@@ -17,10 +17,9 @@ const ResidentFile = () => import('@/pages/residentFile/residentFile/residentFil
 const ResidentDetail = () => import('@/pages/residentFile/residentDetail/residentDetail');
 const ResidentLabel = () => import('@/pages/residentFile/label/label');
 
-
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 let router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     // {

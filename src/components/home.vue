@@ -102,7 +102,8 @@ export default {
         this.promise = true;
       }
     } else {
-      this.$router.push({ path: '/login' });
+      // this.$router.push({ path: '/login' });
+      this.$router.push({ path: '/' });
     }
   },
   methods: {
@@ -112,13 +113,14 @@ export default {
       window.localStorage.setItem('SD_USERAVATAR', defaultAvatar);
     },
     handleLogout() {
-      window.localStorage.setItem('SD_ACCESS_TOKEN', '');
-      window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
-      window.localStorage.setItem('SD_AUTHORITIES', '');
-      window.localStorage.setItem('SD_USERAVATAR', '');
-      window.localStorage.setItem('SD_USERNAME', '');
-      window.localStorage.setItem('login_refresh', 'false');
-      this.$router.push({ path: '/login' });
+      // window.localStorage.setItem('SD_ACCESS_TOKEN', '');
+      // window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
+      // window.localStorage.setItem('SD_AUTHORITIES', '');
+      // window.localStorage.setItem('SD_USERAVATAR', '');
+      // window.localStorage.setItem('SD_USERNAME', '');
+      // window.localStorage.setItem('login_refresh', 'false');
+      // this.$router.push({ path: '/login' });
+      this.$router.push({ path: '/' });
     }
   },
   watch: {
@@ -131,7 +133,8 @@ export default {
           this.promise = true;
         }
       } else {
-        this.$router.push({ path: '/login' });
+        // this.$router.push({ path: '/login' });
+        this.$router.push({ path: '/' });
       }
     }
   }
