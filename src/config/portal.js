@@ -1,4 +1,5 @@
 export default [
+  // 基本设置
   {
     label: "基本设置",
     children: [
@@ -28,6 +29,7 @@ export default [
       },
     ],
   },
+  // 物业服务
   {
     label: "物业服务",
     children: [
@@ -97,6 +99,7 @@ export default [
       // },
     ],
   },
+  // 运营管理
   {
     label: "运营管理",
     children: [
@@ -141,6 +144,5 @@ export default [
   //       authKeys: ["app_quality"],
   //     },
   //   ]
-  // },
-
+  // }
 ];

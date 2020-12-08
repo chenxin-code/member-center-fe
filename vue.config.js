@@ -1,22 +1,22 @@
-const path = require('path')
-const webpack = require('webpack')
-const buildDate = JSON.stringify(new Date().toLocaleString())
-const createThemeColorReplacerPlugin = require('./config/plugin.config')
+const path = require('path');
+const webpack = require('webpack');
+const buildDate = JSON.stringify(new Date().toLocaleString());
+const createThemeColorReplacerPlugin = require('./config/plugin.config');
 const CompressionWebpackPlugin = require('compression-webpack-plugin'); // 开启gzip压缩， 按需引用
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i; // 开启gzip压缩， 按需写入
 
-function resolve (dir) {
-  return path.join(__dirname, dir)
+function resolve(dir) {
+  return path.join(__dirname, dir);
 }
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
 
 const assetsCDN = {
   // webpack build externals
   externals: {
     vue: 'Vue',
     'vue-router': 'VueRouter',
-    'Antd': 'ant-design-vue',
+    Antd: 'ant-design-vue',
     vuex: 'Vuex',
     axios: 'axios'
   },
@@ -28,7 +28,7 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
     '//cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js'
   ]
-}
+};
 
 // vue.config.js
 const vueConfig = {
@@ -48,18 +48,19 @@ const vueConfig = {
         threshold: 100,
         minRatio: 0.8
       })
-    ],
+    ]
     // if prod, add externals
     // externals: isProd ? assetsCDN.externals : {}
   },
 
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     // 移除prefetch插件，避免加载多余的资源
-    config.plugins.delete('prefetch')
+    config.plugins.delete('prefetch');
     // 压缩图片
-    const imagesRule = config.module.rule('images')
-    imagesRule.uses.clear()
-    imagesRule.use('file-loader')
+    const imagesRule = config.module.rule('images');
+    imagesRule.uses.clear();
+    imagesRule
+      .use('file-loader')
       .loader('url-loader')
       .options({
         limit: 10240,
@@ -69,17 +70,15 @@ const vueConfig = {
             outputPath: 'static/images'
           }
         }
-      })
+      });
 
     // 压缩响应的app.json返回的代码压缩
-    config.optimization.minimize(true)
+    config.optimization.minimize(true);
 
-    config.resolve.alias
-      .set('@$', resolve('src'))
-      .set('assets', resolve('src/assets'))
+    config.resolve.alias.set('@$', resolve('src')).set('assets', resolve('src/assets'));
 
-    const svgRule = config.module.rule('svg')
-    svgRule.uses.clear()
+    const svgRule = config.module.rule('svg');
+    svgRule.uses.clear();
     svgRule
       .oneOf('inline')
       .resourceQuery(/inline/)
@@ -92,7 +91,7 @@ const vueConfig = {
       .loader('file-loader')
       .options({
         name: 'assets/[name].[hash:8].[ext]'
-      })
+      });
 
     // if prod is on
     // assets require on cdn
@@ -114,12 +113,12 @@ const vueConfig = {
             'menu-dark-submenu-bg': '#303e51',
             'layout-header-background': '#414751',
             'link-color': '#4B7AFB',
-            'border-radius-base': '2px',
+            'border-radius-base': '2px'
           },
-          javascriptEnabled: true,
-        },
-      },
-    },
+          javascriptEnabled: true
+        }
+      }
+    }
   },
 
   devServer: {
@@ -128,21 +127,18 @@ const vueConfig = {
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/times/': {
-        //target: "http://dev.linli580.com:10000", //后端ip地址及端口
-        // target: 'http://dev.linli590.cn:16666/',
-        target: 'http://8.129.225.124:16666/',
-        // target: 'http://sit.linli590.cn:7000/',
+        target: 'http://8.129.225.124:16666/', //后端ip地址及端口
         ws: true, //是否跨域
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/oss-backend/': {
         target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/oss-frontend/': {
         target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
-        changeOrigin: true,
-      },
+        changeOrigin: true
+      }
     }
   },
 
@@ -151,13 +147,13 @@ const vueConfig = {
   lintOnSave: false,
   // babel-loader no-ignore node_modules/*
   transpileDependencies: []
-}
+};
 
 // preview.pro.loacg.com only do not use in your production;
 if (process.env.VUE_APP_PREVIEW === 'true') {
-  console.log('VUE_APP_PREVIEW', true)
+  console.log('VUE_APP_PREVIEW', true);
   // add `ThemeColorReplacer` plugin to webpack plugins
-  vueConfig.configureWebpack.plugins.push(createThemeColorReplacerPlugin())
+  vueConfig.configureWebpack.plugins.push(createThemeColorReplacerPlugin());
 }
 
-module.exports = vueConfig
+module.exports = vueConfig;

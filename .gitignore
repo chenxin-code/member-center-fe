@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+dist
 /dist
 
 # local env files
@@ -21,3 +22,7 @@ pnpm-debug.log*
 *.sln
 *.sw?
 webstorm.config.js
+
+# Zjh config files
+.prettierrc
+push.sh
