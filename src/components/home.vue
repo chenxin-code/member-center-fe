@@ -16,9 +16,9 @@
                 <a-icon type="down" />
               </span>
               <a-menu slot="overlay">
-                <!-- <a-menu-item>
-                  <router-link :to="{path: '/user/userInfo'}">个人中心</router-link>
-                </a-menu-item> -->
+                <a-menu-item>
+                  <router-link :to="{ path: '/user/userInfo' }">个人中心</router-link>
+                </a-menu-item>
                 <a-menu-item>
                   <router-link :to="{ path: '/portal' }">返回首页</router-link>
                 </a-menu-item>
@@ -46,8 +46,7 @@
 </template>
 
 <script>
-
-import Menu from '@/components/menu';//
+import Menu from '@/components/menu'; //
 import Breadcrumb from '@/components/breadcrumb';
 import { hasRangeAuthorityWithoutProject } from '@/utils/authority';
 import { mapGetters } from 'vuex';
