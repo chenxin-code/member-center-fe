@@ -23,24 +23,24 @@ let router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '/login',
-      name: 'login',
-      menuKey: 'login',
-      meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
-      component: Login
-    },
-    {
-      path: '/portal',
-      name: 'portal',
-      menuKey: 'portal',
-      meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
-      component: Portal
-    },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   menuKey: 'login',
+    //   meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
+    //   component: Login
+    // },
+    // {
+    //   path: '/portal',
+    //   name: 'portal',
+    //   menuKey: 'portal',
+    //   meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
+    //   component: Portal
+    // },
     {
       path: '/',
-      redirect: '/login',
-      // redirect: '/resident',
+      // redirect: '/login',
+      redirect: '/resident',
       name: 'home',
       menuKey: 'home',
       component: Home,
