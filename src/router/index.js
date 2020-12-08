@@ -18,89 +18,92 @@ const ResidentDetail = () => import('@/pages/residentFile/residentDetail/residen
 const ResidentLabel = () => import('@/pages/residentFile/label/label');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
-let router = new VueRouter({
+const routes = [
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   menuKey: 'login',
+  //   meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
+  //   component: Login
+  // },
+  // {
+  //   path: '/portal',
+  //   name: 'portal',
+  //   menuKey: 'portal',
+  //   meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
+  //   component: Portal
+  // },
+  {
+    path: '/',
+    // redirect: '/login',
+    redirect: '/resident',
+    name: 'home',
+    menuKey: 'home',
+    component: Home,
+    children: [
+      {
+        path: '/resident',
+        name: 'resident',
+        menuKey: 'resident',
+        meta: {
+          menu: '/resident',
+          authKeys: [''],
+          bread: [{ path: '/resident', name: '住户档案' }],
+          keepAlive: true
+        },
+        component: ResidentFile
+      },
+      {
+        path: '/resident/detail',
+        name: 'detail',
+        props: paramsStorage.setPropsStorage,
+        menuKey: 'resident',
+        meta: {
+          menu: '/resident',
+          authKeys: [''],
+          bread: [
+            { path: '/resident', name: '住户档案' },
+            { path: '/resident/detail', name: '住户详情' }
+          ]
+        },
+        component: ResidentDetail
+      },
+      {
+        path: '/residentLabel',
+        name: 'residentLabel',
+        menuKey: 'detail',
+        meta: {
+          menu: '/residentLabel',
+          authKeys: [''],
+          bread: [{ path: '/residentLabel', name: '标签管理' }]
+        },
+        component: ResidentLabel
+      }
+    ]
+  },
+  {
+    path: '/404',
+    component: () => import('@/pages/exception/404')
+  },
+  {
+    path: '/403',
+    component: () => import('@/pages/exception/403')
+  },
+  {
+    path: '/500',
+    component: () => import('@/pages/exception/500')
+  },
+  {
+    path: '*',
+    redirect: '/404'
+  }
+];
+
+const router = new VueRouter({
+  // mode: 'hash',
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   menuKey: 'login',
-    //   meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
-    //   component: Login
-    // },
-    // {
-    //   path: '/portal',
-    //   name: 'portal',
-    //   menuKey: 'portal',
-    //   meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
-    //   component: Portal
-    // },
-    {
-      path: '/',
-      // redirect: '/login',
-      redirect: '/resident',
-      name: 'home',
-      menuKey: 'home',
-      component: Home,
-      children: [
-        {
-          path: '/resident',
-          name: 'resident',
-          menuKey: 'resident',
-          meta: {
-            menu: '/resident',
-            authKeys: [''],
-            bread: [{ path: '/resident', name: '住户档案' }],
-            keepAlive: true
-          },
-          component: ResidentFile
-        },
-        {
-          path: '/resident/detail',
-          name: 'detail',
-          props: paramsStorage.setPropsStorage,
-          menuKey: 'resident',
-          meta: {
-            menu: '/resident',
-            authKeys: [''],
-            bread: [
-              { path: '/resident', name: '住户档案' },
-              { path: '/resident/detail', name: '住户详情' }
-            ]
-          },
-          component: ResidentDetail
-        },
-        {
-          path: '/residentLabel',
-          name: 'residentLabel',
-          menuKey: 'detail',
-          meta: {
-            menu: '/residentLabel',
-            authKeys: [''],
-            bread: [{ path: '/residentLabel', name: '标签管理' }]
-          },
-          component: ResidentLabel
-        }
-      ]
-    },
-    {
-      path: '/404',
-      component: () => import('@/pages/exception/404')
-    },
-    {
-      path: '/403',
-      component: () => import('@/pages/exception/403')
-    },
-    {
-      path: '/500',
-      component: () => import('@/pages/exception/500')
-    },
-    {
-      path: '*',
-      redirect: '/404'
-    }
-  ]
+  routes
 });
 
 router.beforeEach((to, from, next) => {
