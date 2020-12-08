@@ -25,4 +25,5 @@ webstorm.config.js
 
 # Zjh config files
 .prettierrc
+test.json
 push.sh

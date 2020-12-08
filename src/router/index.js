@@ -9,8 +9,6 @@ const Home = () => import('@/components/home');
 
 //登录
 const Login = () => import('@/pages/login/login');
-//获取token
-// const Token = () => import('@/pages/login/index');
 //portal
 const Portal = () => import('@/pages/portal/portal');
 
@@ -19,6 +17,8 @@ const ResidentFile = () => import('@/pages/residentFile/residentFile/residentFil
 const ResidentDetail = () => import('@/pages/residentFile/residentDetail/residentDetail');
 const ResidentLabel = () => import('@/pages/residentFile/label/label');
 
+
+/* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 let router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL,
@@ -30,14 +30,6 @@ let router = new VueRouter({
       meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
       component: Login
     },
-    //获取token使用
-    // {
-    //   path: '/token',
-    //   name: 'token',
-    //   menuKey: '',
-    //   meta: { menu: '/token', bread: [{ path: '/token', name: '获取token' }] },
-    //   component: Token
-    // },
     {
       path: '/portal',
       name: 'portal',
@@ -47,7 +39,8 @@ let router = new VueRouter({
     },
     {
       path: '/',
-      redirect: { name: 'login' },
+      redirect: '/login',
+      // redirect: '/resident',
       name: 'home',
       menuKey: 'home',
       component: Home,
@@ -94,15 +87,15 @@ let router = new VueRouter({
     },
     {
       path: '/404',
-      component: () => import('../pages/exception/404')
+      component: () => import('@/pages/exception/404')
     },
     {
       path: '/403',
-      component: () => import('../pages/exception/403')
+      component: () => import('@/pages/exception/403')
     },
     {
       path: '/500',
-      component: () => import('../pages/exception/500')
+      component: () => import('@/pages/exception/500')
     },
     {
       path: '*',

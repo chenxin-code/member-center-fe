@@ -37,6 +37,7 @@ export default {
   data () {
     return {
       menus: [],
+      // openKeys: [this.$route.path.split("/")[2]],
       openKeys: [this.$route.path.split("/")[2]],
       rootPath: '',
       collapsed: false
@@ -47,6 +48,8 @@ export default {
   },
   created () {
     this.setMenus();
+    console.log('this.$route :>> ', this.$route.path.split("/"));
+    console.log('openKeys :>> ', this.openKeys);
   },
   methods: {
     checkKeys(openKeys) {
