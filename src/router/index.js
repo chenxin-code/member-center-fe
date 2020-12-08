@@ -7,10 +7,10 @@ Vue.use(VueRouter);
 
 const Home = () => import('@/components/home');
 
-//登录
-const Login = () => import('@/pages/login/login');
-//portal
-const Portal = () => import('@/pages/portal/portal');
+// //登录
+// const Login = () => import('@/pages/login/login');
+// //portal
+// const Portal = () => import('@/pages/portal/portal');
 
 //住户档案
 const ResidentFile = () => import('@/pages/residentFile/residentFile/residentFile');
