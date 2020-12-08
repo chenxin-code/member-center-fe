@@ -132,6 +132,7 @@ const vueConfig = {
         ws: true, //是否跨域
         changeOrigin: true
       },
+      //oss是图片预览的时候才使用
       '/oss-backend/': {
         target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
         changeOrigin: true
