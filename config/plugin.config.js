@@ -1,3 +1,4 @@
+//颜色主题
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
 const generate = require('@ant-design/colors/lib/generate').default
 

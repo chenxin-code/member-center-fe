@@ -1,4 +1,4 @@
-export function hasRangeAuthorityWithoutProject(authorityKeys) {
+export default function hasRangeAuthorityWithoutProject(authorityKeys) {
   let flag = true;
   const jsonAuthorities = window.localStorage.getItem("SD_AUTHORITIES");
   if (jsonAuthorities && authorityKeys != "") {

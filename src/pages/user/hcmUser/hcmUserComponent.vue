@@ -67,7 +67,7 @@ import api from "@/api";
 import { EMPLOYEE } from "@/constance";
 import { debounce } from "@/utils/util";
 import FormList from "@/components/FormList/index.jsx";
-import {hasRangeAuthorityWithoutProject} from '@/utils/authority'
+import hasRangeAuthorityWithoutProject from '@/utils/authority'
 
 function getStatus(isEnable, isReverse = false) {
   if (isReverse) {

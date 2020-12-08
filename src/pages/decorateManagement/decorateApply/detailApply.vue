@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content-header">
-      <span class="text-bold">装修申请详情</span> 
+      <span class="text-bold">装修申请详情</span>
       <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div>
 
@@ -166,7 +166,7 @@
             </div>
           </a-tab-pane>
 
-          <a-tab-pane class="tabs-body-content" key="6" tab="整改" v-if="appDetail.decorationStatus === '21'||appDetail.decorationStatus === '31'"> 
+          <a-tab-pane class="tabs-body-content" key="6" tab="整改" v-if="appDetail.decorationStatus === '21'||appDetail.decorationStatus === '31'">
             <div>
               <!-- 整改表格 -->
               <a-table
@@ -233,7 +233,7 @@ import FormList from "@/components/FormList/index.jsx";
 import BasicInformation from "./components/BasicInformation";
 import DetailedInformation from "./components/DetailedInformation";
 import moment from "moment";
-import {hasRangeAuthorityWithoutProject} from "@/utils/authority"
+import hasRangeAuthorityWithoutProject from "@/utils/authority"
 
 export default {
   components: {
@@ -475,7 +475,7 @@ export default {
       closeMessage:'',
       refuseMessage:'',
       applicationId:'',
-    
+
     };
   },
   //局部过滤器
@@ -539,7 +539,7 @@ export default {
         .then(res => {
           if (res.code === 200) {
             this.appDetail = {
-              ...res.data,                
+              ...res.data,
             };
           }
         });
@@ -588,7 +588,7 @@ export default {
       this.acceptApplyVisible = false;
     },
     acceptApply(){
-       
+
        api
         .auditPassAppManage({
           applicationId: this.$route.params.id

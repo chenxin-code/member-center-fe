@@ -12,9 +12,9 @@
             <a-icon type="down"/>
           </span>
           <a-menu slot="overlay">
-            <a-menu-item>
+            <!-- <a-menu-item>
               <router-link :to="{path: '/user/userInfo'}">个人中心</router-link>
-            </a-menu-item>
+            </a-menu-item> -->
             <a-menu-item @click="handleLogout">
               <span>退出登录</span>
             </a-menu-item>
@@ -58,7 +58,7 @@
 
 <script>
 import PORTAL_MENUS from "@/config/portal";
-import {hasRangeAuthorityWithoutProject} from "@/utils/authority";
+import hasRangeAuthorityWithoutProject from "@/utils/authority";
 import api from "@/api";
 const defaultAvatar = require("@/assets/img/user/avatar.png");
 

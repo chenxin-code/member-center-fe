@@ -16,9 +16,9 @@
                 <a-icon type="down"/>
               </span>
               <a-menu slot="overlay">
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <router-link :to="{path: '/user/userInfo'}">个人中心</router-link>
-                </a-menu-item>
+                </a-menu-item> -->
                 <a-menu-item>
                   <router-link :to="{path: '/portal'}">返回首页</router-link>
                 </a-menu-item>

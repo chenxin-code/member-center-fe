@@ -27,7 +27,7 @@
 <script>
 
 import MENU_ROUTES from "../../config/menu";
-import {hasRangeAuthorityWithoutProject} from '@/utils/authority'
+import hasRangeAuthorityWithoutProject from '@/utils/authority'
 
 export default {
   name: 'Menu',

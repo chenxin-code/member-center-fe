@@ -1,7 +1,6 @@
 <template>
   <a-config-provider :locale="locale">
     <div id="app">
-      <!--      <router-view></router-view>-->
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
@@ -11,30 +10,30 @@
 </template>
 
 <script>
-import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
-import moment from "moment";
-import "moment/locale/zh-cn";
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 
-moment.locale("zh-cn");
+moment.locale('zh-cn');
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     // Home
   },
   data() {
     return {
-      locale: zhCN,
+      locale: zhCN
     };
   },
   created() {
     // 在页面刷新时将vuex里的信息保存到sessionStorage里
     // beforeunload事件在页面刷新时先触发
     window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('refreshflag', "1")
-      sessionStorage.setItem('store', JSON.stringify(this.$store.state))
-    })
-  },
+      sessionStorage.setItem('refreshflag', '1');
+      sessionStorage.setItem('store', JSON.stringify(this.$store.state));
+    });
+  }
 };
 </script>
 
@@ -69,7 +68,7 @@ export default {
       text-align: left;
       font-size: 13px;
       &::after {
-        content: ":";
+        content: ':';
         margin: 0 3px;
       }
     }
@@ -90,7 +89,7 @@ export default {
       text-align: left;
       font-size: 13px;
       &::after {
-        content: ":";
+        content: ':';
         margin: 0 3px;
       }
     }
