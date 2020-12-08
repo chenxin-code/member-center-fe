@@ -37,9 +37,9 @@
           </a-form-item>
           <a-form-item label="业主" hasFeedback>
             <!-- <a-input v-decorator="['ownerInfo',{rules:[{ required: true, message: '业主不能为空' }]}]" placeholder="请输入" style="width: 60%" />-->
-            <a-select 
+            <a-select
                v-decorator="['ownerInfo',{ rules: [{ required: true, message: '业主不能为空' }] }]"
-               placeholder="请选择业主" style="width: 60%" 
+               placeholder="请选择业主" style="width: 60%"
                @change="onCheckOwnerInfoChange" :disabled="optionDisabled">
               <a-select-option v-for="(item,key) in ownerInfoData" :key="item.id" :value="item.name">{{item.name}}</a-select-option>
             </a-select>
@@ -49,7 +49,7 @@
               v-decorator="['decorationDate',{ rules: [{ required: true, message: '装修日期不能为空' }] }]"
               :format="dateFormat"
               :disabled-date="disabledDate" @change="decorationDateChange"
-            />  
+            />
           </a-form-item>
           <a-form-model-item label="是否委托装修公司">
             <a-radio-group v-decorator="['entrustFlag', {initialValue: 1}]" @change="onChange">
@@ -111,7 +111,7 @@
                         <div class="ant-upload-text">上传身份证反面（国徽面）</div>
                       </div>
                     </a-upload>
-              
+
                   </a-spin>
                 </a-col>
               </a-row>
@@ -134,7 +134,7 @@
                     <div class="ant-upload-text">上传装修公司营业执照</div>
                   </div>
                 </a-upload>
-             
+
               </a-spin>
               <span
                 style="margin-left:10px;color:#999999;font-size:12px;"
@@ -155,7 +155,7 @@
                     <div class="ant-upload-text">上传装修公司资质证书</div>
                   </div>
                 </a-upload>
-          
+
               </a-spin>
               <span
                 style="margin-left:10px;color:#999999;font-size:12px;"
@@ -371,13 +371,13 @@
         @click="onSubmit"
         :disabled="commitBtn"
       >保存</a-button>
-      <a-button 
-      type="primary" 
-      style="width: 120px;" 
-      :loading="btnLoading" 
-      @click="onCommit" 
-      :disabled='!(!this.decorationBtn ? this.spaceName && this.ownerInfo && this.decorationDateStr !="" 
-        : this.spaceName && this.ownerInfo && this.decorationDateStr !="" && this.fileList1.length 
+      <a-button
+      type="primary"
+      style="width: 120px;"
+      :loading="btnLoading"
+      @click="onCommit"
+      :disabled='!(!this.decorationBtn ? this.spaceName && this.ownerInfo && this.decorationDateStr !=""
+        : this.spaceName && this.ownerInfo && this.decorationDateStr !="" && this.fileList1.length
         && this.fileList2.length && this.fileList3.length && this.fileList4.length)'
       >
       提交</a-button>
@@ -464,12 +464,12 @@
         </a-row>
       </a-form>
 
-      <a-radio-group v-model="handleQuery" @change="getRadioVal" class="radio-wrap"> 
+      <a-radio-group v-model="handleQuery" @change="getRadioVal" class="radio-wrap">
         <a-radio
           style="margin-bottom:5px"
           v-for="item in onQueryResult"
           :key="item.name"
-          :value="item.id"                 
+          :value="item.id"
         >{{ item.name }}</a-radio>
       </a-radio-group>
     </a-modal>
@@ -501,7 +501,7 @@ export default {
 	 optionDisabled:true,
 	 //房屋 是否可以选择
 	 houseFlg:false,
-	 //选中的房屋	
+	 //选中的房屋
 	 spaceIdSelected: "",
 	 spaceNameSelected: "",
       form: this.$form.createForm(this, { name: "form" }),
@@ -534,7 +534,7 @@ export default {
       fileList11: [],
 	  fileList12: [],
 	  fileList13: [],
-	  
+
 	  beforeUpload5Count: 0,
 	  beforeUpload6Count: 0,
 	  beforeUpload7Count: 0,
@@ -544,7 +544,7 @@ export default {
 	  beforeUpload11Count: 0,
 	  beforeUpload12Count: 0,
 	  beforeUpload13Count: 0,
-	  
+
 	  beforeUpload5CountFlag: true,
 	  beforeUpload6CountFlag: true,
 	  beforeUpload7CountFlag: true,
@@ -608,9 +608,9 @@ export default {
     getCurrentData() {
       return new Date().toLocaleDateString();
     },
-	
+
 	back(){
-		// this.$router.go(-1);		
+		// this.$router.go(-1);
 		this.$confirm({
 		  title: "提示",
 		  content: "是否保存该装修申请？",
@@ -622,7 +622,7 @@ export default {
 		  },
 		});
 	},
-	
+
     //
     //验证正则只能输入数字
     checkData(rule, value, callback) {
@@ -641,7 +641,7 @@ export default {
       }
     },
     disabledDate(current) {
-      return !(        
+      return !(
         current > moment().startOf("day") && current < moment().add(3, "month")
       );
     },
@@ -726,7 +726,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url,
-                      fileId: res.data.fileId, 
+                      fileId: res.data.fileId,
 					            thumbUrl: res.data.url,
                     };
                   }
@@ -784,7 +784,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url,
-                      fileId: res.data.fileId, 
+                      fileId: res.data.fileId,
 					            thumbUrl: res.data.url,
                     };
                   }
@@ -843,7 +843,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url,
-                      fileId: res.data.fileId, 
+                      fileId: res.data.fileId,
 					            thumbUrl: res.data.url,
                     };
                   }
@@ -901,7 +901,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url,
-                      fileId: res.data.fileId, 
+                      fileId: res.data.fileId,
 					            thumbUrl: res.data.url,
                     };
                   }
@@ -940,7 +940,7 @@ export default {
 
       // if (this.fileList5.length > 4) {
       //     this.$message.error('图片最多上传5张');
-      // } else 
+      // } else
 
 	  if (this.beforeUpload5Count <= 5) {
         const isJpgOrPng =
@@ -966,7 +966,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                   });
 				  this.beforeUpload5Count = this.fileList5.length;
                   this.$set(this.fileList5, this.fileList5);
@@ -1012,7 +1012,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                   });
 				  this.beforeUpload6Count = this.fileList6.length;
                   this.$set(this.fileList6, this.fileList6);
@@ -1059,7 +1059,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                   });
 				  this.beforeUpload7Count = this.fileList7.length;
                   this.$set(this.fileList7, this.fileList7);
@@ -1107,7 +1107,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                 });
 				this.beforeUpload8Count = this.fileList8.length;
                 this.$set(this.fileList8, this.fileList8);
@@ -1155,7 +1155,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                 });
 				this.beforeUpload9Count = this.fileList9.length;
                 this.$set(this.fileList9, this.fileList9);
@@ -1203,7 +1203,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                 });
 				this.beforeUpload10Count = this.fileList10.length;
                 this.$set(this.fileList10, this.fileList10);
@@ -1250,7 +1250,7 @@ export default {
                       documentId: res.data.documentId,
                       fileExt: res.data.fileExt,
                       url: res.data.url ? res.data.url : "",
-                      fileId: res.data.fileId,  
+                      fileId: res.data.fileId,
                   });
 				  this.beforeUpload11Count = this.fileList11.length;
                   this.$set(this.fileList11, this.fileList11);
@@ -1287,7 +1287,7 @@ export default {
 	        this.picUploading = true;
 	        const formData = new FormData();
 	        formData.append("file", file.file.originFileObj);
-	
+
 	        api["uploadDecorateImagePic"](formData)
 	          .then(res => {
 	            if (res.code === 200) {
@@ -1298,7 +1298,7 @@ export default {
 	                  documentId: res.data.documentId,
 	                  fileExt: res.data.fileExt,
 	                  url: res.data.url ? res.data.url : "",
-	                  fileId: res.data.fileId,  
+	                  fileId: res.data.fileId,
 	              });
 				  this.beforeUpload12Count = this.fileList12.length;
 	              this.$set(this.fileList12, this.fileList12);
@@ -1310,7 +1310,7 @@ export default {
 	      }
 	    }
 	  }
-	
+
 	},
 	addPic13(file) {
 	  if (file.file.status === "removed") {
@@ -1335,7 +1335,7 @@ export default {
 	        this.picUploading = true;
 	        const formData = new FormData();
 	        formData.append("file", file.file.originFileObj);
-	
+
 	        api["uploadDecorateImagePic"](formData)
 	          .then(res => {
 	            if (res.code === 200) {
@@ -1346,7 +1346,7 @@ export default {
 	                  documentId: res.data.documentId,
 	                  fileExt: res.data.fileExt,
 	                  url: res.data.url ? res.data.url : "",
-	                  fileId: res.data.fileId,  
+	                  fileId: res.data.fileId,
 	              });
 				  this.beforeUpload13Count = this.fileList13.length;
 	              this.$set(this.fileList13, this.fileList13);
@@ -1358,7 +1358,7 @@ export default {
 	      }
 	    }
 	  }
-	
+
   },
   beforeUpload(file) {
 		return new Promise((resolve, reject) => {
@@ -1525,7 +1525,7 @@ export default {
     handleCancel7() {
       this.previewVisible7 = false;
     },
-    
+
 
     //图片预览
     getBase64(file) {
@@ -1554,7 +1554,7 @@ export default {
       }
       this.visible = true;
       this.periodOption=[];
-      this.buildingOption=[];     
+      this.buildingOption=[];
       this.onQueryResult=[];
       this.rooming="";
       this.period = "";
@@ -1571,7 +1571,7 @@ export default {
       this.spaceSelect();
     },
 
-    //房屋查询//TODO
+    //房屋查询//todo
     onHouseSearch(e) {
       const value = e.target.value;
       console.log(this.projectId);
@@ -1587,7 +1587,7 @@ export default {
       //   }
       // });
     },
-    //房屋Changes//TODO
+    //房屋Changes//todo
     onHouseChange(value) {
       this.spaceId = value;
       let obj = {};
@@ -1697,7 +1697,7 @@ export default {
     onConfirm(e) {
 	  this.spaceId = this.spaceIdSelected;
 	  this.spaceName = this.spaceNameSelected;
-	  
+
       this.visible = false;
       //空间下的业主列表
       const para = {
@@ -1732,7 +1732,7 @@ export default {
 			this.optionDisabled=false;
 			this.houseFlg=true;
 		}
-		
+
       console.log(this.id);
       if (this.applicationId) {
         api
@@ -1746,7 +1746,7 @@ export default {
 			  	this.optionDisabled=false;
 			  	this.houseFlg=true;
 			   }
-			  
+
               //保存按钮
               if (data.decorationStatus != "01") {
                 this.commitBtn = true;
@@ -1761,7 +1761,7 @@ export default {
 	                  documentId: res.data.identityCardFace.documentId,
 	                  fileExt: res.data.identityCardFace.fileExt,
 	                  url: res.data.identityCardFace.url,
-                    fileId: res.data.identityCardFace.fileId, 
+                    fileId: res.data.identityCardFace.fileId,
 					          thumbUrl: res.data.identityCardFace.url,
                 }); //图片
                 this.form.setFieldsValue({
@@ -1772,7 +1772,7 @@ export default {
 	                  documentId: res.data.identityCardFace.documentId,
 	                  fileExt: res.data.identityCardFace.fileExt,
 	                  url: res.data.identityCardFace.url ? res.data.identityCardFace.url : "",
-                    fileId: res.data.identityCardFace.fileId, 
+                    fileId: res.data.identityCardFace.fileId,
                   }
                 })
               }
@@ -1784,7 +1784,7 @@ export default {
 	                  documentId: res.data.identityCardBack.documentId,
 	                  fileExt: res.data.identityCardBack.fileExt,
 	                  url: res.data.identityCardBack.url,
-	                  fileId: res.data.identityCardBack.fileId, 
+	                  fileId: res.data.identityCardBack.fileId,
 					          thumbUrl: res.data.identityCardBack.url,
                 });
                 this.form.setFieldsValue({
@@ -1795,19 +1795,19 @@ export default {
 	                  documentId: res.data.identityCardBack.documentId,
 	                  fileExt: res.data.identityCardBack.fileExt,
 	                  url: res.data.identityCardBack.url ? res.data.identityCardBack.url : "",
-	                  fileId: res.data.identityCardBack.fileId, 
+	                  fileId: res.data.identityCardBack.fileId,
                   }
                 })
               }
               if (res.data.companyPhoto) {
                 this.fileList3.push(
-                  { uid: "-1", 
+                  { uid: "-1",
                     fileName: res.data.companyPhoto.fileName,
 	                  fileSize: res.data.companyPhoto.fileSize,
 	                  documentId: res.data.companyPhoto.documentId,
 	                  fileExt: res.data.companyPhoto.fileExt,
 	                  url: res.data.companyPhoto.url,
-	                  fileId: res.data.companyPhoto.fileId, 
+	                  fileId: res.data.companyPhoto.fileId,
 					          thumbUrl: res.data.companyPhoto.url,
                   });
                 this.form.setFieldsValue({
@@ -1818,7 +1818,7 @@ export default {
 	                  documentId: res.data.companyPhoto.documentId,
 	                  fileExt: res.data.companyPhoto.fileExt,
 	                  url: res.data.companyPhoto.url ? res.data.companyPhoto.url : "",
-	                  fileId: res.data.companyPhoto.fileId, 
+	                  fileId: res.data.companyPhoto.fileId,
                  }
                 })
               }
@@ -1830,7 +1830,7 @@ export default {
 	                  documentId: res.data.certificatePhoto.documentId,
 	                  fileExt: res.data.certificatePhoto.fileExt,
 	                  url: res.data.certificatePhoto.url,
-	                  fileId: res.data.certificatePhoto.fileId, 
+	                  fileId: res.data.certificatePhoto.fileId,
 					          thumbUrl: res.data.certificatePhoto.url,
                 });
                 this.form.setFieldsValue({
@@ -1841,7 +1841,7 @@ export default {
 	                  documentId: res.data.certificatePhoto.documentId,
 	                  fileExt: res.data.certificatePhoto.fileExt,
 	                  url: res.data.certificatePhoto.url ? res.data.certificatePhoto.url : "",
-	                  fileId: res.data.certificatePhoto.fileId, 
+	                  fileId: res.data.certificatePhoto.fileId,
                  }
                 })
               }
@@ -1858,7 +1858,7 @@ export default {
 	                  documentId: designImage[i].documentId,
 	                  fileExt: designImage[i].fileExt,
 	                  url: designImage[i].url ? designImage[i].url : "",
-	                  fileId: designImage[i].fileId, 
+	                  fileId: designImage[i].fileId,
                   });
                 }
 				if (this.fileList5.length && this.fileList5.length > 0) {
@@ -1875,7 +1875,7 @@ export default {
 	                  documentId: mainWallImage[i].documentId,
 	                  fileExt: mainWallImage[i].fileExt,
 	                  url: mainWallImage[i].url ? mainWallImage[i].url : "",
-	                  fileId: mainWallImage[i].fileId, 
+	                  fileId: mainWallImage[i].fileId,
                   });
                 }
 				if (this.fileList6.length && this.fileList6.length > 0) {
@@ -1892,7 +1892,7 @@ export default {
 	                  documentId: exteriorWallImage[i].documentId,
 	                  fileExt: exteriorWallImage[i].fileExt,
 	                  url: exteriorWallImage[i].url ? exteriorWallImage[i].url : "",
-	                  fileId: exteriorWallImage[i].fileId, 
+	                  fileId: exteriorWallImage[i].fileId,
                   });
                 }
 				if (this.fileList7.length && this.fileList7.length > 0) {
@@ -1909,7 +1909,7 @@ export default {
 	                  documentId: planeSolidImage[i].documentId,
 	                  fileExt: planeSolidImage[i].fileExt,
 	                  url: planeSolidImage[i].url ? planeSolidImage[i].url : "",
-	                  fileId: planeSolidImage[i].fileId, 
+	                  fileId: planeSolidImage[i].fileId,
                   });
                 }
 				if (this.fileList8.length && this.fileList8.length > 0) {
@@ -1926,7 +1926,7 @@ export default {
 	                  documentId: electricPowerImage[i].documentId,
 	                  fileExt: electricPowerImage[i].fileExt,
 	                  url: electricPowerImage[i].url ? electricPowerImage[i].url : "",
-	                  fileId: electricPowerImage[i].fileId, 
+	                  fileId: electricPowerImage[i].fileId,
                   });
                 }
 				if (this.fileList9.length && this.fileList9.length > 0) {
@@ -1943,7 +1943,7 @@ export default {
 	                  documentId: airConditionerImage[i].documentId,
 	                  fileExt: airConditionerImage[i].fileExt,
 	                  url: airConditionerImage[i].url ? airConditionerImage[i].url : "",
-	                  fileId: airConditionerImage[i].fileId, 
+	                  fileId: airConditionerImage[i].fileId,
                   });
                 }
 				if (this.fileList10.length && this.fileList10.length > 0) {
@@ -1960,7 +1960,7 @@ export default {
 	                  documentId: waterSupplyImage[i].documentId,
 	                  fileExt: waterSupplyImage[i].fileExt,
 	                  url: waterSupplyImage[i].url ?waterSupplyImage[i].url : "",
-	                  fileId: waterSupplyImage[i].fileId,  
+	                  fileId: waterSupplyImage[i].fileId,
 	               });
                 }
 				if (this.fileList11.length && this.fileList11.length > 0) {
@@ -1977,7 +1977,7 @@ export default {
 	                documentId: fireContrlImage[i].documentId,
 	                fileExt: fireContrlImage[i].fileExt,
 	                url: fireContrlImage[i].url ? fireContrlImage[i].url : "",
-	                fileId: fireContrlImage[i].fileId,  
+	                fileId: fireContrlImage[i].fileId,
 	            });
 			    }
 				if (this.fileList12.length && this.fileList12.length > 0) {
@@ -1994,7 +1994,7 @@ export default {
 	                documentId: otherImage[i].documentId,
 	                fileExt: otherImage[i].fileExt,
 	                url: otherImage[i].url ? otherImage[i].url : "",
-	                fileId: otherImage[i].fileId,  
+	                fileId: otherImage[i].fileId,
 	          });
 			    }
 				if (this.fileList13.length && this.fileList13.length > 0) {
@@ -2128,7 +2128,7 @@ export default {
       if(this.decorationBtn == true && (_this.fileList1.length < 1 || _this.fileList2.length < 1)){
         _this.$message.error("装修负责人身份证不能为空");
         return
-      } 
+      }
       if(this.decorationBtn == true && _this.fileList3.length < 1){
         _this.$message.error("装修公司营业执照不能为空");
         return
@@ -2213,7 +2213,7 @@ export default {
        if(this.decorationBtn == true && (_this.fileList1.length < 1 || _this.fileList2.length < 1)){
         _this.$message.error("装修负责人身份证不能为空");
         return
-      } 
+      }
       if(this.decorationBtn == true && _this.fileList3.length < 1){
         _this.$message.error("装修公司营业执照不能为空");
         return
