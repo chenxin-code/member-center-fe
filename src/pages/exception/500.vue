@@ -13,7 +13,7 @@
     name: 'Exception500',
     methods: {
       toLogin () {
-        this.$router.push({ path: '/login' })
+        this.$router.replace({ path: '/resident' });
       }
     }
   }

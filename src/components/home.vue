@@ -17,10 +17,10 @@
               </span>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <router-link :to="{ path: '/user/userInfo' }">个人中心</router-link>
+                  <router-link :to="{ path: '/resident' }">个人中心</router-link>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link :to="{ path: '/portal' }">返回首页</router-link>
+                  <router-link :to="{ path: '/resident' }">返回首页</router-link>
                 </a-menu-item>
                 <a-menu-item @click="handleLogout">
                   <span>退出登录</span>
@@ -102,8 +102,7 @@ export default {
         this.promise = true;
       }
     } else {
-      // this.$router.push({ path: '/login' });
-      this.$router.push({ path: '/' });
+      this.$router.push({ path: '/resident' });
     }
   },
   methods: {
@@ -119,8 +118,7 @@ export default {
       // window.localStorage.setItem('SD_USERAVATAR', '');
       // window.localStorage.setItem('SD_USERNAME', '');
       // window.localStorage.setItem('login_refresh', 'false');
-      // this.$router.push({ path: '/login' });
-      this.$router.push({ path: '/' });
+      this.$router.push({ path: '/resident' });
     }
   },
   watch: {
@@ -133,8 +131,7 @@ export default {
           this.promise = true;
         }
       } else {
-        // this.$router.push({ path: '/login' });
-        this.$router.push({ path: '/' });
+        this.$router.push({ path: '/resident' });
       }
     }
   }
