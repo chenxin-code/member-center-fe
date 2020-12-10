@@ -126,6 +126,9 @@ export default {
 };
 </script>
 <style>
+.ant-menu-submenu .ant-menu .ant-menu-item {
+  padding-left: 36px !important;
+}
 .menu-icon {
   display: inline-block;
   width: 14px;
