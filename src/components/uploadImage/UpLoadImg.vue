@@ -117,7 +117,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    /deep/ .ant-upload{
+    ::v-deep .ant-upload{
         width: 100% !important;
         height: 100px;
     }

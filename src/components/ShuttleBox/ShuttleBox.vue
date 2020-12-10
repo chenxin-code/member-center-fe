@@ -324,15 +324,15 @@ export default {
   }
 }
 
-// /deep/ .ant-empty-normal {
+// ::v-deep .ant-empty-normal {
 //     margin: 140px 0 !important;
 // }
 
-/deep/ .hide {
+::v-deep .hide {
   display: none;
 }
 
-/deep/ .ant-modal-body{
+::v-deep .ant-modal-body{
   padding: 15px;
 }
 </style>
