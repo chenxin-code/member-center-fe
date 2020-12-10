@@ -126,19 +126,18 @@ export function getBase64Img(imgUrl, callback) {
 /***
  * 防抖
  */
-let timer = null;
-
+let debounceTimer = null;
 export function debounce(fn, delay = 100) {
   if (typeof fn !== 'function') {
     throw new Error('必须传入函数');
   }
-  if (timer !== null) {
-    clearTimeout(timer);
+  if (debounceTimer !== null) {
+    clearTimeout(debounceTimer);
   }
-  timer = setTimeout(function() {
+  debounceTimer = setTimeout(function() {
     fn();
-    clearTimeout(timer);
-    timer = null;
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
   }, delay);
 }
 
