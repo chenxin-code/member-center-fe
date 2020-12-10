@@ -30,7 +30,7 @@
           <template v-for="(menuItem, index) in menu_block.children">
             <template v-if="menuItem.type === 'other'">
               <div class="menu-item" :key="index" @click="turn_other(menuItem.authKeys[0])" v-if="hasRangeAuthorityWithoutProject(menuItem.authKeys)">
-                <img class="menu-item-icon" :src="getImgUrl(menuItem.icon)" alt="icon" />
+                <img class="menu-item-icon" :src="menuItem.icon" alt="icon" />
                 <span class="menu-item-title" >
                     {{menuItem.title}}
                 </span>
@@ -40,7 +40,7 @@
             </template>
             <template v-else>
               <div class="menu-item" :key="index" @click="turn_route(menuItem.route)" v-if="hasRangeAuthorityWithoutProject(menuItem.authKeys)">
-                <img class="menu-item-icon" :src="getImgUrl(menuItem.icon)" alt="icon" />
+                <img class="menu-item-icon" :src="menuItem.icon" alt="icon" />
                 <span class="menu-item-title" >
                     {{menuItem.title}}
                 </span>
@@ -129,9 +129,6 @@ export default {
     },
     mouseleave(){
       this.dropDown = !this.dropDown
-    },
-    getImgUrl(icon){
-      return require("@/assets/img/portal/"+icon);
     },
     handleLogout(){
       window.localStorage.setItem("SD_ACCESS_TOKEN", "");

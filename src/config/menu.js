@@ -12,12 +12,14 @@ export default [
       {
         title: '项目列表',
         authKeys: ['menu_project'],
+        icon: require('@/assets/img/menu/icon_xiangmuguanli.png'),
         menuKey: 'project ',
         path: '/project/second/projectList'
       },
       {
         title: '社区信息管理',
         authKeys: ['menu_project'],
+        icon: require('@/assets/img/menu/icon_xiangmuguanli.png'),
         menuKey: 'projectInfo ',
         path: '/project/second/projectInfo'
       }

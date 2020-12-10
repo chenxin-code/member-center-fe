@@ -4,7 +4,7 @@ export default [
     label: '会员管理',
     children: [
       {
-        icon: ("kongjianguanli.png"),
+        icon: require('@/assets/img/portal/kongjianguanli.png'),
         title: "空间管理",
         route: `/space`,
         authKeys: ["app_space"],
