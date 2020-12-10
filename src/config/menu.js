@@ -1,42 +1,42 @@
 export default [
   {
-    title: '会员列表',
-    authKeys: ['app_owner_archive'],
-    icon: require('@/assets/img/menu/icon_zhuhudangan.png'),
-    menuKey: 'resident',
-    group: 'zhda',
-    path: '/resident'
+    title: '项目管理',
+    authKeys: ['menu_project'],
+    icon: require('@/assets/img/menu/icon_xiangmuguanli.png'),
+    menuKey: '',
+    group: 'kjgl',
+    name: 'second',
+    hasChild: 'project',
+    path: '/project/second',
+    children: [
+      {
+        title: '项目列表',
+        authKeys: ['menu_project'],
+        menuKey: 'project ',
+        path: '/project/second/projectList'
+      },
+      {
+        title: '社区信息管理',
+        authKeys: ['menu_project'],
+        menuKey: 'projectInfo ',
+        path: '/project/second/projectInfo'
+      }
+    ]
   },
   {
-    title: '会员标签',
-    authKeys: ['app_owner_archive'],
-    icon: require('@/assets/img/menu/icon_zhuhudangan.png'),
-    menuKey: 'residentLabel',
-    group: 'zhda',
-    path: '/residentLabel'
+    title: '空间管理',
+    authKeys: ['menu_space'],
+    icon: require('@/assets/img/menu/icon_kongjianguanli.png'),
+    menuKey: 'space',
+    group: 'kjgl',
+    path: '/space'
   },
   {
-    title: '404页面',
-    authKeys: ['app_owner_archive'],
-    icon: require('@/assets/img/menu/icon_zhuhudangan.png'),
-    menuKey: 'pageError',
-    group: 'zhda',
-    path: '/404'
-  },
-  {
-    title: '403页面',
-    authKeys: ['app_owner_archive'],
-    icon: require('@/assets/img/menu/icon_zhuhudangan.png'),
-    menuKey: 'pageError',
-    group: 'zhda',
-    path: '/403'
-  },
-  {
-    title: '500页面',
-    authKeys: ['app_owner_archive'],
-    icon: require('@/assets/img/menu/icon_zhuhudangan.png'),
-    menuKey: 'pageError',
-    group: 'zhda',
-    path: '/500'
+    title: '标签管理',
+    authKeys: ['menu_space_label'],
+    icon: require('@/assets/img/menu/icon_biaoqianguanli.png'),
+    menuKey: 'label',
+    group: 'kjgl',
+    path: '/label'
   }
 ];

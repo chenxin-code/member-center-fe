@@ -17,10 +17,10 @@
               </span>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <router-link :to="{ path: '/resident' }">个人中心</router-link>
+                  <router-link :to="{ path: '/portal' }">个人中心</router-link>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link :to="{ path: '/resident' }">返回首页</router-link>
+                  <router-link :to="{ path: '/portal' }">返回首页</router-link>
                 </a-menu-item>
                 <a-menu-item @click="handleLogout">
                   <span>退出登录</span>
@@ -58,7 +58,8 @@ export default {
   data() {
     return {
       collapsed: false,
-      promise: '',
+      // promise: '',
+      promise: true,
       userImage: defaultAvatar
     };
   },
@@ -97,12 +98,13 @@ export default {
     if (jsonAuthorities) {
       const authKeys = this.$route.meta.authKeys;
       if (authKeys != '' && !hasRangeAuthorityWithoutProject(authKeys)) {
-        this.promise = false;
+        // this.promise = false;
+        this.promise = true;
       } else {
         this.promise = true;
       }
     } else {
-      this.$router.push({ path: '/resident' });
+      this.$router.push({ path: '/portal' });
     }
   },
   methods: {
@@ -118,7 +120,7 @@ export default {
       // window.localStorage.setItem('SD_USERAVATAR', '');
       // window.localStorage.setItem('SD_USERNAME', '');
       // window.localStorage.setItem('login_refresh', 'false');
-      this.$router.push({ path: '/resident' });
+      this.$router.push({ path: '/portal' });
     }
   },
   watch: {
@@ -126,12 +128,13 @@ export default {
       const jsonAuthorities = window.localStorage.getItem('SD_AUTHORITIES');
       if (jsonAuthorities) {
         if (!hasRangeAuthorityWithoutProject(this.$route.meta.authKeys)) {
-          this.promise = false;
+          // this.promise = false;
+          this.promise = true;
         } else {
           this.promise = true;
         }
       } else {
-        this.$router.push({ path: '/resident' });
+        this.$router.push({ path: '/portal' });
       }
     }
   }

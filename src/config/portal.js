@@ -4,10 +4,10 @@ export default [
     label: '会员管理',
     children: [
       {
-        icon: 'zhuhudangan.png',
-        title: '会员中心',
-        route: `/resident`,
-        authKeys: ['app_owner_archive']
+        icon: ("kongjianguanli.png"),
+        title: "空间管理",
+        route: `/space`,
+        authKeys: ["app_space"],
       }
     ]
   }
