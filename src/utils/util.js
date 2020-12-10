@@ -127,7 +127,7 @@ export function getBase64Img(imgUrl, callback) {
  * 防抖
  */
 let debounceTimer = null;
-export function debounce(fn, delay = 100) {
+export function debounce(fn, delay = 300) {
   if (typeof fn !== 'function') {
     throw new Error('必须传入函数');
   }
