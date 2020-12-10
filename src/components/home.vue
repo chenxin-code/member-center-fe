@@ -48,7 +48,8 @@
 <script>
 import Menu from '@/components/menu'; //
 import Breadcrumb from '@/components/breadcrumb';
-import { hasRangeAuthorityWithoutProject } from '@/utils/authority';
+import hasRangeAuthorityWithoutProject from '@/utils/authority';
+console.log('hasRangeAuthorityWithoutProject :>> ', hasRangeAuthorityWithoutProject);
 import { mapGetters } from 'vuex';
 
 const defaultAvatar = require('@/assets/img/user/avatar.png');
