@@ -43,31 +43,19 @@ export default {
   data() {
     return {
       menus: [],
-      // openKeys: [this.$route.path.split("/")[2]],
-      openKeys: [this.$route.path.split('/')[2]],
+      openKeys: [this.$route.path.split('/')[2] ? this.$route.path.split('/')[2] : ''],
       rootPath: '',
       collapsed: false
     };
   },
-  watch: {
-    $route: 'setMenus',
-    menus: {
-      handler(newVal) {
-        console.log('menus :>> ', newVal);
-      },
-      immediate: true, //刷新加载 立马触发一次handler
-      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
-    }
-  },
   created() {
     this.setMenus();
-    console.log('this.$route :>> ', this.$route.path.split('/'));
-    console.log('openKeys :>> ', this.openKeys);
+    // console.log('this.$route :>> ', this.$route);
+    // console.log('this.$route.path.split("/") :>> ', this.$route.path.split('/'));
   },
   methods: {
     checkKeys(openKeys) {
       this.openKeys = openKeys;
-      // this.openKeys = openKeys;
       this.$forceUpdate();
       console.log(this.openKeys);
     },
@@ -76,6 +64,7 @@ export default {
       console.log(this.openKeys);
     },
     onClickMenu(path) {
+      console.log('onClickMenu path :>> ', path);
       this.openKeys = [''];
       this.$forceUpdate();
       this.$router.push({ path: path });
@@ -121,6 +110,23 @@ export default {
       }
       this.rootPath = pathname;
       this.menus = filteredMenus;
+    }
+  },
+  watch: {
+    $route: 'setMenus',
+    // menus: {
+    //   handler(newVal) {
+    //     console.log('menus :>> ', newVal);
+    //   },
+    //   immediate: true, //刷新加载 立马触发一次handler
+    //   deep: true // 可以深度检测到 ownerList 对象的属性值的变化
+    // },
+    openKeys: {
+      handler(newVal) {
+        console.log('openKeys newVal:>> ', newVal);
+      },
+      immediate: true,
+      deep: true
     }
   }
 };

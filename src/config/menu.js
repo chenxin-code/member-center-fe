@@ -1,5 +1,13 @@
 export default [
   {
+    title: '空间管理',
+    authKeys: ['menu_space'],
+    icon: require('@/assets/img/menu/icon_kongjianguanli.png'),
+    menuKey: 'space',
+    group: 'kjgl',
+    path: '/space'
+  },
+  {
     title: '项目管理',
     authKeys: ['menu_project'],
     icon: require('@/assets/img/menu/icon_xiangmuguanli.png'),
@@ -24,14 +32,6 @@ export default [
         path: '/project/second/projectInfo'
       }
     ]
-  },
-  {
-    title: '空间管理',
-    authKeys: ['menu_space'],
-    icon: require('@/assets/img/menu/icon_kongjianguanli.png'),
-    menuKey: 'space',
-    group: 'kjgl',
-    path: '/space'
   },
   {
     title: '标签管理',

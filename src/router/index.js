@@ -8,33 +8,33 @@ Vue.use(VueRouter);
 const Home = () => import('@/components/home');
 
 //登录
-// const Login = () => import('@/pages/login/login');
+const Login = () => import('@/pages/login/login');
 //portal
 const Portal = () => import('@/pages/portal/portal');
 
 //空间管理
 //1.0空间
-const Space = () => import ('../pages/space/space/space');
-const SpaceAdd = () => import ('../pages/space/space/addSpace');
-const SpaceEdit = () => import ('../pages/space/space/editSpace');
-const MainSpaceEdit = () => import ('../pages/space/space/editMainSpace');
+const Space = () => import('../pages/space/space/space');
+const SpaceAdd = () => import('../pages/space/space/addSpace');
+const SpaceEdit = () => import('../pages/space/space/editSpace');
+const MainSpaceEdit = () => import('../pages/space/space/editMainSpace');
 //2.0项目
-const Project = () => import ('../pages/space/project/project');
-const ProjectDetail = () => import ('../pages/space/project/detail');
-const ProjectInfo = () => import ('../pages/space/project/projectInfo');
-const ProjectInfoMation = () => import ('../pages/space/project/projectnformation');
+const Project = () => import('../pages/space/project/project');
+const ProjectDetail = () => import('../pages/space/project/detail');
+const ProjectInfo = () => import('../pages/space/project/projectInfo');
+const ProjectInfoMation = () => import('../pages/space/project/projectnformation');
 //3.0标签
-const Label = () => import ('../pages/space/label/label');
+const Label = () => import('../pages/space/label/label');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   menuKey: 'login',
-  //   meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
-  //   component: Login
-  // },
+  {
+    path: '/login',
+    name: 'login',
+    menuKey: 'login',
+    meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
+    component: Login
+  },
   {
     path: '/portal',
     name: 'portal',
@@ -53,53 +53,67 @@ const routes = [
       {
         path: '/space',
         name: 'space',
-        menuKey: "space",
-        meta: { menu: '/space', keepAlive: true, authKeys: ["menu_space"], bread: [{ path: '/space', name: '空间列表' }] },
-        component: Space,
+        menuKey: 'space',
+        meta: {
+          menu: '/space',
+          keepAlive: true,
+          authKeys: ['menu_space'],
+          bread: [{ path: '/space', name: '空间列表' }]
+        },
+        component: Space
       },
       {
         path: '/space/add',
         name: 'spaceAdd',
-        menuKey: "space",
+        menuKey: 'space',
         props: paramsStorage.setPropsStorage,
         meta: {
           menu: '/space',
-          authKeys: ["menu_space"],
-          bread: [{ path: '/space', name: '空间列表' }, { path: '/space/add', name: '添加空间' }]
+          authKeys: ['menu_space'],
+          bread: [
+            { path: '/space', name: '空间列表' },
+            { path: '/space/add', name: '添加空间' }
+          ]
         },
         component: SpaceAdd
       },
       {
         path: '/space/edit',
         name: 'spaceEdit',
-        menuKey: "space",
+        menuKey: 'space',
         props: paramsStorage.setPropsStorage,
         meta: {
           menu: '/space',
-          authKeys: ["menu_space"],
-          bread: [{ path: '/space', name: '空间列表' }, { path: '/space/edit', name: '编辑空间' }]
+          authKeys: ['menu_space'],
+          bread: [
+            { path: '/space', name: '空间列表' },
+            { path: '/space/edit', name: '编辑空间' }
+          ]
         },
         component: SpaceEdit
       },
       {
         path: '/space/mainEdit',
         name: 'mainSpaceEdit',
-        menuKey: "space",
+        menuKey: 'space',
         props: paramsStorage.setPropsStorage,
         meta: {
           menu: '/space',
-          authKeys: ["menu_space"],
-          bread: [{ path: '/space', name: '空间列表' }, { path: '/space/mainEdit', name: '编辑空间' }]
+          authKeys: ['menu_space'],
+          bread: [
+            { path: '/space', name: '空间列表' },
+            { path: '/space/mainEdit', name: '编辑空间' }
+          ]
         },
         component: MainSpaceEdit
       },
       {
         path: '/project/second/projectList',
         name: 'projectList',
-        menuKey: "projectList",
+        menuKey: 'projectList',
         meta: {
           menu: '/project/second/projectList',
-          authKeys: [""],
+          authKeys: [''],
           bread: [{ path: '/project/second/projectList', name: '项目列表' }],
           keepAlive: true
         },
@@ -109,23 +123,27 @@ const routes = [
         path: '/project/second/projectDetail',
         name: 'projectDetail',
         props: paramsStorage.setPropsStorage,
-        menuKey: "projectDetail",
+        menuKey: 'projectDetail',
         meta: {
-          menu: '/project/second/projectList', authKeys: [""],
-          bread: [{ path: '/project/second/projectList', name: '项目列表' }, {
-            path: '/project/second/projectDetail',
-            name: '项目详情'
-          }]
+          menu: '/project/second/projectList',
+          authKeys: [''],
+          bread: [
+            { path: '/project/second/projectList', name: '项目列表' },
+            {
+              path: '/project/second/projectDetail',
+              name: '项目详情'
+            }
+          ]
         },
         component: ProjectDetail
       },
       {
         path: '/project/second/projectInfo',
         name: 'projectInfo',
-        menuKey: "projectInfo",
+        menuKey: 'projectInfo',
         meta: {
           menu: '/project/second/projectInfo',
-          authKeys: [""],
+          authKeys: [''],
           bread: [{ path: '/project/second/projectInfo', name: '社区信息列表' }]
         },
         component: ProjectInfo
@@ -134,19 +152,22 @@ const routes = [
         path: '/project/projectnformation',
         name: 'projectnformation',
         props: paramsStorage.setPropsStorage,
-        menuKey: "projectInfo",
+        menuKey: 'projectInfo',
         meta: {
           menu: '/project/second/projectInfo',
-          authKeys: [""],
-          bread: [{ path: '/project/second/projectInfo', name: '社区信息列表' }, { path: '/project/projectnformation', name: '创建社区信息列表' }]
+          authKeys: [''],
+          bread: [
+            { path: '/project/second/projectInfo', name: '社区信息列表' },
+            { path: '/project/projectnformation', name: '创建社区信息列表' }
+          ]
         },
         component: ProjectInfoMation
       },
       {
         path: '/label',
         name: 'labels',
-        menuKey: "label",
-        meta: { menu: '/label', authKeys: ["menu_space_label"], bread: [{ path: '/label', name: '标签列表' }] },
+        menuKey: 'label',
+        meta: { menu: '/label', authKeys: ['menu_space_label'], bread: [{ path: '/label', name: '标签列表' }] },
         component: Label
       }
     ]
