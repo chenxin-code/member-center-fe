@@ -24,7 +24,8 @@ const ProjectDetail = () => import('../pages/space/project/detail');
 const ProjectInfo = () => import('../pages/space/project/projectInfo');
 const ProjectInfoMation = () => import('../pages/space/project/projectnformation');
 //3.0标签
-const Label = () => import('../pages/space/label/label');
+const Info = () => import('../pages/space/info/info');
+const Detail = () => import('../pages/space/info/detail');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
@@ -167,8 +168,26 @@ const routes = [
         path: '/info',
         name: 'info',
         menuKey: 'info',
-        meta: { menu: '/info', authKeys: [''], bread: [{ path: '/info', name: '会员信息' }] },
-        component: Label
+        meta: {
+          menu: '/info',
+          authKeys: [''],
+          bread: [{ path: '/info', name: '会员信息' }]
+        },
+        component: Info
+      },
+      {
+        path: '/info/detail',
+        name: 'detail',
+        menuKey: 'detail',
+        meta: {
+          menu: '/info',
+          authKeys: [''],
+          bread: [
+            { path: '/info', name: '会员信息' },
+            { path: '/info/detail', name: '会员详情' }
+          ]
+        },
+        component: Detail
       }
     ]
   },

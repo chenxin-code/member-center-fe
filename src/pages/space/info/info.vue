@@ -5,9 +5,6 @@
       <a-row style="padding:20px;height:100%;">
         <a-col flex:auto>
           <FormList ref="form" rowCol="3" :formList="formList" :onSubmit="onCheck" />
-          <a-button type="primary" html-type="submit" @click="onAdd">
-            +添加
-          </a-button>
           <!-- 表格 -->
           <a-table
             :columns="columns"
@@ -23,10 +20,9 @@
                 {{ tags.tag === 0 ? '默认' : '自定义' }}
               </span>
             </template>
-            <template slot="operation" slot-scope="operation" v-if="operation.tag === 1">
+            <template slot="operation" slot-scope="operation">
               <div class="editable-row-operations">
-                <a @click="onEdit(operation)">编辑</a>
-                <a @click="onDelet(operation)">删除</a>
+                <a @click="goDetail(operation)">查看</a>
               </div>
             </template>
           </a-table>
@@ -44,48 +40,6 @@
             :pageSizeOptions="['10', '20', '50', '100']"
             style="margin-top:30px;width:100%;text-align: right;"
           />
-          <a-modal v-model="visibleAdd" title="添加标签" @cancel="handleCancel">
-            <template slot="footer">
-              <a-button key="back" @click="handleCancel">
-                取消
-              </a-button>
-              <a-button key="submit" type="primary" :loading="loading" @click="handleOk_add">
-                确定
-              </a-button>
-            </template>
-            <a-form layout="inline">
-              <a-form-item label="标签名" :validate-status="validateStatus" :help="validateHelp">
-                <a-input
-                  v-model="addlabel"
-                  default-value=""
-                  style="width:195px;"
-                  @pressEnter="handleOk_add"
-                  @change="watchChange"
-                />
-              </a-form-item>
-            </a-form>
-          </a-modal>
-          <a-modal v-model="visibleEdit" title="编辑标签" on-ok="handleOk_edit" @cancel="handleCancel">
-            <template slot="footer">
-              <a-button key="back" @click="handleCancel">
-                取消
-              </a-button>
-              <a-button key="submit" type="primary" :loading="loading" @click="handleOk_edit">
-                确定
-              </a-button>
-            </template>
-            <a-form layout="inline">
-              <a-form-item label="标签名" :validate-status="validateStatus" :help="validateHelp">
-                <a-input
-                  v-model="labelname"
-                  default-value="labelname"
-                  style="width:195px;"
-                  @pressEnter="handleOk_edit"
-                  @change="watchChange"
-                />
-              </a-form-item>
-            </a-form>
-          </a-modal>
         </a-col>
       </a-row>
     </div>
@@ -146,6 +100,16 @@ export default {
           key: 'name'
         },
         {
+          title: '创建时间',
+          dataIndex: 'createTime',
+          key: 'createTime'
+        },
+        {
+          title: '更新时间',
+          dataIndex: 'updateTime',
+          key: 'updateTime'
+        },
+        {
           title: '类型',
           key: 'tag',
           scopedSlots: { customRender: 'tags' }
@@ -162,8 +126,6 @@ export default {
       labelId: '',
       addlabel: '',
       loading: false,
-      visibleEdit: false,
-      visibleAdd: false,
       tableLoading: true,
       validateStatus: '',
       validateHelp: '',
@@ -189,12 +151,6 @@ export default {
     this.getlabelList();
   },
   methods: {
-    // 下拉框
-    // handleSelectChange(value) {
-    //   this.tag = value;
-    //   this.current = 1;
-    //   // this.getlabelList();
-    // },
     watchChange(e) {
       const value = e.target.value;
       if (value.trim().length > 0) {
@@ -219,40 +175,20 @@ export default {
         this.getlabelList();
       });
     },
-    //添加
-    onAdd() {
-      // debounce(()=>{
-      this.visibleAdd = true;
-      this.addlabel = '';
-      // })
-    },
-    //编辑
-    onEdit(operation) {
-      // debounce(()=>{
-      // this.loading = false;
-      this.labelname = operation.name;
-      this.labelId = operation.id;
-      this.visibleEdit = true;
-      // })
-    },
-    //删除
-    onDelet(operation) {
-      // debounce(()=>{
-      this.labelId = operation.id;
-      this.$confirm({
-        title: '删除标签',
-        content: '是否删除该标签？',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk: () => {
-          this.deleLabel();
-        },
-        onCancel: () => {
-          console.log('Cancel');
-        }
+    //跳详情页
+    goDetail(operation) {
+      console.log('operation :>> ', operation);
+      debounce(() => {
+        this.$router.push({
+          name: 'detail',
+          params: {
+            project: {
+              name: operation.name,
+              id: operation.id
+            }
+          }
+        });
       });
-      // })
     },
     // 分页
     onShowSizeChange(current, pageSize) {
@@ -262,10 +198,12 @@ export default {
     },
     //获取列表
     getlabelList() {
-      const { tag, sealabelName } = this.$refs.form.getFieldsValue();
+      // const { tag, sealabelName } = this.$refs.form.getFieldsValue();
+      // console.log('tag :>> ', tag);
+      // console.log('sealabelName :>> ', sealabelName);
       const para = {
-        tag: tag,
-        name: sealabelName ? sealabelName.trim() : '',
+        // tag: tag,
+        // name: sealabelName ? sealabelName.trim() : '',
         pageIndex: this.current,
         pageSize: this.pageSize
       };
@@ -273,113 +211,15 @@ export default {
       api
         .getLabel(para)
         .then(res => {
-          this.data = res.data.records;
-          this.total = res.data.total;
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
-    },
-    //删除标签
-    deleLabel() {
-      // debounce(()=>{
-      const para = {
-        id: this.labelId
-      };
-      this.tableLoading = true;
-      api
-        .deleteLabel(para)
-        .then(res => {
+          console.log('res :>> ', res);
           if (res.code === 200) {
-            if (this.data.length === 1) {
-              this.current--;
-              this.getlabelList();
-            } else {
-              this.getlabelList();
-            }
-            // this.data = this.data.filter(item => item.id !== this.labelId);
+            this.data = res.data.records;
+            this.total = res.data.total;
           }
         })
         .finally(() => {
           this.tableLoading = false;
         });
-      // })
-    },
-    //编辑标签
-    handleOk_edit() {
-      // debounce(()=>{
-      if (this.labelname.trim() === '') {
-        this.validateStatus = 'error';
-        this.validateHelp = '标签名不能为空';
-      } else if (this.labelname.length > 20) {
-        this.validateStatus = 'error';
-        this.validateHelp = '标签名最长20字';
-      } else {
-        const para = {
-          id: this.labelId,
-          name: this.labelname.trim()
-        };
-        this.loading = true;
-        api
-          .updateLabel(para)
-          .then(res => {
-            if (res.code === 200) {
-              this.labelname = '';
-              this.labelId = '';
-              this.visibleEdit = false;
-              this.getlabelList();
-            } else {
-              this.validateStatus = 'error';
-              this.validateHelp = res.message;
-              message.destroy();
-            }
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      }
-      // })
-    },
-    //添加标签
-    handleOk_add() {
-      debounce(() => {
-        if (this.addlabel.trim() === '') {
-          this.validateStatus = 'error';
-          this.validateHelp = '标签名不能为空';
-        } else if (this.addlabel.length > 20) {
-          this.validateStatus = 'error';
-          this.validateHelp = '标签名最长20字';
-        } else {
-          this.current = 1;
-          const para = {
-            name: this.addlabel.trim(),
-            tag: ''
-          };
-          api
-            .addLabel(para)
-            .then(res => {
-              if (res.code === 200) {
-                this.addlabel = '';
-                this.visibleAdd = false;
-                this.getlabelList();
-              } else if (res.code !== 200) {
-                this.validateStatus = 'error';
-                this.validateHelp = res.message;
-                message.destroy();
-              }
-            })
-            .finally(() => {
-              this.tableLoading = false;
-            });
-        }
-      });
-    },
-    handleCancel() {
-      this.loading = false;
-      this.validateStatus = '';
-      this.validateHelp = '';
-      this.visibleEdit = false;
-      this.visibleAdd = false;
     }
   }
 };

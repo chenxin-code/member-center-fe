@@ -45,9 +45,9 @@ const FormList = {
   data() {
     return {
       form: null
-    }
+    };
   },
-  created: function () {
+  created: function() {
     this.form = this.$form.createForm(this, { name: 'formList' });
     this.setFieldsValue = this.form.setFieldsValue;
     this.getFieldsValue = this.form.getFieldsValue;
@@ -59,34 +59,43 @@ const FormList = {
   },
   methods: {
     generateItem(attrs) {
-      const { type, name, rules, onChange = defaultFn, buttonName, buttonType = "primary", htmlType = "submit", ...others } = attrs;
+      const {
+        type,
+        name,
+        rules,
+        onChange = defaultFn,
+        buttonName,
+        buttonType = 'primary',
+        htmlType = 'submit',
+        ...others
+      } = attrs;
       switch (type) {
         case 'input':
-          return (
-            <a-input v-decorator={ [name, { rules: rules }] } { ...others }  placeholder={ attrs.placeholder }/>
-          );
+          return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
         case 'select':
           return (
             <a-select
-              v-decorator={ [name, { rules: rules }] }
-              placeholder={ attrs.placeholder }
-              onChange={ onChange }
-              { ...others }
-            >
-              {
-                (others.selectOptions || []).map((option) =>
-                  (<a-select-option key={ option.id } value={ option.id } data-title={ option.name }>
-                    { option.name }
-                  </a-select-option>))
-              }
+              v-decorator={[name, { rules: rules }]}
+              placeholder={attrs.placeholder}
+              onChange={onChange}
+              {...others}>
+              {(others.selectOptions || []).map(option => (
+                <a-select-option key={option.id} value={option.id} data-title={option.name}>
+                  {option.name}
+                </a-select-option>
+              ))}
             </a-select>
           );
         case 'datePicker':
-          return (<a-date-picker v-decorator={ [name, { rules: rules }] }  { ...others } />);
+          return <a-date-picker v-decorator={[name, { rules: rules }]} {...others} />;
         case 'rangePicker':
-          return (<a-range-picker v-decorator={ [name, { rules: rules }] }  { ...others } />);
-        case "button":
-          return (<a-button type={ buttonType } html-type={ htmlType } { ...others }>{ buttonName }</a-button>);
+          return <a-range-picker v-decorator={[name, { rules: rules }]} {...others} />;
+        case 'button':
+          return (
+            <a-button type={buttonType} html-type={htmlType} {...others}>
+              {buttonName}
+            </a-button>
+          );
         default:
           return null;
       }
@@ -99,32 +108,23 @@ const FormList = {
   render() {
     return (
       <a-form
-        form={ this.form }
-        autoComplete= "off"
-        labelCol={ { span: 6 } }
-        wrapperCol={ { span: 18 } }
-        { ...this.formSetting }
-        onSubmit={ this.handleSubmit }
-      >
-        <a-row gutter={ 24 }>
-          {
-            this.formList.map((item, index) => {
-              const { align, labelCol, wrapperCol, ...others } = item;
-              return (
-                <a-col span={ this.formList.length % 3 === 1 ? 6 : this.rowSpan }>
-                  <a-form-item
-                    key={ index }
-                    label={ item.label }
-                    align={ align }
-                    labelCol={ labelCol }
-                    wrapperCol={ wrapperCol }
-                  >
-                    { this.generateItem(others) }
-                  </a-form-item>
-                </a-col>
-              )
-            })
-          }
+        form={this.form}
+        autoComplete='off'
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
+        {...this.formSetting}
+        onSubmit={this.handleSubmit}>
+        <a-row gutter={24}>
+          {this.formList.map((item, index) => {
+            const { align, labelCol, wrapperCol, ...others } = item;
+            return (
+              <a-col span={this.formList.length % 3 === 1 ? 6 : this.rowSpan}>
+                <a-form-item key={index} label={item.label} align={align} labelCol={labelCol} wrapperCol={wrapperCol}>
+                  {this.generateItem(others)}
+                </a-form-item>
+              </a-col>
+            );
+          })}
         </a-row>
       </a-form>
     );
