@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const buildDate = JSON.stringify(new Date().toLocaleString());
-const createThemeColorReplacerPlugin = require('./config/plugin.config');//颜色主题
+const createThemeColorReplacerPlugin = require('./src/config/plugin.config'); //颜色主题
 const CompressionWebpackPlugin = require('compression-webpack-plugin'); // 开启gzip压缩， 按需引用
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i; // 开启gzip压缩， 按需写入
 
@@ -129,8 +129,8 @@ const vueConfig = {
     proxy: {
       '/times/': {
         target: 'http://8.129.225.124:16666/', //后端ip地址及端口
-        ws: true, //是否跨域
-        changeOrigin: true
+        ws: true, //是否支持WebSocket
+        changeOrigin: true //是否开启跨域
       },
       //oss是图片预览的时候才使用
       '/oss-backend/': {

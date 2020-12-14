@@ -44,6 +44,7 @@ const routes = [
   },
   {
     path: '/',
+    // redirect: '/login',
     redirect: '/portal',
     name: 'home',
     menuKey: 'home',
