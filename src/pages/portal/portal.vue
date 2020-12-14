@@ -110,6 +110,7 @@ export default {
       const that = this;
       api.getPermission().then(res => {
         if (res.code === 200) {
+          console.log('res.data.code :>> ', res.data.code);
           this.url = res.data.url;
           window.localStorage.setItem('SD_AUTHORITIES', JSON.stringify(res.data.code));
           PORTAL_MENUS.map(menuBlock => {
@@ -134,12 +135,12 @@ export default {
       this.dropDown = !this.dropDown;
     },
     handleLogout() {
-      window.localStorage.setItem('SD_ACCESS_TOKEN', '');
-      window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
-      window.localStorage.setItem('SD_AUTHORITIES', '');
-      window.localStorage.setItem('SD_USERAVATAR', '');
-      window.localStorage.setItem('SD_USERNAME', '');
-      this.$router.push({ path: '/login' });
+      // window.localStorage.setItem('SD_ACCESS_TOKEN', '');
+      // window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
+      // window.localStorage.setItem('SD_AUTHORITIES', '');
+      // window.localStorage.setItem('SD_USERAVATAR', '');
+      // window.localStorage.setItem('SD_USERNAME', '');
+      this.$router.push({ path: '/' });
     },
     turn_route(route) {
       this.$router.push({ path: route });

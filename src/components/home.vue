@@ -2,7 +2,7 @@
   <div id="home">
     <a-layout class="container">
       <a-layout-sider v-model="collapsed" collapsible>
-        <div class="logo"></div>
+        <div class="logo" @click="handleLogout"></div>
         <Menu />
       </a-layout-sider>
       <a-layout>

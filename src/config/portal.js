@@ -6,8 +6,8 @@ export default [
       {
         icon: require('@/assets/img/portal/kongjianguanli.png'),
         title: "空间管理",
-        route: `/space`,
-        // route: `/login`,
+        // route: `/space`,
+        route: `/info`,
         authKeys: ["app_space"],
       }
     ]

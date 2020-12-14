@@ -164,10 +164,10 @@ const routes = [
         component: ProjectInfoMation
       },
       {
-        path: '/label',
-        name: 'labels',
-        menuKey: 'label',
-        meta: { menu: '/label', authKeys: ['menu_space_label'], bread: [{ path: '/label', name: '标签列表' }] },
+        path: '/info',
+        name: 'info',
+        menuKey: 'info',
+        meta: { menu: '/info', authKeys: [''], bread: [{ path: '/info', name: '会员信息' }] },
         component: Label
       }
     ]

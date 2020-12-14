@@ -65,8 +65,10 @@ export default {
     },
     onClickMenu(path) {
       console.log('onClickMenu path :>> ', path);
-      this.openKeys = [''];
-      this.$forceUpdate();
+      this.openKeys.splice(0, this.openKeys.length);
+      this.openKeys.push('');
+      // this.openKeys = [''];
+      // this.$forceUpdate();
       this.$router.push({ path: path });
       console.log(this.openKeys);
     },
