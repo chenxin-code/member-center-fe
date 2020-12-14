@@ -22,27 +22,34 @@
             <p>请使用邻里家APP扫一扫</p>
           </div>
         </div>
-        <a-button v-if="urls.previewQRCode === 'app_notice'" style="margin-left: auto" v-on:mouseover="preview" v-on:mouseout="hidePreview">预览</a-button>
+        <a-button
+          v-if="urls.previewQRCode === 'app_notice'"
+          style="margin-left: auto"
+          v-on:mouseover="preview"
+          v-on:mouseout="hidePreview"
+        >
+          预览
+        </a-button>
       </div>
     </div>
 
     <span style="color: #c3c3c3">支持在内容中插入链接，填写链接结束时请以空格结尾</span>
     <div>
       <div v-for="(item, index) in list" :key="index" style="display: flex;margin-bottom: 4px;">
-        <div v-if="item.type==='pic'" style="width: 70%">
-          <img :src="item.content" style="width: 100%"/>
+        <div v-if="item.type === 'pic'" style="width: 70%">
+          <img :src="item.content" style="width: 100%" />
         </div>
         <div v-else style="width: 70%">
-          <a-textarea v-model="item.content" :auto-size="{ minRows: 6, maxRows: 12}" @change="text" :maxLength="500"/>
+          <a-textarea v-model="item.content" :auto-size="{ minRows: 6, maxRows: 12 }" @change="text" :maxLength="500" />
         </div>
         <div class="operate-wrapper" style="width: 20%; margin-left: auto;">
-          <a-button :class="{'hidden': index === 0}" type="link" @click="move(index, index - 1)">
+          <a-button :class="{ hidden: index === 0 }" type="link" @click="move(index, index - 1)">
             上移
           </a-button>
-          <a-button :class="{'hidden': index === list.length - 1}" type="link" @click="move(index, index + 1)">
+          <a-button :class="{ hidden: index === list.length - 1 }" type="link" @click="move(index, index + 1)">
             下移
           </a-button>
-          <a-button type="link" @click="deleteItem(index,item)">
+          <a-button type="link" @click="deleteItem(index, item)">
             删除
           </a-button>
         </div>
@@ -54,10 +61,10 @@
 <script>
 import api from '@/api';
 import { debounce } from '@/utils/util';
-import QRCode from 'qrcodejs2'
+import QRCode from 'qrcodejs2';
 
 export default {
-  name: "richTextLike",
+  name: 'richTextLike',
   props: ['value', 'urls'],
   data() {
     return {
@@ -66,15 +73,13 @@ export default {
       showQR: false,
       qrCodeLoading: false,
       picUploading: false,
-      qrId: "",
-      picList: [], // 目的是再次选择文件时不保留旧数据
+      qrId: '',
+      picList: [] // 目的是再次选择文件时不保留旧数据
     };
   },
-  created() {
-
-  },
+  created() {},
   watch: {
-    value: function (val) {
+    value: function(val) {
       try {
         if (typeof val === 'string') {
           this.list = JSON.parse(val);
@@ -89,25 +94,25 @@ export default {
     addPic({ fileList = [] } = {}) {
       debounce(() => {
         const pic = [];
-        this.list.forEach((item)=>{
-          if (item.type === "pic") {
-            pic.push(item)
+        this.list.forEach(item => {
+          if (item.type === 'pic') {
+            pic.push(item);
           }
         });
         console.log(pic.length + fileList.length);
-        if ( pic.length + fileList.length > 9) {
+        if (pic.length + fileList.length > 9) {
           this.$message.error('图片最多9张');
-        }else{
+        } else {
           const img = [];
           if (fileList.length > 3) {
             this.$message.error('每次最多能选三张');
           } else {
-            fileList.forEach((item)=>{
+            fileList.forEach(item => {
               const imgSize = item.size / 1024 / 1024 < 5;
               const imgType = item.type === 'image/jpeg' || item.type === 'image/png';
               if (!imgSize) {
                 this.$message.error('图片过大，请重新上传');
-              } else if ( imgSize && imgType){
+              } else if (imgSize && imgType) {
                 img.push(item);
               }
             });
@@ -116,19 +121,21 @@ export default {
             img.forEach((file, index) => {
               formData.append('file' + index, file.originFileObj);
             });
-            formData.append('programCode',this.urls.previewQRCode );
-            api[this.urls.picUpload](formData).then(res => {
-              if (res.code === 200) {
-                (res.data || []).forEach(url => {
-                  this.$data.list.push({ type: 'pic', content: url });
-                });
-                this.triggerChange(this.list);
-                // 清空旧数据
-                this.picList = [];
-              }
-            }).finally(() => {
-              this.picUploading = false;
-            });
+            formData.append('programCode', this.urls.previewQRCode);
+            api[this.urls.picUpload](formData)
+              .then(res => {
+                if (res.code === 200) {
+                  (res.data || []).forEach(url => {
+                    this.$data.list.push({ type: 'pic', content: url });
+                  });
+                  this.triggerChange(this.list);
+                  // 清空旧数据
+                  this.picList = [];
+                }
+              })
+              .finally(() => {
+                this.picUploading = false;
+              });
           }
         }
       });
@@ -138,9 +145,9 @@ export default {
     },
     addText() {
       const text = [];
-      this.list.forEach((item)=>{
-        if (item.type === "text") {
-          text.push(item)
+      this.list.forEach(item => {
+        if (item.type === 'text') {
+          text.push(item);
         }
       });
       console.log(text);
@@ -157,21 +164,24 @@ export default {
       this.list[oppIndex] = temp;
       this.triggerChange(this.list);
     },
-    deleteItem(index,item) {
-      if(item.type === "pic") {
+    deleteItem(index, item) {
+      if (item.type === 'pic') {
         const para = {
           filePath: item.content,
           type: 1
         };
         this.picUploading = true;
-        api.deleteImage(para).then(res => {
-          if (res.code === 200) {
-            this.list.splice(index, 1);
-            this.triggerChange(this.list);
-          }
-        }).finally(() => {
-          this.picUploading = false;
-        });
+        api
+          .deleteImage(para)
+          .then(res => {
+            if (res.code === 200) {
+              this.list.splice(index, 1);
+              this.triggerChange(this.list);
+            }
+          })
+          .finally(() => {
+            this.picUploading = false;
+          });
       } else {
         this.list.splice(index, 1);
         this.triggerChange(this.list);
@@ -186,34 +196,37 @@ export default {
     },
     toQrcode(res) {
       const para = {
-        qrCodeInfo: JSON.stringify({type:"microapp",uri:"com.times.microapp.AppbNotice",path:"/previewDetail?id=" + res})
-      }
-      api.qrcodeInsert(para).then(res => {
-        if (res.code === 200) {
-          this.qrId = "msg://" + res.data;
-          this.$refs.qrcode.innerHTML = '';
-          this.qrcode = new QRCode(this.$refs.qrcode, {
-            width: 200,  // 设置宽度
-            height: 200, // 设置高度
-            text: this.qrId,
-          })
-        }
-      }).finally(() => {
-      });
-
-
+        qrCodeInfo: JSON.stringify({
+          type: 'microapp',
+          uri: 'com.times.microapp.AppbNotice',
+          path: '/previewDetail?id=' + res
+        })
+      };
+      api
+        .qrcodeInsert(para)
+        .then(res => {
+          if (res.code === 200) {
+            this.qrId = 'msg://' + res.data;
+            this.$refs.qrcode.innerHTML = '';
+            this.qrcode = new QRCode(this.$refs.qrcode, {
+              width: 200, // 设置宽度
+              height: 200, // 设置高度
+              text: this.qrId
+            });
+          }
+        })
+        .finally(() => {});
     },
     preview() {
       this.showQR = true;
       this.qrCodeLoading = true;
 
-        if(this.urls.previewQRCode === "app_notice") {
-          // this.addPreviewNotice();
-          this.$emit('addPreviewNotice', this.list);
-          // this.$parent.addPreviewNotice();
-          // debugger
-
-        }
+      if (this.urls.previewQRCode === 'app_notice') {
+        // this.addPreviewNotice();
+        this.$emit('addPreviewNotice', this.list);
+        // this.$parent.addPreviewNotice();
+        // debugger
+      }
 
       //   api[this.urls.previewQRCode]().then(res => {
       //     if (res.code !== 200) {
@@ -225,10 +238,9 @@ export default {
       //     this.qrCodeLoading = false;
       //   });
       // }
-
-    },
+    }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -249,11 +261,10 @@ export default {
   left: -5px;
   z-index: 0;
   top: 14px;
-
 }
-.qr-preview{
+.qr-preview {
   position: relative;
-  .qrcode-content{
+  .qrcode-content {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -262,7 +273,7 @@ export default {
     left: 0;
     padding: 10px 14px;
   }
-  .qrcode{
+  .qrcode {
     width: 228px;
     height: 250px;
 
@@ -274,9 +285,8 @@ export default {
     text-align: center;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
   }
-  .text{
-
-  }
+  // .text {
+  // }
 }
 .operate-wrapper {
   margin-left: auto;
@@ -292,5 +302,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const buildDate = JSON.stringify(new Date().toLocaleString());
-const createThemeColorReplacerPlugin = require('./src/config/plugin.config'); //颜色主题
+const createThemeColorReplacerPlugin = require('./config/theme.plugin'); //颜色主题
 const CompressionWebpackPlugin = require('compression-webpack-plugin'); // 开启gzip压缩， 按需引用
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i; // 开启gzip压缩， 按需写入
 

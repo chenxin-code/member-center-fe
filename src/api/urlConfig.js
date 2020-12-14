@@ -1,4 +1,4 @@
-export let option = {
+export const option = {
   login: '/times/auth', // 登录
   logout: '/times/api-demo/logout', //退出
   pub: '/times/pub-center', //数据字典

@@ -1,6 +1,6 @@
 <template>
   <a-menu theme="dark" mode="inline" :openKeys="openKeys" :selected-keys="[$route.meta.menu]" @openChange="checkKeys">
-    <template v-for="(menu, menuIndex) in menus">
+    <template v-for="menu in menus">
       <template v-if="menu.children && hasRangeAuthorityWithoutProject(menu.authKeys)">
         <a-sub-menu :key="menu.name">
           <span slot="title">

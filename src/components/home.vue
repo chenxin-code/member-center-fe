@@ -158,7 +158,6 @@ export default {
     }
 
     .logout-btn {
-      display: inline-block;
       float: right;
       font-family: PingFangSC-Regular;
       font-size: 12px;
