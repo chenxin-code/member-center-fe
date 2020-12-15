@@ -72,21 +72,16 @@ export default {
       return hasRangeAuthorityWithoutProject(authKeys);
     },
     setMenus() {
-      console.log('0000', this.$route)
       const pathname = this.$route.path;
-      console.log('----', pathname)
       const matchedMenu = MENU_ROUTES.find(x => x.path === pathname) || { group: '' };
-      console.log('1111', matchedMenu)
       let filteredMenus = [];
       const groupMenus = MENU_ROUTES.filter(x => x.group === matchedMenu.group);
-      console.log('22222', groupMenus)
 
       if (groupMenus.length > 0) {
         filteredMenus = groupMenus;
       } else {
         if (pathname.split('/').length > 0) {
           const pathParams = pathname.split('/');
-          console.log(MENU_ROUTES);
           const newMatchedMenu = MENU_ROUTES.find(x =>
             x.hasChild
               ? x.hasChild === (pathParams[1] === 'advertise' ? pathParams[1] : pathParams[1])
@@ -103,7 +98,6 @@ export default {
           // const newMatchedMenu = MENU_ROUTES.find(x =>
           // x.path ===
           //   ("/" + ((pathParams[1] === "user" || pathParams[1] === "advertise") ? pathParams[1] + "/" + pathParams[2] : pathParams[1])));
-          console.log(newMatchedMenu);
           if (newMatchedMenu) {
             const newGroupMenus = MENU_ROUTES.filter(x => x.group === newMatchedMenu.group);
             filteredMenus = newGroupMenus || [];

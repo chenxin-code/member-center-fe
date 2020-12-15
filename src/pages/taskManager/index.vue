@@ -14,11 +14,25 @@
                         :columns="columns"
                         :data-source="dataList"
                         :pagination="false"
+                        :loading="tableLoading"
                     >
                         <span slot="action" slot-scope="record">
                             <a @click="onCheck(text, record)">查看</a>
                         </span>
                     </a-table>
+                    <a-pagination
+                        :total="total"
+                        :show-total="total => `共 ${total} 条`"
+                        show-quick-jumper
+                        show-size-changer
+                        v-model="current"
+                        :default-current="current"
+                        :page-size.sync="pageSize"
+                        :pageSizeOptions="['10','20','50','100']"
+                        @change="onShowSizeChange"
+                        @showSizeChange="onShowSizeChange"
+                        style="margin-top:30px;width:100%;text-align: right;"
+                    />
                 </a-col>
             </a-row>
         </div>
@@ -27,10 +41,15 @@
 
 <script>
 import FilterForm from '@/components/FormList/index.jsx'
+import api from "@/api";
 export default {
     name: "task-manager",
     data() {
         return {
+            pageSize: 10,
+            current: 1,
+            total: null,
+            tableLoading: false,
             formList: [
                 {
                     label: "任务名称",
@@ -50,44 +69,40 @@ export default {
             ],
             columns: [
                 {
-                    dataIndex: 'uuid',
-                    key: 'uuid',
-                    title: 'UUID',
+                    dataIndex: 'id',
+                    key: 'id',
+                    title: '任务key',
                 },
                 {
-                    title: '姓名',
-                    key: 'name',
-                    dataIndex: 'name'
+                    title: '任务名称',
+                    key: 'taskName',
+                    dataIndex: 'taskName'
                 },
                 {
-                    title: '手机号',
-                    key: 'phoneNum',
-                    dataIndex: 'phoneNum'
+                    title: '任务有效期(天)',
+                    key: 'taskTime',
+                    dataIndex: 'taskTime'
                 },
                 {
-                    title: '性别',
-                    key: 'gender',
-                    dataIndex: 'gender'
+                    title: '是否周期性',
+                    key: 'isPeriodic',
+                    dataIndex: 'isPeriodic',
+                    customRender: (text) => text === 1 ? '是' : '否'
                 },
                 {
-                    title: '创建来源',
-                    key: 'source',
-                    dataIndex: 'source'
+                    title: '对应行为',
+                    key: 'behaviourId',
+                    dataIndex: 'behaviourId'
                 },
                 {
-                    title: '加入时间',
-                    key: 'joinTime',
-                    dataIndex: 'joinTime'
+                    title: '任务来源',
+                    key: 'sourceName',
+                    dataIndex: 'sourceName'
                 },
                 {
-                    title: '邦豆值',
-                    key: 'money',
-                    dataIndex: 'money'
-                },
-                {
-                    title: '时代邻里会员卡等级',
-                    key: 'vip',
-                    dataIndex: 'vip'
+                    title: '创建时间',
+                    key: 'createTime',
+                    dataIndex: 'createTime'
                 },
                 {
                     title: '操作',
@@ -95,27 +110,39 @@ export default {
                     scopedSlots: { customRender: 'action' },
                 }
             ],
-            dataList: [
-                {
-                    key: '1',
-                    uuid: '00001212122',
-                    name: '111',
-                    phoneNum: '110',
-                    gender: 'man',
-                    source: 'test',
-                    joinTime: 'today',
-                    money: '100',
-                    vip: '1',
-                }
-            ]
+            dataList: []
         }
     },
     components: {
       FilterForm
     },
+    created () {
+        this.getTaskList()
+    },
     methods: {
         onCheck(record) {
             console.log(record)
+        },
+
+        onShowSizeChange(current, pageSize) {
+            this.current = current;
+            this.pageSize = pageSize;
+            this.getTaskList()
+        },
+
+        getTaskList() {
+            this.tableLoading = true;
+            let args = {
+                pageIndex: this.current,
+                pageSize: this.pageSize
+            }
+            api.getTaskList(args)
+            .then( res => {
+                this.tableLoading = false;
+                this.dataList = res.data.records;
+                this.total = res.data.total;
+            })
+            .finally( () => this.tableLoading = false)
         }
     }
 }
