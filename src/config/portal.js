@@ -5,10 +5,9 @@ export default [
     children: [
       {
         icon: require('@/assets/img/portal/kongjianguanli.png'),
-        title: "空间管理",
-        // route: `/space`,
-        route: `/info`,
-        authKeys: ["app_space"],
+        title: "会员管理",
+        route: `/memberInfo`,
+        authKeys: [""],
       }
     ]
   }

@@ -5,7 +5,10 @@ export const option = {
 
   space: '/times/space-center/space', //空间管理模块
   label: '/times/space-center/space/dir', //标签管理
-  dictionary:'/times/pub-center/dictionary',//获取子行政列表
+  dictionary: '/times/pub-center/dictionary', //获取子行政列表
+  micro: '/times/micro-app-service', //微应用管理  版本管理
+  member: '/times/member-center/member',
+  client: '/times/member-center/client'
 };
 
 // 请求地址
@@ -49,4 +52,22 @@ export default {
   PROJECT_INFO_LIST: option.space + '/api/v1/community-project/queryProjects', //小区名称列表
   PROJECT_INFO_UPDATE: option.space + '/api/v1/community-project/updateCommunityProject', //修改社区信息
   PROJECT_INFO_STATUS: option.space + '/api/v1/community-project/usingAndForbiddenCProject', //是否启用禁用
+
+  MICRO_APPLICATION: option.micro + '/api/program/v1/page', //微应用列表
+  MICRO_APPLICATION_DETAIL: option.micro + '/api/program/v1/detail', //微应用详情
+  MICRO_APPLICATION_VERSION: option.micro + '/api/program_version/v1/list', //微应用版本列表
+  MICRO_VERSION_RELEASE: option.micro + '/api/program_version/v1/publish', //微应用版本发布
+  MICRO_ALL_PROJECT: option.micro + '/api/program/v1/project/list', //全部项目
+  RESOURCE_PACKAGE: option.micro + '/api/resource/v1/list', //资源包列表
+  RESOURCE_PACKAGE_NO_PAGE: option.micro + '/api/resource/v1/list_of_program', //资源包列表不分页
+  RESOURCE_PACKAGE_ADD: option.micro + '/api/resource/v1/create', //创建资源包
+  MICRO_ALL: option.micro + '/api/program/v1/system/program/list', //全部微应用
+  VERSION_ALL: option.micro + '/api/app_version/v1/app/list', //APP版本列表不分页
+  PLOT_LIST: option.micro + '/api/program/v1/project_page', //小区分布列表
+  VERSION_ADD: option.micro + '/api/app_version/v1/publish', // APP版本发布
+  VERSION: option.micro + '/api/app_version/v1/list', // APP版本列表
+
+  //会员中心
+  MEMBER_LIST: option.member + '/api/v1/member/list',
+  CLIENT_LIST: option.client + '/api/v1/list'
 };

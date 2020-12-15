@@ -12,20 +12,9 @@ const Login = () => import('@/pages/login/login');
 //portal
 const Portal = () => import('@/pages/portal/portal');
 
-//空间管理
-//1.0空间
-const Space = () => import('../pages/space/space/space');
-const SpaceAdd = () => import('../pages/space/space/addSpace');
-const SpaceEdit = () => import('../pages/space/space/editSpace');
-const MainSpaceEdit = () => import('../pages/space/space/editMainSpace');
-//2.0项目
-const Project = () => import('../pages/space/project/project');
-const ProjectDetail = () => import('../pages/space/project/detail');
-const ProjectInfo = () => import('../pages/space/project/projectInfo');
-const ProjectInfoMation = () => import('../pages/space/project/projectnformation');
-//3.0标签
-const Info = () => import('../pages/space/info/info');
-const Detail = () => import('../pages/space/info/detail');
+//会员信息
+const MemberInfo = () => import('../pages/member/info/list');
+const MemberInfoDetail = () => import('../pages/member/info/detail');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
@@ -45,149 +34,36 @@ const routes = [
   },
   {
     path: '/',
-    // redirect: '/login',
-    redirect: '/portal',
+    // redirect: '/portal',
+    redirect: '/memberInfo',
     name: 'home',
     menuKey: 'home',
     component: Home,
     children: [
       {
-        path: '/space',
-        name: 'space',
-        menuKey: 'space',
+        path: '/memberInfo',
+        name: 'memberInfo',
+        menuKey: 'memberInfo',
         meta: {
-          menu: '/space',
-          keepAlive: true,
-          authKeys: ['menu_space'],
-          bread: [{ path: '/space', name: '空间列表' }]
-        },
-        component: Space
-      },
-      {
-        path: '/space/add',
-        name: 'spaceAdd',
-        menuKey: 'space',
-        props: paramsStorage.setPropsStorage,
-        meta: {
-          menu: '/space',
-          authKeys: ['menu_space'],
-          bread: [
-            { path: '/space', name: '空间列表' },
-            { path: '/space/add', name: '添加空间' }
-          ]
-        },
-        component: SpaceAdd
-      },
-      {
-        path: '/space/edit',
-        name: 'spaceEdit',
-        menuKey: 'space',
-        props: paramsStorage.setPropsStorage,
-        meta: {
-          menu: '/space',
-          authKeys: ['menu_space'],
-          bread: [
-            { path: '/space', name: '空间列表' },
-            { path: '/space/edit', name: '编辑空间' }
-          ]
-        },
-        component: SpaceEdit
-      },
-      {
-        path: '/space/mainEdit',
-        name: 'mainSpaceEdit',
-        menuKey: 'space',
-        props: paramsStorage.setPropsStorage,
-        meta: {
-          menu: '/space',
-          authKeys: ['menu_space'],
-          bread: [
-            { path: '/space', name: '空间列表' },
-            { path: '/space/mainEdit', name: '编辑空间' }
-          ]
-        },
-        component: MainSpaceEdit
-      },
-      {
-        path: '/project/second/projectList',
-        name: 'projectList',
-        menuKey: 'projectList',
-        meta: {
-          menu: '/project/second/projectList',
+          menu: '/memberInfo',
           authKeys: [''],
-          bread: [{ path: '/project/second/projectList', name: '项目列表' }],
-          keepAlive: true
+          bread: [{ path: '/memberInfo', name: '会员信息' }]
         },
-        component: Project
+        component: MemberInfo
       },
       {
-        path: '/project/second/projectDetail',
-        name: 'projectDetail',
-        props: paramsStorage.setPropsStorage,
-        menuKey: 'projectDetail',
+        path: '/memberInfo/detail',
+        name: 'memberInfoDetail',
+        menuKey: 'memberInfo',
         meta: {
-          menu: '/project/second/projectList',
+          menu: '/memberInfo',
           authKeys: [''],
           bread: [
-            { path: '/project/second/projectList', name: '项目列表' },
-            {
-              path: '/project/second/projectDetail',
-              name: '项目详情'
-            }
+            { path: '/memberInfo', name: '会员信息' },
+            { path: '/memberInfo/detail', name: '会员详情' }
           ]
         },
-        component: ProjectDetail
-      },
-      {
-        path: '/project/second/projectInfo',
-        name: 'projectInfo',
-        menuKey: 'projectInfo',
-        meta: {
-          menu: '/project/second/projectInfo',
-          authKeys: [''],
-          bread: [{ path: '/project/second/projectInfo', name: '社区信息列表' }]
-        },
-        component: ProjectInfo
-      },
-      {
-        path: '/project/projectnformation',
-        name: 'projectnformation',
-        props: paramsStorage.setPropsStorage,
-        menuKey: 'projectInfo',
-        meta: {
-          menu: '/project/second/projectInfo',
-          authKeys: [''],
-          bread: [
-            { path: '/project/second/projectInfo', name: '社区信息列表' },
-            { path: '/project/projectnformation', name: '创建社区信息列表' }
-          ]
-        },
-        component: ProjectInfoMation
-      },
-      {
-        path: '/info',
-        name: 'info',
-        menuKey: 'info',
-        meta: {
-          menu: '/info',
-          authKeys: [''],
-          bread: [{ path: '/info', name: '会员信息' }]
-        },
-        component: Info
-      },
-      {
-        path: '/info/detail',
-        name: 'detail',
-        menuKey: 'detail',
-        meta: {
-          menu: '/info',
-          authKeys: [''],
-          bread: [
-            { path: '/info', name: '会员信息' },
-            { path: '/info/detail', name: '会员详情' }
-          ]
-        },
-        component: Detail
+        component: MemberInfoDetail
       }
     ]
   },

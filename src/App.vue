@@ -102,8 +102,8 @@ export default {
   //   align-items: center;
   //   padding-bottom: 10px;
   //   width: 15%;
-  .btn {
-  }
+  // .btn {
+  // }
   // }
 }
 </style>
