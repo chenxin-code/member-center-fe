@@ -57,29 +57,29 @@ export default {
     checkKeys(openKeys) {
       this.openKeys = openKeys;
       this.$forceUpdate();
-      console.log(this.openKeys);
     },
     onClickMenuChid(path) {
       this.$router.push({ path: path });
-      console.log(this.openKeys);
     },
     onClickMenu(path) {
-      console.log('onClickMenu path :>> ', path);
       this.openKeys.splice(0, this.openKeys.length);
       this.openKeys.push('');
       // this.openKeys = [''];
       // this.$forceUpdate();
       this.$router.push({ path: path });
-      console.log(this.openKeys);
     },
     hasRangeAuthorityWithoutProject(authKeys) {
       return hasRangeAuthorityWithoutProject(authKeys);
     },
     setMenus() {
+      console.log('0000', this.$route)
       const pathname = this.$route.path;
+      console.log('----', pathname)
       const matchedMenu = MENU_ROUTES.find(x => x.path === pathname) || { group: '' };
+      console.log('1111', matchedMenu)
       let filteredMenus = [];
       const groupMenus = MENU_ROUTES.filter(x => x.group === matchedMenu.group);
+      console.log('22222', groupMenus)
 
       if (groupMenus.length > 0) {
         filteredMenus = groupMenus;

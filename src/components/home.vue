@@ -105,7 +105,7 @@ export default {
         this.promise = true;
       }
     } else {
-      this.$router.push({ path: '/portal' });
+      // this.$router.push({ path: '/portal' });
     }
   },
   methods: {

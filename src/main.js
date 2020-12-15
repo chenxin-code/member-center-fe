@@ -6,11 +6,11 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.less';
 import './assets/css/common.less';
 Vue.use(Antd);
-
+console.log('rrrrr', router)
 Vue.config.productionTip = false;
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app');

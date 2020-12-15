@@ -106,6 +106,7 @@ const FormList = {
     }
   },
   render() {
+    console.log(this)
     return (
       <a-form
         form={this.form}
@@ -125,6 +126,9 @@ const FormList = {
               </a-col>
             );
           })}
+          <a-col span={3} offset={(4 - this.formList.length % 4) * 6 - 3 }>
+            <a-button style={{width: '100%'}} type="primary" onSubmit={this.handleSubmit}>查询</a-button>
+          </a-col>
         </a-row>
       </a-form>
     );
