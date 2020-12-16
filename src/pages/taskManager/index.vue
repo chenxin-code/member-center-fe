@@ -6,8 +6,9 @@
                 <a-col flex="auto" style="padding:20px 10px;height:100%;">
                     <FilterForm
                         ref="form"
-                        rowCol="4"
-                        :formList="formList"
+                        rowCol="3"
+                        :formList="this.formList"
+                        :onSubmit="this.onSearch"
                     />
                     <a-table
                         :style="{marginTop: '20px'}"
@@ -40,7 +41,8 @@
 </template>
 
 <script>
-import FilterForm from '@/components/FormList/index.jsx'
+import FilterForm from '@/components/FilterGroup/index.jsx';
+import moment from 'moment';
 import api from "@/api";
 export default {
     name: "task-manager",
@@ -53,23 +55,45 @@ export default {
             formList: [
                 {
                     label: "任务名称",
-                    name: "name",
+                    name: "taskName",
                     type: "input",
                     placeholder: "请输入",
                 },
                 {
+                    label: '任务Key',
+                    type: "input",
+                    placeholder: "请输入",
+                    name: 'taskKey'
+                },
+                {
+                    label: '任务状态',
+                    type: 'select',
+                    placeholder: "全部",
+                    name: 'status',
+                    selectOptions: [
+                        {id: '', name: '全部'},
+                        {id: 0, name: '禁用'},
+                        {id: 1, name: '启用'}
+                    ]
+                },
+                {
                     label: "任务来源",
                     type: "select",
-                    name: "source",
+                    name: "taskSource",
                     placeholder: "全部",
                     selectOptions: [],
                     rules: [],
                     initialValue: "全部",
                 },
+                {
+                    label: '任务时间',
+                    type: 'rangePicker',
+                    name: 'taskDate',
+                }
             ],
             columns: [
                 {
-                    dataIndex: 'id',
+                    dataIndex: 'taskKey',
                     key: 'id',
                     title: '任务key',
                 },
@@ -80,14 +104,20 @@ export default {
                 },
                 {
                     title: '任务有效期(天)',
-                    key: 'taskTime',
-                    dataIndex: 'taskTime'
+                    key: 'validity',
+                    dataIndex: 'validity'
                 },
                 {
                     title: '是否周期性',
                     key: 'isPeriodic',
                     dataIndex: 'isPeriodic',
                     customRender: (text) => text === 1 ? '是' : '否'
+                },
+                {
+                    title: '状态',
+                    key: 'status',
+                    dataIndex: 'status',
+                    customRender: text => text === 0 ? '禁用' : '启用'
                 },
                 {
                     title: '对应行为',
@@ -118,8 +148,14 @@ export default {
     },
     created () {
         this.getTaskList()
+        this.getTaskSource()
     },
     methods: {
+        onSearch(args) {
+            console.log('-----', args)
+            this.getTaskList(args)
+        },
+
         onCheck(record) {
             console.log(record)
         },
@@ -130,11 +166,17 @@ export default {
             this.getTaskList()
         },
 
-        getTaskList() {
+        getTaskList(values) {
             this.tableLoading = true;
             let args = {
                 pageIndex: this.current,
-                pageSize: this.pageSize
+                pageSize: this.pageSize,
+                createTimeStart: values && values.taskDate[0] && moment(values.taskDate[0]).format('YYYY-MM-DD'),
+                createTimeEnd: values && values.taskDate[1] && moment(values.taskDate[1]).format('YYYY-MM-DD'),
+                status: values && values.status ? values.status : null,
+                taskKey: values && values.taskKey,
+                taskName: values && values.taskName,
+                taskSource: values && values.taskSource,
             }
             api.getTaskList(args)
             .then( res => {
@@ -143,6 +185,28 @@ export default {
                 this.total = res.data.total;
             })
             .finally( () => this.tableLoading = false)
+        },
+
+        getTaskSource() {
+            let sourceList = []
+            api.getTaskSource()
+            .then( res => 
+                sourceList = res.data.map(item => {
+                    return {id: item.appCode, name: item.appName}
+                })
+            )
+            .then( () => {
+                this.formList = this.formList.map( item => {
+                    if (item.name === 'taskSource') {
+                        return {
+                            ...item,
+                            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
+                        }
+                    } else {
+                        return item
+                    }
+                })
+            })
         }
     }
 }

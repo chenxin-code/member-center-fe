@@ -18,6 +18,12 @@ const Portal = () =>
 const TaskManager = () =>
     import ('@/pages/taskManager/index');
 
+const Card = () =>
+    import ('@/pages/card/index');
+
+const AccessManager = () =>
+    import ('@/pages/accessManager/index');
+
 //空间管理
 //1.0空间
 const Space = () =>
@@ -78,6 +84,20 @@ const routes = [{
                 component: Space
             },
             {
+                path: '/card',
+                name: 'card',
+                menuKey: 'card',
+                meta: {
+                    menu: '/card',
+                    keepAlive: true,
+                    bread: [{
+                        path: '/card',
+                        name: ''
+                    }]
+                },
+                component: Card
+            },
+            {
                 path: '/task-manager',
                 name: 'task-manager',
                 menuKey: 'task-manager',
@@ -90,6 +110,12 @@ const routes = [{
                     }]
                 },
                 component: TaskManager
+            },
+            {
+                path: '/access-manager',
+                name: 'access',
+                menuKey: 'access-manager',
+                component: AccessManager
             },
             {
                 path: '/space/add',

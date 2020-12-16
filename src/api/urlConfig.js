@@ -11,6 +11,7 @@ export const option = {
 // 请求地址
 export default {
     GET_TASKlIST: '/times/member-center/task/api/v1/list', // 获取任务列表
+    GET_TASKSOURCE: '/times/member-center/client/api/v1/list', // 获取任务来源
     LOGIN: option.login + '/oauth/token', //登录
     LOGOUT: option.logout + '/logout', //退出登录
     SEND_CODE: option.pub + '/verifycode/api/v1/send', //发送验证码
