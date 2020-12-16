@@ -2,7 +2,7 @@
   <div id="microApplication">
     <div class="content-header">会员信息</div>
     <div class="content-main" ref="content_main" style="padding: 20px;">
-      <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onCheck" />
+      <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -46,7 +46,7 @@
 
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="onCheckDetail(rowData)" style="margin-left:20px;">详情</a>
+            <a @click="goDetail(rowData)" style="margin-left:20px;">详情</a>
           </div>
         </template>
       </a-table>
@@ -86,15 +86,16 @@ export default {
           selectOptions: []
         },
         {
+          label: '唯一标识',
+          type: 'input',
+          name: 'memberCode',
+          placeholder: '请输入'
+        },
+        {
           label: '手机号',
           type: 'input',
           name: 'phoneNo',
           placeholder: '请输入'
-        },
-        {
-          label: '加入时间',
-          type: 'rangePicker',
-          name: 'jointime'
         },
         {
           type: 'button',
@@ -103,6 +104,11 @@ export default {
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
+        },
+        {
+          label: '加入时间',
+          type: 'rangePicker',
+          name: 'jointime'
         }
       ],
       //表格高度
@@ -198,8 +204,8 @@ export default {
       clearTimeout(timer1);
     });
 
-    this.getMemberList();
-    this.getClientList();
+    //初始化加载数据
+    this.getDataInit();
   },
   created() {
     const loginUrl = 'http://8.129.225.124:8000/login';
@@ -214,20 +220,24 @@ export default {
       console.log('有参数');
       window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
       window.localStorage.setItem('SD_LOGIN_URL', loginUrl);
-      window.location.href = window.location.origin + window.location.pathname;
+      window.location.replace(window.location.origin + window.location.pathname);
     } else {
       console.log('没有参数');
     }
   },
   methods: {
     moment,
+    async getDataInit() {
+      await this.getMemberList();
+      await this.getClientList();
+    },
     //查询按钮
-    onCheck() {
+    onQuery() {
       this.current = 1;
       this.getMemberList();
     },
     //查看微应用详情
-    onCheckDetail(param) {
+    goDetail(param) {
       console.log('param :>> ', param);
       this.$router.push({
         name: 'memberInfoDetail',
@@ -244,33 +254,28 @@ export default {
     },
     //获取会员来源
     getClientList() {
-      api
-        .getClientList()
-        .then(res => {
-          console.log('res :>> ', res);
-          if (res.code === 200) {
-            const project = {
-              id: '',
-              name: '全部'
-            };
-            this.formList[0].selectOptions.splice(1, this.formList[0].length);
-            res.data.forEach(element => {
-              let tempObj = {};
-              tempObj.id = element.appCode;
-              tempObj.name = element.appName;
-              this.formList[0].selectOptions.push(tempObj);
-            });
-            this.formList[0].selectOptions.unshift(project);
+      api.getClientList().then(res => {
+        console.log('res :>> ', res);
+        if (res.code === 200) {
+          const project = {
+            id: '',
+            name: '全部'
+          };
+          this.formList[0].selectOptions.splice(1, this.formList[0].length);
+          res.data.forEach(element => {
+            let tempObj = {};
+            tempObj.id = element.appCode;
+            tempObj.name = element.appName;
+            this.formList[0].selectOptions.push(tempObj);
+          });
+          this.formList[0].selectOptions.unshift(project);
 
-            this.$refs.memberForm.setFieldsValue({
-              memberSource: this.formList[0].selectOptions[0].id
-            });
-            this.getMemberList();
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+          this.$refs.memberForm.setFieldsValue({
+            memberSource: this.formList[0].selectOptions[0].id
+          });
+          // this.getMemberList();
+        }
+      });
     },
     //获取表格数据
     getMemberList() {
@@ -279,6 +284,11 @@ export default {
       let memberSource = '';
       if (this.$refs.memberForm.getFieldsValue().memberSource) {
         memberSource = this.$refs.memberForm.getFieldsValue().memberSource;
+      }
+
+      let memberCode = '';
+      if (this.$refs.memberForm.getFieldsValue().memberCode) {
+        memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
       }
 
       let phoneNo = '';
@@ -295,6 +305,7 @@ export default {
 
       const para = {
         memberSource: memberSource,
+        memberCode: memberCode,
         phone: phoneNo,
         createTimeStart: jointimeStart,
         createTimeEnd: jointimeEnd,
@@ -302,6 +313,7 @@ export default {
         pageIndex: this.current,
         pageSize: this.pageSize
       };
+
       console.log('getMemberList para :>> ', para);
 
       // for (let index = 0; index < mock.data.records.length; index++) {

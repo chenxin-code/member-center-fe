@@ -13,8 +13,9 @@ const Login = () => import('@/pages/login/login');
 const Portal = () => import('@/pages/portal/portal');
 
 //会员信息
-const MemberInfo = () => import('../pages/member/info/list');
-const MemberInfoDetail = () => import('../pages/member/info/detail');
+const Dashboard = () => import('@/pages/dashboard');
+const MemberInfo = () => import('@/pages/member/info/list');
+const MemberInfoDetail = () => import('@/pages/member/info/detail');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
@@ -33,12 +34,24 @@ const routes = [
     component: Portal
   },
   {
+
     path: '/',
     redirect: '/memberInfo',
     name: 'home',
     menuKey: 'home',
     component: Home,
     children: [
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        menuKey: 'dashboard',
+        meta: {
+          menu: '/dashboard',
+          authKeys: [''],
+          bread: [{ path: '/dashboard', name: '看板' }]
+        },
+        component: Dashboard
+      },
       {
         path: '/memberInfo',
         name: 'memberInfo',

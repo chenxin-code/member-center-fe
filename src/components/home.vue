@@ -17,10 +17,10 @@
               </span>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <router-link :to="{ path: '/portal' }">个人中心</router-link>
+                  <router-link :to="{ path: '/memberInfo' }">个人中心</router-link>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link :to="{ path: '/portal' }">返回首页</router-link>
+                  <router-link :to="{ path: '/memberInfo' }">返回首页</router-link>
                 </a-menu-item>
                 <a-menu-item @click="handleLogout">
                   <span>退出登录</span>
@@ -95,18 +95,18 @@ export default {
     // console.log(this.userImage)
     // this.userImage = window.localStorage.getItem("SD_USERAVATAR");
     // this.userName = window.localStorage.getItem("SD_USERNAME");
-    const jsonAuthorities = window.localStorage.getItem('SD_AUTHORITIES');
-    if (jsonAuthorities) {
-      const authKeys = this.$route.meta.authKeys;
-      if (authKeys != '' && !hasRangeAuthorityWithoutProject(authKeys)) {
-        // this.promise = false;
-        this.promise = true;
-      } else {
-        this.promise = true;
-      }
-    } else {
-      this.$router.push({ path: '/portal' });
-    }
+    // const jsonAuthorities = window.localStorage.getItem('SD_AUTHORITIES');
+    // if (jsonAuthorities) {
+    //   const authKeys = this.$route.meta.authKeys;
+    //   if (authKeys != '' && !hasRangeAuthorityWithoutProject(authKeys)) {
+    //     // this.promise = false;
+    //     this.promise = true;
+    //   } else {
+    //     this.promise = true;
+    //   }
+    // } else {
+    //   this.$router.push({ path: '/portal' });
+    // }
   },
   methods: {
     loadError() {
@@ -115,29 +115,29 @@ export default {
       window.localStorage.setItem('SD_USERAVATAR', defaultAvatar);
     },
     handleLogout() {
-      // window.localStorage.setItem('SD_ACCESS_TOKEN', '');
-      // window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
-      // window.localStorage.setItem('SD_AUTHORITIES', '');
-      // window.localStorage.setItem('SD_USERAVATAR', '');
-      // window.localStorage.setItem('SD_USERNAME', '');
-      // window.localStorage.setItem('login_refresh', 'false');
-      this.$router.push({ path: '/portal' });
+      window.localStorage.setItem('SD_ACCESS_TOKEN', '');
+      window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
+      window.localStorage.setItem('SD_AUTHORITIES', '');
+      window.localStorage.setItem('SD_USERAVATAR', '');
+      window.localStorage.setItem('SD_USERNAME', '');
+      window.localStorage.setItem('login_refresh', 'false');
+      this.$router.push({ path: '/memberInfo' });
     }
   },
   watch: {
-    $route() {
-      const jsonAuthorities = window.localStorage.getItem('SD_AUTHORITIES');
-      if (jsonAuthorities) {
-        if (!hasRangeAuthorityWithoutProject(this.$route.meta.authKeys)) {
-          // this.promise = false;
-          this.promise = true;
-        } else {
-          this.promise = true;
-        }
-      } else {
-        this.$router.push({ path: '/portal' });
-      }
-    }
+    // $route() {
+    //   const jsonAuthorities = window.localStorage.getItem('SD_AUTHORITIES');
+    //   if (jsonAuthorities) {
+    //     if (!hasRangeAuthorityWithoutProject(this.$route.meta.authKeys)) {
+    //       // this.promise = false;
+    //       this.promise = true;
+    //     } else {
+    //       this.promise = true;
+    //     }
+    //   } else {
+    //     this.$router.push({ path: '/portal' });
+    //   }
+    // }
   }
 };
 </script>

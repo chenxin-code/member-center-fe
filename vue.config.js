@@ -132,16 +132,16 @@ const vueConfig = {
         target: 'http://8.129.64.205:20000/', //会员中心后端ip地址及端口
         ws: true, //是否支持WebSocket
         changeOrigin: true //是否开启跨域
+      },
+      //oss是图片预览的时候才使用
+      '/oss-backend/': {
+        target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
+        changeOrigin: true
+      },
+      '/oss-frontend/': {
+        target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
+        changeOrigin: true
       }
-      // //oss是图片预览的时候才使用
-      // '/oss-backend/': {
-      //   target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
-      //   changeOrigin: true
-      // },
-      // '/oss-frontend/': {
-      //   target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
-      //   changeOrigin: true
-      // }
     }
   },
 
