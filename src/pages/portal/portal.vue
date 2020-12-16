@@ -94,8 +94,11 @@ export default {
   },
   methods: {
     getUserInfo() {
-      console.log('api :>> ', api);
-      api.getUserInfo().then(res => {
+      const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
+      const param = {
+        token: tokenStr
+      };
+      api.getUserInfo(param).then(res => {
         if (res.code === 200) {
           this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
           this.username = res.data.userName;

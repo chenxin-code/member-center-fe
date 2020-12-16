@@ -34,9 +34,8 @@ const routes = [
     component: Portal
   },
   {
-
     path: '/',
-    redirect: '/memberInfo',
+    redirect: '/dashboard',
     name: 'home',
     menuKey: 'home',
     component: Home,

@@ -28,9 +28,7 @@
         </template>
         <template slot="memberSourceSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-show="rowData.memberSource === undefined || rowData.memberSource === null">全部项目</span>
-            <span v-show="rowData.memberSource === '1'">地产</span>
-            <span v-show="rowData.memberSource === '5'">邻里帮</span>
+            <span v-html="showSource(rowData)"></span>
           </div>
         </template>
         <template slot="jointimeSlot" slot-scope="rowData">
@@ -70,6 +68,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import api from '@/api';
 import moment from 'moment';
+const defaultAvatar = require('@/assets/img/user/avatar.png');
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
@@ -81,7 +80,7 @@ export default {
         {
           label: '创建来源',
           type: 'select',
-          name: 'memberSource',
+          name: 'memberSourceCode',
           placeholder: '请选择',
           selectOptions: []
         },
@@ -117,8 +116,8 @@ export default {
       tableColumns: [
         {
           title: '唯一标识',
-          dataIndex: 'memberId',
-          key: 'memberId'
+          dataIndex: 'memberCode',
+          key: 'memberCode'
         },
         {
           title: '姓名',
@@ -183,6 +182,12 @@ export default {
               tempStr += element.levelName;
             }
           });
+          // param.levels.forEach(element => {
+          //   if (element.levelName) {
+          //     tempStr += element.levelName + ',';
+          //   }
+          // });
+          // tempStr = tempStr.substring(0, tempStr.length - 1);
         } else if (param.levels.length === 1) {
           param.levels.forEach(element => {
             if (element.levelName) {
@@ -194,21 +199,48 @@ export default {
         }
         return tempStr;
       };
+    },
+    showSource() {
+      return param => {
+        let tempStr = '';
+        if (param.memberSources.length > 1) {
+          // param.memberSources.slice(0, 1).forEach(element => {
+          //   if (element.sourceName) {
+          //     tempStr += element.sourceName;
+          //   }
+          // });
+          param.memberSources.forEach(element => {
+            if (element.sourceName) {
+              tempStr += element.sourceName + ',';
+            }
+          });
+          tempStr = tempStr.substring(0, tempStr.length - 1);
+        } else if (param.memberSources.length === 1) {
+          param.memberSources.forEach(element => {
+            if (element.sourceName) {
+              tempStr += element.sourceName;
+            }
+          });
+        } else {
+          tempStr = '';
+        }
+        return tempStr;
+      };
     }
   },
   mounted() {
     const timer1 = setTimeout(() => {
-      this.scrollY = this.$refs.content_main.offsetHeight - 215 + 'px';
+      console.log('this.$refs.content_main.offsetHeight  :>> ', this.$refs.content_main.offsetHeight);
+      this.scrollY = this.$refs.content_main.offsetHeight - 275 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
-
-    //初始化加载数据
+    //初始化校验token和加载数据
+    this.getLoginUrl();
     this.getDataInit();
   },
   created() {
-    const loginUrl = 'http://8.129.225.124:8000/login';
     let tokenStr = '';
     const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
     if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
@@ -219,7 +251,6 @@ export default {
     if (tokenStr) {
       console.log('有参数');
       window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
-      window.localStorage.setItem('SD_LOGIN_URL', loginUrl);
       window.location.replace(window.location.origin + window.location.pathname);
     } else {
       console.log('没有参数');
@@ -228,6 +259,7 @@ export default {
   methods: {
     moment,
     async getDataInit() {
+      await this.getUserInfo();
       await this.getMemberList();
       await this.getClientList();
     },
@@ -241,7 +273,7 @@ export default {
       console.log('param :>> ', param);
       this.$router.push({
         name: 'memberInfoDetail',
-        query: {
+        params: {
           id: param.memberId
         }
       });
@@ -252,10 +284,35 @@ export default {
       this.pageSize = pageSize;
       this.getMemberList();
     },
+    getLoginUrl() {
+      api.getLoginUrl().then(res => {
+        console.log('getLoginUrl res :>> ', res);
+        if (res.code === 200) {
+          window.localStorage.setItem('SD_LOGIN_URL', res.data);
+        }
+      });
+    },
+    getUserInfo() {
+      const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
+      const param = {
+        token: tokenStr
+      };
+      api.getUserInfo(param).then(res => {
+        console.log('getUserInfo res :>> ', res);
+        if (res.code === 200) {
+          this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
+          this.username = res.data.userName;
+          window.localStorage.setItem('SD_USERAVATAR', this.userAvatar);
+          window.localStorage.setItem('SD_USERNAME', res.data.userName);
+          this.$store.commit('setUseravatar', this.userAvatar);
+          this.$store.commit('setUsername', res.data.userName);
+        }
+      });
+    },
     //获取会员来源
     getClientList() {
       api.getClientList().then(res => {
-        console.log('res :>> ', res);
+        console.log('getClientList res :>> ', res);
         if (res.code === 200) {
           const project = {
             id: '',
@@ -271,7 +328,7 @@ export default {
           this.formList[0].selectOptions.unshift(project);
 
           this.$refs.memberForm.setFieldsValue({
-            memberSource: this.formList[0].selectOptions[0].id
+            memberSourceCode: this.formList[0].selectOptions[0].id
           });
           // this.getMemberList();
         }
@@ -281,9 +338,9 @@ export default {
     getMemberList() {
       this.tableLoading = true;
 
-      let memberSource = '';
-      if (this.$refs.memberForm.getFieldsValue().memberSource) {
-        memberSource = this.$refs.memberForm.getFieldsValue().memberSource;
+      let memberSourceCode = '';
+      if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
+        memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
       }
 
       let memberCode = '';
@@ -304,7 +361,7 @@ export default {
       }
 
       const para = {
-        memberSource: memberSource,
+        memberSourceCode: memberSourceCode,
         memberCode: memberCode,
         phone: phoneNo,
         createTimeStart: jointimeStart,
@@ -330,15 +387,12 @@ export default {
       api
         .getMemberList(para)
         .then(res => {
+          this.tableLoading = false;
           console.log('getMemberList res :>> ', res);
           if (res.code === 200) {
             this.total = res.data.total;
             this.tableData.splice(0, this.tableData.length);
             res.data.records.forEach((element, index) => {
-              // if (element.memberId === undefined || element.memberId === '') {
-              //   element.memberId = Date.now().toString() + '-' + index;
-              // }
-
               this.tableData.push(element);
             });
           }

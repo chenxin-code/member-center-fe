@@ -8,7 +8,9 @@ export const option = {
   dictionary: '/times/pub-center/dictionary', //获取子行政列表
   micro: '/times/micro-app-service', //微应用管理  版本管理
   member: '/times/member-center/member',
-  client: '/times/member-center/client'
+  client: '/times/member-center/client',
+  mpc_integrated:'/times/member-pub-center/integrated',
+  mc_integrated:'/times/member-center/integrated',
 };
 
 // 请求地址
@@ -69,5 +71,8 @@ export default {
 
   //会员中心
   MEMBER_LIST: option.member + '/api/v1/member/list',
-  CLIENT_LIST: option.client + '/api/v1/list'
+  CLIENT_LIST: option.client + '/api/v1/list',
+  LOGIN_URL: option.mpc_integrated + '/api/v1/login',
+  USER_INFO: option.mc_integrated + '/api/v1/user',
+  MEMBER_DETAIL: option.member + '/api/v1/member/detailByMemberId'
 };

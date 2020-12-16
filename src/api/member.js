@@ -3,7 +3,11 @@ import URL from './urlConfig'
 
 //会员列表
 export const getMemberList = data => fetchApi(URL.MEMBER_LIST, data, 'GET');
+export const getMemberDetail = data => fetchApi(URL.MEMBER_DETAIL, data, 'GET');
 export const getClientList = data => fetchApi(URL.CLIENT_LIST, data, 'GET');
+export const getLoginUrl = data => fetchApi(URL.LOGIN_URL, data, 'GET');
+export const getUserInfo = data => fetchApi(URL.USER_INFO, data, 'POST');
+
 
 /*
 //微应用版本列表
