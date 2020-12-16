@@ -1,8 +1,7 @@
 <template>
   <div id="microDetail">
     <div class="content-header">
-      会员详情
-      <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
+      会员详情<span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div>
     <div class="content-main" ref="contentMain">
       <a-row style="padding:20px 0;height:100%;">
@@ -78,7 +77,6 @@
         <a-row style="margin-top: 20px">
           <a-tabs type="card" @change="tabChangeCallback">
             <a-tab-pane class="tabs-body-content" key="1" tab="微应用版本">
-              <!-- <a-button type="primary" @click="createMicroVersion">+ 创建微应用版本</a-button> -->
               <div>
                 <a-table
                   :columns="versionsColumns"
@@ -131,7 +129,6 @@
               </div>
             </a-tab-pane>
             <a-tab-pane class="tabs-body-content" key="3" tab="资源包">
-              <!-- <a-button type="primary" @click="createResourcePackage">+ 创建资源包</a-button> -->
               <div>
                 <a-table
                   :columns="resourcePackageColumns"
@@ -290,7 +287,7 @@ export default {
     }
   },
   created: function() {
-    // console.log('detail this.$store :>> ', this.$store);
+    console.log('detail this.$store :>> ', this.$store);
     console.log('this.$route :>> ', this.$route);
 
     //一进入这个页面必须执行
@@ -301,6 +298,7 @@ export default {
     this.getMicroDetail();
   },
   mounted() {
+    // console.log(this.$store.commit('FALLBACK'));
     this.getVersionsDataSource();
     setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 204 + 'px';
@@ -321,87 +319,87 @@ export default {
       }
     },
     getMicroDetail() {
-      //const programId = this.$route.params.id;
+      //const programId = this.$route.query.id;
       const para = {
-        id: this.$route.params.id
+        id: this.$route.query.id
       };
-      api
-        .microApplicationDetail(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.microApplicationDetail = res.data;
-            if (this.microApplicationDetail.icon == undefined) {
-              this.microApplicationDetail.icon =
-                'https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00408-1094.jpg';
-            }
-          }
-        })
-        .finally(() => {
-          //this.tableLoading = false;
-        });
+      // api
+      //   .microApplicationDetail(para)
+      //   .then(res => {
+      //     if (res.code === 200) {
+      //       this.microApplicationDetail = res.data;
+      //       if (this.microApplicationDetail.icon == undefined) {
+      //         this.microApplicationDetail.icon =
+      //           'https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00408-1094.jpg';
+      //       }
+      //     }
+      //   })
+      //   .finally(() => {
+      //     //this.tableLoading = false;
+      //   });
     },
     //获取小区范围数据列表
     getDevelopmentDataSource() {
-      this.tableLoading = true;
-      const programId = this.$route.params.id;
+      // this.tableLoading = true;
+      const programId = this.$route.query.id;
       const para = {
         programId,
         pageIndex: this.developmentCurrent,
         pageSize: this.developmentPageSize
       };
-      api
-        .getAllPlot(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.developmentTotal = res.data.total;
-            this.developmentDataSource = res.data.records;
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+      // api
+      //   .getAllPlot(para)
+      //   .then(res => {
+      //     if (res.code === 200) {
+      //       this.developmentTotal = res.data.total;
+      //       this.developmentDataSource = res.data.records;
+      //     }
+      //   })
+      //   .finally(() => {
+      //     this.tableLoading = false;
+      //   });
     },
     //获取微应用资源包列表
     getResourcePackageDataSource() {
-      this.tableLoading = true;
-      const programId = this.$route.params.id;
+      // this.tableLoading = true;
+      const programId = this.$route.query.id;
       const para = {
         programId,
         pageIndex: this.resourcePackageCurrent,
         pageSize: this.resourcePackagePageSize
       };
-      api
-        .getResourcePackage(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.resourcePackageTotal = res.data.total;
-            this.resourcePackageDataSource = res.data.records;
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+      // api
+      //   .getResourcePackage(para)
+      //   .then(res => {
+      //     if (res.code === 200) {
+      //       this.resourcePackageTotal = res.data.total;
+      //       this.resourcePackageDataSource = res.data.records;
+      //     }
+      //   })
+      //   .finally(() => {
+      //     this.tableLoading = false;
+      //   });
     },
     //获取微应用版本列表
     getVersionsDataSource() {
-      this.tableLoading = true;
-      const programId = this.$route.params.id;
+      // this.tableLoading = true;
+      const programId = this.$route.query.id;
       const para = {
         programId,
         pageIndex: this.versionsCurrent,
         pageSize: this.versionPageSize
       };
-      api
-        .getMicroApplicationVersion(para)
-        .then(res => {
-          if (res.code === 200) {
-            this.versionsTotal = res.data.total;
-            this.versionsDataSource = res.data.records;
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+      // api
+      //   .getMicroApplicationVersion(para)
+      //   .then(res => {
+      //     if (res.code === 200) {
+      //       this.versionsTotal = res.data.total;
+      //       this.versionsDataSource = res.data.records;
+      //     }
+      //   })
+      //   .finally(() => {
+      //     this.tableLoading = false;
+      //   });
     },
     //微应用版本
     pagingVersions(current, pageSize) {

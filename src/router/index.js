@@ -34,7 +34,6 @@ const routes = [
   },
   {
     path: '/',
-    // redirect: '/portal',
     redirect: '/memberInfo',
     name: 'home',
     menuKey: 'home',

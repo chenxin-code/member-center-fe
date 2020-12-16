@@ -8,7 +8,6 @@ import QS from 'qs';
 let BASEURL = '';
 if (process.env.NODE_ENV === 'development') {
   BASEURL = '/';
-  // BASEURL = "http://dev.linli580.com:10000/";
 } else {
   BASEURL = location.origin;
 }
@@ -36,40 +35,26 @@ HTTP.interceptors.request.use(async config => {
 
   console.log('config.url :>> ', config.url);
 
-  // //login走这个ajax
-  // if (config.url.indexOf('/times/auth/oauth/token') >= 0 || config.url.indexOf('/verifycode/api/v1/send') >= 0) {
-  //   let tokenStr = '';
-  //   config.headers.Authorization = tokenStr;
-  //   return config;
-  // } else {
-  //   if (config.url.indexOf('/times/pub-center/qr-code/api/v1/qr/insert') >= 0) {
-  //     config.headers.program_code = 'app_notice';
-  //   }
-  //   let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
-  //   console.log(tokenStr);
-  //   config.headers.Authorization = tokenStr;
-  //   return config;
-  // }
+  //login走这个ajax
+  if (config.url.indexOf('/times/auth/oauth/token') >= 0 || config.url.indexOf('/verifycode/api/v1/send') >= 0) {
+    let tokenStr = '';
+    config.headers.Authorization = tokenStr;
+    return config;
+  } else {
+    if (config.url.indexOf('/times/pub-center/qr-code/api/v1/qr/insert') >= 0) {
+      config.headers.program_code = 'app_notice';
+    }
+    let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
+    console.log('ajax tokenStr :>> ', tokenStr);
+    config.headers.Authorization = tokenStr;
+    return config;
+  }
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   //开发环境
-  //   let tokenStr =
-  //     'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDQxMjI5LCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiJhNWQ1NGNiYy0yZDNiLTQwNDQtYWZjNy01OGRjYjZkY2FmNzIiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.mAVbcm6YXc8-8t9mom6u3qWqQ-1DsG_2xCOj3BymzABIgeUqX64_EaLBa-jr6f-JsR9pycJEoieP5-5fd-2a8XXN7hJgVWEyJwKFtnvSuHcwCcmAHG4QR3nRdVsl_qc-va8opT46b6k71zjnMtGucphbU09M1rP8V2xj2Uu6XcUcnbJEIrsWLX1ZFtyinOk_J6k7XB5q4XZau4VyjGQzbpk-94wMZWwPdvw_MqWMg-mgcfUilsTTv29y7e_H8HNgj_TQgEZ8vJqbq4eBoX_yh7-ZJpHenC5meuItSqyF5sFxCpVmautQPjEsw0-mbx5GI7wpfdIsPBBStMMMoj_STA';
-  //   config.headers.Authorization = tokenStr;
-  //   return config;
-  // } else {
-  //   //生产环境
-  //   let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
-  //   config.headers.Authorization = tokenStr;
-  //   return config;
-  // }
-
-  // 非login走这个ajax
-  let tokenStr =
-    'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDY4NzQzLCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiIyNDJjOGNhYS02YmU4LTQ5OWYtYjI5Ny0zMjVhNzEwY2UxZGUiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.WgYr5lRJ7-10vuu0iSU5yQr1kbFhVNtmOglMVHCXC2_IyKaWNW8dcUAU7Jr-CKBwkJ97u5x6dyXVzmBKrmP5GAxXplEdLFxbSLE_inyCP_b8UtKj5gwWo3-OXXGQd_az-3gY8UWdjapGwXq3ASxvFoZmEsDXq9IsxRdP2NoL7dx4wpxtQNBNt2VsdYhzGPzxjH82-UqRbZi5l_vKJuqO1jGTLQhNOYFMqkLe7QQgcBqJzgoDoQd_FuLWT_agFxEiOBn92RKaxG9oDJ8EB8lBJB3AhKJBkdoZRvEf5MXCzz8_PF2z4V-e1uePXZF46Pt36596daxP4pAVv9WYdZMxiA';
-  console.log(tokenStr);
-  config.headers.Authorization = tokenStr;
-  return config;
+  // // 非login走这个ajax
+  // let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN')
+  // console.log('ajax tokenStr :>> ', tokenStr);
+  // config.headers.Authorization = tokenStr;
+  // return config;
 });
 
 function handleParams(url, rawData, rawMethod, responseType) {
@@ -142,28 +127,30 @@ let defaultHeader = {
   }
 };
 
-let refresh = false;
+let isRefresh = false;
 async function refreshToken() {
-  refresh = true;
-  const para = QS.stringify({
-    grant_type: 'refresh_token',
-    client_id: 'web_b',
-    client_secret: 'times',
-    username: window.localStorage.getItem('SD_LOGIN_NAME'),
-    password: '',
-    scope: 'all',
-    refresh_token: window.localStorage.getItem('SD_ACCESS_REFRESHTOKEN')
-  });
-  api
-    .toLogin(para)
-    .then(res => {
-      if (res.code === 200) {
-        window.localStorage.setItem('SD_ACCESS_TOKEN', res.data.token);
-        window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', res.data.refreshToken);
-        location.reload();
-      }
-    })
-    .finally(() => {});
+  isRefresh = true;
+  window.location.href = localStorage.getItem('SD_LOGIN_URL');
+
+  // const para = QS.stringify({
+  //   grant_type: 'refresh_token',
+  //   client_id: 'web_b',
+  //   client_secret: 'times',
+  //   username: window.localStorage.getItem('SD_LOGIN_NAME'),
+  //   password: '',
+  //   scope: 'all',
+  //   refresh_token: window.localStorage.getItem('SD_ACCESS_REFRESHTOKEN')
+  // });
+  // api
+  //   .toLogin(para)
+  //   .then(res => {
+  //     if (res.code === 200) {
+  //       window.localStorage.setItem('SD_ACCESS_TOKEN', res.data.token);
+  //       window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', res.data.refreshToken);
+  //       location.reload();
+  //     }
+  //   })
+  //   .finally(() => {});
 }
 
 export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, responseType = 'json', url = BASEURL) => {
@@ -226,12 +213,12 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
               resolve(res);
             } else {
               if (res.code === 401) {
-                if (refresh) {
+                if (isRefresh) {
                   message.error(res.message);
                   resolve(res);
                 } else {
                   message.error(res.message);
-                  refreshToken();
+                  refreshToken(); //刷新token
                   resolve(res);
                 }
               } else if (res.code !== 200) {

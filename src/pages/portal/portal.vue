@@ -140,7 +140,7 @@ export default {
       // window.localStorage.setItem('SD_AUTHORITIES', '');
       // window.localStorage.setItem('SD_USERAVATAR', '');
       // window.localStorage.setItem('SD_USERNAME', '');
-      this.$router.push({ path: '/' });
+      // this.$router.push({ path: '/portal' });
     },
     turn_route(route) {
       this.$router.push({ path: route });

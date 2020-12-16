@@ -2,7 +2,7 @@
   <div id="microApplication">
     <div class="content-header">会员信息</div>
     <div class="content-main" ref="content_main" style="padding: 20px;">
-      <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onCheck" />
+      <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onCheck" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -14,11 +14,11 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="phoneNoSot" slot-scope="rowData">
+        <!-- <template slot="phoneNoSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
           </div>
-        </template>
+        </template> -->
         <template slot="sexSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-show="rowData.sex === 0">未知</span>
@@ -38,8 +38,13 @@
             <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
           </div>
         </template>
+        <template slot="levelNameSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="showLevel(rowData)"></span>
+          </div>
+        </template>
 
-        <template slot="details" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a @click="onCheckDetail(rowData)" style="margin-left:20px;">详情</a>
           </div>
@@ -65,8 +70,8 @@
 import FormList from '@/components/FormList/index.jsx';
 import api from '@/api';
 import moment from 'moment';
-import mock from './mock';
-console.log('mock :>> ', mock);
+// import mock from './mock';
+// console.log('mock :>> ', mock);
 
 export default {
   name: 'microApplication',
@@ -79,6 +84,12 @@ export default {
           name: 'memberSource',
           placeholder: '请选择',
           selectOptions: []
+        },
+        {
+          label: '手机号',
+          type: 'input',
+          name: 'phoneNo',
+          placeholder: '请输入'
         },
         {
           label: '加入时间',
@@ -94,15 +105,14 @@ export default {
           wrapperCol: { span: 24 }
         }
       ],
-      projectData: [], //项目
       //表格高度
       scrollY: 100,
       //表头数据
       tableColumns: [
         {
           title: '唯一标识',
-          dataIndex: 'id',
-          key: 'id'
+          dataIndex: 'memberId',
+          key: 'memberId'
         },
         {
           title: '姓名',
@@ -111,8 +121,9 @@ export default {
         },
         {
           title: '手机号',
-          key: 'phoneNoSot',
-          scopedSlots: { customRender: 'phoneNoSot' }
+          dataIndex: 'phone',
+          key: 'phone'
+          // scopedSlots: { customRender: 'phoneNoSlot' }
         },
         {
           title: '性别',
@@ -136,13 +147,13 @@ export default {
         },
         {
           title: '时代邻里会员卡等级',
-          dataIndex: 'memberType',
-          key: 'memberType'
+          key: 'levelNameSlot',
+          scopedSlots: { customRender: 'levelNameSlot' }
         },
         {
           title: '操作',
-          key: 'details',
-          scopedSlots: { customRender: 'details' }
+          key: 'detailsSlot',
+          scopedSlots: { customRender: 'detailsSlot' }
         }
       ],
       tableData: [],
@@ -156,6 +167,29 @@ export default {
   components: {
     FormList
   },
+  computed: {
+    showLevel() {
+      return param => {
+        let tempStr = '';
+        if (param.levels.length > 1) {
+          param.levels.slice(0, 1).forEach(element => {
+            if (element.levelName) {
+              tempStr += element.levelName;
+            }
+          });
+        } else if (param.levels.length === 1) {
+          param.levels.forEach(element => {
+            if (element.levelName) {
+              tempStr += element.levelName;
+            }
+          });
+        } else {
+          tempStr = '';
+        }
+        return tempStr;
+      };
+    }
+  },
   mounted() {
     const timer1 = setTimeout(() => {
       this.scrollY = this.$refs.content_main.offsetHeight - 215 + 'px';
@@ -167,7 +201,24 @@ export default {
     this.getMemberList();
     this.getClientList();
   },
-  created() {},
+  created() {
+    const loginUrl = 'http://8.129.225.124:8000/login';
+    let tokenStr = '';
+    const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
+    if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
+      if (tokenArr[1]) {
+        tokenStr = tokenArr[1];
+      }
+    }
+    if (tokenStr) {
+      console.log('有参数');
+      window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
+      window.localStorage.setItem('SD_LOGIN_URL', loginUrl);
+      window.location.href = window.location.origin + window.location.pathname;
+    } else {
+      console.log('没有参数');
+    }
+  },
   methods: {
     moment,
     //查询按钮
@@ -177,11 +228,11 @@ export default {
     },
     //查看微应用详情
     onCheckDetail(param) {
-      console.log('onCheckDetail param :>> ', param);
+      console.log('param :>> ', param);
       this.$router.push({
         name: 'memberInfoDetail',
-        params: {
-          id: param.id
+        query: {
+          id: param.memberId
         }
       });
     },
@@ -200,7 +251,7 @@ export default {
           if (res.code === 200) {
             const project = {
               id: '',
-              name: '全部项目'
+              name: '全部'
             };
             this.formList[0].selectOptions.splice(1, this.formList[0].length);
             res.data.forEach(element => {
@@ -224,17 +275,27 @@ export default {
     //获取表格数据
     getMemberList() {
       this.tableLoading = true;
-      let { memberSource, jointime } = this.$refs.memberForm.getFieldsValue();
+
+      let memberSource = '';
+      if (this.$refs.memberForm.getFieldsValue().memberSource) {
+        memberSource = this.$refs.memberForm.getFieldsValue().memberSource;
+      }
+
+      let phoneNo = '';
+      if (this.$refs.memberForm.getFieldsValue().phoneNo) {
+        phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
+      }
+
       let jointimeStart = '';
       let jointimeEnd = '';
-
-      if (jointime) {
-        jointimeStart = moment(jointime[0]).format('YYYY-MM-DD');
-        jointimeEnd = moment(jointime[1]).format('YYYY-MM-DD');
+      if (this.$refs.memberForm.getFieldsValue().jointime) {
+        jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
+        jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
       }
 
       const para = {
         memberSource: memberSource,
+        phone: phoneNo,
         createTimeStart: jointimeStart,
         createTimeEnd: jointimeEnd,
         isAll: 0,
@@ -245,7 +306,7 @@ export default {
 
       // for (let index = 0; index < mock.data.records.length; index++) {
       //   const element = mock.data.records[index];
-      //   element.memberId = Date.now().toString(32) + index;
+      //   element.id = Date.now().toString(32) + index;
       // }
 
       // this.total = mock.data.total;
@@ -262,9 +323,9 @@ export default {
             this.total = res.data.total;
             this.tableData.splice(0, this.tableData.length);
             res.data.records.forEach((element, index) => {
-              if (element.id === undefined || element.id === '') {
-                element.id = Date.now().toString(32) + index;
-              }
+              // if (element.memberId === undefined || element.memberId === '') {
+              //   element.memberId = Date.now().toString() + '-' + index;
+              // }
 
               this.tableData.push(element);
             });
