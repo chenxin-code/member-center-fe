@@ -9,13 +9,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      run: member-center-fe
+      run: nginx
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: member-center-fe
+        run: nginx
     spec:
       containers:
       - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/m-center-prod/member-center-fe:GIT_BRANCH_AS_TAG_TIMESTAMP
@@ -23,9 +23,9 @@ spec:
         resources: {}
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
-          name: nginx-conf
+          name: member-center-fe-conf
           subPath: nginx.conf
       volumes:
       - configMap:
-          name: member-center-fe
-        name: member-center-fe
+          name: member-center-fe-conf
+        name: member-center-fe-conf
