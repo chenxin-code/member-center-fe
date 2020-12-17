@@ -224,6 +224,7 @@
 
 <script>
 import moment from 'moment';
+import api from '@/api';
 import {
   ChartCard,
   MiniArea,
@@ -235,9 +236,9 @@ import {
   NumberInfo,
   MiniSmoothArea
 } from '@/antd/components';
-
 import { baseMixin } from '@/store/app-mixin';
 
+const defaultAvatar = require('@/assets/img/user/avatar.png');
 const barData = [];
 const barData2 = [];
 for (let i = 0; i < 12; i += 1) {
@@ -380,7 +381,59 @@ export default {
       }
     };
   },
+  methods: {
+    async checkLoginUser() {
+      await this.getLoginUrl();
+      await this.getUserInfo();
+    },
+    getLoginUrl() {
+      return api.getLoginUrl().then(res => {
+        console.log('getLoginUrl res :>> ', res);
+        if (res.code === 200) {
+          window.localStorage.setItem('SD_LOGIN_URL', res.data);
+        }
+      });
+    },
+    getUserInfo() {
+      const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
+
+      const param = {
+        token: tokenStr
+      };
+
+      return api.getUserInfo(param).then(res => {
+        console.log('getUserInfo res :>> ', res);
+        if (res.code === 200) {
+          this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
+          this.username = res.data.userName;
+          window.localStorage.setItem('SD_USERAVATAR', this.userAvatar);
+          window.localStorage.setItem('SD_USERNAME', res.data.userName);
+          this.$store.commit('setUseravatar', this.userAvatar);
+          this.$store.commit('setUsername', res.data.userName);
+        }
+      });
+    }
+  },
   created() {
+    //------ 通过网址传递token并存储到ls ------
+    let tokenStr = '';
+    const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
+    if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
+      if (tokenArr[1]) {
+        tokenStr = tokenArr[1];
+      }
+    }
+    if (tokenStr) {
+      console.log('有参数');
+      window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
+      window.history.replaceState(null, null, window.location.pathname);
+    } else {
+      console.log('没有参数');
+    }
+    //------ 通过网址传递token并存储到ls ------
+    //初始化校验token和用户信息
+    this.checkLoginUser();
+
     setTimeout(() => {
       this.loading = !this.loading;
     }, 1000);

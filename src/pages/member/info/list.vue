@@ -68,7 +68,6 @@
 import FormList from '@/components/FormList/index.jsx';
 import api from '@/api';
 import moment from 'moment';
-const defaultAvatar = require('@/assets/img/user/avatar.png');
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
@@ -228,6 +227,24 @@ export default {
       };
     }
   },
+  created() {
+    // //------ 通过网址传递token并存储到ls ------
+    // let tokenStr = '';
+    // const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
+    // if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
+    //   if (tokenArr[1]) {
+    //     tokenStr = tokenArr[1];
+    //   }
+    // }
+    // if (tokenStr) {
+    //   console.log('有参数');
+    //   window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
+    //   window.history.replaceState(null, null, window.location.pathname);
+    // } else {
+    //   console.log('没有参数');
+    // }
+    // //------ 通过网址传递token并存储到ls ------
+  },
   mounted() {
     const timer1 = setTimeout(() => {
       console.log('this.$refs.content_main.offsetHeight  :>> ', this.$refs.content_main.offsetHeight);
@@ -236,32 +253,14 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
-    //初始化校验token和加载数据
-    this.getLoginUrl();
+    //初始化加载数据
     this.getDataInit();
-  },
-  created() {
-    let tokenStr = '';
-    const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
-    if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
-      if (tokenArr[1]) {
-        tokenStr = tokenArr[1];
-      }
-    }
-    if (tokenStr) {
-      console.log('有参数');
-      window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
-      window.location.replace(window.location.origin + window.location.pathname);
-    } else {
-      console.log('没有参数');
-    }
   },
   methods: {
     moment,
     async getDataInit() {
-      await this.getUserInfo();
-      await this.getMemberList();
       await this.getClientList();
+      await this.getMemberList();
     },
     //查询按钮
     onQuery() {
@@ -284,34 +283,10 @@ export default {
       this.pageSize = pageSize;
       this.getMemberList();
     },
-    getLoginUrl() {
-      api.getLoginUrl().then(res => {
-        console.log('getLoginUrl res :>> ', res);
-        if (res.code === 200) {
-          window.localStorage.setItem('SD_LOGIN_URL', res.data);
-        }
-      });
-    },
-    getUserInfo() {
-      const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
-      const param = {
-        token: tokenStr
-      };
-      api.getUserInfo(param).then(res => {
-        console.log('getUserInfo res :>> ', res);
-        if (res.code === 200) {
-          this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
-          this.username = res.data.userName;
-          window.localStorage.setItem('SD_USERAVATAR', this.userAvatar);
-          window.localStorage.setItem('SD_USERNAME', res.data.userName);
-          this.$store.commit('setUseravatar', this.userAvatar);
-          this.$store.commit('setUsername', res.data.userName);
-        }
-      });
-    },
+
     //获取会员来源
     getClientList() {
-      api.getClientList().then(res => {
+      return api.getClientList().then(res => {
         console.log('getClientList res :>> ', res);
         if (res.code === 200) {
           const project = {
@@ -330,7 +305,6 @@ export default {
           this.$refs.memberForm.setFieldsValue({
             memberSourceCode: this.formList[0].selectOptions[0].id
           });
-          // this.getMemberList();
         }
       });
     },
@@ -342,6 +316,7 @@ export default {
       if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
         memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
       }
+      console.log('memberSourceCode :>> ', memberSourceCode);
 
       let memberCode = '';
       if (this.$refs.memberForm.getFieldsValue().memberCode) {
@@ -384,7 +359,7 @@ export default {
       //   this.tableData.push(element);
       // });
 
-      api
+      return api
         .getMemberList(para)
         .then(res => {
           this.tableLoading = false;

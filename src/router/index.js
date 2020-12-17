@@ -7,32 +7,33 @@ Vue.use(VueRouter);
 
 const Home = () => import('@/components/home');
 
-//登录
-const Login = () => import('@/pages/login/login');
-//portal
-const Portal = () => import('@/pages/portal/portal');
+// //登录
+// const Login = () => import('@/pages/login/login');
+// //portal
+// const Portal = () => import('@/pages/portal/portal');
 
 //会员信息
-const Dashboard = () => import('@/pages/dashboard');
+const Dashboard = () => import('@/pages/member/dashboard');
 const MemberInfo = () => import('@/pages/member/info/list');
 const MemberInfoDetail = () => import('@/pages/member/info/detail');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
-  {
-    path: '/login',
-    name: 'login',
-    menuKey: 'login',
-    meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
-    component: Login
-  },
-  {
-    path: '/portal',
-    name: 'portal',
-    menuKey: 'portal',
-    meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
-    component: Portal
-  },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   menuKey: 'login',
+  //   meta: { menu: '/login', bread: [{ path: '/login', name: '登录' }] },
+  //   component: Login
+  // },
+  // {
+  //   path: '/portal',
+  //   name: 'portal',
+  //   menuKey: 'portal',
+  //   meta: { menu: '/portal', bread: [{ path: '/portal', name: 'portal' }] },
+  //   component: Portal
+  // },
+  //首页:home
   {
     path: '/',
     redirect: '/dashboard',
@@ -47,7 +48,7 @@ const routes = [
         meta: {
           menu: '/dashboard',
           authKeys: [''],
-          bread: [{ path: '/dashboard', name: '看板' }]
+          bread: [{ path: '/dashboard', name: '会员看板' }]
         },
         component: Dashboard
       },
