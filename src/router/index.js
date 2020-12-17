@@ -18,8 +18,14 @@ const Portal = () =>
 const TaskManager = () =>
     import ('@/pages/taskManager/index');
 
+const TaskDetail = () =>
+    import ('@/pages/taskManager/detail');
+
 const Card = () =>
     import ('@/pages/card/index');
+
+const CardDetail = () =>
+    import ('@/pages/card/detail');
 
 const AccessManager = () =>
     import ('@/pages/accessManager/index');
@@ -67,23 +73,11 @@ const routes = [{
     {
         path: '/',
         // redirect: '/login',
-        // redirect: '/portal',
+        redirect: '/portal',
         name: 'home',
         menuKey: 'home',
         component: Home,
         children: [{
-                path: '/space',
-                name: 'space',
-                menuKey: 'space',
-                meta: {
-                    menu: '/space',
-                    keepAlive: true,
-                    authKeys: ['menu_space'],
-                    bread: [{ path: '/space', name: '空间列表' }]
-                },
-                component: Space
-            },
-            {
                 path: '/card',
                 name: 'card',
                 menuKey: 'card',
@@ -91,11 +85,26 @@ const routes = [{
                     menu: '/card',
                     keepAlive: true,
                     bread: [{
-                        path: '/card',
-                        name: ''
+                        path: '/card_detail',
+                        name: '会员卡详情'
                     }]
                 },
                 component: Card
+            },
+            {
+                path: '/card/detail',
+                name: 'card_detail',
+                menuKey: 'card',
+                props: paramsStorage.setPropsStorage,
+                meta: {
+                    menu: '/card',
+                    keepAlive: true,
+                    bread: [
+                        { path: '/card', name: '会员卡列表' },
+                        { path: '/card/detail', name: '会员卡详情' }
+                    ]
+                },
+                component: CardDetail
             },
             {
                 path: '/task-manager',
@@ -106,16 +115,43 @@ const routes = [{
                     keepAlive: true,
                     bread: [{
                         path: '/task-manager',
-                        name: ''
+                        name: '任务管理'
                     }]
                 },
                 component: TaskManager
+            },
+            {
+                path: '/task-manager/detail',
+                name: 'task_detail',
+                menuKey: 'task-manager',
+                props: paramsStorage.setPropsStorage,
+                meta: {
+                    menu: '/task-manager',
+                    keepAlive: true,
+                    bread: [
+                        { path: '/task-manager', name: '任务管理' },
+                        { path: '/task-manager/detail', name: '任务详情' }
+                    ]
+                },
+                component: TaskDetail
             },
             {
                 path: '/access-manager',
                 name: 'access',
                 menuKey: 'access-manager',
                 component: AccessManager
+            },
+            {
+                path: '/space',
+                name: 'space',
+                menuKey: 'space',
+                meta: {
+                    menu: '/space',
+                    keepAlive: true,
+                    authKeys: ['menu_space'],
+                    bread: [{ path: '/space', name: '空间列表' }]
+                },
+                component: Space
             },
             {
                 path: '/space/add',

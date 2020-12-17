@@ -3,54 +3,22 @@
         <div class="card-header">会员卡</div>
         <div class="card-main">
             <a-row type="flex" justify="space-around" align="middle">
-                <a-col :span="8">
+                <a-col :span="8" v-for="item in dataList" :key="item.id">
                     <div class="card-main-boxs">
                         <div class="card-main-boxs-top">
                             <img class="card-main-boxs-top-img" :src="require('@/assets/img/card/card-bg.png')" alt="card">
-                            <p class="card-main-boxs-top-title">时代邻里会员卡</p>
-                            <p class="card-main-boxs-top-id">ID: 3aaf-11eb-b400-0a80</p>
+                            <p class="card-main-boxs-top-title">{{item.memberCardName}}</p>
+                            <p class="card-main-boxs-top-id">ID: {{item.id}}</p>
                         </div>
                         <div class="card-main-boxs-description">
-                            描述
+                            {{item.memo}}
                         </div>
                         <div class="card-main-boxs-footer">
-                            <p class="card-main-boxs-footer-member">持卡会员：<span>99999</span></p>
+                            <p class="card-main-boxs-footer-member">持卡会员：<span>{{item.memberCount}}</span></p>
                             <a-divider type="vertical" />
-                            <p class="card-main-boxs-footer-btn">查看</p>
-                        </div>
-                    </div>
-                </a-col>
-                <a-col :span="8">
-                    <div class="card-main-boxs">
-                        <div class="card-main-boxs-top">
-                            <img class="card-main-boxs-top-img" :src="require('@/assets/img/card/card-bg.png')" alt="card">
-                            <p class="card-main-boxs-top-title">时代邻里会员卡</p>
-                            <p class="card-main-boxs-top-id">ID: 3aaf-11eb-b400-0a80</p>
-                        </div>
-                        <div class="card-main-boxs-description">
-                            描述
-                        </div>
-                        <div class="card-main-boxs-footer">
-                            <p class="card-main-boxs-footer-member">持卡会员：<span>99999</span></p>
-                            <a-divider type="vertical" />
-                            <p class="card-main-boxs-footer-btn">查看</p>
-                        </div>
-                    </div>
-                </a-col>
-                <a-col :span="8">
-                    <div class="card-main-boxs">
-                        <div class="card-main-boxs-top">
-                            <img class="card-main-boxs-top-img" :src="require('@/assets/img/card/card-bg.png')" alt="card">
-                            <p class="card-main-boxs-top-title">时代邻里会员卡</p>
-                            <p class="card-main-boxs-top-id">ID: 3aaf-11eb-b400-0a80</p>
-                        </div>
-                        <div class="card-main-boxs-description">
-                            描述
-                        </div>
-                        <div class="card-main-boxs-footer">
-                            <p class="card-main-boxs-footer-member">持卡会员：<span>99999</span></p>
-                            <a-divider type="vertical" />
-                            <p class="card-main-boxs-footer-btn">查看</p>
+                            <p class="card-main-boxs-footer-btn" 
+                                @click="goDetail(item.id)"
+                            >查看</p>
                         </div>
                     </div>
                 </a-col>
@@ -60,11 +28,27 @@
 </template>
 
 <script>
+import api from "@/api";
 export default {
     name: 'card',
     data() {
         return {
-
+            dataList: []
+        }
+    },
+    created() {
+        this.initData()
+        console.log(this)
+    },
+    methods: {
+        initData() {
+            api.getCardList({})
+            .then( res => {
+                this.dataList = res.data
+            })
+        },
+        goDetail(id) {
+            this.$router.push({name: 'card_detail', query: {cardId: id}})
         }
     }
 }

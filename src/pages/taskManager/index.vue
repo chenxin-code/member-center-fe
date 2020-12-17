@@ -18,7 +18,7 @@
                         :loading="tableLoading"
                     >
                         <span slot="action" slot-scope="record">
-                            <a @click="onCheck(text, record)">查看</a>
+                            <a @click="onCheck(record)">查看</a>
                         </span>
                     </a-table>
                     <a-pagination
@@ -71,7 +71,7 @@ export default {
                     placeholder: "全部",
                     name: 'status',
                     selectOptions: [
-                        {id: '', name: '全部'},
+                        {id: null, name: '全部'},
                         {id: 0, name: '禁用'},
                         {id: 1, name: '启用'}
                     ]
@@ -140,24 +140,34 @@ export default {
                     scopedSlots: { customRender: 'action' },
                 }
             ],
-            dataList: []
+            dataList: [],
+            taskKey: '', 
+            taskDate: [], 
+            taskName: '', 
+            taskSource: '', 
+            status: null
         }
     },
     components: {
       FilterForm
     },
     created () {
-        this.getTaskList()
         this.getTaskSource()
+        this.getTaskList()
     },
     methods: {
         onSearch(args) {
-            console.log('-----', args)
-            this.getTaskList(args)
+            const { taskKey, taskDate, taskName, taskSource, status } = args
+            this.taskKey = taskKey || null,
+            this.taskName = taskName || null,
+            this.taskSource = taskSource || null,
+            this.status = status || null,
+            this.taskDate = taskDate || [],
+            this.getTaskList()
         },
 
         onCheck(record) {
-            console.log(record)
+            this.$router.push({name: 'task_detail', query: {id: record.id}});
         },
 
         onShowSizeChange(current, pageSize) {
@@ -166,17 +176,17 @@ export default {
             this.getTaskList()
         },
 
-        getTaskList(values) {
+        getTaskList() {
             this.tableLoading = true;
             let args = {
                 pageIndex: this.current,
                 pageSize: this.pageSize,
-                createTimeStart: values && values.taskDate[0] && moment(values.taskDate[0]).format('YYYY-MM-DD'),
-                createTimeEnd: values && values.taskDate[1] && moment(values.taskDate[1]).format('YYYY-MM-DD'),
-                status: values && values.status ? values.status : null,
-                taskKey: values && values.taskKey,
-                taskName: values && values.taskName,
-                taskSource: values && values.taskSource,
+                createTimeStart: this.taskDate.length ? moment(this.taskDate[0]).format('YYYY-MM-DD') : null,
+                createTimeEnd: this.taskDate.length ? moment(this.taskDate[1]).format('YYYY-MM-DD') : null,
+                status: this.status,
+                taskKey: this.taskKey,
+                taskName: this.taskName,
+                taskSource: this.taskSource,
             }
             api.getTaskList(args)
             .then( res => {
@@ -200,7 +210,7 @@ export default {
                     if (item.name === 'taskSource') {
                         return {
                             ...item,
-                            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
+                            selectOptions: [].concat({id: null, name: '全部'}, sourceList)
                         }
                     } else {
                         return item

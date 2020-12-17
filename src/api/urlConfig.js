@@ -12,6 +12,9 @@ export const option = {
 export default {
     GET_TASKlIST: '/times/member-center/task/api/v1/list', // 获取任务列表
     GET_TASKSOURCE: '/times/member-center/client/api/v1/list', // 获取任务来源
+    GET_CARDLIST: '/times/member-center/member-card/api/v1/list', // 获取会员卡列表
+    GET_CARDDETAIL: '/times/member-center/member-card/api/v1/detail', // 获取会员卡详情
+    GET_CLiENT: '/times/member-center/client/api/v1/list', // 获取第三方来源列表
     LOGIN: option.login + '/oauth/token', //登录
     LOGOUT: option.logout + '/logout', //退出登录
     SEND_CODE: option.pub + '/verifycode/api/v1/send', //发送验证码

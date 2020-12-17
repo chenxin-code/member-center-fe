@@ -7,14 +7,14 @@
                     <div class="access-main-boxs">
                         <div class="access-main-boxs-top">
                             <img class="access-main-boxs-top-img" :src="require('@/assets/img/card/card-bg.png')" alt="card">
-                            <p class="access-main-boxs-top-title">{{item.title}}</p>
-                            <p class="access-main-boxs-top-id">KEY: 3aaf-11eb-b400-0a80</p>
+                            <p class="access-main-boxs-top-title">{{item.appName}}</p>
+                            <p class="access-main-boxs-top-id">KEY: {{item.appCode}}</p>
                         </div>
                         <div class="access-main-boxs-description">
-                            {{item.des}}
+                            {{item.appDescribe}}
                         </div>
                         <div class="access-main-boxs-footer">
-                            <p class="access-main-boxs-footer-member">注册会员：<span>99w</span></p>
+                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}w</span></p>
                             <a-divider type="vertical" />
                             <p class="access-main-boxs-footer-btn">查看</p>
                         </div>
@@ -26,24 +26,24 @@
 </template>
 
 <script>
+import api from '@/api'
 export default {
     name: 'access',
     data() {
         return {
-            list: [
-                {
-                    title: '邻里邦PRO',
-                    des: '邻里邦PRO平台，主要服务于时代邻里客户，住宅小区的业主等'
-                },
-                {
-                    title: '时代+',
-                    des: '时代+平台，主要服务于时代中国客户，主要面向的置业客户'
-                },
-                {
-                    title: '企业邦',
-                    des: '企业邦平台，主要服务于企业客户'
-                },
-            ]
+            list: []
+        }
+    },
+    created() {
+        this.initData()
+    },
+    methods: {
+        initData() {
+            api.getClientList()
+            .then( res => {
+                console.log(res)
+                this.list = res.data
+            })
         }
     }
 }
