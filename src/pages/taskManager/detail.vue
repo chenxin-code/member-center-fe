@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import api from '@/api'
+import moment from 'moment'
 export default {
     name: 'task_detail',
     data() {
@@ -25,42 +27,51 @@ export default {
                 },
                 {
                     label: '任务名称：',
-                    name: 'memberCardName',
+                    name: 'taskName',
                 },
                 {
                     label: '任务有效期(天)：',
-                    name: 'memberCount'
+                    name: 'validity'
                 },
                 {
                     label: '是否周期性：',
-                    name: 'memo',
+                    name: 'isPeriodic',
                 },
                 {
                     label: '状态：',
-                    name: 'memberCardSourceName'
+                    name: 'status'
                 },
                 {
                     label: '对应行为：',
-                    name: 'memberCardImage'
+                    name: 'behaviourName'
                 },
                 {
                     label: '触发条件：',
-                    name: 'memberCardImage'
+                    name: 'taskCondition'
                 },
                 {
                     label: '创建时间：',
-                    name: 'memberCardImage'
+                    name: 'createTime'
                 },
             ],
             dataObj: {}
         }
     },
     created() {
-
+        this.initData(this.$route.query.id)
     },
     methods: {
-        initData() {
-
+        initData(id) {
+            api.getTaskDetail({taskId: id})
+            .then( res => {
+                console.log(res)
+                this.dataObj = Object.assign(
+                    res.data,
+                    {createTime: moment(res.data.createTime).format('YYYY-MM-DD')},
+                    {isPeriodic: res.data.isPeriodic === 0 ? '否' : '是'},
+                    {status: res.data.status === 0 ? '禁用' : '启用'},
+                )
+            })
         }
     }
 }

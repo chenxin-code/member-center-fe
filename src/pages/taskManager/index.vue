@@ -132,7 +132,8 @@ export default {
                 {
                     title: '创建时间',
                     key: 'createTime',
-                    dataIndex: 'createTime'
+                    dataIndex: 'createTime',
+                    customRender: text => moment(text).format('YYYY-MM-DD')
                 },
                 {
                     title: '操作',

@@ -51,7 +51,6 @@ export default {
     },
     created () {
         this.initData(this.$route.query.cardId)
-        console.log(this.$route.query.cardId)
     },
     methods: {
         initData(id) {
