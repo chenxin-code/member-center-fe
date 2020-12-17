@@ -1,5 +1,5 @@
 <template>
-  <div id="microApplication">
+  <div id="member-info">
     <div class="content-header">会员信息</div>
     <div class="content-main" ref="content_main" style="padding: 20px;">
       <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onQuery" />
@@ -72,7 +72,7 @@ import moment from 'moment';
 // console.log('mock :>> ', mock);
 
 export default {
-  name: 'microApplication',
+  name: 'memberInfo',
   data() {
     return {
       formList: [
@@ -381,12 +381,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#microApplication {
+#member-info {
   height: 100%;
   overflow: hidden;
-}
-.content_main {
-  height: 100%;
-  padding: 10px;
+
+  .content_main {
+    height: 100%;
+    padding: 10px;
+  }
 }
 </style>
