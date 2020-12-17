@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    run: nginx
-  name: nginx
+    run: member-center-fe
+  name: member-center-fe
 spec:
   replicas: 1
   selector:
@@ -18,14 +18,14 @@ spec:
         run: nginx
     spec:
       containers:
-      - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/m-center-prod/web-b:GIT_BRANCH_AS_TAG_TIMESTAMP
-        name: nginx
+      - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/m-center-prod/member-center-fe:GIT_BRANCH_AS_TAG_TIMESTAMP
+        name: member-center-fe
         resources: {}
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
-          name: nginx-conf
+          name: member-center-fe-conf
           subPath: nginx.conf
       volumes:
       - configMap:
-          name: nginx-conf
-        name: nginx-conf
+          name: member-center-fe-conf
+        name: member-center-fe-conf
