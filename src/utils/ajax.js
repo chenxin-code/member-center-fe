@@ -35,14 +35,21 @@ HTTP.interceptors.request.use(async config => {
 
   console.log('config.url :>> ', config.url);
 
-  // 通过调用ajax拿到存在localStorage里面的token
-  // let tokenStr =
-  //   'Bearer ' +
-  //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDY4NzQzLCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiIyNDJjOGNhYS02YmU4LTQ5OWYtYjI5Ny0zMjVhNzEwY2UxZGUiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.WgYr5lRJ7-10vuu0iSU5yQr1kbFhVNtmOglMVHCXC2_IyKaWNW8dcUAU7Jr-CKBwkJ97u5x6dyXVzmBKrmP5GAxXplEdLFxbSLE_inyCP_b8UtKj5gwWo3-OXXGQd_az-3gY8UWdjapGwXq3ASxvFoZmEsDXq9IsxRdP2NoL7dx4wpxtQNBNt2VsdYhzGPzxjH82-UqRbZi5l_vKJuqO1jGTLQhNOYFMqkLe7QQgcBqJzgoDoQd_FuLWT_agFxEiOBn92RKaxG9oDJ8EB8lBJB3AhKJBkdoZRvEf5MXCzz8_PF2z4V-e1uePXZF46Pt36596daxP4pAVv9WYdZMxiA';
-  let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
-  console.log('ajax tokenStr :>> ', tokenStr);
-  config.headers.Authorization = tokenStr;
-  return config;
+  if (config.url.indexOf('/times/member-pub-center') >= 0) {
+    let tokenStr = '';
+    config.headers.Authorization = tokenStr;
+    return config;
+  } else {
+    // 通过调用ajax拿到存在localStorage里面的token
+    // let tokenStr =
+    //   'Bearer ' +
+    //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDY4NzQzLCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiIyNDJjOGNhYS02YmU4LTQ5OWYtYjI5Ny0zMjVhNzEwY2UxZGUiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.WgYr5lRJ7-10vuu0iSU5yQr1kbFhVNtmOglMVHCXC2_IyKaWNW8dcUAU7Jr-CKBwkJ97u5x6dyXVzmBKrmP5GAxXplEdLFxbSLE_inyCP_b8UtKj5gwWo3-OXXGQd_az-3gY8UWdjapGwXq3ASxvFoZmEsDXq9IsxRdP2NoL7dx4wpxtQNBNt2VsdYhzGPzxjH82-UqRbZi5l_vKJuqO1jGTLQhNOYFMqkLe7QQgcBqJzgoDoQd_FuLWT_agFxEiOBn92RKaxG9oDJ8EB8lBJB3AhKJBkdoZRvEf5MXCzz8_PF2z4V-e1uePXZF46Pt36596daxP4pAVv9WYdZMxiA';
+    let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
+    console.log('ajax tokenStr :>> ', tokenStr);
+    config.headers.Authorization = tokenStr;
+    return config;
+  }
+
 });
 
 function handleParams(url, rawData, rawMethod, responseType) {
