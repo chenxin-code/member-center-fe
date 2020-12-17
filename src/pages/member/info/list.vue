@@ -38,7 +38,8 @@
         </template>
         <template slot="levelNameSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="showLevel(rowData)"></span>
+            <!-- <span v-html="showLevel(rowData)"></span> -->
+            <span v-html="rowData.memberName"></span>
           </div>
         </template>
 

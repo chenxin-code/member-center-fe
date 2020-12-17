@@ -8,7 +8,9 @@
       <a-row style="padding-bottom:10px;height:100%;">
         <!-- 基础信息 -->
         <div class="member-base">
-          <div class="base-title">基础信息</div>
+          <div class="base-title">
+            <div class="base-title-content">基础信息</div>
+          </div>
           <a-row class="base-row" style="padding:16px;border-bottom: 1px dashed #ccc;">
             <a-col :span="16">
               <div class="base-left">
@@ -52,7 +54,7 @@
             <a-col :span="8">
               <div class="base-right">
                 <div class="right-item">邦豆</div>
-                <div class="right-item right-item-middle">{{memberDetails.integral}}</div>
+                <div class="right-item right-item-middle">{{ memberDetails.integral }}</div>
                 <div class="right-item right-item-bottom">
                   <div class="right-item-bottom-left">邦豆充值</div>
                   <div class="right-item-bottom-right">邦豆抵扣</div>
@@ -63,17 +65,16 @@
         </div>
         <!-- 会员卡信息 -->
         <div class="member-card">
+          <div class="card-title">
+            <div class="card-title-content">会员卡信息</div>
+          </div>
           <a-row style="padding:16px;border-bottom: 1px dashed #ccc;">
-            <div>会员卡信息</div>
-            <a-col style="background: #ccc;" :span="16">
-              <div>aaaa</div>
-              <div>aaaa</div>
-              <div>aaaa</div>
-            </a-col>
-            <a-col style="background: skyblue;" :span="8">
-              <div>aaaa</div>
-              <div>aaaa</div>
-              <div>aaaa</div>
+            <a-col :span="24">
+              <div class="card-row">
+                <div class="card-row-left"></div>
+                <div class="card-row-center">aaaa</div>
+                <div class="card-row-right">aaaa</div>
+              </div>
             </a-col>
           </a-row>
         </div>
@@ -175,8 +176,8 @@ const defaultAvatar = require('@/assets/img/user/avatar.png');
 import { CARD_TYPE_MAP } from '@/constance';
 // console.log('CARD_TYPE_MAP :>> ', CARD_TYPE_MAP);
 
-import mock from './mock';
-console.log('mock :>> ', mock);
+// import mock from './mock';
+// console.log('mock :>> ', mock);
 
 //页面列表数据
 const allColumns = {
@@ -325,25 +326,25 @@ export default {
         memberId: this.$route.params.id
       };
 
-      for (const key in mock.data) {
-        if (Object.hasOwnProperty.call(mock.data, key)) {
-          const element = mock.data[key];
-          this.$set(this.memberDetails, key, element);
-        }
-      }
-
-      // api.getMemberDetail(param).then(res => {
-      //   console.log('getMemberDetail res :>> ', res);
-      //   if (res.code === 200) {
-      //     for (const key in res.data) {
-      //       if (Object.hasOwnProperty.call(res.data, key)) {
-      //         const element = res.data[key];
-      //         this.$set(this.memberDetails, key, element);
-      //       }
-      //     }
-      //     console.log('this.memberDetails :>> ', this.memberDetails);
+      // for (const key in mock.data) {
+      //   if (Object.hasOwnProperty.call(mock.data, key)) {
+      //     const element = mock.data[key];
+      //     this.$set(this.memberDetails, key, element);
       //   }
-      // });
+      // }
+
+      api.getMemberDetail(param).then(res => {
+        console.log('getMemberDetail res :>> ', res);
+        if (res.code === 200) {
+          for (const key in res.data) {
+            if (Object.hasOwnProperty.call(res.data, key)) {
+              const element = res.data[key];
+              this.$set(this.memberDetails, key, element);
+            }
+          }
+          console.log('this.memberDetails :>> ', this.memberDetails);
+        }
+      });
     },
     //微应用版本
     pagingVersions(current, pageSize) {
@@ -407,9 +408,15 @@ export default {
 #member-info-detail {
   .member-base {
     .base-title {
-      font-size: 18px;
       color: #666;
       padding: 5px 0 0 26px;
+      .base-title-content {
+        font-size: 16px;
+        height: 16px;
+        line-height: 16px;
+        padding-left: 8px;
+        border-left: 3px solid rgba(33, 33, 206, 0.5);
+      }
     }
     .base-row {
       display: flex;
@@ -495,6 +502,45 @@ export default {
             border: 1px solid skyblue;
           }
         }
+      }
+    }
+  }
+
+  .member-card {
+    .card-title {
+      color: #666;
+      padding: 5px 0 0 26px;
+      .card-title-content {
+        font-size: 16px;
+        height: 16px;
+        line-height: 16px;
+        padding-left: 8px;
+        border-left: 3px solid rgba(33, 33, 206, 0.5);
+      }
+    }
+    .card-row {
+      padding-left: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: stretch;
+
+      .card-row-left {
+        margin-right: 45px;
+        background-color: red;
+        width: 200px;
+        height: 150px;
+      }
+      .card-row-center {
+                margin-right: 45px;
+        background-color: #ccc;
+        width: 200px;
+        height: 150px;
+      }
+      .card-row-right {
+        background-color: skyblue;
+        width: 200px;
+        height: 150px;
       }
     }
   }

@@ -13,9 +13,9 @@
               <span class="ant-dropdown-link" @click="e => e.preventDefault()">
                 <a-avatar class="user-avatar" :src="useravatar" @loadError="loadError" />
                 {{ username }}
-                <a-icon type="down" />
+                <!-- <a-icon type="down" /> -->
               </span>
-              <a-menu slot="overlay">
+              <!-- <a-menu slot="overlay">
                 <a-menu-item>
                   <router-link :to="{ path: '/memberInfo' }">个人中心</router-link>
                 </a-menu-item>
@@ -25,7 +25,7 @@
                 <a-menu-item @click="handleLogout">
                   <span>退出登录</span>
                 </a-menu-item>
-              </a-menu>
+              </a-menu> -->
             </a-dropdown>
           </div>
         </a-layout-header>
@@ -169,6 +169,7 @@ export default {
       }
 
       .ant-dropdown-link {
+        padding-right: 10px;
         height: 60px;
         line-height: 60px;
         display: inline-block;
