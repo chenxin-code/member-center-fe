@@ -35,7 +35,7 @@ HTTP.interceptors.request.use(async config => {
 
   console.log('config.url :>> ', config.url);
 
-  if (config.url.indexOf('/times/member-pub-center') >= 0) {
+  if (config.url.indexOf('/times/member-pub-center/integrated') >= 0) {
     let tokenStr = '';
     config.headers.Authorization = tokenStr;
     return config;
@@ -49,7 +49,6 @@ HTTP.interceptors.request.use(async config => {
     config.headers.Authorization = tokenStr;
     return config;
   }
-
 });
 
 function handleParams(url, rawData, rawMethod, responseType) {

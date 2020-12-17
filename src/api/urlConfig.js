@@ -9,8 +9,8 @@ export const option = {
   micro: '/times/micro-app-service', //微应用管理  版本管理
   member: '/times/member-center/member',
   client: '/times/member-center/client',
-  mpc_integrated:'/times/member-pub-center/integrated',
-  mc_integrated:'/times/member-center/integrated',
+  mpc_integrated: '/times/member-pub-center/integrated', //无需做token验证(token传空)
+  mc_integrated: '/times/member-center/integrated'
 };
 
 // 请求地址
