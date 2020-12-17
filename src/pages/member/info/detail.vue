@@ -8,9 +8,9 @@
       <a-row style="padding-bottom:10px;height:100%;">
         <!-- 基础信息 -->
         <div class="member-base">
-          <div class="base-title" style="padding:0 26px;">基础信息</div>
+          <div class="base-title">基础信息</div>
           <a-row class="base-row" style="padding:16px;border-bottom: 1px dashed #ccc;">
-            <a-col :span="14">
+            <a-col :span="16">
               <div class="base-left">
                 <div class="base-left-top">
                   <div class="left-top-left">
@@ -25,28 +25,34 @@
                   </div>
                 </div>
                 <div class="base-left-middle">
-                  <div class="left-middle-item">昵称: 我是一个昵称</div>
-                  <div class="left-middle-item">姓名: 名姓名</div>
-                  <div class="left-middle-item">性别: 男</div>
-                  <div class="left-middle-item">证件类型: 大陆生份证</div>
-                  <div class="left-middle-item">证件号: 111111111111111111</div>
-                  <div class="left-middle-item">生日: 2020-09-01</div>
-                  <div class="left-middle-item">加入时间: 2020-09-01</div>
-                  <div class="left-middle-item">邮箱: 11@qq.com</div>
+                  <div class="left-middle-item">昵称: {{ memberDetails.memberName }}</div>
+                  <div class="left-middle-item">姓名: {{ memberDetails.memberName }}</div>
+                  <div class="left-middle-item">性别: {{ sexStr(memberDetails.sex) }}</div>
+                  <div class="left-middle-item">证件类型: {{ cardTypeStr(memberDetails.cardType) }}</div>
+                  <div class="left-middle-item">证件号: {{ memberDetails.cardNo }}</div>
+                  <div class="left-middle-item" v-html="`生日: ${moment(memberDetails.birthday).format('YYYY-MM-DD')}`">
+                    {
+                  </div>
+                  <div
+                    class="left-middle-item"
+                    v-html="`加入时间: ${moment(memberDetails.createTime).format('YYYY-MM-DD')}`"
+                  ></div>
+                  <div class="left-middle-item">邮箱: {{ memberDetails.email }}</div>
                 </div>
                 <div class="base-left-bottom">
                   <div class="left-bottom-left" style="padding-right:5px;">接入来源:</div>
                   <div class="left-bottom-right">
-                    <div>邻里邦Pro 2017-10-10 17:48:51 （创建）</div>
-                    <div>企业邦 2018-10-10 17:48:51</div>
+                    <div v-for="item in memberDetails.memberSources" :key="item.id">
+                      {{ item.sourceName }} {{ moment(memberDetails.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                    </div>
                   </div>
                 </div>
               </div>
             </a-col>
-            <a-col :span="10">
+            <a-col :span="8">
               <div class="base-right">
                 <div class="right-item">邦豆</div>
-                <div class="right-item right-item-middle">20000</div>
+                <div class="right-item right-item-middle">{{memberDetails.integral}}</div>
                 <div class="right-item right-item-bottom">
                   <div class="right-item-bottom-left">邦豆充值</div>
                   <div class="right-item-bottom-right">邦豆抵扣</div>
@@ -163,8 +169,14 @@
 
 <script>
 import api from '@/api';
+import moment from 'moment';
 import { mapActions } from 'vuex';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
+import { CARD_TYPE_MAP } from '@/constance';
+// console.log('CARD_TYPE_MAP :>> ', CARD_TYPE_MAP);
+
+import mock from './mock';
+console.log('mock :>> ', mock);
 
 //页面列表数据
 const allColumns = {
@@ -269,7 +281,32 @@ export default {
       resourcePackagePageSize: 10
     };
   },
+  computed: {
+    cardTypeStr() {
+      return param => {
+        let str = '';
+        if (Object.keys(CARD_TYPE_MAP).includes(param)) {
+          str = CARD_TYPE_MAP[param];
+        }
+        return str;
+      };
+    },
+    sexStr() {
+      return param => {
+        let str = '';
+        if (param === 1) {
+          str = '男';
+        } else if (param === 2) {
+          str = '女';
+        } else {
+          str = '未知';
+        }
+        return str;
+      };
+    }
+  },
   methods: {
+    moment,
     ...mapActions(['FALLBACK']),
     defImg() {
       this.microApplicationDetail.icon = require('../../../assets/img/user/avatar.png');
@@ -287,18 +324,26 @@ export default {
       const param = {
         memberId: this.$route.params.id
       };
-      api.getMemberDetail(param).then(res => {
-        console.log('getMemberDetail res :>> ', res);
-        if (res.code === 200) {
-          for (const key in res.data) {
-            if (Object.hasOwnProperty.call(res.data, key)) {
-              const element = res.data[key];
-              this.$set(this.memberDetails, key, element);
-            }
-          }
-          console.log('this.memberDetails :>> ', this.memberDetails);
+
+      for (const key in mock.data) {
+        if (Object.hasOwnProperty.call(mock.data, key)) {
+          const element = mock.data[key];
+          this.$set(this.memberDetails, key, element);
         }
-      });
+      }
+
+      // api.getMemberDetail(param).then(res => {
+      //   console.log('getMemberDetail res :>> ', res);
+      //   if (res.code === 200) {
+      //     for (const key in res.data) {
+      //       if (Object.hasOwnProperty.call(res.data, key)) {
+      //         const element = res.data[key];
+      //         this.$set(this.memberDetails, key, element);
+      //       }
+      //     }
+      //     console.log('this.memberDetails :>> ', this.memberDetails);
+      //   }
+      // });
     },
     //微应用版本
     pagingVersions(current, pageSize) {
@@ -364,6 +409,7 @@ export default {
     .base-title {
       font-size: 18px;
       color: #666;
+      padding: 5px 0 0 26px;
     }
     .base-row {
       display: flex;

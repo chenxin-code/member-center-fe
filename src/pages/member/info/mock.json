@@ -1,28 +1,116 @@
 {
-  "code": 200,
-  "data": {
-    "current": 1,
-    "pages": 2,
-    "records": [
-      {
-        "createTime": 1607933871000,
-        "grow": 0,
-        "integral": 100,
-        "integralTotal": 100,
-        "isDeleted": 0,
-        "isEnable": 0,
-        "isShowRealName": 0,
-        "memberName": "用户 138****0007",
-        "memberType": 0,
-        "phone": "13800010007",
-        "phoneAreaCode": "81",
-        "sex": 0,
-        "updateTime": 1607934051000
-      }
-    ],
-    "searchCount": true,
-    "size": 10,
-    "total": 17
-  },
-  "message": "success"
+	"code":200,
+	"data":{
+		"birthday":946656000000,
+		"cardNo":"14112419961010",
+		"cardType":"111",
+		"createTime":1608087326000,
+		"email":"ceshi",
+		"grow":0,
+		"integral":200,
+		"integralTotal":3000,
+		"isDeleted":0,
+		"isEnable":0,
+		"isShowRealName":1,
+		"levels":[
+			{
+				"cardId":1,
+				"createTime":1607740692000,
+				"createUser":1,
+				"describe":"2",
+				"id":2,
+				"isDeleted":0,
+				"levelIcon":"2",
+				"levelName":"铜牌会员",
+				"orderNum":2,
+				"rangeBegin":0,
+				"rangeEnd":10000,
+				"ratio":1.0,
+				"updateTime":1607740698000,
+				"updateUser":1
+			},
+			{
+				"cardId":1,
+				"createTime":1607740692000,
+				"createUser":1,
+				"describe":"1",
+				"id":1,
+				"isDeleted":0,
+				"levelIcon":"1",
+				"levelName":"普通会员",
+				"orderNum":1,
+				"rangeBegin":0,
+				"rangeEnd":5000,
+				"ratio":1.0,
+				"updateTime":1607740698000,
+				"updateUser":1
+			}
+		],
+		"memberCards":[
+			{
+				"createTime":1607741945000,
+				"expirationDate":1633057123000,
+				"growEffective":3,
+				"id":3,
+				"integral":100,
+				"integralEffective":3,
+				"isDefault":0,
+				"isDeleted":0,
+				"memberCardImage":"1312",
+				"memberCardName":"时代邻里会员卡",
+				"memberCardSource":"1",
+				"memberCardType":1,
+				"memberCount":0,
+				"updateTime":1607917478000
+			},
+			{
+				"createTime":1607741834000,
+				"expirationDate":1612148206000,
+				"growEffective":3,
+				"historyMemberCardId":"312313",
+				"id":1,
+				"integral":1000,
+				"integralEffective":3,
+				"isDefault":1,
+				"isDeleted":0,
+				"memberCardImage":"qweqe",
+				"memberCardName":"金卡",
+				"memberCardSource":"1",
+				"memberCardType":1,
+				"memberCount":0,
+				"memo":"13213",
+				"updateTime":1607917476000
+			}
+		],
+		"memberCode":"3795c380-3f87-11eb-9636-00163e10e44d",
+		"memberImage":"13123",
+		"memberName":"张三",
+		"memberSources":[
+			{
+				"createTime":1608023430000,
+				"id":2,
+				"isDeleted":0,
+				"memberId":2,
+				"sourceCode":"sys_linlibang",
+				"sourceName":"邻里邦",
+				"updateTime":1608023430000
+			},
+			{
+				"createTime":1608023511000,
+				"id":11,
+				"isDeleted":0,
+				"memberId":2,
+				"sourceCode":"sys_dichan",
+				"sourceName":"地产",
+				"updateTime":1608023511000
+			}
+		],
+		"memberType":1,
+		"memo":"测试",
+		"phone":"13643470000",
+		"phoneAreaCode":"81",
+		"sex":1,
+		"updateTime":1607741726000
+	},
+	"message":"success"
 }
