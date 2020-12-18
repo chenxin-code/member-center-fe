@@ -33,6 +33,19 @@ const assetsCDN = {
 // vue.config.js
 const vueConfig = {
     configureWebpack: {
+        //警告 webpack 的性能提示
+        performance: {
+            hints: 'warning',
+            //入口起点的最大体积
+            maxEntrypointSize: 50000000,
+            //生成文件的最大体积
+            maxAssetSize: 30000000,
+            //只给出 js 文件的性能提示
+            assetFilter: function(assetFilename) {
+                return assetFilename.endsWith('.js');
+            }
+        },
+
         // webpack plugins
         plugins: [
                 // Ignore all locale files of moment.js
@@ -128,7 +141,8 @@ const vueConfig = {
         // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
         proxy: {
             '/times/': {
-                target: 'http://8.129.64.205:20000/', //后端ip地址及端口
+                // target: 'http://8.129.225.124:16666/', //web-b后端ip地址及端口
+                target: 'http://8.129.64.205:20000/', //会员中心后端ip地址及端口
                 ws: true, //是否支持WebSocket
                 changeOrigin: true //是否开启跨域
             },

@@ -72,8 +72,8 @@ export default {
                     name: 'status',
                     selectOptions: [
                         {id: null, name: '全部'},
-                        {id: 0, name: '禁用'},
-                        {id: 1, name: '启用'}
+                        {id: '0', name: '禁用'},
+                        {id: '1', name: '启用'}
                     ]
                 },
                 {

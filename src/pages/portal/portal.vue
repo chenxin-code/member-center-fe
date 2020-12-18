@@ -94,8 +94,11 @@ export default {
   },
   methods: {
     getUserInfo() {
-      console.log('api :>> ', api);
-      api.getUserInfo().then(res => {
+      const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
+      const param = {
+        token: tokenStr
+      };
+      api.getUserInfo(param).then(res => {
         if (res.code === 200) {
           this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
           this.username = res.data.userName;
@@ -140,7 +143,7 @@ export default {
       // window.localStorage.setItem('SD_AUTHORITIES', '');
       // window.localStorage.setItem('SD_USERAVATAR', '');
       // window.localStorage.setItem('SD_USERNAME', '');
-      this.$router.push({ path: '/' });
+      // this.$router.push({ path: '/portal' });
     },
     turn_route(route) {
       this.$router.push({ path: route });

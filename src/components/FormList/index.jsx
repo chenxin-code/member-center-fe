@@ -88,6 +88,8 @@ const FormList = {
           );
         case 'datePicker':
           return <a-date-picker v-decorator={[name, { rules: rules }]} {...others} />;
+        case 'datePickerShowTime':
+          return <a-date-picker show-time v-decorator={[name, { rules: rules }]} {...others} />;
         case 'rangePicker':
           return <a-range-picker v-decorator={[name, { rules: rules }]} {...others} />;
         case 'button':
