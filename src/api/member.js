@@ -10,3 +10,5 @@ export const getUserInfo = data => fetchApi(URL.USER_INFO, data, 'POST');
 export const getIntegralRecord = data => fetchApi(URL.INTEGRAL_RECORD, data, 'GET');
 export const getGrownLog = data => fetchApi(URL.GROWN_LOG, data, 'GET');
 export const getBehaviourList = data => fetchApi(URL.BEHAVIOUR_LIST, data, 'GET');
+export const getMemberTongJi = data => fetchApi(URL.MEMBER_TONGJI, data, 'GET');
+export const getMemberTongJiDate = data => fetchApi(URL.MEMBER_TONGJI_DATE, data, 'GET');

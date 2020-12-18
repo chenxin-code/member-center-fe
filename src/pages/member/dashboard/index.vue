@@ -385,9 +385,11 @@ export default {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
+      await this.getMemberTongJi();
+      await this.getMemberTongJiDate();
     },
     getLoginUrl() {
-      return api.getLoginUrl().then(res => {
+      api.getLoginUrl().then(res => {
         console.log('getLoginUrl res :>> ', res);
         if (res.code === 200) {
           window.localStorage.setItem('SD_LOGIN_URL', res.data);
@@ -401,7 +403,7 @@ export default {
         token: tokenStr
       };
 
-      return api.getUserInfo(param).then(res => {
+      api.getUserInfo(param).then(res => {
         console.log('getUserInfo res :>> ', res);
         if (res.code === 200) {
           this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
@@ -412,6 +414,38 @@ export default {
           this.$store.commit('setUsername', res.data.userName);
         }
       });
+    },
+    //获取会员统计
+    getMemberTongJi() {
+      api
+        .getMemberTongJi()
+        .then(res => {
+          console.log('getMemberTongJi res :>> ', res);
+          if (res.code === 200) {
+            //
+          }
+        })
+        .finally(() => {
+          //
+        });
+    },
+    getMemberTongJiDate() {
+      const param = {
+        type: 1
+        // createTimeStart: jointimeStart,
+        // createTimeEnd: jointimeEnd
+      };
+      api
+        .getMemberTongJiDate()
+        .then(res => {
+          console.log('getMemberTongJiDate res :>> ', res);
+          if (res.code === 200) {
+            //
+          }
+        })
+        .finally(() => {
+          //
+        });
     }
   },
   created() {
