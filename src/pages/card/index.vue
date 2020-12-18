@@ -99,6 +99,9 @@ export default {
                 color: #a0a0a0;
                 background: rgba(247, 249, 250, 1);
                 line-height: 48px;
+                &-btn{
+                    cursor: pointer;
+                }
                 &-member, &-btn{
                     margin: 0;
                     display: inline-block;

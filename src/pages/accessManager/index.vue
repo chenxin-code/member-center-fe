@@ -14,7 +14,7 @@
                             {{item.appDescribe}}
                         </div>
                         <div class="access-main-boxs-footer">
-                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}w</span></p>
+                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}{{(item.memberCount / 10000) >= 1 ? 'w' : ''}}</span></p>
                             <a-divider type="vertical" />
                             <p class="access-main-boxs-footer-btn">查看</p>
                         </div>
@@ -98,6 +98,9 @@ export default {
                 color: #a0a0a0;
                 background: rgba(247, 249, 250, 1);
                 line-height: 48px;
+                &-btn{
+                    cursor: pointer;
+                }
                 &-member, &-btn{
                     margin: 0;
                     display: inline-block;
