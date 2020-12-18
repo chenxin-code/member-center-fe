@@ -1,4 +1,10 @@
 export const option = {
+  /* ------暂时用不到----- */
+  login: '/times/auth', // 登录
+  logout: '/times/api-demo/logout', //退出
+  pub: '/times/pub-center', //数据字典
+  /* ------暂时用不到----- */
+
   member: '/times/member-center/member',
   client: '/times/member-center/client',
   behaviour: '/times/member-center/behaviour',
@@ -8,6 +14,13 @@ export const option = {
 
 // 请求地址
 export default {
+  /* ------暂时用不到----- */
+  LOGIN: option.login + '/oauth/token', //登录
+  LOGOUT: option.logout + '/logout', //退出登录
+  SEND_CODE: option.pub + '/verifycode/api/v1/send', //发送验证码
+  PERMISSION: '/times/user-center/permission/api/v2/permissions/get', //获取权限信息
+  /* ------暂时用不到----- */
+
   //会员中心:庄
   GET_TASKlIST: '/times/member-center/task/api/v1/list', // 获取任务列表
   GET_TASKSOURCE: '/times/member-center/client/api/v1/list', // 获取任务来源
