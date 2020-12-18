@@ -9,6 +9,7 @@ export const option = {
   micro: '/times/micro-app-service', //微应用管理  版本管理
   member: '/times/member-center/member',
   client: '/times/member-center/client',
+  behaviour:'/times/member-center/behaviour',
   mpc_integrated: '/times/member-pub-center/integrated', //无需做token验证(token传空)
   mc_integrated: '/times/member-center/integrated'
 };
@@ -74,5 +75,8 @@ export default {
   CLIENT_LIST: option.client + '/api/v1/list',
   LOGIN_URL: option.mpc_integrated + '/api/v1/login',
   USER_INFO: option.mc_integrated + '/api/v1/user',
-  MEMBER_DETAIL: option.member + '/api/v1/member/detailByMemberId'
+  MEMBER_DETAIL: option.member + '/api/v1/member/detailByMemberId',
+  INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
+  GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
+  BEHAVIOUR_LIST:option.behaviour + '/api/v1/behaviour/list',
 };

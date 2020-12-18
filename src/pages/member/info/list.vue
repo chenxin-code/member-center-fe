@@ -38,8 +38,7 @@
         </template>
         <template slot="levelNameSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <!-- <span v-html="showLevel(rowData)"></span> -->
-            <span v-html="rowData.memberName"></span>
+            <span v-html="showLevel(rowData)"></span>
           </div>
         </template>
 
@@ -49,7 +48,6 @@
           </div>
         </template>
       </a-table>
-
       <a-pagination
         :total="total"
         :show-total="total => `共 ${total} 条`"
@@ -166,7 +164,8 @@ export default {
       //分页
       total: 0,
       current: 1,
-      pageSize: 10
+      // pageSize: 10
+      pageSize: 50
     };
   },
   components: {
@@ -176,20 +175,20 @@ export default {
     showLevel() {
       return param => {
         let tempStr = '';
-        if (param.levels.length > 1) {
-          param.levels.slice(0, 1).forEach(element => {
+        if (param.memberCardRelats.length > 1) {
+          param.memberCardRelats.slice(0, 1).forEach(element => {
             if (element.levelName) {
               tempStr += element.levelName;
             }
           });
-          // param.levels.forEach(element => {
+          // param.memberCardRelats.forEach(element => {
           //   if (element.levelName) {
           //     tempStr += element.levelName + ',';
           //   }
           // });
           // tempStr = tempStr.substring(0, tempStr.length - 1);
-        } else if (param.levels.length === 1) {
-          param.levels.forEach(element => {
+        } else if (param.memberCardRelats.length === 1) {
+          param.memberCardRelats.forEach(element => {
             if (element.levelName) {
               tempStr += element.levelName;
             }

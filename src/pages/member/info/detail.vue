@@ -17,7 +17,8 @@
                 <div class="base-left-top">
                   <div class="left-top-left">
                     <a-avatar
-                      class="head-avatar"
+                      class="base-avatar"
+                      :size="48"
                       src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                     />
                   </div>
@@ -70,10 +71,32 @@
           </div>
           <a-row style="padding:16px;border-bottom: 1px dashed #ccc;">
             <a-col :span="24">
-              <div class="card-row">
-                <div class="card-row-left"></div>
-                <div class="card-row-center">aaaa</div>
-                <div class="card-row-right">aaaa</div>
+              <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
+                <div class="card-row-left">
+                  <img
+                    class="card-avatar"
+                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    alt=""
+                  />
+                </div>
+                <div class="card-row-center">
+                  <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
+                  <div class="card-row-center-item">
+                    获取时间:{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                  </div>
+                </div>
+                <div class="card-row-right">
+                  <div class="card-row-right-item">会员等级:{{ item.levelName }}</div>
+                  <div class="card-row-right-item">
+                    <mini-progress
+                      color="rgb(19, 194, 194)"
+                      :hasTarget="false"
+                      :percentage="(item.grow / item.rangeEnd) * 100"
+                      height="8px"
+                    />
+                  </div>
+                  <div class="card-row-right-item card-row-right-item-range">{{ item.grow }}/{{ item.rangeEnd }}</div>
+                </div>
               </div>
             </a-col>
           </a-row>
@@ -82,11 +105,12 @@
         <div class="member-record">
           <a-row style="margin-top: 20px">
             <a-tabs type="card" @change="tabChangeCallback">
-              <a-tab-pane class="tabs-body-content" key="1" tab="微应用版本">
-                <div>
+              <a-tab-pane class="tabs-body-content" key="1" tab="会员积分记录">
+                <div class="content-main" ref="content_main" style="padding: 20px;">
+                  <FormList ref="memberForm1" rowCol="2" :formList="formList1" :onSubmit="onQuery1" />
                   <a-table
-                    :columns="versionsColumns"
-                    :data-source="versionsDataSource"
+                    :columns="integralColumns"
+                    :data-source="integralDataSource"
                     :pagination="false"
                     :scroll="{ y: scrollY }"
                     :row-key="(r, i) => i"
@@ -95,24 +119,25 @@
                     style="width:100%;margin-top:8px;"
                   ></a-table>
                   <a-pagination
-                    :total="versionsTotal"
-                    :show-total="versionsTotal => `共 ${versionsTotal} 条`"
+                    :total="integralTotal"
+                    :show-total="integralTotal => `共 ${integralTotal} 条`"
                     show-quick-jumper
                     show-size-changer
-                    :default-current="versionsCurrent"
-                    :page-size.sync="versionPageSize"
+                    :default-current="integralCurrent"
+                    :page-size.sync="integralPageSize"
                     :pageSizeOptions="['10', '20', '50', '100']"
-                    @change="pagingVersions"
-                    @showSizeChange="pagingVersions"
+                    @change="pagingIntegral"
+                    @showSizeChange="pagingIntegral"
                     style="margin-top:30px;width:100%;text-align: right;"
                   />
                 </div>
               </a-tab-pane>
-              <a-tab-pane class="tabs-body-content" key="2" tab="小区范围">
-                <div>
+              <a-tab-pane class="tabs-body-content" key="2" tab="会员成长值记录">
+                <div class="content-main" ref="content_main" style="padding: 20px;">
+                  <FormList ref="memberForm2" rowCol="2" :formList="formList2" :onSubmit="onQuery2" />
                   <a-table
-                    :columns="developmentColumns"
-                    :data-source="developmentDataSource"
+                    :columns="grownColumns"
+                    :data-source="grownDataSource"
                     :pagination="false"
                     :scroll="{ y: scrollY }"
                     :row-key="(r, i) => i"
@@ -121,24 +146,25 @@
                     style="width:100%;margin-top:8px;"
                   ></a-table>
                   <a-pagination
-                    :total="developmentTotal"
-                    :show-total="developmentTotal => `共 ${developmentTotal} 条`"
+                    :total="grownTotal"
+                    :show-total="grownTotal => `共 ${grownTotal} 条`"
                     show-quick-jumper
                     show-size-changer
-                    :default-current="developmentCurrent"
-                    :page-size.sync="developmentPageSize"
+                    :default-current="grownCurrent"
+                    :page-size.sync="grownPageSize"
                     :pageSizeOptions="['10', '20', '50', '100']"
-                    @change="pagingDevelopment"
-                    @showSizeChange="pagingDevelopment"
+                    @change="pagingGrown"
+                    @showSizeChange="pagingGrown"
                     style="margin-top:30px;width:100%;text-align: right;"
                   />
                 </div>
               </a-tab-pane>
-              <a-tab-pane class="tabs-body-content" key="3" tab="资源包">
-                <div>
+              <a-tab-pane class="tabs-body-content" key="3" tab="会员行为记录">
+                <div class="content-main" ref="content_main" style="padding: 20px;">
+                  <FormList ref="memberForm3" rowCol="2" :formList="formList3" :onSubmit="onQuery3" />
                   <a-table
-                    :columns="resourcePackageColumns"
-                    :data-source="resourcePackageDataSource"
+                    :columns="behaviourColumns"
+                    :data-source="behaviourDataSource"
                     :pagination="false"
                     :scroll="{ y: scrollY }"
                     :row-key="(r, i) => i"
@@ -147,15 +173,15 @@
                     style="width:100%;margin-top:8px;"
                   ></a-table>
                   <a-pagination
-                    :total="resourcePackageTotal"
-                    :show-total="resourcePackageTotal => `共 ${resourcePackageTotal} 条`"
+                    :total="behaviourTotal"
+                    :show-total="behaviourTotal => `共 ${behaviourTotal} 条`"
                     show-quick-jumper
                     show-size-changer
-                    :default-current="developmentCurrent"
-                    :page-size.sync="resourcePackagePageSize"
+                    :default-current="behaviourCurrent"
+                    :page-size.sync="behaviourPageSize"
                     :pageSizeOptions="['10', '20', '50', '100']"
-                    @change="pagingResourcePackage"
-                    @showSizeChange="pagingResourcePackage"
+                    @change="pagingBehaviour"
+                    @showSizeChange="pagingBehaviour"
                     style="margin-top:30px;width:100%;text-align: right;"
                   />
                 </div>
@@ -169,8 +195,11 @@
 </template>
 
 <script>
-import api from '@/api';
 import moment from 'moment';
+import api from '@/api';
+import { MiniProgress } from '@/antd/components';
+import FormList from '@/components/FormList/index.jsx';
+
 import { mapActions } from 'vuex';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 import { CARD_TYPE_MAP } from '@/constance';
@@ -181,105 +210,149 @@ import { CARD_TYPE_MAP } from '@/constance';
 
 //页面列表数据
 const allColumns = {
-  versionsColumns: [
+  integralColumns: [
     {
-      title: '版本号',
-      key: 'programVersion',
-      dataIndex: 'programVersion'
+      title: '来源',
+      key: 'sourceType',
+      dataIndex: 'sourceType'
     },
     {
-      title: '小区分布数量',
-      dataIndex: 'projectCount',
-      key: 'projectCount'
+      title: '积分变动',
+      dataIndex: 'integralChange',
+      key: 'integralChange'
     },
     {
-      title: 'App版本分布数量',
-      dataIndex: 'appVersionCount',
-      key: 'appVersionCount'
+      title: '描述',
+      dataIndex: 'describe',
+      key: 'describe'
+    },
+    {
+      title: '操作人',
+      dataIndex: 'createUser',
+      key: 'createUser'
+    },
+    {
+      title: '记录时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime'
     }
   ],
-  developmentColumns: [
+  grownColumns: [
     {
-      title: '小区名称',
+      title: '成长值变动',
+      key: 'growthChange',
+      dataIndex: 'growthChange'
+    },
+    {
+      title: '描述',
+      dataIndex: 'describe',
+      key: 'describe'
+    },
+    {
+      title: '记录时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime'
+    }
+  ],
+  behaviourColumns: [
+    {
+      title: '行为名称',
       key: 'name',
       dataIndex: 'name'
     },
     {
-      title: '城市',
-      dataIndex: 'orgName',
-      key: 'orgName'
-    }
-  ],
-  resourcePackageColumns: [
-    {
-      title: '资源包名称',
-      key: 'resourceName',
-      dataIndex: 'resourceName'
+      title: '行为类型',
+      dataIndex: 'type',
+      key: 'type'
     },
     {
-      title: '资源包大小',
-      dataIndex: 'size',
-      key: 'size'
+      title: '行为来源',
+      dataIndex: 'memo',
+      key: 'memo'
     },
     {
-      title: '版本号',
-      dataIndex: 'resourceVersion',
-      key: 'resourceVersion'
-    },
-    {
-      title: '下载地址',
-      key: 'url',
-      dataIndex: 'url'
+      title: '记录时间',
+      key: 'id',
+      dataIndex: 'id'
     }
   ]
 };
-//基本信息
-const microApplicationDetail = {
-  appCode: '',
-  code: '',
-  icon: '',
-  id: '',
-  isDeleted: '',
-  memo: '',
-  name: '',
-  router: '',
-  type: ''
-  // microId: "",
-};
 export default {
   name: 'memberInfoDetail',
-  // props: {
-  //   id: {
-  //     type: Number,
-  //     default: () => ({})
-  //   },
-  // },
+  components: {
+    MiniProgress,
+    FormList
+  },
   data() {
     return {
       memberId: '',
       memberDetails: {},
-      microApplicationDetail: microApplicationDetail,
       //表格高度,与每页大小通用
       scrollY: 100,
       tableLoading: false,
-      //微应用版本列表变量
-      versionsColumns: allColumns.versionsColumns,
-      versionsDataSource: [],
-      versionsTotal: 0,
-      versionsCurrent: 1,
-      versionPageSize: 10,
-      //小区范围列表变量
-      developmentColumns: allColumns.developmentColumns,
-      developmentDataSource: [],
-      developmentTotal: 0,
-      developmentCurrent: 1,
-      developmentPageSize: 10,
-      //资源包列表变量
-      resourcePackageColumns: allColumns.resourcePackageColumns,
-      resourcePackageDataSource: [],
-      resourcePackageTotal: 0,
-      resourcePackageCurrent: 1,
-      resourcePackagePageSize: 10
+      formList1: [
+        {
+          label: '加入时间',
+          type: 'rangePicker',
+          name: 'jointime1'
+        },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        }
+      ],
+      formList2: [
+        {
+          label: '加入时间',
+          type: 'rangePicker',
+          name: 'jointime2'
+        },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        }
+      ],
+      formList3: [
+        {
+          label: '加入时间',
+          type: 'rangePicker',
+          name: 'jointime3'
+        },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        }
+      ],
+      //积分记录
+      integralColumns: allColumns.integralColumns,
+      integralDataSource: [],
+      integralTotal: 0,
+      integralCurrent: 1,
+      integralPageSize: 10,
+      //成长值记录
+      grownColumns: allColumns.grownColumns,
+      grownDataSource: [],
+      grownTotal: 0,
+      grownCurrent: 1,
+      grownPageSize: 10,
+      //行为记录
+      behaviourColumns: allColumns.behaviourColumns,
+      behaviourDataSource: [],
+      behaviourTotal: 0,
+      behaviourCurrent: 1,
+      behaviourPageSize: 10
     };
   },
   computed: {
@@ -309,23 +382,34 @@ export default {
   methods: {
     moment,
     ...mapActions(['FALLBACK']),
-    defImg() {
-      this.microApplicationDetail.icon = require('../../../assets/img/user/avatar.png');
-    },
     tabChangeCallback(key) {
       if (key == 1) {
-        // this.getVersionsDataSource();
+        this.getIntegralRecord();
       } else if (key == 2) {
-        this.getDevelopmentDataSource();
+        this.getGrownLog();
       } else if (key == 3) {
-        this.getResourcePackageDataSource();
+        this.getBehaviourList();
       }
+    },
+    //查询按钮
+    onQuery1() {
+      this.current = 1;
+      this.getIntegralRecord();
+    },
+    onQuery2() {
+      this.current = 1;
+      this.getGrownLog();
+    },
+    onQuery3() {
+      this.current = 1;
+      this.getBehaviourList();
     },
     getMemberDetail() {
       const param = {
-        memberId: this.$route.params.id
+        memberId: this.memberId
       };
 
+      // //mock操作
       // for (const key in mock.data) {
       //   if (Object.hasOwnProperty.call(mock.data, key)) {
       //     const element = mock.data[key];
@@ -346,45 +430,142 @@ export default {
         }
       });
     },
-    //微应用版本
-    pagingVersions(current, pageSize) {
+
+    getIntegralRecord() {
+      this.tableLoading = true;
+      let jointimeStart = '';
+      let jointimeEnd = '';
+      this.$nextTick(() => {
+        if (this.$refs.memberForm1.getFieldsValue().jointime1) {
+          jointimeStart = moment(this.$refs.memberForm1.getFieldsValue().jointime1[0]).format('YYYY-MM-DD');
+          jointimeEnd = moment(this.$refs.memberForm1.getFieldsValue().jointime1[1]).format('YYYY-MM-DD');
+        }
+
+        const param = {
+          memberId: this.memberId,
+          pageIndex: this.integralCurrent,
+          pageSize: this.integralPageSize,
+          createTimeStart: jointimeStart,
+          createTimeEnd: jointimeEnd
+        };
+
+        console.log('getIntegralRecord param :>> ', param);
+
+        api
+          .getIntegralRecord(param)
+          .then(res => {
+            console.log('getIntegralRecord res :>> ', res);
+            this.tableLoading = false;
+            if (res.code === 200) {
+              this.integralTotal = res.data.total;
+              this.integralDataSource.splice(0, this.integralDataSource.length);
+              res.data.records.forEach((element, index) => {
+                this.integralDataSource.push(element);
+              });
+
+              console.log('this.integralDataSource :>> ', this.integralDataSource);
+            }
+          })
+          .finally(() => {
+            this.tableLoading = false;
+          });
+      });
+    },
+
+    getGrownLog() {
+      this.tableLoading = true;
+      let jointimeStart = '';
+      let jointimeEnd = '';
+      this.$nextTick(() => {
+        if (this.$refs.memberForm2.getFieldsValue().jointime2) {
+          jointimeStart = moment(this.$refs.memberForm2.getFieldsValue().jointime2[0]).format('YYYY-MM-DD');
+          jointimeEnd = moment(this.$refs.memberForm2.getFieldsValue().jointime2[1]).format('YYYY-MM-DD');
+        }
+
+        const param = {
+          memberId: this.memberId,
+          pageIndex: this.grownCurrent,
+          pageSize: this.grownPageSize,
+          createTimeStart: jointimeStart,
+          createTimeEnd: jointimeEnd
+        };
+
+        console.log('getGrownLog param :>> ', param);
+
+        api
+          .getGrownLog(param)
+          .then(res => {
+            console.log('getGrownLog res :>> ', res);
+            this.tableLoading = false;
+            if (res.code === 200) {
+              this.grownTotal = res.data.total;
+              this.grownDataSource.splice(0, this.grownDataSource.length);
+              res.data.records.forEach((element, index) => {
+                this.grownDataSource.push(element);
+              });
+            }
+          })
+          .finally(() => {
+            this.tableLoading = false;
+          });
+      });
+    },
+    getBehaviourList() {
+      this.tableLoading = true;
+      let jointimeStart = '';
+      let jointimeEnd = '';
+
+      this.$nextTick(() => {
+        if (this.$refs.memberForm3.getFieldsValue().jointime3) {
+          jointimeStart = moment(this.$refs.memberForm3.getFieldsValue().jointime3[0]).format('YYYY-MM-DD');
+          jointimeEnd = moment(this.$refs.memberForm3.getFieldsValue().jointime3[1]).format('YYYY-MM-DD');
+        }
+        const param = {
+          memberId: this.memberId,
+          pageIndex: this.behaviourCurrent,
+          pageSize: this.behaviourPageSize,
+          createTimeStart: jointimeStart,
+          createTimeEnd: jointimeEnd
+        };
+        console.log('getBehaviourList param :>> ', param);
+
+        api
+          .getBehaviourList(param)
+          .then(res => {
+            console.log('getBehaviourList res :>> ', res);
+            this.tableLoading = false;
+            if (res.code === 200) {
+              this.behaviourTotal = res.data.total;
+              this.behaviourDataSource.splice(0, this.behaviourDataSource.length);
+              res.data.records.forEach((element, index) => {
+                this.behaviourDataSource.push(element);
+              });
+            }
+          })
+          .finally(() => {
+            this.tableLoading = false;
+          });
+      });
+    },
+
+    //积分分页
+    pagingIntegral(current, pageSize) {
       console.log(current, pageSize);
-      this.versionPageSize = pageSize;
-      this.versionsCurrent = current;
-      // this.getVersionsDataSource();
+      this.integralPageSize = pageSize;
+      this.integralCurrent = current;
+      this.getIntegralRecord();
     },
-    //小区列表分页
-    pagingDevelopment(current, pageSize) {
-      this.developmentPageSize = pageSize;
-      this.developmentCurrent = current;
-      this.getDevelopmentDataSource();
+    //成长值分页
+    pagingGrown(current, pageSize) {
+      this.grownPageSize = pageSize;
+      this.grownCurrent = current;
+      this.getGrownLog();
     },
-    //资源包列表分页
-    pagingResourcePackage(current, pageSize) {
-      this.resourcePackagePageSize = pageSize;
-      this.resourcePackageCurrent = current;
-      this.getResourcePackageDataSource();
-    }
-  },
-  //局部过滤器
-  filters: {
-    formatType(value) {
-      let returnMsg = '未知';
-      switch (value) {
-        case 1:
-          returnMsg = '原生';
-          break;
-        case 2:
-          returnMsg = 'uniapp';
-          break;
-        case 3:
-          returnMsg = '微应用';
-          break;
-        case 4:
-          returnMsg = 'H5';
-          break;
-      }
-      return returnMsg;
+    //行为分页
+    pagingBehaviour(current, pageSize) {
+      this.behaviourPageSize = pageSize;
+      this.behaviourCurrent = current;
+      this.getBehaviourList();
     }
   },
   created: function() {
@@ -395,8 +576,10 @@ export default {
     this.getMemberDetail();
   },
   mounted() {
-    // console.log(this.$store.commit('FALLBACK'));
-    // this.getVersionsDataSource();
+    this.getIntegralRecord();
+    this.getGrownLog();
+    this.getBehaviourList();
+
     setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 204 + 'px';
     }, 100);
@@ -520,6 +703,7 @@ export default {
     }
     .card-row {
       padding-left: 10px;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -527,23 +711,54 @@ export default {
 
       .card-row-left {
         margin-right: 45px;
-        background-color: red;
+        background-color: lightblue;
         width: 200px;
         height: 150px;
+
+        .card-avatar {
+          display: block;
+          width: 200px;
+          height: 150px;
+        }
       }
       .card-row-center {
-                margin-right: 45px;
-        background-color: #ccc;
+        margin-right: 45px;
+        // background-color: #ccc;
         width: 200px;
         height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        .card-row-center-item {
+          margin-bottom: 8px;
+        }
       }
       .card-row-right {
-        background-color: skyblue;
+        // background-color: #ccc;
         width: 200px;
         height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        .card-row-right-item {
+          margin-bottom: 8px;
+        }
+        .card-row-right-item-range {
+          color: rgb(98, 98, 238);
+          font-size: 18px;
+        }
       }
     }
+    .card-row:last-child {
+      margin-bottom: 0;
+    }
   }
+
+  .member-record {
+  }
+
   .ant-tabs-bar {
     margin: 0 !important;
   }
