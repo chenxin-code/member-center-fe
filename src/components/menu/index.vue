@@ -57,20 +57,16 @@ export default {
     checkKeys(openKeys) {
       this.openKeys = openKeys;
       this.$forceUpdate();
-      console.log(this.openKeys);
     },
     onClickMenuChid(path) {
       this.$router.push({ path: path });
-      console.log(this.openKeys);
     },
     onClickMenu(path) {
-      console.log('onClickMenu path :>> ', path);
       this.openKeys.splice(0, this.openKeys.length);
       this.openKeys.push('');
       // this.openKeys = [''];
       // this.$forceUpdate();
       this.$router.push({ path: path });
-      console.log(this.openKeys);
     },
     hasRangeAuthorityWithoutProject(authKeys) {
       return hasRangeAuthorityWithoutProject(authKeys);
@@ -86,7 +82,6 @@ export default {
       } else {
         if (pathname.split('/').length > 0) {
           const pathParams = pathname.split('/');
-          console.log(MENU_ROUTES);
           const newMatchedMenu = MENU_ROUTES.find(x =>
             x.hasChild
               ? x.hasChild === (pathParams[1] === 'advertise' ? pathParams[1] : pathParams[1])
@@ -103,7 +98,6 @@ export default {
           // const newMatchedMenu = MENU_ROUTES.find(x =>
           // x.path ===
           //   ("/" + ((pathParams[1] === "user" || pathParams[1] === "advertise") ? pathParams[1] + "/" + pathParams[2] : pathParams[1])));
-          console.log(newMatchedMenu);
           if (newMatchedMenu) {
             const newGroupMenus = MENU_ROUTES.filter(x => x.group === newMatchedMenu.group);
             filteredMenus = newGroupMenus || [];
