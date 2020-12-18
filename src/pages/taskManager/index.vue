@@ -192,7 +192,12 @@ export default {
             api.getTaskList(args)
             .then( res => {
                 this.tableLoading = false;
-                this.dataList = res.data.records;
+                this.dataList = res.data.records.map((item, index) => {
+                    return {
+                        ...item,
+                        key: index
+                    }
+                });
                 this.total = res.data.total;
             })
             .finally( () => this.tableLoading = false)

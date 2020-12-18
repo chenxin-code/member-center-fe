@@ -2,7 +2,7 @@
     <div class="access">
         <div class="access-header">会员卡</div>
         <div class="access-main">
-            <a-row type="flex" justify="space-around" align="middle">
+            <a-row type="flex" justify="start" align="middle">
                 <a-col :span="8" v-for="item in list" :key="item.title">
                     <div class="access-main-boxs">
                         <div class="access-main-boxs-top">
@@ -14,7 +14,7 @@
                             {{item.appDescribe}}
                         </div>
                         <div class="access-main-boxs-footer">
-                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}w</span></p>
+                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}{{(item.memberCount / 10000) >= 1 ? 'w' : ''}}</span></p>
                             <a-divider type="vertical" />
                             <p class="access-main-boxs-footer-btn">查看</p>
                         </div>
@@ -98,6 +98,9 @@ export default {
                 color: #a0a0a0;
                 background: rgba(247, 249, 250, 1);
                 line-height: 48px;
+                &-btn{
+                    cursor: pointer;
+                }
                 &-member, &-btn{
                     margin: 0;
                     display: inline-block;

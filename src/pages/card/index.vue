@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header">会员卡</div>
         <div class="card-main">
-            <a-row type="flex" justify="space-around" align="middle">
+            <a-row type="flex" justify="start" align="middle">
                 <a-col :span="8" v-for="item in dataList" :key="item.id">
                     <div class="card-main-boxs">
                         <div class="card-main-boxs-top">
@@ -99,6 +99,9 @@ export default {
                 color: #a0a0a0;
                 background: rgba(247, 249, 250, 1);
                 line-height: 48px;
+                &-btn{
+                    cursor: pointer;
+                }
                 &-member, &-btn{
                     margin: 0;
                     display: inline-block;
