@@ -1,76 +1,61 @@
 <template>
   <div>
     <a-row :gutter="24">
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
+        <chart-card :loading="loading" title="今日新增" :total="`${numFormat(tongJiData.todayNewNum)}人`">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <div>
-            <trend flag="up" style="margin-right: 16px;">
-              <span slot="term">周同比</span>
-              12%
-            </trend>
-            <trend flag="down">
-              <span slot="term">日同比</span>
-              11%
-            </trend>
-          </div>
           <template slot="footer">
-            日均销售额
-            <span>￥ 234.56</span>
+            会员总数
+            <span style="padding-left:20px;">{{ tongJiData.sum | NumberFormat }}</span>
           </template>
         </chart-card>
       </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
+
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
+        <chart-card :loading="loading" title="季度新增" :total="tongJiData.quarterNewNum | NumberFormat">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <mini-area />
+            <mini-area :useData="useData" />
           </div>
           <template slot="footer">
-            日访问量
-            <span>{{ '1234' | NumberFormat }}</span>
+            <div class="quarter-footer">
+              <div class="quarter-footer-item">一月</div>
+              <div class="quarter-footer-item">二月</div>
+              <div class="quarter-footer-item">三月</div>
+            </div>
           </template>
         </chart-card>
       </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar />
-          </div>
-          <template slot="footer">
-            转化率
-            <span>60%</span>
-          </template>
-        </chart-card>
+
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
+        <div class="pie-source">
+          <v-chart :forceFit="true" :height="275" :data="pieData" :scale="pieScale">
+            <v-tooltip :showTitle="false" dataKey="item*percent" />
+            <v-axis />
+            <v-legend dataKey="item" />
+            <v-pie position="percent" color="item" :v-style="pieStyle" />
+            <v-coord type="theta" />
+          </v-chart>
+        </div>
       </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="运营活动效果" total="78%">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" height="8px" />
-          </div>
-          <template slot="footer">
-            <trend flag="down" style="margin-right: 16px;">
-              <span slot="term">同周比</span>
-              12%
-            </trend>
-            <trend flag="up">
-              <span slot="term">日环比</span>
-              80%
-            </trend>
-          </template>
-        </chart-card>
+
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
+        <div class="pie-source">
+          <v-chart :forceFit="true" :height="275" :data="pieData" :scale="pieScale">
+            <v-tooltip :showTitle="false" dataKey="item*percent" />
+            <v-axis />
+            <v-legend dataKey="item" />
+            <v-pie position="percent" color="item" :v-style="pieStyle" />
+            <v-coord type="theta" />
+          </v-chart>
+        </div>
       </a-col>
     </a-row>
+
 
     <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
       <div class="salesCard">
@@ -135,7 +120,6 @@
                     </a-tooltip>
                   </span>
                 </number-info>
-                <!-- miniChart -->
                 <div>
                   <mini-smooth-area :style="{ height: '45px' }" :dataSource="searchUserData" :scale="searchUserScale" />
                 </div>
@@ -149,7 +133,6 @@
                     </a-tooltip>
                   </span>
                 </number-info>
-                <!-- miniChart -->
                 <div>
                   <mini-smooth-area :style="{ height: '45px' }" :dataSource="searchUserData" :scale="searchUserScale" />
                 </div>
@@ -179,7 +162,6 @@
             :style="{ height: '100%' }"
           >
             <div slot="extra" style="height: inherit;">
-              <!-- style="bottom: 12px;display: inline-block;" -->
               <span class="dashboard-analysis-iconGroup">
                 <a-dropdown :trigger="['click']" placement="bottomLeft">
                   <a-icon type="ellipsis" class="ant-dropdown-link" />
@@ -203,12 +185,10 @@
             </div>
             <h4>销售额</h4>
             <div>
-              <!-- style="width: calc(100% - 240px);" -->
               <div>
                 <v-chart :force-fit="true" :height="405" :data="pieData" :scale="pieScale">
                   <v-tooltip :showTitle="false" dataKey="item*percent" />
                   <v-axis />
-                  <!-- position="right" :offsetX="-140" -->
                   <v-legend dataKey="item" />
                   <v-pie position="percent" color="item" :vStyle="pieStyle" />
                   <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
@@ -237,8 +217,8 @@ import {
   MiniSmoothArea
 } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
-
 const defaultAvatar = require('@/assets/img/user/avatar.png');
+
 const barData = [];
 const barData2 = [];
 for (let i = 0; i < 12; i += 1) {
@@ -260,15 +240,30 @@ for (let i = 0; i < 7; i++) {
   });
 }
 
+const userData = [
+  { date: '2020-12-01', num: 1 },
+  { date: '2020-12-02', num: 3 },
+  { date: '2020-12-03', num: 5 },
+  { date: '2020-12-04', num: 9 },
+  { date: '2020-12-05', num: 7 },
+  { date: '2020-12-06', num: 4 }
+];
 const searchUserData = [];
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < userData.length; i++) {
   searchUserData.push({
-    x: moment()
-      .add(i, 'days')
-      .format('YYYY-MM-DD'),
-    y: Math.ceil(Math.random() * 10)
+    x: userData[i].date,
+    y: userData[i].num
   });
 }
+// for (let i = 0; i < 7; i++) {
+//   searchUserData.push({
+//     x: moment()
+//       .add(i, 'days')
+//       .format('YYYY-MM-DD'),
+//     y: Math.ceil(Math.random() * 10)
+//   });
+// }
+
 const searchUserScale = [
   {
     dataKey: 'x',
@@ -315,17 +310,15 @@ for (let i = 0; i < 50; i += 1) {
   });
 }
 
+//饼图
 const DataSet = require('@antv/data-set');
-
 const sourceData = [
-  { item: '家用电器', count: 32.2 },
-  { item: '食用酒水', count: 21 },
-  { item: '个护健康', count: 17 },
-  { item: '服饰箱包', count: 13 },
-  { item: '母婴产品', count: 9 },
-  { item: '其他', count: 7.8 }
+  { item: '家用', count: 32.2 },
+  { item: '酒水', count: 21 },
+  { item: '个护', count: 17 },
+  { item: '服饰', count: 13 },
+  { item: '母婴', count: 9 }
 ];
-
 const pieScale = [
   {
     dataKey: 'percent',
@@ -333,7 +326,6 @@ const pieScale = [
     formatter: '.0%'
   }
 ];
-
 const dv = new DataSet.View().source(sourceData);
 dv.transform({
   type: 'percent',
@@ -349,7 +341,7 @@ export default {
   components: {
     ChartCard,
     MiniArea,
-    MiniBar,
+    // MiniBar,
     MiniProgress,
     RankList,
     Bar,
@@ -359,9 +351,17 @@ export default {
   },
   data() {
     return {
+      tongJiData: {},
+      useData: [
+        { date: '2020-12-01', num: 1 },
+        { date: '2020-12-02', num: 3 },
+        { date: '2020-12-03', num: 5 },
+        { date: '2020-12-04', num: 9 },
+        { date: '2020-12-05', num: 7 },
+        { date: '2020-12-06', num: 4 }
+      ],
       loading: true,
       rankList,
-
       // 搜索用户数
       searchUserData,
       searchUserScale,
@@ -381,12 +381,24 @@ export default {
       }
     };
   },
+  computed: {
+    numFormat() {
+      return value => {
+        if (!value) {
+          return '0';
+        } else {
+          const intPartFormat = value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'); // 将整数部分逢三一断
+          return intPartFormat;
+        }
+      };
+    }
+  },
   methods: {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
       await this.getMemberTongJi();
-      await this.getMemberTongJiDate();
+      // await this.getMemberTongJiDate();
     },
     getLoginUrl() {
       api.getLoginUrl().then(res => {
@@ -417,17 +429,18 @@ export default {
     },
     //获取会员统计
     getMemberTongJi() {
-      api
-        .getMemberTongJi()
-        .then(res => {
-          console.log('getMemberTongJi res :>> ', res);
-          if (res.code === 200) {
-            //
+      api.getMemberTongJi().then(res => {
+        console.log('getMemberTongJi res :>> ', res);
+        if (res.code === 200) {
+          for (const key in res.data) {
+            if (Object.hasOwnProperty.call(res.data, key)) {
+              const element = res.data[key];
+              this.$set(this.tongJiData, key, element);
+            }
           }
-        })
-        .finally(() => {
-          //
-        });
+          console.log('this.tongJiData :>> ', this.tongJiData);
+        }
+      });
     },
     getMemberTongJiDate() {
       const param = {
@@ -436,7 +449,7 @@ export default {
         // createTimeEnd: jointimeEnd
       };
       api
-        .getMemberTongJiDate()
+        .getMemberTongJiDate(param)
         .then(res => {
           console.log('getMemberTongJiDate res :>> ', res);
           if (res.code === 200) {
@@ -476,6 +489,31 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.quarter-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .quarter-footer-item {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.pie-source {
+  height: 260px !important;
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 .extra-wrapper {
   line-height: 55px;
   padding-right: 24px;

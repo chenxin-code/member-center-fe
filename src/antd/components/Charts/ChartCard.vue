@@ -94,7 +94,8 @@ export default {
   .chart-card-content {
     margin-bottom: 12px;
     position: relative;
-    height: 46px;
+    // height: 46px;//原
+    height: 66px;
     width: 100%;
 
     .content-fix {
@@ -111,7 +112,8 @@ export default {
     word-break: break-all;
     white-space: nowrap;
     color: #000;
-    margin-top: 4px;
+    // margin-top: 4px;//原
+    margin-top: 14px;
     margin-bottom: 0;
     font-size: 30px;
     line-height: 38px;

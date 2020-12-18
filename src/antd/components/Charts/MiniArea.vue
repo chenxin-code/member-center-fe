@@ -10,16 +10,7 @@
 </template>
 
 <script>
-import moment from 'moment'
-const data = []
-const beginDay = new Date().getTime()
-
-for (let i = 0; i < 10; i++) {
-  data.push({
-    x: moment(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD'),
-    y: Math.round(Math.random() * 10)
-  })
-}
+import moment from 'moment';
 
 const tooltip = [
   'x*y',
@@ -27,30 +18,49 @@ const tooltip = [
     name: x,
     value: y
   })
-]
-const scale = [{
-  dataKey: 'x',
-  min: 2
-}, {
-  dataKey: 'y',
-  title: '时间',
-  min: 1,
-  max: 22
-}]
+];
+const scale = [
+  {
+    dataKey: 'x',
+    min: 2
+  },
+  {
+    dataKey: 'y',
+    title: '时间',
+    min: 1,
+    max: 22
+  }
+];
 
 export default {
   name: 'MiniArea',
-  data () {
+  data() {
     return {
-      data,
+      data: [],
       tooltip,
       scale,
       height: 100
+    };
+  },
+  props: {
+    useData: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  mounted() {
+    for (let i = 0; i < this.useData.length; i++) {
+      this.data.push({
+        x: this.useData[i].date,
+        y: this.useData[i].num
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  @import "chart";
+@import 'chart';
 </style>
