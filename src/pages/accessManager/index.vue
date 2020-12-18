@@ -2,7 +2,7 @@
     <div class="access">
         <div class="access-header">会员卡</div>
         <div class="access-main">
-            <a-row type="flex" justify="space-around" align="middle">
+            <a-row type="flex" justify="start" align="middle">
                 <a-col :span="8" v-for="item in list" :key="item.title">
                     <div class="access-main-boxs">
                         <div class="access-main-boxs-top">
