@@ -2,7 +2,7 @@
   <div id="home">
     <a-layout class="container">
       <a-layout-sider v-model="collapsed" collapsible>
-        <div class="logo" @click="handleLogout"></div>
+        <div class="logo"></div>
         <Menu />
       </a-layout-sider>
       <a-layout>
@@ -114,15 +114,15 @@ export default {
       // this.useravatar = defaultAvatar;
       window.localStorage.setItem('SD_USERAVATAR', defaultAvatar);
     },
-    handleLogout() {
-      window.localStorage.setItem('SD_ACCESS_TOKEN', '');
-      window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
-      window.localStorage.setItem('SD_AUTHORITIES', '');
-      window.localStorage.setItem('SD_USERAVATAR', '');
-      window.localStorage.setItem('SD_USERNAME', '');
-      window.localStorage.setItem('login_refresh', 'false');
-      this.$router.push({ path: '/memberInfo' });
-    }
+    // handleLogout() {
+    //   window.localStorage.setItem('SD_ACCESS_TOKEN', '');
+    //   window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
+    //   window.localStorage.setItem('SD_AUTHORITIES', '');
+    //   window.localStorage.setItem('SD_USERAVATAR', '');
+    //   window.localStorage.setItem('SD_USERNAME', '');
+    //   window.localStorage.setItem('login_refresh', 'false');
+    //   this.$router.push({ path: '/' });
+    // }
   },
   watch: {
     // $route() {
