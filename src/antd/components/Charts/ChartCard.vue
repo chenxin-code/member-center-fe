@@ -95,7 +95,7 @@ export default {
     margin-bottom: 12px;
     position: relative;
     // height: 46px;//原
-    height: 66px;
+    height: 86px;
     width: 100%;
 
     .content-fix {

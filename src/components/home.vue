@@ -113,7 +113,7 @@ export default {
       this.$store.commit('setUseravatar', this.userImage);
       // this.useravatar = defaultAvatar;
       window.localStorage.setItem('SD_USERAVATAR', defaultAvatar);
-    },
+    }
     // handleLogout() {
     //   window.localStorage.setItem('SD_ACCESS_TOKEN', '');
     //   window.localStorage.setItem('SD_ACCESS_REFRESHTOKEN', '');
@@ -148,6 +148,7 @@ export default {
 
   .container {
     height: 100%;
+    margin-bottom: 24px;
 
     aside.ant-layout-sider {
       z-index: 2;
@@ -202,8 +203,8 @@ export default {
     .content {
       height: calc(100% - 90px);
       margin: 24px 16px;
-      background: #fff;
-      overflow: auto;
+      // background: #fff;
+      // overflow-y: auto;
 
       .home-fail {
         padding: 20px;

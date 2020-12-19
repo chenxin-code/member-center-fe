@@ -1,14 +1,10 @@
 <template>
-  <div :style="{ padding: '0 0 32px 32px' }">
+  <div :style="{ padding: '0 0 0 32px' }">
     <h4 :style="{ marginBottom: '20px' }">{{ title }}</h4>
-    <v-chart
-      height="254"
-      :data="data"
-      :forceFit="true"
-      :padding="['auto', 'auto', '40', '50']">
+    <v-chart height="294" :data="data" :forceFit="true" :padding="['auto', '50', '40', '50']">
       <v-tooltip />
       <v-axis />
-      <v-bar position="x*y"/>
+      <v-bar position="x*y" />
     </v-chart>
   </div>
 </template>
@@ -24,21 +20,24 @@ export default {
     data: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
     },
     scale: {
       type: Array,
       default: () => {
-        return [{
-          dataKey: 'x',
-          min: 2
-        }, {
-          dataKey: 'y',
-          title: '时间',
-          min: 1,
-          max: 22
-        }]
+        return [
+          {
+            dataKey: 'x',
+            min: 2
+          },
+          {
+            dataKey: 'y',
+            title: '时间',
+            min: 1,
+            max: 22
+          }
+        ];
       }
     },
     tooltip: {
@@ -50,13 +49,12 @@ export default {
             name: x,
             value: y
           })
-        ]
+        ];
       }
     }
   },
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
