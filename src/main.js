@@ -9,7 +9,9 @@ Vue.use(Antd);
 
 import './utils/lazy_use' // use lazy load components
 import './utils/filter' // global filter
-import './mock'
+import './assets/css/global.less' // global style
+
+// import './mock'
 
 Vue.config.productionTip = false;
 

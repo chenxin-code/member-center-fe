@@ -10,16 +10,7 @@
 </template>
 
 <script>
-import moment from 'moment'
-const data = []
-const beginDay = new Date().getTime()
-
-for (let i = 0; i < 10; i++) {
-  data.push({
-    x: moment(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD'),
-    y: Math.round(Math.random() * 10)
-  })
-}
+import moment from 'moment';
 
 const tooltip = [
   'x*y',
@@ -27,30 +18,56 @@ const tooltip = [
     name: x,
     value: y
   })
-]
-const scale = [{
-  dataKey: 'x',
-  min: 2
-}, {
-  dataKey: 'y',
-  title: '时间',
-  min: 1,
-  max: 22
-}]
+];
+const scale = [
+  {
+    dataKey: 'x',
+    min: 2
+  },
+  {
+    dataKey: 'y',
+    title: '时间',
+    min: 1,
+    max: 22
+  }
+];
 
 export default {
   name: 'MiniArea',
-  data () {
+  data() {
     return {
-      data,
+      data: [],
       tooltip,
       scale,
-      height: 100
+      height: 120
+    };
+  },
+  props: {
+    useData: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  mounted() {},
+  watch: {
+    useData: {
+      handler(newVal) {
+        for (let i = 0; i < newVal.length; i++) {
+          this.data.push({
+            x: newVal[i].date,
+            y: newVal[i].memberCount
+          });
+        }
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  @import "chart";
+@import 'chart';
 </style>

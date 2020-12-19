@@ -39,5 +39,5 @@ export default {
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.behaviour + '/api/v1/behaviour/list',
     MEMBER_TONGJI: '/times/member-center/member/api/v1/member/statistics',
-    MEMBER_TONGJI_DATE: '/times/member-center/member/api/v1/member/statistics'
+    MEMBER_TONGJI_DATE: '/times/member-center/member/api/v1/member/num-statistics'
 };
