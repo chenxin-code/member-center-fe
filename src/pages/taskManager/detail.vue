@@ -57,7 +57,7 @@ export default {
             dataObj: {}
         }
     },
-    created() {
+    mounted() {
         this.initData(this.$route.query.id)
     },
     methods: {

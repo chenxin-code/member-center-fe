@@ -21,8 +21,11 @@
  * @returns {undefined}
  */
 const defaultFn = () => undefined;
-
+// import Upload from './Upload/index.jsx';
 const FormList = {
+  // component: {
+  //   Upload
+  // },
   name: 'Button',
   props: {
     formList: {
@@ -86,6 +89,8 @@ const FormList = {
           return <a-date-picker v-decorator={[name, { rules: rules }]} {...others} />;
         case 'rangePicker':
           return <a-range-picker v-decorator={[name, { rules: rules }]} {...others} />;
+        // case 'upload':
+        //   return <Upload v-decorator={[name, { rules: rules }]} {...others} />;
         default:
           return null;
       }

@@ -28,8 +28,14 @@ const Card = () =>
 const CardDetail = () =>
     import ('@/pages/card/detail');
 
+const CardEdited = () =>
+    import ('@/pages/card/edited');
+
 const AccessManager = () =>
     import ('@/pages/accessManager/index');
+
+const DccessDetail = () =>
+    import ('@/pages/accessManager/detail');
 
 /* 路由login和portal打开，并且路由home redirect到login，可以获取token */
 const routes = [
@@ -82,7 +88,7 @@ const routes = [
                 menuKey: 'card',
                 meta: {
                     menu: '/card',
-                    keepAlive: true,
+                    authKeys: [''],
                     bread: [{
                         path: '/card_detail',
                         name: '会员卡详情'
@@ -94,16 +100,29 @@ const routes = [
                 path: '/card/detail',
                 name: 'card_detail',
                 menuKey: 'card',
-                props: paramsStorage.setPropsStorage,
                 meta: {
                     menu: '/card',
-                    keepAlive: true,
+                    authKeys: [''],
                     bread: [
                         { path: '/card', name: '会员卡列表' },
-                        { path: '/card/detail', name: '会员卡详情' }
+                        { path: '/card/detail', name: '会员卡详情' },
                     ]
                 },
                 component: CardDetail
+            },
+            {
+                path: '/card/edited',
+                name: 'card_edited',
+                menuKey: 'card',
+                meta: {
+                    menu: '/card',
+                    authKeys: [''],
+                    bread: [
+                        { path: '/card', name: '会员卡列表' },
+                        { path: '/card/edited', name: '会员卡详情编辑' },
+                    ]
+                },
+                component: CardEdited
             },
             {
                 path: '/task-manager',
@@ -111,7 +130,7 @@ const routes = [
                 menuKey: 'task-manager',
                 meta: {
                     menu: '/task-manager',
-                    keepAlive: true,
+                    authKeys: [''],
                     bread: [{
                         path: '/task-manager',
                         name: '任务管理'
@@ -123,13 +142,12 @@ const routes = [
                 path: '/task-manager/detail',
                 name: 'task_detail',
                 menuKey: 'task-manager',
-                props: paramsStorage.setPropsStorage,
                 meta: {
                     menu: '/task-manager',
-                    keepAlive: true,
+                    authKeys: [''],
                     bread: [
                         { path: '/task-manager', name: '任务管理' },
-                        { path: '/task-manager/detail', name: '任务详情' }
+                        { path: '/task-manager/detail', name: '任务详情' },
                     ]
                 },
                 component: TaskDetail
@@ -140,14 +158,28 @@ const routes = [
                 menuKey: 'access-manager',
                 meta: {
                     menu: '/access-manager',
-                    keepAlive: true,
+                    authKeys: [''],
                     bread: [{
                         path: '/access-manager',
-                        name: '任务管理'
+                        name: '接入系统管理'
                     }]
                 },
                 component: AccessManager
-            }
+            },
+            {
+                path: '/access-manager/detail',
+                name: 'access_detail',
+                menuKey: 'access-manager',
+                meta: {
+                    menu: '/access-manager',
+                    authKeys: [''],
+                    bread: [
+                        { path: '/access-manager', name: '接入系统管理' },
+                        { path: '/access-manager/detail', name: '接入系统管理详情' }
+                    ]
+                },
+                component: DccessDetail
+            },
         ]
     },
     {

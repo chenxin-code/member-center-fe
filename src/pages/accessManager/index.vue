@@ -14,9 +14,9 @@
                             {{item.appDescribe}}
                         </div>
                         <div class="access-main-boxs-footer">
-                            <p class="access-main-boxs-footer-member">注册会员：<span>{{item.memberCount}}{{(item.memberCount / 10000) >= 1 ? 'w' : ''}}</span></p>
+                            <p class="access-main-boxs-footer-member">注册会员：<span>{{(item.memberCount / 10000) >= 1 ? item.memberCount / 10000 + 'w' : item.memberCount}}</span></p>
                             <a-divider type="vertical" />
-                            <p class="access-main-boxs-footer-btn">查看</p>
+                            <p class="access-main-boxs-footer-btn" @click="onCheck(item.appCode)">查看</p>
                         </div>
                     </div>
                 </a-col>
@@ -34,16 +34,18 @@ export default {
             list: []
         }
     },
-    created() {
+    mounted() {
         this.initData()
     },
     methods: {
         initData() {
             api.getClientList()
             .then( res => {
-                console.log(res)
                 this.list = res.data
             })
+        },
+        onCheck(code) {
+            this.$router.push({name: 'access_detail', query: {code}})
         }
     }
 }

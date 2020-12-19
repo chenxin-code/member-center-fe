@@ -1,14 +1,14 @@
 <template>
     <div class="detail">
         <div class="detail-header">
-            <p class="detail-header-title">会员卡详情</p>
-            <p class="detail-header-btn" @click="goEdit()">编辑</p>
+            <p class="detail-header-title">接入平台详情</p>
         </div>
         <div class="detail-main">
             <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
             <div class="detail-main-items" v-for="item in dataList" :key="item.label">
                 <span class="detail-main-items-label">{{item.label}}</span>
-                <span class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
+                <span v-if="item.name === 'createTime'" class="detail-main-items-value">{{moment(dataObj[item.name]).format('YYYY-MM-DD HH:MM:SS') || ''}}</span>
+                <span v-else class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
             </div>
         </div>
     </div>
@@ -16,53 +16,46 @@
 
 <script>
 import api from '@/api'
+import moment from 'moment'
 export default {
-    name: 'card_detail',
+    name: 'access_detail',
     data() {
         return {
             dataList: [
                 {
-                    label: '会员卡ID：',
-                    name: 'id'
+                    label: '接入系统key：',
+                    name: 'appCode'
                 },
                 {
-                    label: '会员卡名称：',
-                    name: 'memberCardName',
+                    label: '接入系统名称：',
+                    name: 'appName',
                 },
                 {
-                    label: '持卡会员：',
+                    label: '注册用户：',
                     name: 'memberCount'
                 },
                 {
-                    label: '会员卡简介：',
-                    name: 'memo',
+                    label: '接入系统简介：',
+                    name: 'appDescribe',
                 },
                 {
-                    label: '所属系统：',
-                    name: 'memberCardSourceName'
-                },
-                {
-                    label: '卡片封面：',
-                    name: 'memberCardImage'
+                    label: '接入时间：',
+                    name: 'createTime'
                 },
             ],
-            dataObj: {},
-            cardId: null,
+            dataObj: {}
         }
     },
     mounted () {
-        this.initData(this.$route.query.cardId);
-        this.cardId = this.$route.query.cardId;
+        this.initData(this.$route.query.code)
     },
     methods: {
-        initData(id) {
-            api.getCardDetail({cardId: id})
+        moment,
+        initData(code) {
+            api.getClientDetail({appCode: code})
             .then(res => {
                 this.dataObj = res.data
             })
-        },
-        goEdit() {
-            // this.$router.push({name: 'card_edited', query: {cardId: this.cardId}})
         }
     }
 }

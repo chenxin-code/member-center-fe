@@ -203,8 +203,8 @@ export default {
     .content {
       height: calc(100% - 90px);
       margin: 24px 16px;
-      // background: #fff;
-      // overflow-y: auto;
+      background: #fff;
+      overflow-y: auto;
 
       .home-fail {
         padding: 20px;
