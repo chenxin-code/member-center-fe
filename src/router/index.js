@@ -28,8 +28,8 @@ const Card = () =>
 const CardDetail = () =>
     import ('@/pages/card/detail');
 
-const CardEdited = () =>
-    import ('@/pages/card/edited');
+// const CardEdited = () =>
+//     import ('@/pages/card/edited');
 
 const AccessManager = () =>
     import ('@/pages/accessManager/index');
