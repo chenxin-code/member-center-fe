@@ -39,7 +39,7 @@ export default {
       data: [],
       tooltip,
       scale,
-      height: 100
+      height: 120
     };
   },
   props: {
@@ -50,12 +50,19 @@ export default {
       }
     }
   },
-  mounted() {
-    for (let i = 0; i < this.useData.length; i++) {
-      this.data.push({
-        x: this.useData[i].date,
-        y: this.useData[i].num
-      });
+  mounted() {},
+  watch: {
+    useData: {
+      handler(newVal) {
+        for (let i = 0; i < newVal.length; i++) {
+          this.data.push({
+            x: newVal[i].date,
+            y: newVal[i].memberCount
+          });
+        }
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
     }
   }
 };

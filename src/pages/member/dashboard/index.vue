@@ -25,9 +25,9 @@
           </div>
           <template slot="footer">
             <div class="quarter-footer">
-              <div class="quarter-footer-item">一月</div>
-              <div class="quarter-footer-item">二月</div>
-              <div class="quarter-footer-item">三月</div>
+              <div class="quarter-footer-item" v-for="(item, index) in quarterStr(tongJiData.quarter)" :key="index">
+                {{ item }}
+              </div>
             </div>
           </template>
         </chart-card>
@@ -100,64 +100,8 @@ import { ChartCard, MiniArea } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
-//季度新增
-const quarterData = [
-  { date: '2020-12-01', num: 1 },
-  { date: '2020-12-02', num: 3 },
-  { date: '2020-12-03', num: 5 },
-  { date: '2020-12-04', num: 9 },
-  { date: '2020-12-05', num: 7 },
-  { date: '2020-12-06', num: 4 }
-];
-
 //饼图：会员来源+会员等级
 const DataSet = require('@antv/data-set');
-//1.0会员来源
-const pieSourceData1 = [
-  { item: '家用用1', count: 32.2 },
-  { item: '酒水用1', count: 21 },
-  { item: '个护用1', count: 17 },
-  { item: '服饰用1', count: 13 },
-  { item: '母婴用1', count: 9 }
-];
-const pieScale1 = [
-  {
-    dataKey: 'percent',
-    min: 0,
-    formatter: '.0%'
-  }
-];
-const dv1 = new DataSet.View().source(pieSourceData1);
-dv1.transform({
-  type: 'percent',
-  field: 'count',
-  dimension: 'item',
-  as: 'percent'
-});
-const pieData1 = dv1.rows;
-//2.0会员等级
-const pieSourceData2 = [
-  { item: '家用用2', count: 23 },
-  { item: '酒水用2', count: 44 },
-  { item: '个护用2', count: 45 },
-  { item: '服饰用2', count: 10 },
-  { item: '母婴用2', count: 9 }
-];
-const pieScale2 = [
-  {
-    dataKey: 'percent',
-    min: 0,
-    formatter: '.0%'
-  }
-];
-const dv2 = new DataSet.View().source(pieSourceData2);
-dv2.transform({
-  type: 'percent',
-  field: 'count',
-  dimension: 'item',
-  as: 'percent'
-});
-const pieData2 = dv2.rows;
 
 // 折行图
 const lineSourceData = [
@@ -204,19 +148,29 @@ export default {
       tongJiData: {},
       loading: true,
       //面积图:季度新增
-      quarterData,
+      quarterData: [],
       //饼图：会员来源+会员等级
       // 1.0会员来源
-      pieScale1,
-      pieData1,
-      pieSourceData1,
+      pieData1: [],
+      pieScale1: [
+        {
+          dataKey: 'percent',
+          min: 0,
+          formatter: '.0%'
+        }
+      ],
       pieStyle1: {
         stroke: '#000'
       },
-      // 2.0会员来源
-      pieScale2,
-      pieData2,
-      pieSourceData2,
+      // 2.会员等级
+      pieData2: [],
+      pieScale2: [
+        {
+          dataKey: 'percent',
+          min: 0,
+          formatter: '.0%'
+        }
+      ],
       pieStyle2: {
         stroke: '#000'
       },
@@ -227,6 +181,19 @@ export default {
     };
   },
   computed: {
+    quarterStr() {
+      return value => {
+        if (value === 1) {
+          return ['1月', '2月', '3月'];
+        } else if (value === 2) {
+          return ['4月', '5月', '6月'];
+        } else if (value === 3) {
+          return ['7月', '8月', '9月'];
+        } else if (value === 4) {
+          return ['10月', '11月', '12月'];
+        }
+      };
+    },
     numFormat() {
       return value => {
         if (!value) {
@@ -283,7 +250,57 @@ export default {
               this.$set(this.tongJiData, key, element);
             }
           }
-          console.log('this.tongJiData :>> ', this.tongJiData);
+          console.log('this.tongJiData :>> ', this.tongJiData); //测试
+          // --------------------------------------
+          //季度新增
+          this.quarterData.splice(0, this.quarterData.length);
+          this.tongJiData.quarterStatisticsVo.forEach(element => {
+            this.quarterData.push(element);
+          });
+          console.log('this.quarterData :>> ', this.quarterData);
+          // --------------------------------------
+          //会员来源
+          const pieSourceData1 = [];
+          this.tongJiData.memberSourceStatisticsVos.forEach(element => {
+            let temp = {};
+            temp.item = element.memberSourceName;
+            temp.count = element.memberCount;
+            pieSourceData1.push(temp);
+          });
+          const dv1 = new DataSet.View().source(pieSourceData1);
+          dv1.transform({
+            type: 'percent',
+            field: 'count',
+            dimension: 'item',
+            as: 'percent'
+          });
+          this.pieData1.splice(0, this.pieData1.length);
+          dv1.rows.forEach(element => {
+            this.pieData1.push(element);
+          });
+          console.log('pieData1 :>> ', this.pieData1);
+          // --------------------------------------
+          //会员等级
+          const pieSourceData2 = [];
+          this.tongJiData.memberLevelStatisticsVos.forEach(element => {
+            let temp = {};
+            temp.item = element.memberLevelName;
+            temp.count = element.memberCount;
+            pieSourceData2.push(temp);
+          });
+          const dv2 = new DataSet.View().source(pieSourceData2);
+          dv2.transform({
+            type: 'percent',
+            field: 'count',
+            dimension: 'item',
+            as: 'percent'
+          });
+          this.pieData2.splice(0, this.pieData2.length);
+          dv2.rows.forEach(element => {
+            this.pieData2.push(element);
+          });
+          console.log('pieData2 :>> ', this.pieData2);
+          // --------------------------------------
         }
       });
     },
