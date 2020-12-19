@@ -213,8 +213,8 @@ const allColumns = {
   integralColumns: [
     {
       title: '来源',
-      key: 'sourceType',
-      dataIndex: 'sourceType'
+      key: 'clientName',
+      dataIndex: 'clientName'
     },
     {
       title: '积分变动',
@@ -227,14 +227,9 @@ const allColumns = {
       key: 'describe'
     },
     {
-      title: '操作人',
-      dataIndex: 'createUser',
-      key: 'createUser'
-    },
-    {
       title: '记录时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime'
+      dataIndex: 'createTime',
+      key: 'createTime'
     }
   ],
   grownColumns: [
@@ -257,23 +252,24 @@ const allColumns = {
   behaviourColumns: [
     {
       title: '行为名称',
-      key: 'name',
-      dataIndex: 'name'
+      key: 'behaviourName',
+      dataIndex: 'behaviourName'
     },
+    // 行为类型 1：消费；2：其他
     {
       title: '行为类型',
-      dataIndex: 'type',
-      key: 'type'
+      dataIndex: 'behaviourType',
+      key: 'behaviourType'
     },
     {
       title: '行为来源',
-      dataIndex: 'memo',
-      key: 'memo'
+      dataIndex: 'behaviourSource',
+      key: 'behaviourSource'
     },
     {
       title: '记录时间',
-      key: 'id',
-      dataIndex: 'id'
+      key: 'createTime',
+      dataIndex: 'createTime'
     }
   ]
 };

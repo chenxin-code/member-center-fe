@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="member-dashboard">
     <a-row :gutter="24">
       <!-- 今日新增 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
@@ -57,13 +57,7 @@
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
-              <v-pie
-                :settings="chartSettings"
-                position="percent"
-                color="item"
-                :v-style="pieStyle2"
-                :label="labelConfig"
-              />
+              <v-pie position="percent" color="item" :v-style="pieStyle2" :label="labelConfig" />
               <v-coord type="theta" />
             </v-chart>
           </div>
@@ -451,13 +445,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.member-dashboard {
+  background: #f0f2f5 !important;
+  background-color: #f0f2f5 !important;
+}
 ::v-deep .ant-row {
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   .ant-card {
     height: 250px !important;
   }
   .pie-card .ant-card-body {
     padding: 0 !important;
+  }
+  .ant-card-bordered {
+    border: none;
   }
 }
 
