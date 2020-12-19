@@ -35,29 +35,39 @@
 
       <!-- 会员来源 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <div class="pie-source">
-          <span class="pie-title">会员来源</span>
-          <v-chart :forceFit="true" :height="255" :data="pieData1" :scale="pieScale1">
-            <v-tooltip :showTitle="false" dataKey="item*percent" />
-            <v-axis />
-            <v-legend dataKey="item" />
-            <v-pie position="percent" color="item" :v-style="pieStyle1" />
-            <v-coord type="theta" />
-          </v-chart>
-        </div>
+        <a-card :loading="loading" class="pie-card">
+          <div class="pie-source">
+            <span class="pie-title">会员来源</span>
+            <v-chart :forceFit="true" :height="255" :data="pieData1" :scale="pieScale1">
+              <v-tooltip :showTitle="false" dataKey="item*percent" />
+              <v-axis />
+              <v-legend dataKey="item" />
+              <v-pie position="percent" color="item" :v-style="pieStyle1" :label="labelConfig" />
+              <v-coord type="theta" />
+            </v-chart>
+          </div>
+        </a-card>
       </a-col>
       <!-- 会员等级 -->
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <div class="pie-source">
-          <span class="pie-title">会员等级</span>
-          <v-chart :forceFit="true" :height="255" :data="pieData2" :scale="pieScale2">
-            <v-tooltip :showTitle="false" dataKey="item*percent" />
-            <v-axis />
-            <v-legend dataKey="item" />
-            <v-pie position="percent" color="item" :v-style="pieStyle2" />
-            <v-coord type="theta" />
-          </v-chart>
-        </div>
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }" class="pie">
+        <a-card :loading="loading" class="pie-card">
+          <div class="pie-source">
+            <span class="pie-title">会员等级</span>
+            <v-chart :forceFit="true" :height="255" :data="pieData2" :scale="pieScale2">
+              <v-tooltip :showTitle="false" dataKey="item*percent" />
+              <v-axis />
+              <v-legend dataKey="item" />
+              <v-pie
+                :settings="chartSettings"
+                position="percent"
+                color="item"
+                :v-style="pieStyle2"
+                :label="labelConfig"
+              />
+              <v-coord type="theta" />
+            </v-chart>
+          </div>
+        </a-card>
       </a-col>
     </a-row>
 
@@ -67,11 +77,11 @@
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
-              <a>今日</a>
-              <a>本月</a>
-              <a>本年</a>
+              <span :class="{ isClicked: dateType === 1 }" @click="getMemberTongJiDate(1)">本日</span>
+              <span :class="{ isClicked: dateType === 2 }" @click="getMemberTongJiDate(2)">本月</span>
+              <span :class="{ isClicked: dateType === 3 }" @click="getMemberTongJiDate(3)">本年</span>
             </div>
-            <a-range-picker :style="{ width: '256px' }" />
+            <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
           </div>
 
           <a-tab-pane loading="true" tab="会员数量" key="1">
@@ -81,8 +91,8 @@
                   <v-tooltip />
                   <v-axis />
                   <v-legend />
-                  <v-line position="month*temperature" color="city" />
-                  <v-point position="month*temperature" color="city" :size="4" :v-style="lineStyle" :shape="'circle'" />
+                  <v-line position="xitem*sumVal" color="sumType" />
+                  <v-point position="xitem*sumVal" color="sumType" :size="4" :v-style="lineStyle" :shape="'circle'" />
                 </v-chart>
               </a-col>
             </a-row>
@@ -100,41 +110,8 @@ import { ChartCard, MiniArea } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
-//饼图：会员来源+会员等级
+//饼图：会员来源+会员等级 + 折线图：会员数量
 const DataSet = require('@antv/data-set');
-
-// 折行图
-const lineSourceData = [
-  { month: 'Jan', Tokyo: 7.0, London: 3.9 },
-  { month: 'Feb', Tokyo: 6.9, London: 4.2 },
-  { month: 'Mar', Tokyo: 9.5, London: 5.7 },
-  { month: 'Apr', Tokyo: 14.5, London: 8.5 },
-  { month: 'May', Tokyo: 18.4, London: 11.9 },
-  { month: 'Jun', Tokyo: 21.5, London: 15.2 },
-  { month: 'Jul', Tokyo: 25.2, London: 17.0 },
-  { month: 'Aug', Tokyo: 26.5, London: 16.6 },
-  { month: 'Sep', Tokyo: 23.3, London: 14.2 },
-  { month: 'Oct', Tokyo: 18.3, London: 10.3 },
-  { month: 'Nov', Tokyo: 13.9, London: 6.6 },
-  { month: 'Dec', Tokyo: 9.6, London: 4.8 }
-];
-
-const lineDv = new DataSet.View().source(lineSourceData);
-lineDv.transform({
-  type: 'fold',
-  fields: ['Tokyo', 'London'],
-  key: 'city',
-  value: 'temperature'
-});
-const lineData = lineDv.rows;
-
-const lineScale = [
-  {
-    dataKey: 'month',
-    min: 0,
-    max: 1
-  }
-];
 
 export default {
   name: 'Analysis',
@@ -145,6 +122,14 @@ export default {
   },
   data() {
     return {
+      labelConfig: [
+        'percent',
+        {
+          formatter: (val, item) => {
+            return val;
+          }
+        }
+      ],
       tongJiData: {},
       loading: true,
       //面积图:季度新增
@@ -174,9 +159,19 @@ export default {
       pieStyle2: {
         stroke: '#000'
       },
-      //会员数量
-      lineData,
-      lineScale,
+      //会员数量:折线图
+      jointimeStart: '',
+      jointimeEnd: '',
+      rangeDate: '',
+      dateType: 3,
+      lineData: [],
+      lineScale: [
+        {
+          dataKey: 'xitem'
+          // min: 0,
+          // max: 1
+        }
+      ],
       lineStyle: { stroke: '#fff', lineWidth: 1 }
     };
   },
@@ -210,7 +205,7 @@ export default {
       await this.getLoginUrl();
       await this.getUserInfo();
       await this.getMemberTongJi();
-      await this.getMemberTongJiDate();
+      await this.getMemberTongJiDate(this.dateType);
     },
     getLoginUrl() {
       api.getLoginUrl().then(res => {
@@ -254,14 +249,14 @@ export default {
           // --------------------------------------
           //季度新增
           this.quarterData.splice(0, this.quarterData.length);
-          this.tongJiData.quarterStatisticsVo.forEach(element => {
+          res.data.quarterStatisticsVo.forEach(element => {
             this.quarterData.push(element);
           });
           console.log('this.quarterData :>> ', this.quarterData);
           // --------------------------------------
           //会员来源
           const pieSourceData1 = [];
-          this.tongJiData.memberSourceStatisticsVos.forEach(element => {
+          res.data.memberSourceStatisticsVos.forEach(element => {
             let temp = {};
             temp.item = element.memberSourceName;
             temp.count = element.memberCount;
@@ -282,7 +277,7 @@ export default {
           // --------------------------------------
           //会员等级
           const pieSourceData2 = [];
-          this.tongJiData.memberLevelStatisticsVos.forEach(element => {
+          res.data.memberLevelStatisticsVos.forEach(element => {
             let temp = {};
             temp.item = element.memberLevelName;
             temp.count = element.memberCount;
@@ -304,23 +299,128 @@ export default {
         }
       });
     },
-    getMemberTongJiDate() {
+
+    handleRangePicker(dateVal) {
+      this.dateType = 4;
+      console.log('handleRangePicker val :>> ', dateVal);
+      this.jointimeStart = moment(dateVal[0]).format('YYYY-MM-DD');
+      this.jointimeEnd = moment(dateVal[1]).format('YYYY-MM-DD');
+      this.getMemberTongJiDate(this.dateType);
+    },
+    getMemberTongJiDate(dateTypeParam) {
+      this.dateType = dateTypeParam; //存dateType
+      console.log('getMemberTongJiDate this.dateType :>> ', this.dateType);
+      if (dateTypeParam === 4) {
+        console.log('rangeDate :>> ', this.rangeDate);
+      }
       const param = {
-        type: 1
-        // createTimeStart: jointimeStart,
-        // createTimeEnd: jointimeEnd
+        type: this.dateType,
+        createTimeStart: this.jointimeStart,
+        createTimeEnd: this.jointimeEnd
       };
-      api
-        .getMemberTongJiDate(param)
-        .then(res => {
-          console.log('getMemberTongJiDate res :>> ', res);
-          if (res.code === 200) {
-            //
+
+      console.log('getMemberTongJiDate param :>> ', param);
+
+      api.getMemberTongJiDate(param).then(res => {
+        console.log('getMemberTongJiDate res :>> ', res);
+        if (res.code === 200) {
+          if (this.dateType === 3) {
+            const lineSourceData = [];
+            res.data.forEach(element => {
+              let temp = {};
+              temp['总数量'] = element.monthSum;
+              temp['新增数量'] = element.monthNewNum;
+              temp.xitem = element.monthNum;
+              lineSourceData.push(temp);
+            });
+            console.log('lineSourceData :>> ', lineSourceData);
+
+            const lineDv = new DataSet.View().source(lineSourceData);
+            lineDv.transform({
+              type: 'fold',
+              fields: ['总数量', '新增数量'],
+              key: 'sumType',
+              value: 'sumVal'
+            });
+
+            this.lineData.splice(0, this.lineData.length);
+            lineDv.rows.forEach(element => {
+              this.lineData.push(element);
+            });
+            console.log('lineData :>> ', this.lineData);
+          } else if (this.dateType === 1) {
+            const lineSourceData = [];
+            res.data.forEach(element => {
+              let temp = {};
+              temp['总数量'] = element.hourSum;
+              temp['新增数量'] = element.hourNewNum;
+              temp.xitem = element.hourNum + ':00';
+              lineSourceData.push(temp);
+            });
+            console.log('lineSourceData :>> ', lineSourceData);
+            const lineDv = new DataSet.View().source(lineSourceData);
+            lineDv.transform({
+              type: 'fold',
+              fields: ['总数量', '新增数量'],
+              key: 'sumType',
+              value: 'sumVal'
+            });
+            this.lineData.splice(0, this.lineData.length);
+            lineDv.rows.forEach(element => {
+              this.lineData.push(element);
+            });
+            console.log('lineData :>> ', this.lineData);
+          } else if (this.dateType === 2) {
+            const lineSourceData = [];
+            res.data.forEach(element => {
+              let temp = {};
+              temp['总数量'] = element.daySum;
+              temp['新增数量'] = element.dayNewNum;
+              temp.xitem = element.dayNum;
+              lineSourceData.push(temp);
+            });
+            console.log('lineSourceData :>> ', lineSourceData);
+
+            const lineDv = new DataSet.View().source(lineSourceData);
+            lineDv.transform({
+              type: 'fold',
+              fields: ['总数量', '新增数量'],
+              key: 'sumType',
+              value: 'sumVal'
+            });
+
+            this.lineData.splice(0, this.lineData.length);
+            lineDv.rows.forEach(element => {
+              this.lineData.push(element);
+            });
+            console.log('lineData :>> ', this.lineData);
+          } else if (this.dateType === 4) {
+            const lineSourceData = [];
+            res.data.forEach(element => {
+              let temp = {};
+              temp['总数量'] = element.daySum;
+              temp['新增数量'] = element.dayNewNum;
+              temp.xitem = element.dayNum;
+              lineSourceData.push(temp);
+            });
+            console.log('lineSourceData :>> ', lineSourceData);
+
+            const lineDv = new DataSet.View().source(lineSourceData);
+            lineDv.transform({
+              type: 'fold',
+              fields: ['总数量', '新增数量'],
+              key: 'sumType',
+              value: 'sumVal'
+            });
+
+            this.lineData.splice(0, this.lineData.length);
+            lineDv.rows.forEach(element => {
+              this.lineData.push(element);
+            });
+            console.log('lineData :>> ', this.lineData);
           }
-        })
-        .finally(() => {
-          //
-        });
+        }
+      });
     }
   },
   created() {
@@ -345,16 +445,19 @@ export default {
 
     setTimeout(() => {
       this.loading = !this.loading;
-    }, 1000);
+    }, 2000);
   }
 };
 </script>
 
 <style lang="less" scoped>
-.ant-row {
+::v-deep .ant-row {
   margin-bottom: 20px;
   .ant-card {
     height: 250px !important;
+  }
+  .pie-card .ant-card-body {
+    padding: 0 !important;
   }
 }
 
@@ -401,6 +504,10 @@ export default {
   }
 }
 
+.isClicked {
+  color: blue;
+}
+
 .extra-wrapper {
   line-height: 55px;
   padding-right: 24px;
@@ -409,7 +516,8 @@ export default {
     display: inline-block;
     margin-right: 24px;
 
-    a {
+    span {
+      display: inline-block;
       margin-left: 24px;
     }
   }
