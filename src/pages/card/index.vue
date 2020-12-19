@@ -36,9 +36,8 @@ export default {
             dataList: []
         }
     },
-    created() {
+    mounted() {
         this.initData()
-        console.log(this)
     },
     methods: {
         initData() {

@@ -152,7 +152,7 @@ export default {
     components: {
       FilterForm
     },
-    created () {
+    mounted () {
         this.getTaskSource()
         this.getTaskList()
     },

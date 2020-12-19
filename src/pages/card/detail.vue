@@ -2,7 +2,7 @@
     <div class="detail">
         <div class="detail-header">
             <p class="detail-header-title">会员卡详情</p>
-            <p class="detail-header-btn">编辑</p>
+            <p class="detail-header-btn" @click="goEdit()">编辑</p>
         </div>
         <div class="detail-main">
             <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
@@ -46,11 +46,13 @@ export default {
                     name: 'memberCardImage'
                 },
             ],
-            dataObj: {}
+            dataObj: {},
+            cardId: null,
         }
     },
-    created () {
-        this.initData(this.$route.query.cardId)
+    mounted () {
+        this.initData(this.$route.query.cardId);
+        this.cardId = this.$route.query.cardId;
     },
     methods: {
         initData(id) {
@@ -58,6 +60,9 @@ export default {
             .then(res => {
                 this.dataObj = res.data
             })
+        },
+        goEdit() {
+            this.$router.push({name: 'card_edited', query: {cardId: this.cardId}})
         }
     }
 }
