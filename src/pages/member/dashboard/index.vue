@@ -66,7 +66,7 @@
     </a-row>
 
     <!-- 会员数量 -->
-    <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
+    <a-card :loading="loadingDate" :bordered="false" :body-style="{ padding: '0' }">
       <div class="salesCard">
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
@@ -116,6 +116,8 @@ export default {
   },
   data() {
     return {
+      loading: true,
+      loadingDate: true,
       labelConfig: [
         'percent',
         {
@@ -125,7 +127,6 @@ export default {
         }
       ],
       tongJiData: {},
-      loading: true,
       //面积图:季度新增
       quarterData: [],
       //饼图：会员来源+会员等级
@@ -196,13 +197,17 @@ export default {
   },
   methods: {
     async checkLoginUser() {
+      this.loading = true;
+      this.loadingDate = true;
       await this.getLoginUrl();
       await this.getUserInfo();
       await this.getMemberTongJi();
       await this.getMemberTongJiDate(this.dateType);
+      this.loading = false;
+      this.loadingDate = false;
     },
     getLoginUrl() {
-      api.getLoginUrl().then(res => {
+      return api.getLoginUrl().then(res => {
         console.log('getLoginUrl res :>> ', res);
         if (res.code === 200) {
           window.localStorage.setItem('SD_LOGIN_URL', res.data);
@@ -216,7 +221,7 @@ export default {
         token: tokenStr
       };
 
-      api.getUserInfo(param).then(res => {
+      return api.getUserInfo(param).then(res => {
         console.log('getUserInfo res :>> ', res);
         if (res.code === 200) {
           this.userAvatar = res.data.userImage ? res.data.userImage : defaultAvatar;
@@ -230,7 +235,7 @@ export default {
     },
     //获取会员统计
     getMemberTongJi() {
-      api.getMemberTongJi().then(res => {
+      return api.getMemberTongJi().then(res => {
         console.log('getMemberTongJi res :>> ', res);
         if (res.code === 200) {
           for (const key in res.data) {
@@ -302,6 +307,7 @@ export default {
       this.getMemberTongJiDate(this.dateType);
     },
     getMemberTongJiDate(dateTypeParam) {
+      this.loadingDate = true;
       this.dateType = dateTypeParam; //存dateType
       console.log('getMemberTongJiDate this.dateType :>> ', this.dateType);
       if (dateTypeParam === 4) {
@@ -315,106 +321,112 @@ export default {
 
       console.log('getMemberTongJiDate param :>> ', param);
 
-      api.getMemberTongJiDate(param).then(res => {
-        console.log('getMemberTongJiDate res :>> ', res);
-        if (res.code === 200) {
-          if (this.dateType === 3) {
-            const lineSourceData = [];
-            res.data.forEach(element => {
-              let temp = {};
-              temp['总数量'] = element.monthSum;
-              temp['新增数量'] = element.monthNewNum;
-              temp.xitem = element.monthNum;
-              lineSourceData.push(temp);
-            });
-            console.log('lineSourceData :>> ', lineSourceData);
+      return api
+        .getMemberTongJiDate(param)
+        .then(res => {
+          console.log('getMemberTongJiDate res :>> ', res);
+          this.loadingDate = false;
+          if (res.code === 200) {
+            if (this.dateType === 3) {
+              const lineSourceData = [];
+              res.data.forEach(element => {
+                let temp = {};
+                temp['总数量'] = element.monthSum;
+                temp['新增数量'] = element.monthNewNum;
+                temp.xitem = element.monthNum;
+                lineSourceData.push(temp);
+              });
+              console.log('lineSourceData :>> ', lineSourceData);
 
-            const lineDv = new DataSet.View().source(lineSourceData);
-            lineDv.transform({
-              type: 'fold',
-              fields: ['总数量', '新增数量'],
-              key: 'sumType',
-              value: 'sumVal'
-            });
+              const lineDv = new DataSet.View().source(lineSourceData);
+              lineDv.transform({
+                type: 'fold',
+                fields: ['总数量', '新增数量'],
+                key: 'sumType',
+                value: 'sumVal'
+              });
 
-            this.lineData.splice(0, this.lineData.length);
-            lineDv.rows.forEach(element => {
-              this.lineData.push(element);
-            });
-            console.log('lineData :>> ', this.lineData);
-          } else if (this.dateType === 1) {
-            const lineSourceData = [];
-            res.data.forEach(element => {
-              let temp = {};
-              temp['总数量'] = element.hourSum;
-              temp['新增数量'] = element.hourNewNum;
-              temp.xitem = element.hourNum + ':00';
-              lineSourceData.push(temp);
-            });
-            console.log('lineSourceData :>> ', lineSourceData);
-            const lineDv = new DataSet.View().source(lineSourceData);
-            lineDv.transform({
-              type: 'fold',
-              fields: ['总数量', '新增数量'],
-              key: 'sumType',
-              value: 'sumVal'
-            });
-            this.lineData.splice(0, this.lineData.length);
-            lineDv.rows.forEach(element => {
-              this.lineData.push(element);
-            });
-            console.log('lineData :>> ', this.lineData);
-          } else if (this.dateType === 2) {
-            const lineSourceData = [];
-            res.data.forEach(element => {
-              let temp = {};
-              temp['总数量'] = element.daySum;
-              temp['新增数量'] = element.dayNewNum;
-              temp.xitem = element.dayNum;
-              lineSourceData.push(temp);
-            });
-            console.log('lineSourceData :>> ', lineSourceData);
+              this.lineData.splice(0, this.lineData.length);
+              lineDv.rows.forEach(element => {
+                this.lineData.push(element);
+              });
+              console.log('lineData :>> ', this.lineData);
+            } else if (this.dateType === 1) {
+              const lineSourceData = [];
+              res.data.forEach(element => {
+                let temp = {};
+                temp['总数量'] = element.hourSum;
+                temp['新增数量'] = element.hourNewNum;
+                temp.xitem = element.hourNum + ':00';
+                lineSourceData.push(temp);
+              });
+              console.log('lineSourceData :>> ', lineSourceData);
+              const lineDv = new DataSet.View().source(lineSourceData);
+              lineDv.transform({
+                type: 'fold',
+                fields: ['总数量', '新增数量'],
+                key: 'sumType',
+                value: 'sumVal'
+              });
+              this.lineData.splice(0, this.lineData.length);
+              lineDv.rows.forEach(element => {
+                this.lineData.push(element);
+              });
+              console.log('lineData :>> ', this.lineData);
+            } else if (this.dateType === 2) {
+              const lineSourceData = [];
+              res.data.forEach(element => {
+                let temp = {};
+                temp['总数量'] = element.daySum;
+                temp['新增数量'] = element.dayNewNum;
+                temp.xitem = element.dayNum;
+                lineSourceData.push(temp);
+              });
+              console.log('lineSourceData :>> ', lineSourceData);
 
-            const lineDv = new DataSet.View().source(lineSourceData);
-            lineDv.transform({
-              type: 'fold',
-              fields: ['总数量', '新增数量'],
-              key: 'sumType',
-              value: 'sumVal'
-            });
+              const lineDv = new DataSet.View().source(lineSourceData);
+              lineDv.transform({
+                type: 'fold',
+                fields: ['总数量', '新增数量'],
+                key: 'sumType',
+                value: 'sumVal'
+              });
 
-            this.lineData.splice(0, this.lineData.length);
-            lineDv.rows.forEach(element => {
-              this.lineData.push(element);
-            });
-            console.log('lineData :>> ', this.lineData);
-          } else if (this.dateType === 4) {
-            const lineSourceData = [];
-            res.data.forEach(element => {
-              let temp = {};
-              temp['总数量'] = element.daySum;
-              temp['新增数量'] = element.dayNewNum;
-              temp.xitem = element.dayNum;
-              lineSourceData.push(temp);
-            });
-            console.log('lineSourceData :>> ', lineSourceData);
+              this.lineData.splice(0, this.lineData.length);
+              lineDv.rows.forEach(element => {
+                this.lineData.push(element);
+              });
+              console.log('lineData :>> ', this.lineData);
+            } else if (this.dateType === 4) {
+              const lineSourceData = [];
+              res.data.forEach(element => {
+                let temp = {};
+                temp['总数量'] = element.daySum;
+                temp['新增数量'] = element.dayNewNum;
+                temp.xitem = element.dayNum;
+                lineSourceData.push(temp);
+              });
+              console.log('lineSourceData :>> ', lineSourceData);
 
-            const lineDv = new DataSet.View().source(lineSourceData);
-            lineDv.transform({
-              type: 'fold',
-              fields: ['总数量', '新增数量'],
-              key: 'sumType',
-              value: 'sumVal'
-            });
+              const lineDv = new DataSet.View().source(lineSourceData);
+              lineDv.transform({
+                type: 'fold',
+                fields: ['总数量', '新增数量'],
+                key: 'sumType',
+                value: 'sumVal'
+              });
 
-            this.lineData.splice(0, this.lineData.length);
-            lineDv.rows.forEach(element => {
-              this.lineData.push(element);
-            });
-            console.log('lineData :>> ', this.lineData);
+              this.lineData.splice(0, this.lineData.length);
+              lineDv.rows.forEach(element => {
+                this.lineData.push(element);
+              });
+              console.log('lineData :>> ', this.lineData);
+            }
           }
-        }
-      });
+        })
+        .finally(() => {
+          this.loadingDate = false;
+        });
     }
   },
   created() {
@@ -436,10 +448,6 @@ export default {
     //------ 通过网址传递token并存储到ls ------
     //初始化校验token和用户信息
     this.checkLoginUser();
-
-    setTimeout(() => {
-      this.loading = !this.loading;
-    }, 2000);
   }
 };
 </script>
