@@ -162,8 +162,7 @@ export default {
       //分页
       total: 0,
       current: 1,
-      // pageSize: 10
-      pageSize: 50
+      pageSize: 10
     };
   },
   components: {

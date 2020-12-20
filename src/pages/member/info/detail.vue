@@ -16,11 +16,7 @@
               <div class="base-left">
                 <div class="base-left-top">
                   <div class="left-top-left">
-                    <a-avatar
-                      class="base-avatar"
-                      :size="48"
-                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
+                    <a-avatar class="base-avatar" :size="48" :src="userAvatar" @loadError="loadAvatarError" />
                   </div>
                   <div class="left-top-right">
                     <div>会员ID:{{ memberId }}</div>
@@ -224,14 +220,13 @@ import { MiniProgress } from '@/antd/components';
 import FormList from '@/components/FormList/index.jsx';
 
 import { mapActions } from 'vuex';
-const defaultAvatar = require('@/assets/img/user/avatar.png');
 import { CARD_TYPE_MAP } from '@/constance';
 // console.log('CARD_TYPE_MAP :>> ', CARD_TYPE_MAP);
 
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
-// v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"
+const defaultAvatar = require('@/assets/img/user/avatar.png');
 
 //页面列表数据
 const allColumns = {
@@ -305,6 +300,7 @@ export default {
   },
   data() {
     return {
+      userAvatar: '',
       memberId: '',
       memberDetails: {},
       //表格高度,与每页大小通用
@@ -414,6 +410,9 @@ export default {
   },
   methods: {
     moment,
+    loadAvatarError() {
+      this.useravatar = defaultAvatar;
+    },
     ...mapActions(['FALLBACK']),
     tabChangeCallback(key) {
       if (key == 1) {
