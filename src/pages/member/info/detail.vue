@@ -466,9 +466,10 @@ export default {
 
     getIntegralRecord() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
+
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm1.getFieldsValue().jointime1) {
           jointimeStart = moment(this.$refs.memberForm1.getFieldsValue().jointime1[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm1.getFieldsValue().jointime1[1]).format('YYYY-MM-DD');
@@ -507,9 +508,10 @@ export default {
 
     getGrownLog() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
+
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm2.getFieldsValue().jointime2) {
           jointimeStart = moment(this.$refs.memberForm2.getFieldsValue().jointime2[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm2.getFieldsValue().jointime2[1]).format('YYYY-MM-DD');
@@ -545,10 +547,10 @@ export default {
     },
     getBehaviourList() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
 
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm3.getFieldsValue().jointime3) {
           jointimeStart = moment(this.$refs.memberForm3.getFieldsValue().jointime3[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm3.getFieldsValue().jointime3[1]).format('YYYY-MM-DD');

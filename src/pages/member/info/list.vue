@@ -257,7 +257,6 @@ export default {
   },
   mounted() {
     const timer1 = setTimeout(() => {
-      console.log('this.$refs.content_main.offsetHeight  :>> ', this.$refs.content_main.offsetHeight);
       this.scrollY = this.$refs.content_main.offsetHeight - 275 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
@@ -311,80 +310,87 @@ export default {
             this.formList[0].selectOptions.push(tempObj);
           });
           this.formList[0].selectOptions.unshift(project);
-
-          this.$refs.memberForm.setFieldsValue({
-            memberSourceCode: this.formList[0].selectOptions[0].id
-          });
         }
       });
     },
     //获取表格数据
     getMemberList() {
       this.tableLoading = true;
+      this.$nextTick(() => {
+        let memberSourceCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
+          memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
+        }
+        console.log('memberSourceCode :>> ', memberSourceCode);
 
-      let memberSourceCode = '';
-      if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
-        memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
-      }
-      console.log('memberSourceCode :>> ', memberSourceCode);
+        let memberCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberCode) {
+          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
+        }
 
-      let memberCode = '';
-      if (this.$refs.memberForm.getFieldsValue().memberCode) {
-        memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
-      }
+        let phoneNo = '';
+        if (this.$refs.memberForm.getFieldsValue().phoneNo) {
+          phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
+        }
 
-      let phoneNo = '';
-      if (this.$refs.memberForm.getFieldsValue().phoneNo) {
-        phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
-      }
+        let jointimeStart = '';
+        let jointimeEnd = '';
+        if (this.$refs.memberForm.getFieldsValue().jointime) {
+          jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
+          jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
+        }
 
-      let jointimeStart = '';
-      let jointimeEnd = '';
-      if (this.$refs.memberForm.getFieldsValue().jointime) {
-        jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
-        jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
-      }
+        const para = {
+          memberSourceCode: memberSourceCode,
+          memberCode: memberCode,
+          phone: phoneNo,
+          createTimeStart: jointimeStart,
+          createTimeEnd: jointimeEnd,
+          isAll: 0,
+          pageIndex: this.current,
+          pageSize: this.pageSize
+        };
 
-      const para = {
-        memberSourceCode: memberSourceCode,
-        memberCode: memberCode,
-        phone: phoneNo,
-        createTimeStart: jointimeStart,
-        createTimeEnd: jointimeEnd,
-        isAll: 0,
-        pageIndex: this.current,
-        pageSize: this.pageSize
-      };
+        console.log('getMemberList para :>> ', para);
 
-      console.log('getMemberList para :>> ', para);
+        // for (let index = 0; index < mock.data.records.length; index++) {
+        //   const element = mock.data.records[index];
+        //   element.id = Date.now().toString(32) + index;
+        // }
 
-      // for (let index = 0; index < mock.data.records.length; index++) {
-      //   const element = mock.data.records[index];
-      //   element.id = Date.now().toString(32) + index;
-      // }
+        // this.total = mock.data.total;
+        // this.tableData.splice(0, this.tableData.length);
+        // mock.data.records.forEach(element => {
+        //   this.tableData.push(element);
+        // });
 
-      // this.total = mock.data.total;
-      // this.tableData.splice(0, this.tableData.length);
-      // mock.data.records.forEach(element => {
-      //   this.tableData.push(element);
-      // });
-
-      api
-        .getMemberList(para)
-        .then(res => {
-          this.tableLoading = false;
-          console.log('getMemberList res :>> ', res);
-          if (res.code === 200) {
-            this.total = res.data.total;
-            this.tableData.splice(0, this.tableData.length);
-            res.data.records.forEach((element, index) => {
-              this.tableData.push(element);
-            });
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
+        api
+          .getMemberList(para)
+          .then(res => {
+            this.tableLoading = false;
+            console.log('getMemberList res :>> ', res);
+            if (res.code === 200) {
+              this.total = res.data.total;
+              this.tableData.splice(0, this.tableData.length);
+              res.data.records.forEach((element, index) => {
+                this.tableData.push(element);
+              });
+            }
+          })
+          .finally(() => {
+            this.tableLoading = false;
+          });
+      });
+    }
+  },
+  watch: {
+    formList: {
+      handler: function(newVal) {
+        this.$refs.memberForm.setFieldsValue({
+          memberSourceCode: this.formList[0].selectOptions[0].id
         });
+      },
+      deep: true
     }
   }
 };
@@ -395,9 +401,10 @@ export default {
   height: 100%;
   overflow: hidden;
 
-  .content_main {
-    height: 100%;
-    padding: 10px;
+  .content-main {
+    ::v-deep .ant-btn {
+      width: 98px !important;
+    }
   }
 }
 </style>
