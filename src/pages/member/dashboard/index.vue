@@ -158,13 +158,11 @@ export default {
       jointimeStart: '',
       jointimeEnd: '',
       rangeDate: '',
-      dateType: 3,
+      dateType: 1,
       lineData: [],
       lineScale: [
         {
           dataKey: 'xitem'
-          // min: 0,
-          // max: 1
         }
       ],
       lineStyle: { stroke: '#fff', lineWidth: 1 }
