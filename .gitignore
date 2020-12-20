@@ -26,6 +26,8 @@ pnpm-debug.log*
 webstorm.config.js
 
 # Zjh config files
+src/pages/member/info/mock.json
+src/pages/member/info/url.json
 .prettierrc
 test.json
 test.js
