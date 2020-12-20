@@ -295,7 +295,7 @@ export default {
 
     //获取会员来源
     getClientList() {
-      api.getClientList().then(res => {
+      return api.getClientList().then(res => {
         console.log('getClientList res :>> ', res);
         if (res.code === 200) {
           const project = {
@@ -364,7 +364,7 @@ export default {
         //   this.tableData.push(element);
         // });
 
-        api
+        return api
           .getMemberList(para)
           .then(res => {
             this.tableLoading = false;

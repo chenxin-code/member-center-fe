@@ -605,7 +605,7 @@ export default {
       this.getBehaviourList();
     }
   },
-  created: function() {
+  created() {
     console.log('detail this.$store :>> ', this.$store);
     console.log('this.$route :>> ', this.$route);
 
