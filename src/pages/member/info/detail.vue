@@ -16,10 +16,11 @@
               <div class="base-left">
                 <div class="base-left-top">
                   <div class="left-top-left">
-                    <a-avatar class="base-avatar" :size="48" :src="userAvatar" @loadError="loadAvatarError" />
+                    <img class="base-avatar" :src="memberDetails.memberImage" @error="loadAvatarError" />
                   </div>
                   <div class="left-top-right">
                     <div>会员ID:{{ memberId }}</div>
+                    <!-- <div>memberDetails.memberImage:{{ memberDetails.memberImage }}</div> -->
                     <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
                   </div>
                 </div>
@@ -69,14 +70,11 @@
             <a-col :span="24">
               <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
                 <div class="card-row-left">
-                  <img
-                    class="card-avatar"
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    alt=""
-                  />
+                  <img class="card-avatar" :src="item.memberCardImage" @error="loadImageError" />
                 </div>
                 <div class="card-row-center">
                   <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
+                  <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
                   <div class="card-row-center-item">
                     获取时间:{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }}
                   </div>
@@ -227,6 +225,7 @@ import { CARD_TYPE_MAP } from '@/constance';
 // console.log('mock :>> ', mock);
 
 const defaultAvatar = require('@/assets/img/user/avatar.png');
+// const defaultAvatar = require('@/assets/img/portal/gongsiguanli.png');
 
 //页面列表数据
 const allColumns = {
@@ -300,7 +299,6 @@ export default {
   },
   data() {
     return {
-      userAvatar: '',
       memberId: '',
       memberDetails: {},
       //表格高度,与每页大小通用
@@ -410,8 +408,11 @@ export default {
   },
   methods: {
     moment,
-    loadAvatarError() {
-      this.useravatar = defaultAvatar;
+    loadAvatarError(e) {
+      e.target.src = defaultAvatar;
+    },
+    loadImageError(e) {
+      e.target.src = defaultAvatar;
     },
     ...mapActions(['FALLBACK']),
     tabChangeCallback(key) {
@@ -657,7 +658,16 @@ export default {
           justify-content: flex-start;
           align-items: center;
 
-          // .left-top-left{}
+          .left-top-left {
+            width: 48px;
+            height: 48px;
+            .base-avatar {
+              display: block;
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+            }
+          }
           // .left-top-right{}
         }
         .base-left-middle {
@@ -724,6 +734,7 @@ export default {
   }
 
   .member-card {
+    height: 204px;
     .card-title {
       color: #666;
       padding: 5px 0 0 26px;
@@ -736,6 +747,7 @@ export default {
       }
     }
     .card-row {
+      height: 150px;
       padding-left: 10px;
       margin-bottom: 10px;
       display: flex;
@@ -745,7 +757,6 @@ export default {
 
       .card-row-left {
         margin-right: 45px;
-        background-color: lightblue;
         width: 200px;
         height: 150px;
 
