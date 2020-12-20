@@ -117,7 +117,13 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="integralTotal"
                     :show-total="integralTotal => `共 ${integralTotal} 条`"
@@ -144,7 +150,13 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="grownTotal"
                     :show-total="grownTotal => `共 ${grownTotal} 条`"
@@ -171,7 +183,18 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="behaviourTypeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="behaviourTypeStr(rowData)"></span>
+                      </div>
+                    </template>
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="behaviourTotal"
                     :show-total="behaviourTotal => `共 ${behaviourTotal} 条`"
@@ -208,13 +231,15 @@ import { CARD_TYPE_MAP } from '@/constance';
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
+// v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"
+
 //页面列表数据
 const allColumns = {
   integralColumns: [
     {
       title: '来源',
-      key: 'clientName',
-      dataIndex: 'clientName'
+      dataIndex: 'clientName',
+      key: 'clientName'
     },
     {
       title: '积分变动',
@@ -228,15 +253,15 @@ const allColumns = {
     },
     {
       title: '记录时间',
-      dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ],
   grownColumns: [
     {
       title: '成长值变动',
-      key: 'growthChange',
-      dataIndex: 'growthChange'
+      dataIndex: 'growthChange',
+      key: 'growthChange'
     },
     {
       title: '描述',
@@ -245,21 +270,20 @@ const allColumns = {
     },
     {
       title: '记录时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime'
+      key: 'createTime',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ],
   behaviourColumns: [
     {
       title: '行为名称',
-      key: 'behaviourName',
-      dataIndex: 'behaviourName'
+      dataIndex: 'behaviourName',
+      key: 'behaviourName'
     },
-    // 行为类型 1：消费；2：其他
     {
       title: '行为类型',
-      dataIndex: 'behaviourType',
-      key: 'behaviourType'
+      key: 'behaviourTypeSlot',
+      scopedSlots: { customRender: 'behaviourTypeSlot' }
     },
     {
       title: '行为来源',
@@ -268,8 +292,8 @@ const allColumns = {
     },
     {
       title: '记录时间',
-      key: 'createTime',
-      dataIndex: 'createTime'
+      key: 'createTimeSlot',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ]
 };
@@ -352,6 +376,19 @@ export default {
     };
   },
   computed: {
+    behaviourTypeStr() {
+      return param => {
+        let str = '';
+        if (param === 1) {
+          str = '消费';
+        } else if (param === 2) {
+          str = '其他';
+        } else {
+          str = '';
+        }
+        return str;
+      };
+    },
     cardTypeStr() {
       return param => {
         let str = '';
@@ -369,7 +406,7 @@ export default {
         } else if (param === 2) {
           str = '女';
         } else {
-          str = '未知';
+          str = '';
         }
         return str;
       };
@@ -546,19 +583,21 @@ export default {
 
     //积分分页
     pagingIntegral(current, pageSize) {
-      console.log(current, pageSize);
+      console.log('积分分页 pagingIntegral: ', current, pageSize);
       this.integralPageSize = pageSize;
       this.integralCurrent = current;
       this.getIntegralRecord();
     },
     //成长值分页
     pagingGrown(current, pageSize) {
+      console.log('成长值分页 pagingGrown: ', current, pageSize);
       this.grownPageSize = pageSize;
       this.grownCurrent = current;
       this.getGrownLog();
     },
     //行为分页
     pagingBehaviour(current, pageSize) {
+      console.log('行为分页 pagingBehaviour: ', current, pageSize);
       this.behaviourPageSize = pageSize;
       this.behaviourCurrent = current;
       this.getBehaviourList();
@@ -573,8 +612,8 @@ export default {
   },
   mounted() {
     this.getIntegralRecord();
-    this.getGrownLog();
-    this.getBehaviourList();
+    // this.getGrownLog();
+    // this.getBehaviourList();
 
     setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 204 + 'px';
@@ -752,8 +791,8 @@ export default {
     }
   }
 
-  .member-record {
-  }
+  // .member-record {
+  // }
 
   .ant-tabs-bar {
     margin: 0 !important;

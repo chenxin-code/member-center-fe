@@ -14,16 +14,14 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <!-- <template slot="phoneNoSlot" slot-scope="rowData">
+        <template slot="phoneNoSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
           </div>
-        </template> -->
+        </template>
         <template slot="sexSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-show="rowData.sex === 0">未知</span>
-            <span v-show="rowData.sex === 1">男</span>
-            <span v-show="rowData.sex === 2">女</span>
+            <span v-html="sexStr(rowData)"></span>
           </div>
         </template>
         <template slot="memberSourceSlot" slot-scope="rowData">
@@ -124,9 +122,9 @@ export default {
         },
         {
           title: '手机号',
-          dataIndex: 'phone',
-          key: 'phone'
-          // scopedSlots: { customRender: 'phoneNoSlot' }
+          // dataIndex: 'phone',
+          key: 'phone',
+          scopedSlots: { customRender: 'phoneNoSlot' }
         },
         {
           title: '性别',
@@ -172,6 +170,19 @@ export default {
     FormList
   },
   computed: {
+    sexStr() {
+      return param => {
+        let str = '';
+        if (param === 1) {
+          str = '男';
+        } else if (param === 2) {
+          str = '女';
+        } else {
+          str = '';
+        }
+        return str;
+      };
+    },
     showLevel() {
       return param => {
         let tempStr = '';
