@@ -238,22 +238,8 @@ export default {
     }
   },
   created() {
-    // //------ 通过网址传递token并存储到ls ------
-    // let tokenStr = '';
-    // const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
-    // if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
-    //   if (tokenArr[1]) {
-    //     tokenStr = tokenArr[1];
-    //   }
-    // }
-    // if (tokenStr) {
-    //   console.log('有参数');
-    //   window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
-    //   window.history.replaceState(null, null, window.location.pathname);
-    // } else {
-    //   console.log('没有参数');
-    // }
-    // //------ 通过网址传递token并存储到ls ------
+    //初始化加载数据
+    this.getDataInit();
   },
   mounted() {
     const timer1 = setTimeout(() => {
@@ -262,8 +248,6 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
-    //初始化加载数据
-    this.getDataInit();
   },
   methods: {
     moment,
