@@ -8,7 +8,8 @@
             <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
             <div class="detail-main-items" v-for="item in dataList" :key="item.label">
                 <span class="detail-main-items-label">{{item.label}}</span>
-                <span class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
+                <img v-if="item.name === 'memberCardImage'" class="detail-main-items-value detail-main-items-img" :src="dataObj[item.name]" />
+                <span v-else class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
             </div>
         </div>
     </div>
@@ -99,6 +100,10 @@ export default {
                     display: inline-block;
                     width: 120px;
                     text-align: right;
+                }
+                &-img{
+                    width: 258px;
+                    vertical-align: top;
                 }
             }
         }

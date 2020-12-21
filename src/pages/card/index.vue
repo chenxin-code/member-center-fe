@@ -6,7 +6,7 @@
                 <a-col :span="8" v-for="item in dataList" :key="item.id">
                     <div class="card-main-boxs">
                         <div class="card-main-boxs-top">
-                            <img class="card-main-boxs-top-img" :src="require('@/assets/img/card/card-bg.png')" alt="card">
+                            <img class="card-main-boxs-top-img" :src="item.memberCardImage" alt="card">
                             <p class="card-main-boxs-top-title">{{item.memberCardName}}</p>
                             <p class="card-main-boxs-top-id">ID: {{item.id}}</p>
                         </div>
