@@ -30,20 +30,15 @@
                   <div class="left-middle-item">性别: {{ sexStr(memberDetails.sex) }}</div>
                   <div class="left-middle-item">证件类型: {{ cardTypeStr(memberDetails.cardType) }}</div>
                   <div class="left-middle-item">证件号: {{ memberDetails.cardNo }}</div>
-                  <div class="left-middle-item" v-html="`生日: ${moment(memberDetails.birthday).format('YYYY-MM-DD')}`">
-                    {
-                  </div>
-                  <div
-                    class="left-middle-item"
-                    v-html="`加入时间: ${moment(memberDetails.createTime).format('YYYY-MM-DD')}`"
-                  ></div>
+                  <div class="left-middle-item">生日: {{ momentStr(memberDetails.birthday) }}</div>
+                  <div class="left-middle-item">加入时间: {{ momentStr(memberDetails.createTime) }}</div>
                   <div class="left-middle-item">邮箱: {{ memberDetails.email }}</div>
                 </div>
                 <div class="base-left-bottom">
                   <div class="left-bottom-left" style="padding-right:5px;">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.sourceName }} {{ moment(memberDetails.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                      {{ item.sourceName }} {{ momentStrHms(memberDetails.createTime) }}
                     </div>
                   </div>
                 </div>
@@ -53,10 +48,10 @@
               <div class="base-right">
                 <div class="right-item">邦豆</div>
                 <div class="right-item right-item-middle">{{ memberDetails.integral }}</div>
-                <div class="right-item right-item-bottom">
+                <!-- <div class="right-item right-item-bottom">
                   <div class="right-item-bottom-left">邦豆充值</div>
                   <div class="right-item-bottom-right">邦豆抵扣</div>
-                </div>
+                </div> -->
               </div>
             </a-col>
           </a-row>
@@ -75,9 +70,7 @@
                 <div class="card-row-center">
                   <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
                   <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
-                  <div class="card-row-center-item">
-                    获取时间:{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-                  </div>
+                  <div class="card-row-center-item">获取时间:{{ momentStrHms(item.createTime) }}</div>
                 </div>
                 <div class="card-row-right">
                   <div class="card-row-right-item">会员等级:{{ item.levelName }}</div>
@@ -114,7 +107,7 @@
                   >
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                        <span v-html="momentStr(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -147,7 +140,7 @@
                   >
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                        <span v-html="momentStr(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -185,7 +178,7 @@
                     </template>
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+                        <span v-html="momentStr(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -370,6 +363,24 @@ export default {
     };
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
     behaviourTypeStr() {
       return param => {
         let str = '';
@@ -765,7 +776,7 @@ export default {
         .card-avatar {
           display: block;
           width: 200px;
-          height: 150px;
+          height: 118px;
         }
       }
       .card-row-center {

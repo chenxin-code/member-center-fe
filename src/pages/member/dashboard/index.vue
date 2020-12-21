@@ -25,7 +25,7 @@
               <div class="chart-wrapper" :style="{ height: 46 }">
                 <v-chart :force-fit="true" height="120" :data="quarterAreaData" :padding="[36, 0, 18, 0]">
                   <v-tooltip />
-                  <v-smooth-area color="purple" position="日期*数量" />
+                  <v-smooth-area color="#4D7CFE" position="日期*数量" />
                 </v-chart>
               </div>
             </div>

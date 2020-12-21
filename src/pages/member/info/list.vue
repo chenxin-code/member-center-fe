@@ -31,7 +31,8 @@
         </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+            <span v-html="momentStr(rowData.createTime)"></span>
+
           </div>
         </template>
         <template slot="levelNameSlot" slot-scope="rowData">
@@ -169,6 +170,24 @@ export default {
     FormList
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
     sexStr() {
       return param => {
         let str = '';
@@ -239,7 +258,9 @@ export default {
   },
   created() {
     //初始化加载数据
-    this.getDataInit();
+    // this.getDataInit();
+    this.getClientList();
+    this.getMemberList();
   },
   mounted() {
     const timer1 = setTimeout(() => {
@@ -251,10 +272,10 @@ export default {
   },
   methods: {
     moment,
-    async getDataInit() {
-      await this.getClientList();
-      await this.getMemberList();
-    },
+    // async getDataInit() {
+    //   await this.getClientList();
+    //   await this.getMemberList();
+    // },
     //查询按钮
     onQuery() {
       this.current = 1;
@@ -336,17 +357,6 @@ export default {
         };
 
         console.log('getMemberList para :>> ', para);
-
-        // for (let index = 0; index < mock.data.records.length; index++) {
-        //   const element = mock.data.records[index];
-        //   element.id = Date.now().toString(32) + index;
-        // }
-
-        // this.total = mock.data.total;
-        // this.tableData.splice(0, this.tableData.length);
-        // mock.data.records.forEach(element => {
-        //   this.tableData.push(element);
-        // });
 
         return api
           .getMemberList(para)
