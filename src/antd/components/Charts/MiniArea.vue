@@ -3,7 +3,7 @@
     <div class="chart-wrapper" :style="{ height: 46 }">
       <v-chart :force-fit="true" :height="height" :data="data" :padding="[36, 0, 18, 0]">
         <v-tooltip />
-        <v-smooth-area position="x*y" />
+        <v-smooth-area position="日期*数量" />
       </v-chart>
     </div>
   </div>
@@ -13,20 +13,20 @@
 import moment from 'moment';
 
 const tooltip = [
-  'x*y',
-  (x, y) => ({
-    name: x,
-    value: y
+  '日期*数量',
+  (日期, 数量) => ({
+    日期: 日期,
+    数量: 数量
   })
 ];
 const scale = [
   {
-    dataKey: 'x',
+    dataKey: '日期',
     min: 2
   },
   {
-    dataKey: 'y',
-    title: '时间',
+    dataKey: '数量',
+    title: '会员数量',
     min: 1,
     max: 22
   }
@@ -56,8 +56,8 @@ export default {
       handler(newVal) {
         for (let i = 0; i < newVal.length; i++) {
           this.data.push({
-            x: newVal[i].date,
-            y: newVal[i].memberCount
+            日期: newVal[i].date,
+            数量: newVal[i].memberCount
           });
         }
       },

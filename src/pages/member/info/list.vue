@@ -14,16 +14,14 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <!-- <template slot="phoneNoSlot" slot-scope="rowData">
+        <template slot="phoneNoSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
           </div>
-        </template> -->
+        </template>
         <template slot="sexSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-show="rowData.sex === 0">未知</span>
-            <span v-show="rowData.sex === 1">男</span>
-            <span v-show="rowData.sex === 2">女</span>
+            <span v-html="sexStr(rowData)"></span>
           </div>
         </template>
         <template slot="memberSourceSlot" slot-scope="rowData">
@@ -33,7 +31,8 @@
         </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="`${moment(rowData.createTime).format('YYYY-MM-DD')}`"></span>
+            <span v-html="momentStr(rowData.createTime)"></span>
+
           </div>
         </template>
         <template slot="levelNameSlot" slot-scope="rowData">
@@ -124,9 +123,9 @@ export default {
         },
         {
           title: '手机号',
-          dataIndex: 'phone',
-          key: 'phone'
-          // scopedSlots: { customRender: 'phoneNoSlot' }
+          // dataIndex: 'phone',
+          key: 'phone',
+          scopedSlots: { customRender: 'phoneNoSlot' }
         },
         {
           title: '性别',
@@ -164,14 +163,44 @@ export default {
       //分页
       total: 0,
       current: 1,
-      // pageSize: 10
-      pageSize: 50
+      pageSize: 10
     };
   },
   components: {
     FormList
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
+    sexStr() {
+      return param => {
+        let str = '';
+        if (param === 1) {
+          str = '男';
+        } else if (param === 2) {
+          str = '女';
+        } else {
+          str = '';
+        }
+        return str;
+      };
+    },
     showLevel() {
       return param => {
         let tempStr = '';
@@ -228,40 +257,25 @@ export default {
     }
   },
   created() {
-    // //------ 通过网址传递token并存储到ls ------
-    // let tokenStr = '';
-    // const tokenArr = window.location.href.match(/token=(.*?)(&|$|#)/);
-    // if (Object.prototype.toString.call(tokenArr).indexOf('Array') !== -1) {
-    //   if (tokenArr[1]) {
-    //     tokenStr = tokenArr[1];
-    //   }
-    // }
-    // if (tokenStr) {
-    //   console.log('有参数');
-    //   window.localStorage.setItem('SD_ACCESS_TOKEN', tokenStr);
-    //   window.history.replaceState(null, null, window.location.pathname);
-    // } else {
-    //   console.log('没有参数');
-    // }
-    // //------ 通过网址传递token并存储到ls ------
+    //初始化加载数据
+    // this.getDataInit();
+    this.getClientList();
+    this.getMemberList();
   },
   mounted() {
     const timer1 = setTimeout(() => {
-      console.log('this.$refs.content_main.offsetHeight  :>> ', this.$refs.content_main.offsetHeight);
       this.scrollY = this.$refs.content_main.offsetHeight - 275 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
-    //初始化加载数据
-    this.getDataInit();
   },
   methods: {
     moment,
-    async getDataInit() {
-      await this.getClientList();
-      await this.getMemberList();
-    },
+    // async getDataInit() {
+    //   await this.getClientList();
+    //   await this.getMemberList();
+    // },
     //查询按钮
     onQuery() {
       this.current = 1;
@@ -286,7 +300,7 @@ export default {
 
     //获取会员来源
     getClientList() {
-      api.getClientList().then(res => {
+      return api.getClientList().then(res => {
         console.log('getClientList res :>> ', res);
         if (res.code === 200) {
           const project = {
@@ -301,80 +315,76 @@ export default {
             this.formList[0].selectOptions.push(tempObj);
           });
           this.formList[0].selectOptions.unshift(project);
-
-          this.$refs.memberForm.setFieldsValue({
-            memberSourceCode: this.formList[0].selectOptions[0].id
-          });
         }
       });
     },
     //获取表格数据
     getMemberList() {
       this.tableLoading = true;
+      this.$nextTick(() => {
+        let memberSourceCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
+          memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
+        }
+        console.log('memberSourceCode :>> ', memberSourceCode);
 
-      let memberSourceCode = '';
-      if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
-        memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
-      }
-      console.log('memberSourceCode :>> ', memberSourceCode);
+        let memberCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberCode) {
+          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
+        }
 
-      let memberCode = '';
-      if (this.$refs.memberForm.getFieldsValue().memberCode) {
-        memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
-      }
+        let phoneNo = '';
+        if (this.$refs.memberForm.getFieldsValue().phoneNo) {
+          phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
+        }
 
-      let phoneNo = '';
-      if (this.$refs.memberForm.getFieldsValue().phoneNo) {
-        phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
-      }
+        let jointimeStart = '';
+        let jointimeEnd = '';
+        if (this.$refs.memberForm.getFieldsValue().jointime) {
+          jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
+          jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
+        }
 
-      let jointimeStart = '';
-      let jointimeEnd = '';
-      if (this.$refs.memberForm.getFieldsValue().jointime) {
-        jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
-        jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
-      }
+        const para = {
+          memberSourceCode: memberSourceCode,
+          memberCode: memberCode,
+          phone: phoneNo,
+          createTimeStart: jointimeStart,
+          createTimeEnd: jointimeEnd,
+          isAll: 0,
+          pageIndex: this.current,
+          pageSize: this.pageSize
+        };
 
-      const para = {
-        memberSourceCode: memberSourceCode,
-        memberCode: memberCode,
-        phone: phoneNo,
-        createTimeStart: jointimeStart,
-        createTimeEnd: jointimeEnd,
-        isAll: 0,
-        pageIndex: this.current,
-        pageSize: this.pageSize
-      };
+        console.log('getMemberList para :>> ', para);
 
-      console.log('getMemberList para :>> ', para);
-
-      // for (let index = 0; index < mock.data.records.length; index++) {
-      //   const element = mock.data.records[index];
-      //   element.id = Date.now().toString(32) + index;
-      // }
-
-      // this.total = mock.data.total;
-      // this.tableData.splice(0, this.tableData.length);
-      // mock.data.records.forEach(element => {
-      //   this.tableData.push(element);
-      // });
-
-      api
-        .getMemberList(para)
-        .then(res => {
-          this.tableLoading = false;
-          console.log('getMemberList res :>> ', res);
-          if (res.code === 200) {
-            this.total = res.data.total;
-            this.tableData.splice(0, this.tableData.length);
-            res.data.records.forEach((element, index) => {
-              this.tableData.push(element);
-            });
-          }
-        })
-        .finally(() => {
-          this.tableLoading = false;
+        return api
+          .getMemberList(para)
+          .then(res => {
+            this.tableLoading = false;
+            console.log('getMemberList res :>> ', res);
+            if (res.code === 200) {
+              this.total = res.data.total;
+              this.tableData.splice(0, this.tableData.length);
+              res.data.records.forEach((element, index) => {
+                this.tableData.push(element);
+              });
+            }
+          })
+          .finally(() => {
+            this.tableLoading = false;
+          });
+      });
+    }
+  },
+  watch: {
+    formList: {
+      handler: function(newVal) {
+        this.$refs.memberForm.setFieldsValue({
+          memberSourceCode: this.formList[0].selectOptions[0].id
         });
+      },
+      deep: true
     }
   }
 };
@@ -385,9 +395,10 @@ export default {
   height: 100%;
   overflow: hidden;
 
-  .content_main {
-    height: 100%;
-    padding: 10px;
+  .content-main {
+    ::v-deep .ant-btn {
+      width: 98px !important;
+    }
   }
 }
 </style>

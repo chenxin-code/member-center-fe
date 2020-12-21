@@ -28,8 +28,8 @@ const Card = () =>
 const CardDetail = () =>
     import ('@/pages/card/detail');
 
-const CardEdited = () =>
-    import ('@/pages/card/edited');
+// const CardEdited = () =>
+//     import ('@/pages/card/edited');
 
 const AccessManager = () =>
     import ('@/pages/accessManager/index');
@@ -110,20 +110,20 @@ const routes = [
                 },
                 component: CardDetail
             },
-            {
-                path: '/card/edited',
-                name: 'card_edited',
-                menuKey: 'card',
-                meta: {
-                    menu: '/card',
-                    authKeys: [''],
-                    bread: [
-                        { path: '/card', name: '会员卡列表' },
-                        { path: '/card/edited', name: '会员卡详情编辑' },
-                    ]
-                },
-                component: CardEdited
-            },
+            // {
+            //     path: '/card/edited',
+            //     name: 'card_edited',
+            //     menuKey: 'card',
+            //     meta: {
+            //         menu: '/card',
+            //         authKeys: [''],
+            //         bread: [
+            //             { path: '/card', name: '会员卡列表' },
+            //             { path: '/card/edited', name: '会员卡详情编辑' },
+            //         ]
+            //     },
+            //     component: CardEdited
+            // },
             {
                 path: '/task-manager',
                 name: 'task-manager',

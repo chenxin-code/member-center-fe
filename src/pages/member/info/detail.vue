@@ -16,14 +16,11 @@
               <div class="base-left">
                 <div class="base-left-top">
                   <div class="left-top-left">
-                    <a-avatar
-                      class="base-avatar"
-                      :size="48"
-                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
+                    <img class="base-avatar" :src="memberDetails.memberImage" @error="loadAvatarError" />
                   </div>
                   <div class="left-top-right">
                     <div>会员ID:{{ memberId }}</div>
+                    <!-- <div>memberDetails.memberImage:{{ memberDetails.memberImage }}</div> -->
                     <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
                   </div>
                 </div>
@@ -33,20 +30,15 @@
                   <div class="left-middle-item">性别: {{ sexStr(memberDetails.sex) }}</div>
                   <div class="left-middle-item">证件类型: {{ cardTypeStr(memberDetails.cardType) }}</div>
                   <div class="left-middle-item">证件号: {{ memberDetails.cardNo }}</div>
-                  <div class="left-middle-item" v-html="`生日: ${moment(memberDetails.birthday).format('YYYY-MM-DD')}`">
-                    {
-                  </div>
-                  <div
-                    class="left-middle-item"
-                    v-html="`加入时间: ${moment(memberDetails.createTime).format('YYYY-MM-DD')}`"
-                  ></div>
+                  <div class="left-middle-item">生日: {{ momentStr(memberDetails.birthday) }}</div>
+                  <div class="left-middle-item">加入时间: {{ momentStr(memberDetails.createTime) }}</div>
                   <div class="left-middle-item">邮箱: {{ memberDetails.email }}</div>
                 </div>
                 <div class="base-left-bottom">
                   <div class="left-bottom-left" style="padding-right:5px;">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.sourceName }} {{ moment(memberDetails.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                      {{ item.sourceName }} {{ momentStrHms(memberDetails.createTime) }}
                     </div>
                   </div>
                 </div>
@@ -56,10 +48,10 @@
               <div class="base-right">
                 <div class="right-item">邦豆</div>
                 <div class="right-item right-item-middle">{{ memberDetails.integral }}</div>
-                <div class="right-item right-item-bottom">
+                <!-- <div class="right-item right-item-bottom">
                   <div class="right-item-bottom-left">邦豆充值</div>
                   <div class="right-item-bottom-right">邦豆抵扣</div>
-                </div>
+                </div> -->
               </div>
             </a-col>
           </a-row>
@@ -73,17 +65,12 @@
             <a-col :span="24">
               <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
                 <div class="card-row-left">
-                  <img
-                    class="card-avatar"
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    alt=""
-                  />
+                  <img class="card-avatar" :src="item.memberCardImage" @error="loadImageError" />
                 </div>
                 <div class="card-row-center">
                   <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
-                  <div class="card-row-center-item">
-                    获取时间:{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') }}
-                  </div>
+                  <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
+                  <div class="card-row-center-item">获取时间:{{ momentStrHms(item.createTime) }}</div>
                 </div>
                 <div class="card-row-right">
                   <div class="card-row-right-item">会员等级:{{ item.levelName }}</div>
@@ -117,7 +104,13 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="momentStr(rowData.createTime)"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="integralTotal"
                     :show-total="integralTotal => `共 ${integralTotal} 条`"
@@ -144,7 +137,13 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="momentStr(rowData.createTime)"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="grownTotal"
                     :show-total="grownTotal => `共 ${grownTotal} 条`"
@@ -171,7 +170,18 @@
                     :loading="tableLoading"
                     :selectable="false"
                     style="width:100%;margin-top:8px;"
-                  ></a-table>
+                  >
+                    <template slot="behaviourTypeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="behaviourTypeStr(rowData)"></span>
+                      </div>
+                    </template>
+                    <template slot="createTimeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="momentStr(rowData.createTime)"></span>
+                      </div>
+                    </template>
+                  </a-table>
                   <a-pagination
                     :total="behaviourTotal"
                     :show-total="behaviourTotal => `共 ${behaviourTotal} 条`"
@@ -201,20 +211,22 @@ import { MiniProgress } from '@/antd/components';
 import FormList from '@/components/FormList/index.jsx';
 
 import { mapActions } from 'vuex';
-const defaultAvatar = require('@/assets/img/user/avatar.png');
 import { CARD_TYPE_MAP } from '@/constance';
 // console.log('CARD_TYPE_MAP :>> ', CARD_TYPE_MAP);
 
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
+const defaultAvatar = require('@/assets/img/user/avatar.png');
+// const defaultAvatar = require('@/assets/img/portal/gongsiguanli.png');
+
 //页面列表数据
 const allColumns = {
   integralColumns: [
     {
       title: '来源',
-      key: 'sourceType',
-      dataIndex: 'sourceType'
+      dataIndex: 'clientName',
+      key: 'clientName'
     },
     {
       title: '积分变动',
@@ -227,21 +239,16 @@ const allColumns = {
       key: 'describe'
     },
     {
-      title: '操作人',
-      dataIndex: 'createUser',
-      key: 'createUser'
-    },
-    {
       title: '记录时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime'
+      key: 'createTime',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ],
   grownColumns: [
     {
       title: '成长值变动',
-      key: 'growthChange',
-      dataIndex: 'growthChange'
+      dataIndex: 'growthChange',
+      key: 'growthChange'
     },
     {
       title: '描述',
@@ -250,30 +257,30 @@ const allColumns = {
     },
     {
       title: '记录时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime'
+      key: 'createTime',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ],
   behaviourColumns: [
     {
       title: '行为名称',
-      key: 'name',
-      dataIndex: 'name'
+      dataIndex: 'behaviourName',
+      key: 'behaviourName'
     },
     {
       title: '行为类型',
-      dataIndex: 'type',
-      key: 'type'
+      key: 'behaviourTypeSlot',
+      scopedSlots: { customRender: 'behaviourTypeSlot' }
     },
     {
       title: '行为来源',
-      dataIndex: 'memo',
-      key: 'memo'
+      dataIndex: 'behaviourSource',
+      key: 'behaviourSource'
     },
     {
       title: '记录时间',
-      key: 'id',
-      dataIndex: 'id'
+      key: 'createTimeSlot',
+      scopedSlots: { customRender: 'createTimeSlot' }
     }
   ]
 };
@@ -356,6 +363,37 @@ export default {
     };
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
+    behaviourTypeStr() {
+      return param => {
+        let str = '';
+        if (param === 1) {
+          str = '消费';
+        } else if (param === 2) {
+          str = '其他';
+        } else {
+          str = '';
+        }
+        return str;
+      };
+    },
     cardTypeStr() {
       return param => {
         let str = '';
@@ -373,7 +411,7 @@ export default {
         } else if (param === 2) {
           str = '女';
         } else {
-          str = '未知';
+          str = '';
         }
         return str;
       };
@@ -381,6 +419,12 @@ export default {
   },
   methods: {
     moment,
+    loadAvatarError(e) {
+      e.target.src = defaultAvatar;
+    },
+    loadImageError(e) {
+      e.target.src = defaultAvatar;
+    },
     ...mapActions(['FALLBACK']),
     tabChangeCallback(key) {
       if (key == 1) {
@@ -433,9 +477,10 @@ export default {
 
     getIntegralRecord() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
+
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm1.getFieldsValue().jointime1) {
           jointimeStart = moment(this.$refs.memberForm1.getFieldsValue().jointime1[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm1.getFieldsValue().jointime1[1]).format('YYYY-MM-DD');
@@ -474,9 +519,10 @@ export default {
 
     getGrownLog() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
+
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm2.getFieldsValue().jointime2) {
           jointimeStart = moment(this.$refs.memberForm2.getFieldsValue().jointime2[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm2.getFieldsValue().jointime2[1]).format('YYYY-MM-DD');
@@ -512,10 +558,10 @@ export default {
     },
     getBehaviourList() {
       this.tableLoading = true;
-      let jointimeStart = '';
-      let jointimeEnd = '';
 
       this.$nextTick(() => {
+        let jointimeStart = '';
+        let jointimeEnd = '';
         if (this.$refs.memberForm3.getFieldsValue().jointime3) {
           jointimeStart = moment(this.$refs.memberForm3.getFieldsValue().jointime3[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm3.getFieldsValue().jointime3[1]).format('YYYY-MM-DD');
@@ -550,25 +596,27 @@ export default {
 
     //积分分页
     pagingIntegral(current, pageSize) {
-      console.log(current, pageSize);
+      console.log('积分分页 pagingIntegral: ', current, pageSize);
       this.integralPageSize = pageSize;
       this.integralCurrent = current;
       this.getIntegralRecord();
     },
     //成长值分页
     pagingGrown(current, pageSize) {
+      console.log('成长值分页 pagingGrown: ', current, pageSize);
       this.grownPageSize = pageSize;
       this.grownCurrent = current;
       this.getGrownLog();
     },
     //行为分页
     pagingBehaviour(current, pageSize) {
+      console.log('行为分页 pagingBehaviour: ', current, pageSize);
       this.behaviourPageSize = pageSize;
       this.behaviourCurrent = current;
       this.getBehaviourList();
     }
   },
-  created: function() {
+  created() {
     console.log('detail this.$store :>> ', this.$store);
     console.log('this.$route :>> ', this.$route);
 
@@ -577,8 +625,8 @@ export default {
   },
   mounted() {
     this.getIntegralRecord();
-    this.getGrownLog();
-    this.getBehaviourList();
+    // this.getGrownLog();
+    // this.getBehaviourList();
 
     setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 204 + 'px';
@@ -623,7 +671,16 @@ export default {
           justify-content: flex-start;
           align-items: center;
 
-          // .left-top-left{}
+          .left-top-left {
+            width: 48px;
+            height: 48px;
+            .base-avatar {
+              display: block;
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+            }
+          }
           // .left-top-right{}
         }
         .base-left-middle {
@@ -690,6 +747,7 @@ export default {
   }
 
   .member-card {
+    height: 204px;
     .card-title {
       color: #666;
       padding: 5px 0 0 26px;
@@ -702,6 +760,7 @@ export default {
       }
     }
     .card-row {
+      height: 150px;
       padding-left: 10px;
       margin-bottom: 10px;
       display: flex;
@@ -711,14 +770,13 @@ export default {
 
       .card-row-left {
         margin-right: 45px;
-        background-color: lightblue;
         width: 200px;
         height: 150px;
 
         .card-avatar {
           display: block;
           width: 200px;
-          height: 150px;
+          height: 118px;
         }
       }
       .card-row-center {
@@ -756,8 +814,8 @@ export default {
     }
   }
 
-  .member-record {
-  }
+  // .member-record {
+  // }
 
   .ant-tabs-bar {
     margin: 0 !important;
