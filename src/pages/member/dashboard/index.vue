@@ -21,7 +21,14 @@
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <div>
-            <mini-area :useData="quarterData" />
+            <div class="antv-chart-mini">
+              <div class="chart-wrapper" :style="{ height: 46 }">
+                <v-chart :force-fit="true" height="120" :data="quarterAreaData" :padding="[36, 0, 18, 0]">
+                  <v-tooltip />
+                  <v-smooth-area color="purple" position="日期*数量" />
+                </v-chart>
+              </div>
+            </div>
           </div>
           <template slot="footer">
             <div class="quarter-footer">
@@ -35,7 +42,7 @@
 
       <!-- 会员来源 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <a-card :loading="loading" class="pie-card">
+        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员来源</span>
             <v-chart :forceFit="true" :height="255" :data="pieData1" :scale="pieScale1">
@@ -50,7 +57,7 @@
       </a-col>
       <!-- 会员等级 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }" class="pie">
-        <a-card :loading="loading" class="pie-card">
+        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员等级</span>
             <v-chart :forceFit="true" :height="255" :data="pieData2" :scale="pieScale2">
@@ -100,7 +107,7 @@
 <script>
 import moment from 'moment';
 import api from '@/api';
-import { ChartCard, MiniArea } from '@/antd/components';
+import { ChartCard } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
@@ -111,8 +118,7 @@ export default {
   name: 'Analysis',
   mixins: [baseMixin],
   components: {
-    ChartCard,
-    MiniArea
+    ChartCard
   },
   data() {
     return {
@@ -129,6 +135,7 @@ export default {
       tongJiData: {},
       //面积图:季度新增
       quarterData: [],
+      quarterAreaData: [],
       //饼图：会员来源+会员等级
       // 1.0会员来源
       pieData1: [],
@@ -446,6 +453,21 @@ export default {
     //------ 通过网址传递token并存储到ls ------
     //初始化校验token和用户信息
     this.checkLoginUser();
+  },
+  watch: {
+    quarterData: {
+      handler(newVal) {
+        this.quarterAreaData.splice(0, this.quarterAreaData.length);
+        for (let i = 0; i < newVal.length; i++) {
+          this.quarterAreaData.push({
+            日期: newVal[i].date,
+            数量: newVal[i].memberCount
+          });
+        }
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
+    }
   }
 };
 </script>
@@ -502,7 +524,6 @@ export default {
   }
 
   div {
-    padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -513,6 +534,17 @@ export default {
 
 .isClicked {
   color: blue;
+}
+
+.antv-chart-mini {
+  position: relative;
+  width: 100%;
+
+  .chart-wrapper {
+    position: absolute;
+    bottom: -28px;
+    width: 100%;
+  }
 }
 
 .extra-wrapper {
