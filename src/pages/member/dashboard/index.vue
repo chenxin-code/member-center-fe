@@ -73,7 +73,7 @@
     </a-row>
 
     <!-- 会员数量 -->
-    <a-card :loading="loadingDate" :bordered="false" :body-style="{ padding: '0' }">
+    <a-card :bordered="false" :body-style="{ padding: '20px 0 0 0' }">
       <div class="salesCard">
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
@@ -85,16 +85,18 @@
             <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
           </div>
 
-          <a-tab-pane loading="true" tab="会员数量" key="1">
+          <a-tab-pane tab="会员数量" key="1">
             <a-row>
               <a-col :span="24">
-                <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale">
-                  <v-tooltip />
-                  <v-axis />
-                  <v-legend />
-                  <v-line position="xitem*sumVal" color="sumType" />
-                  <v-point position="xitem*sumVal" color="sumType" :size="4" :v-style="lineStyle" :shape="'circle'" />
-                </v-chart>
+                <a-card :loading="loadingDate">
+                  <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale">
+                    <v-tooltip />
+                    <v-axis />
+                    <v-legend />
+                    <v-line position="xitem*sumVal" color="sumType" />
+                    <v-point position="xitem*sumVal" color="sumType" :size="4" :v-style="lineStyle" :shape="'circle'" />
+                  </v-chart>
+                </a-card>
               </a-col>
             </a-row>
           </a-tab-pane>
@@ -477,6 +479,7 @@ export default {
   background: #f0f2f5 !important;
   background-color: #f0f2f5 !important;
 }
+
 ::v-deep .ant-row {
   padding-bottom: 20px;
   .ant-card {
