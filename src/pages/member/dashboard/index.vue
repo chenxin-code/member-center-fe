@@ -525,11 +525,11 @@ export default {
       height: auto !important;
 
       .ant-card-body {
-        height: 308px;
+        min-height: 284px;
         padding: 0 24px;
 
         .ant-card-loading-content {
-          height: 308px;
+          min-height: 284px;
           display: flex;
           flex-direction: column;
           justify-content: space-evenly;
