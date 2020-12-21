@@ -4,8 +4,8 @@
       会员详情
       <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
     </div>
-    <div class="content-main" ref="contentMain">
-      <a-row style="padding-bottom:10px;height:100%;">
+    <div class="content-main">
+      <a-row style="height:100%;">
         <!-- 基础信息 -->
         <div class="member-base">
           <div class="base-title">
@@ -64,22 +64,25 @@
           <a-row style="padding:16px;border-bottom: 1px dashed #ccc;">
             <a-col :span="24">
               <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
-                <div class="card-row-left">
-                  <img class="card-avatar" :src="item.memberCardImage" @error="loadImageError" />
+                <div class="card-row-inner">
+                  <div class="card-row-left">
+                    <img class="card-avatar" :src="item.memberCardImage" @error="loadImageError" />
+                  </div>
+                  <div class="card-row-center">
+                    <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
+                    <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
+                    <div class="card-row-center-item">获取时间:{{ momentStrHms(item.createTime) }}</div>
+                  </div>
                 </div>
-                <div class="card-row-center">
-                  <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
-                  <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
-                  <div class="card-row-center-item">获取时间:{{ momentStrHms(item.createTime) }}</div>
-                </div>
+
                 <div class="card-row-right">
                   <div class="card-row-right-item">会员等级:{{ item.levelName }}</div>
                   <div class="card-row-right-item">
                     <mini-progress
-                      color="rgb(19, 194, 194)"
+                      color="#5C87FB"
                       :hasTarget="false"
                       :percentage="(item.grow / item.rangeEnd) * 100"
-                      height="8px"
+                      height="10px"
                     />
                   </div>
                   <div class="card-row-right-item card-row-right-item-range">{{ item.grow }}/{{ item.rangeEnd }}</div>
@@ -93,7 +96,11 @@
           <a-row style="margin-top: 20px">
             <a-tabs type="card" @change="tabChangeCallback">
               <a-tab-pane class="tabs-body-content" key="1" tab="会员积分记录">
-                <div class="content-main" ref="content_main" style="padding: 20px;">
+                <div
+                  class="content-main-tab"
+                  ref="contentMainTab"
+                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                >
                   <FormList ref="memberForm1" rowCol="2" :formList="formList1" :onSubmit="onQuery1" />
                   <a-table
                     :columns="integralColumns"
@@ -126,7 +133,11 @@
                 </div>
               </a-tab-pane>
               <a-tab-pane class="tabs-body-content" key="2" tab="会员成长值记录">
-                <div class="content-main" ref="content_main" style="padding: 20px;">
+                <div
+                  class="content-main-tab"
+                  ref="contentMainTab"
+                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                >
                   <FormList ref="memberForm2" rowCol="2" :formList="formList2" :onSubmit="onQuery2" />
                   <a-table
                     :columns="grownColumns"
@@ -159,7 +170,11 @@
                 </div>
               </a-tab-pane>
               <a-tab-pane class="tabs-body-content" key="3" tab="会员行为记录">
-                <div class="content-main" ref="content_main" style="padding: 20px;">
+                <div
+                  class="content-main-tab"
+                  ref="contentMainTab"
+                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                >
                   <FormList ref="memberForm3" rowCol="2" :formList="formList3" :onSubmit="onQuery3" />
                   <a-table
                     :columns="behaviourColumns"
@@ -423,7 +438,7 @@ export default {
       e.target.src = defaultAvatar;
     },
     loadImageError(e) {
-      e.target.src = defaultAvatar;
+      // e.target.src = defaultAvatar;
     },
     ...mapActions(['FALLBACK']),
     tabChangeCallback(key) {
@@ -628,15 +643,19 @@ export default {
     // this.getGrownLog();
     // this.getBehaviourList();
 
-    setTimeout(() => {
-      this.scrollY = this.$refs.contentMain.offsetHeight - 204 + 'px';
-    }, 100);
+    const timer1 = setTimeout(() => {
+      this.scrollY = this.$refs.contentMainTab.offsetHeight;
+    }, 0);
+    this.$once('hook:beforeDestroy', () => {
+      clearTimeout(timer1);
+    });
   }
 };
 </script>
 
 <style lang="less" scoped>
 #member-info-detail {
+  height: 100%;
   .member-base {
     .base-title {
       color: #666;
@@ -747,7 +766,7 @@ export default {
   }
 
   .member-card {
-    height: 204px;
+    height: 172px;
     .card-title {
       color: #666;
       padding: 5px 0 0 26px;
@@ -759,8 +778,9 @@ export default {
         border-left: 3px solid rgba(33, 33, 206, 0.5);
       }
     }
+
     .card-row {
-      height: 150px;
+      height: 118px;
       padding-left: 10px;
       margin-bottom: 10px;
       display: flex;
@@ -768,39 +788,52 @@ export default {
       justify-content: flex-start;
       align-items: stretch;
 
-      .card-row-left {
-        margin-right: 45px;
-        width: 200px;
-        height: 150px;
+      .card-row-inner {
+        flex: 2;
+        height: 118px;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
 
-        .card-avatar {
-          display: block;
+        .card-row-left {
+          margin-right: 45px;
           width: 200px;
           height: 118px;
+
+          .card-avatar {
+            display: block;
+            width: 200px;
+            height: 118px;
+          }
+        }
+        .card-row-center {
+          margin-right: 245px;
+          // background-color: #ccc;
+          width: 200px;
+          height: 118px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: stretch;
+          .card-row-center-item {
+            margin-bottom: 8px;
+          }
         }
       }
-      .card-row-center {
-        margin-right: 45px;
-        // background-color: #ccc;
-        width: 200px;
-        height: 150px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: stretch;
-        .card-row-center-item {
-          margin-bottom: 8px;
-        }
-      }
+
       .card-row-right {
-        // background-color: #ccc;
-        width: 200px;
-        height: 150px;
+        flex: 1;
+        height: 118px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: stretch;
         .card-row-right-item {
+          text-align: center;
+          width: 277px;
           margin-bottom: 8px;
         }
         .card-row-right-item-range {
@@ -809,13 +842,21 @@ export default {
         }
       }
     }
+
     .card-row:last-child {
       margin-bottom: 0;
     }
   }
 
-  // .member-record {
-  // }
+  .member-record {
+    .content-main-tab {
+      background: #fff;
+
+      ::v-deep .ant-btn {
+        width: 88px !important;
+      }
+    }
+  }
 
   .ant-tabs-bar {
     margin: 0 !important;

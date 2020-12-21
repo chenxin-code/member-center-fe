@@ -3,29 +3,33 @@
     <a-row :gutter="24">
       <!-- 今日新增 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <chart-card :loading="loading" title="今日新增" :total="`${numFormat(tongJiData.todayNewNum)}人`">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
+        <chart-card
+          class="today-new"
+          :loading="loading"
+          title="今日新增数量 (人)"
+          :total="`${numFormat(tongJiData.todayNewNum)}人`"
+        >
           <template slot="footer">
-            会员总数
-            <span style="padding-left:20px;">{{ tongJiData.sum | NumberFormat }}</span>
+            会员总数量:
+            <span style="padding-left:10px;">{{ tongJiData.sum | NumberFormat }}</span>
           </template>
         </chart-card>
       </a-col>
 
       <!-- 季度新增 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <chart-card :loading="loading" title="季度新增" :total="tongJiData.quarterNewNum | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
+        <chart-card
+          class="quarter-new"
+          :loading="loading"
+          title="季度新增数量 (人)"
+          :total="tongJiData.quarterNewNum | NumberFormat"
+        >
           <div>
             <div class="antv-chart-mini">
               <div class="chart-wrapper" :style="{ height: 46 }">
                 <v-chart :force-fit="true" height="120" :data="quarterAreaData" :padding="[36, 0, 18, 0]">
                   <v-tooltip />
-                  <v-smooth-area color="#4D7CFE" position="日期*数量" />
+                  <v-smooth-area color="#517EFD" position="日期*数量" />
                 </v-chart>
               </div>
             </div>
@@ -45,7 +49,7 @@
         <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员来源</span>
-            <v-chart :forceFit="true" :height="255" :data="pieData1" :scale="pieScale1">
+            <v-chart :forceFit="true" :height="250" :data="pieData1" :scale="pieScale1">
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
@@ -60,7 +64,7 @@
         <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员等级</span>
-            <v-chart :forceFit="true" :height="255" :data="pieData2" :scale="pieScale2">
+            <v-chart :forceFit="true" :height="250" :data="pieData2" :scale="pieScale2">
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
@@ -478,18 +482,65 @@ export default {
 .member-dashboard {
   background: #f0f2f5 !important;
   background-color: #f0f2f5 !important;
-}
 
-::v-deep .ant-row {
-  padding-bottom: 20px;
-  .ant-card {
-    height: 250px !important;
+  .today-new {
+    ::v-deep .chart-card-footer {
+      margin-top: 0 !important;
+      .field {
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #666666;
+      }
+    }
   }
-  .pie-card .ant-card-body {
-    padding: 0 !important;
+
+  .quarter-new {
+    ::v-deep .quarter-footer .quarter-footer-item {
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+    }
   }
-  .ant-card-bordered {
-    border: none;
+
+  ::v-deep .ant-row {
+    padding-bottom: 20px;
+    .ant-card {
+      height: 250px !important;
+    }
+    .pie-card .ant-card-body {
+      padding: 0 !important;
+    }
+    .ant-card-bordered {
+      border: none;
+    }
+  }
+
+  .salesCard {
+    ::v-deep .ant-row {
+      padding-bottom: 0;
+    }
+    ::v-deep .ant-card {
+      height: auto !important;
+
+      .ant-card-body {
+        height: 308px;
+        padding: 0 24px;
+
+        .ant-card-loading-content {
+          height: 308px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          align-items: stretch;
+        }
+      }
+    }
+
+    ::v-deep .ant-card-bordered {
+      border: none !important;
+    }
   }
 }
 
@@ -516,11 +567,10 @@ export default {
   left: 0;
 
   .pie-title {
-    font-family: PingFangSC-Semibold, Avenir, Helvetica, Arial, sans-serif;
-    color: #333;
-    color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
-    line-height: 22px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #666666;
     position: absolute;
     top: 20px;
     left: 24px;
@@ -536,7 +586,7 @@ export default {
 }
 
 .isClicked {
-  color: blue;
+  color: #4b7afb;
 }
 
 .antv-chart-mini {

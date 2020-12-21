@@ -13,7 +13,7 @@
       </div>
       <div class="total">
         <slot name="total">
-          <span>{{ typeof total === 'function' && total() || total }}</span>
+          <span class="total-text">{{ (typeof total === 'function' && total()) || total }}</span>
         </slot>
       </div>
     </div>
@@ -48,75 +48,88 @@ export default {
       default: false
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
-  .chart-card-header {
+.chart-card-header {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  .meta {
     position: relative;
     overflow: hidden;
     width: 100%;
-
-    .meta {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      color: rgba(0, 0, 0, .45);
-      font-size: 14px;
-      line-height: 22px;
-    }
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+    line-height: 22px;
   }
 
-  .chart-card-action {
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    right: 0;
+  .chart-card-title {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #666666;
   }
+}
 
-  .chart-card-footer {
-    // border-top: 1px solid #e8e8e8;
-    padding-top: 9px;
-    margin-top: 8px;
+.chart-card-action {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
-    > * {
-      position: relative;
-    }
+.chart-card-footer {
+  padding-top: 10px;
+  margin-top: 10px;
 
-    .field {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: 0;
-    }
-  }
-
-  .chart-card-content {
-    margin-bottom: 12px;
+  > * {
     position: relative;
-    // height: 46px;//原
-    height: 86px;
-    width: 100%;
-
-    .content-fix {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-    }
   }
 
-  .total {
+  .field {
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    word-break: break-all;
-    white-space: nowrap;
-    color: #000;
-    // margin-top: 4px;//原
-    margin-top: 14px;
-    margin-bottom: 0;
-    font-size: 30px;
-    line-height: 38px;
-    height: 38px;
+    margin: 0;
   }
+}
+
+.chart-card-content {
+  margin-top: 10px;
+  position: relative;
+  height: 45px;
+  width: 100%;
+
+  .content-fix {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+}
+
+.total {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  color: #000;
+  margin-top: 20px;
+  margin-bottom: 0;
+  font-size: 30px;
+  line-height: 38px;
+  height: 38px;
+
+  .total-text {
+    height: 34px;
+    font-size: 34px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #121212;
+    line-height: 34px;
+  }
+}
 </style>

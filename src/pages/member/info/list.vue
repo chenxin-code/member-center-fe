@@ -1,7 +1,7 @@
 <template>
   <div id="member-info">
     <div class="content-header">会员信息</div>
-    <div class="content-main" ref="content_main" style="padding: 20px;">
+    <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
@@ -32,7 +32,6 @@
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="momentStr(rowData.createTime)"></span>
-
           </div>
         </template>
         <template slot="levelNameSlot" slot-scope="rowData">
@@ -264,7 +263,7 @@ export default {
   },
   mounted() {
     const timer1 = setTimeout(() => {
-      this.scrollY = this.$refs.content_main.offsetHeight - 275 + 'px';
+      this.scrollY = this.$refs.contentMain.offsetHeight - 275 + 'px';
     }, 0);
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
