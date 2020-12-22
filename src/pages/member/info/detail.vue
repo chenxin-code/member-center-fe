@@ -20,7 +20,6 @@
                   </div>
                   <div class="left-top-right">
                     <div>会员ID:{{ memberId }}</div>
-                    <!-- <div>memberDetails.memberImage:{{ memberDetails.memberImage }}</div> -->
                     <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
                   </div>
                 </div>
