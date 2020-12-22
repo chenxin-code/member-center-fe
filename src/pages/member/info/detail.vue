@@ -20,7 +20,6 @@
                   </div>
                   <div class="left-top-right">
                     <div>会员ID:{{ memberId }}</div>
-                    <!-- <div>memberDetails.memberImage:{{ memberDetails.memberImage }}</div> -->
                     <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
                   </div>
                 </div>
@@ -46,15 +45,17 @@
             </a-col>
             <a-col :span="8">
               <div class="base-right">
-                <div class="right-item right-item-top">
-                  <img class="item-top-img" :src="bangdouImage" />
-                  <span class="item-top-text">邦豆</span>
+                <div class="base-right-inner">
+                  <div class="right-item right-item-top">邦豆</div>
+                  <div class="right-item right-item-middle">
+                    <img class="item-middle-img" :src="bangdouImage" />
+                    <span class="item-middle-text">{{ memberDetails.integral }}</span>
+                  </div>
+                  <!-- <div class="right-item right-item-bottom">
+                    <div class="right-item-bottom-left">邦豆充值</div>
+                    <div class="right-item-bottom-right">邦豆抵扣</div>
+                  </div> -->
                 </div>
-                <div class="right-item right-item-middle">{{ memberDetails.integral }}</div>
-                <!-- <div class="right-item right-item-bottom">
-                  <div class="right-item-bottom-left">邦豆充值</div>
-                  <div class="right-item-bottom-right">邦豆抵扣</div>
-                </div> -->
               </div>
             </a-col>
           </a-row>
@@ -72,14 +73,22 @@
                     <img class="card-avatar" :src="item.memberCardImage" @error="loadCardImageError" />
                   </div>
                   <div class="card-row-center">
-                    <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
-                    <!-- <div class="card-row-center-item">item.memberCardImage:{{ item.memberCardImage }}</div> -->
-                    <div class="card-row-center-item">获取时间:{{ momentStrHms(item.createTime) }}</div>
+                    <div class="card-row-center-item">
+                      <span class="row-center-item-left">会员卡名称:</span>
+                      <span class="row-center-item-right">{{ item.memberCardName }}</span>
+                    </div>
+                    <div class="card-row-center-item">
+                      <span class="row-center-item-left">获取时间:</span>
+                      <span class="row-center-item-right">{{ momentStrHms(item.createTime) }}</span>
+                    </div>
                   </div>
                 </div>
 
                 <div class="card-row-right">
-                  <div class="card-row-right-item">会员等级:{{ item.levelName }}</div>
+                  <div class="card-row-right-item card-row-right-item-level">
+                    <span>会员等级:</span>
+                    <span class="row-right-item-level-name">{{ item.levelName }}</span>
+                  </div>
                   <div class="card-row-right-item">
                     <mini-progress
                       color="#5C87FB"
@@ -235,9 +244,9 @@ import { CARD_TYPE_MAP } from '@/constance';
 // import mock from './mock';
 // console.log('mock :>> ', mock);
 
-const defaultAvatar = require('@/assets/img/user/avatar.png');
-const defaultCardImage = require('@/assets/img/member/defaultCard.png');
-const bangdouImage = require('@/assets/img/member/bangdou.jpg');
+const defaultAvatar = require('@/assets/img/member/defaultAvatar.png');
+const defaultCardImage = require('@/assets/img/member/defaultAvatar.png');
+const bangdouImage = require('@/assets/img/member/bangdou.png');
 
 //页面列表数据
 const allColumns = {
@@ -687,7 +696,7 @@ export default {
 
         .base-left-top {
           width: 100%;
-          padding: 10px;
+          padding: 10px 10px 10px 20px;
           font-size: 20px;
           font-weight: bold;
           display: flex;
@@ -696,16 +705,22 @@ export default {
           align-items: center;
 
           .left-top-left {
-            width: 48px;
-            height: 48px;
+            width: 60px;
+            height: 60px;
             .base-avatar {
               display: block;
-              width: 48px;
-              height: 48px;
+              width: 60px;
+              height: 60px;
               border-radius: 50%;
             }
           }
-          // .left-top-right{}
+          .left-top-right {
+            padding-left: 34px;
+            font-size: 18px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #121212;
+          }
         }
         .base-left-middle {
           width: calc(100% -32px);
@@ -738,46 +753,60 @@ export default {
       .base-right {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
 
-        .right-item {
-          margin-bottom: 10px;
+        .base-right-inner {
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
-        }
 
-        .right-item-top {
-          width: 100px;
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: center;
-          .item-top-img {
-            width: 50px;
-            height: 30px;
-            padding-right: 5px;
-          }
-        }
+          width: 173px;
+          height: 143px;
+          background: #fafbff;
+          border: 1px solid #e9e9e9;
 
-        .right-item-middle {
-          width: 100px;
-          padding: 2px 4px;
-          background: lightblue;
-          font-size: 20px;
-          font-weight: bold;
-        }
-        .right-item-bottom {
-          .right-item-bottom-left {
-            padding: 2px 4px;
-            margin-right: 20px;
-            background: skyblue;
+          .right-item {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
           }
-          .right-item-bottom-right {
+
+          .right-item-top {
             padding: 2px 4px;
-            border: 1px solid skyblue;
+            height: 26px;
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            color: #121212;
+            line-height: 26px;
+          }
+
+          .right-item-middle {
+            .item-middle-img {
+              width: 30px;
+              height: 30px;
+              padding-right: 3px;
+            }
+            .item-middle-text {
+              font-size: 20px;
+              font-family: MicrosoftYaHei;
+              color: #121212;
+            }
+          }
+
+          .right-item-bottom {
+            .right-item-bottom-left {
+              padding: 2px 4px;
+              margin-right: 20px;
+              background: skyblue;
+            }
+            .right-item-bottom-right {
+              padding: 2px 4px;
+              border: 1px solid skyblue;
+            }
           }
         }
       }
@@ -831,14 +860,28 @@ export default {
         .card-row-center {
           margin-right: 245px;
           // background-color: #ccc;
-          width: 200px;
           height: 118px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: stretch;
           .card-row-center-item {
-            margin-bottom: 8px;
+            margin-bottom: 20px;
+
+            .row-center-item-left {
+              font-size: 14px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #333333;
+            }
+
+            .row-center-item-right {
+              padding-left: 10px;
+              font-size: 14px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #666666;
+            }
           }
         }
       }
@@ -855,9 +898,23 @@ export default {
           width: 277px;
           margin-bottom: 8px;
         }
+
+        .card-row-right-item-level {
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #666666;
+
+          .row-right-item-level-name {
+            padding-left: 10px;
+            color: #5d88fb;
+          }
+        }
         .card-row-right-item-range {
-          color: rgb(98, 98, 238);
-          font-size: 18px;
+          font-size: 16px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #5d88fb;
         }
       }
     }
