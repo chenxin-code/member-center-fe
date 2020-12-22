@@ -46,7 +46,10 @@
             </a-col>
             <a-col :span="8">
               <div class="base-right">
-                <div class="right-item">邦豆</div>
+                <div class="right-item right-item-top">
+                  <img class="item-top-img" :src="bangdouImage" />
+                  <span class="item-top-text">邦豆</span>
+                </div>
                 <div class="right-item right-item-middle">{{ memberDetails.integral }}</div>
                 <!-- <div class="right-item right-item-bottom">
                   <div class="right-item-bottom-left">邦豆充值</div>
@@ -66,7 +69,7 @@
               <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
                 <div class="card-row-inner">
                   <div class="card-row-left">
-                    <img class="card-avatar" :src="item.memberCardImage" @error="loadImageError" />
+                    <img class="card-avatar" :src="item.memberCardImage" @error="loadCardImageError" />
                   </div>
                   <div class="card-row-center">
                     <div class="card-row-center-item">会员卡名称:{{ item.memberCardName }}</div>
@@ -233,7 +236,8 @@ import { CARD_TYPE_MAP } from '@/constance';
 // console.log('mock :>> ', mock);
 
 const defaultAvatar = require('@/assets/img/user/avatar.png');
-// const defaultAvatar = require('@/assets/img/portal/gongsiguanli.png');
+const defaultCardImage = require('@/assets/img/member/defaultCard.png');
+const bangdouImage = require('@/assets/img/member/bangdou.jpg');
 
 //页面列表数据
 const allColumns = {
@@ -307,6 +311,7 @@ export default {
   },
   data() {
     return {
+      bangdouImage,
       memberId: '',
       memberDetails: {},
       //表格高度,与每页大小通用
@@ -437,8 +442,8 @@ export default {
     loadAvatarError(e) {
       e.target.src = defaultAvatar;
     },
-    loadImageError(e) {
-      // e.target.src = defaultAvatar;
+    loadCardImageError(e) {
+      e.target.src = defaultCardImage;
     },
     ...mapActions(['FALLBACK']),
     tabChangeCallback(key) {
@@ -744,7 +749,21 @@ export default {
           align-items: center;
         }
 
+        .right-item-top {
+          width: 100px;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          .item-top-img {
+            width: 50px;
+            height: 30px;
+            padding-right: 5px;
+          }
+        }
+
         .right-item-middle {
+          width: 100px;
           padding: 2px 4px;
           background: lightblue;
           font-size: 20px;
