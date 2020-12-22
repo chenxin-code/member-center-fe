@@ -23,8 +23,5 @@ pnpm-debug.log*
 webstorm.config.js
 
 # Zjh config files
-src/pages/member/mock.json
-src/pages/member/url.json
 test.json
 test.js
-push.sh
