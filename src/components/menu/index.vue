@@ -1,6 +1,6 @@
 <template>
   <a-menu theme="dark" mode="inline" :openKeys="openKeys" :selected-keys="[$route.meta.menu]" @openChange="checkKeys">
-    <template v-for="menu in menus">
+    <template v-for="(menu, menuIndex) in menus">
       <template v-if="menu.children && hasRangeAuthorityWithoutProject(menu.authKeys)">
         <a-sub-menu :key="menu.name">
           <span slot="title">
@@ -19,9 +19,9 @@
       </template>
       <template v-else>
         <template v-if="hasRangeAuthorityWithoutProject(menu.authKeys)">
-          <a-menu-item :key="menu.path" @click="onClickMenu(menu.path)">
+          <a-menu-item :key="menu.path" @click="onClickMenu(menu.path, menuIndex)">
             <span>
-              <img :src="menu.icon" class="menu-icon" />
+              <img :src="currentMenuIndex === menuIndex ? menu.icon : menu.iconHide" class="menu-icon" />
               <span class="menu-title">{{ menu.title }}</span>
             </span>
           </a-menu-item>
@@ -42,6 +42,7 @@ export default {
   },
   data() {
     return {
+      currentMenuIndex: 0,
       menus: [],
       openKeys: [this.$route.path.split('/')[2] ? this.$route.path.split('/')[2] : ''],
       rootPath: '',
@@ -61,12 +62,13 @@ export default {
     onClickMenuChid(path) {
       this.$router.push({ path: path });
     },
-    onClickMenu(path) {
+    onClickMenu(path, menuIndex) {
       this.openKeys.splice(0, this.openKeys.length);
       this.openKeys.push('');
       // this.openKeys = [''];
       // this.$forceUpdate();
       this.$router.push({ path: path });
+      this.currentMenuIndex = menuIndex;
     },
     hasRangeAuthorityWithoutProject(authKeys) {
       return hasRangeAuthorityWithoutProject(authKeys);
@@ -110,13 +112,20 @@ export default {
   },
   watch: {
     $route: 'setMenus',
-    // menus: {
-    //   handler(newVal) {
-    //     console.log('menus :>> ', newVal);
-    //   },
-    //   immediate: true, //刷新加载 立马触发一次handler
-    //   deep: true // 可以深度检测到 ownerList 对象的属性值的变化
-    // },
+    currentMenuIndex: {
+      handler(newVal) {
+        console.log('currentMenuIndex newVal:>> ', newVal);
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
+    },
+    menus: {
+      handler(newVal) {
+        console.log('menus newVal:>> ', newVal);
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
+    },
     openKeys: {
       handler(newVal) {
         console.log('openKeys newVal:>> ', newVal);
