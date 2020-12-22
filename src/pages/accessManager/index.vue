@@ -15,7 +15,7 @@
                         </div>
                         <div class="access-main-boxs-footer">
                             <p class="access-main-boxs-footer-member">注册会员：<span>{{(item.memberCount / 10000) >= 1 ? item.memberCount / 10000 + 'w' : item.memberCount}}</span></p>
-                            <a-divider type="vertical" />
+                            <a-divider type="vertical" style="height: 25px; color: #DEDEDE"/>
                             <p class="access-main-boxs-footer-btn" @click="onCheck(item.appCode)">查看</p>
                         </div>
                     </div>
@@ -53,38 +53,46 @@ export default {
 
 <style lang="less" scoped>
     .access{
+        height: 100%;
         &-header{
             border-bottom: 1px solid #e8e8e8;
             line-height: 60px;
             padding-left: 40px;
         }
+        &-main{
+            height: calc(100% - 90px);
+            overflow: auto;
+            color: #666;
+        }
         &-main-boxs{
-            width: 346px;
-            height: 412px;  
+            width: 348px;
+            height: 400px;  
             background: #fff;
             border-radius: 2px;
             border: 1px solid rgba(233, 233, 233, 1);
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
             margin: 20px auto 0;
+            font-size: 16px;
             &-top{
-                padding: 12px 9px;
-                font-size: 12px;
+                padding: 10px 10px;
                 &-img{
                     width: 328px;
-                    height: 208px;
-                    padding-bottom: 5px;
+                    height: 180px;
+                    padding-bottom: 15px;
                 }
                 &-title, &-id{
-                    padding: 0 20px;
-                    margin: 5px 0 0 0;
+                    padding: 0 10px;
+                    margin: 0;
                 }
                 &-title{
-                    font-size: 16px;
+                    font-size: 20px;
                     font-weight: bold;
+                    color: #000;
+                    padding-top: 5px;
                 }
                 &-id{
-                    color: #808080;
                     font-weight: bold;
+                    padding-bottom: 5px;
                 }
             }
             &-description{
@@ -92,16 +100,15 @@ export default {
                 overflow-y: auto;
                 margin: 0 auto;
                 padding: 10px 5px;
-                border-top: 1px solid #ccc;
-                height: 77px;
-                color: #a0a0a0;
+                border-top: 1px solid #F0F0F0;
+                height: 83px;
             }
             &-footer{
-                color: #a0a0a0;
-                background: rgba(247, 249, 250, 1);
-                line-height: 48px;
+                background: #F1F5FE;
+                line-height: 50px;
                 &-btn{
                     cursor: pointer;
+                    color: #4B7AFB;
                 }
                 &-member, &-btn{
                     margin: 0;
@@ -112,7 +119,7 @@ export default {
                 }
                 &-member{
                     span{
-                        color: rgba(0, 0, 255, 0.5);
+                        color: #4B7AFB;;
                     }
                 }
             }
