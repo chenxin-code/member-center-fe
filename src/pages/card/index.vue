@@ -15,7 +15,7 @@
                         </div>
                         <div class="card-main-boxs-footer">
                             <p class="card-main-boxs-footer-member">持卡会员：<span>{{item.memberCount}}</span></p>
-                            <a-divider type="vertical" />
+                            <a-divider type="vertical" style="height: 25px; color: #DEDEDE"/>
                             <p class="card-main-boxs-footer-btn" 
                                 @click="goDetail(item.id)"
                             >查看</p>
@@ -55,51 +55,58 @@ export default {
 
 <style lang="less" scoped>
     .card{
+        height: 100%;
         &-header{
             border-bottom: 1px solid #e8e8e8;
             line-height: 60px;
             padding-left: 40px;
         }
+        &-main{
+            height: calc(100% - 90px);
+            overflow: auto;
+            color: #666;
+        }
         &-main-boxs{
-            width: 309px;
-            height: 412px;  
+            width: 348px;
+            height: 420px;  
             background: #fff;
             border-radius: 2px;
             border: 1px solid rgba(233, 233, 233, 1);
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
             margin: 20px auto 0;
+            font-size: 16px;
             &-top{
-                padding: 12px 24px;
-                border-bottom: 1px dashed #cccccc;
-                font-size: 12px;
+                padding: 10px 10px;
+                border-bottom: 1px dashed #F0F0F0;
                 &-img{
-                    width: 260px;
-                    height: 170px;
-                    padding-bottom: 5px;
+                    width: 328px;
+                    height: 180px;
+                    padding-bottom: 15px;
                 }
                 &-title, &-id{
-                    padding: 0;
-                    margin: 5px 0 0 0;
+                    padding: 0 10px;
+                    margin: 0;
                 }
                 &-title{
-                    font-size: 14px;
+                    font-size: 20px;
                     font-weight: bold;
+                    color: #000;
                 }
                 &-id{
-                    color: #a0a0a0;
+                    padding-bottom: 5px;
                 }
             }
             &-description{
-                height: 117px;
+                height: 106px;
                 overflow-y: auto;
-                padding: 5px 24px;
+                padding: 15px 20px;
             }
             &-footer{
-                color: #a0a0a0;
-                background: rgba(247, 249, 250, 1);
-                line-height: 48px;
+                background: #F1F5FE;
+                line-height: 50px;
                 &-btn{
                     cursor: pointer;
+                    color: #4B7AFB;
                 }
                 &-member, &-btn{
                     margin: 0;
@@ -110,7 +117,7 @@ export default {
                 }
                 &-member{
                     span{
-                        color: rgba(0, 0, 255, 0.5);
+                        color: #4B7AFB;
                     }
                 }
             }
