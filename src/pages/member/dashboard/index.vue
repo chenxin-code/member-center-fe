@@ -485,7 +485,8 @@ export default {
 
   .today-new {
     ::v-deep .chart-card-footer {
-      margin-top: 0 !important;
+      margin-top: 9px !important;
+      border-top: 1px solid #eee;
       .field {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
