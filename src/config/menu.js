@@ -1,8 +1,8 @@
 export default [{
         title: '会员看板',
         authKeys: [''],
-        icon: require('@/assets/img/member/kanban_show.png'),
-        iconHide: require('@/assets/img/member/kanban_hide.png'),
+        icon: require('@/assets/img/menu/kanban_show.png'),
+        iconHide: require('@/assets/img/menu/kanban_hide.png'),
         menuKey: 'dashboard',
         group: 'hygl',
         path: '/dashboard'
@@ -10,8 +10,8 @@ export default [{
     {
         title: '会员信息',
         authKeys: [''],
-        icon: require('@/assets/img/member/xinxi_show.png'),
-        iconHide: require('@/assets/img/member/xinxi_hide.png'),
+        icon: require('@/assets/img/menu/xinxi_show.png'),
+        iconHide: require('@/assets/img/menu/xinxi_hide.png'),
         menuKey: 'memberInfo',
         group: 'hygl',
         path: '/memberInfo'
@@ -51,5 +51,14 @@ export default [{
         menuKey: 'dealing',
         group: 'hygl',
         path: '/dealing'
+    },
+    {
+        title: '积分管理',
+        authKeys: [''],
+        icon: require('@/assets/img/menu/xinxi_show.png'),
+        iconHide: require('@/assets/img/menu/xinxi_hide.png'),
+        menuKey: 'integralManage',
+        group: 'hygl',
+        path: '/integralManage'
     }
 ];

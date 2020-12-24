@@ -98,7 +98,14 @@
                     <v-axis />
                     <v-legend />
                     <v-line position="xitem*sumVal" color="sumType" />
-                    <v-point position="xitem*sumVal" color="sumType" :size="4" :v-style="lineStyle" :shape="'circle'" />
+                    <v-point
+                      v-if="dateType === 1 || dateType === 2 || dateType === 3 || (dateType === 4 && dayRange <= 31)"
+                      position="xitem*sumVal"
+                      color="sumType"
+                      :size="4"
+                      :v-style="lineStyle"
+                      :shape="'circle'"
+                    />
                   </v-chart>
                 </a-card>
               </a-col>
@@ -170,7 +177,7 @@ export default {
       //会员数量:折线图
       jointimeStart: '',
       jointimeEnd: '',
-      rangeDate: '',
+      dayRange: '',
       dateType: 1,
       lineData: [],
       lineScale: [
@@ -312,18 +319,24 @@ export default {
 
     handleRangePicker(dateVal) {
       this.dateType = 4;
-      console.log('handleRangePicker val :>> ', dateVal);
+      console.log('handleRangePicker dateVal :>> ', dateVal);
       this.jointimeStart = moment(dateVal[0]).format('YYYY-MM-DD');
       this.jointimeEnd = moment(dateVal[1]).format('YYYY-MM-DD');
-      this.getMemberTongJiDate(this.dateType);
+      this.dayRange = moment(dateVal[1]).diff(moment(dateVal[0]), 'day'); //相差天数
+      console.log('相差天数 handleRangePicker dayRange :>> ', this.dayRange);
+      if (this.dayRange > 90) {
+        this.$warning({
+          title: '提示',
+          content: '日期选择范围不能超过90天'
+        });
+      } else {
+        this.getMemberTongJiDate(this.dateType);
+      }
     },
     getMemberTongJiDate(dateTypeParam) {
       this.loadingDate = true;
       this.dateType = dateTypeParam; //存dateType
       console.log('getMemberTongJiDate this.dateType :>> ', this.dateType);
-      if (dateTypeParam === 4) {
-        console.log('rangeDate :>> ', this.rangeDate);
-      }
       const param = {
         type: this.dateType,
         createTimeStart: this.jointimeStart,
@@ -485,7 +498,8 @@ export default {
 
   .today-new {
     ::v-deep .chart-card-footer {
-      margin-top: 0 !important;
+      margin-top: 9px !important;
+      border-top: 1px solid #eee;
       .field {
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;

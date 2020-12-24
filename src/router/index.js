@@ -15,6 +15,8 @@ const MemberInfo = () =>
     import ('@/pages/member/info/list');
 const MemberInfoDetail = () =>
     import ('@/pages/member/info/detail');
+const IntegralManage = () =>
+    import ('@/pages/member/integral/list');
 
 const TaskManager = () =>
     import ('@/pages/taskManager/index');
@@ -86,6 +88,17 @@ const routes = [
                 component: MemberInfoDetail
             },
             {
+                path: '/integralManage',
+                name: 'integralManage',
+                menuKey: 'integralManage',
+                meta: {
+                    menu: '/integralManage',
+                    authKeys: [''],
+                    bread: [{ path: '/integralManage', name: '积分管理' }]
+                },
+                component: IntegralManage
+            },
+            {
                 path: '/card',
                 name: 'card',
                 menuKey: 'card',
@@ -108,7 +121,7 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/card', name: '会员卡列表' },
-                        { path: '/card/detail', name: '会员卡详情' },
+                        { path: '/card/detail', name: '会员卡详情' }
                     ]
                 },
                 component: CardDetail
@@ -136,7 +149,7 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/task-manager', name: '任务管理' },
-                        { path: '/task-manager/detail', name: '任务详情' },
+                        { path: '/task-manager/detail', name: '任务详情' }
                     ]
                 },
                 component: TaskDetail
