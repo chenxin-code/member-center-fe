@@ -42,5 +42,14 @@ export default [{
         menuKey: 'access-manager',
         group: 'hygl',
         path: '/access-manager'
+    },
+    {
+        title: '行为管理',
+        authKeys: [''],
+        icon: require('@/assets/img/menu/client_show.png'),
+        iconHide: require('@/assets/img/menu/client_hide.png'),
+        menuKey: 'dealing',
+        group: 'hygl',
+        path: '/dealing'
     }
 ];

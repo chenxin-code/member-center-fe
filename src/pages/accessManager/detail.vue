@@ -5,11 +5,28 @@
         </div>
         <div class="detail-main">
             <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
-            <div class="detail-main-items" v-for="item in dataList" :key="item.label">
+            <div class="detail-main-items" v-for="item in basisList" :key="item.label">
                 <span class="detail-main-items-label">{{item.label}}</span>
                 <span v-if="item.name === 'createTime'" class="detail-main-items-value">{{moment(dataObj[item.name]).format('YYYY-MM-DD HH:MM:SS') || ''}}</span>
                 <span v-else class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
             </div>
+        </div>
+        <div class="detail-main">
+            <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />会员信息</p>
+            <div class="detail-main-items" v-for="item in memberList" :key="item.label">
+                <span class="detail-main-items-label">{{item.label}}</span>
+                <span class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
+            </div>
+        </div>
+        <div class="detail-main">
+            <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />会员来源</p>
+            <!-- <a-table
+                :style="{marginTop: '20px'}"
+                :columns="columns"
+                :data-source="tableList"
+                :pagination="false"
+                :loading="tableLoading"
+            > -->
         </div>
     </div>
 </template>
@@ -21,17 +38,17 @@ export default {
     name: 'access_detail',
     data() {
         return {
-            dataList: [
+            basisList: [
                 {
-                    label: '接入系统key：',
+                    label: '接入系统名称：',
                     name: 'appCode'
                 },
                 {
-                    label: '接入系统名称：',
+                    label: 'AppKey：',
                     name: 'appName',
                 },
                 {
-                    label: '注册用户：',
+                    label: 'AppSecret：',
                     name: 'memberCount'
                 },
                 {
@@ -39,10 +56,49 @@ export default {
                     name: 'appDescribe',
                 },
                 {
-                    label: '接入时间：',
+                    label: '创建时间：',
                     name: 'createTime'
                 },
             ],
+            memberList: [
+                {
+                    label: '注册会员：',
+                    name: 'register'
+                },
+                {
+                    label: '创建来源会员：',
+                    name: 'create'
+                }
+            ],
+            tableList: [],
+            columns: [
+                {
+                    dataIndex: 'name',
+                    key: 'name',
+                    title: '来源名称',
+                },
+                {
+                    dataIndex: 'mark',
+                    key: 'mark',
+                    title: '来源标识',
+                },
+                {
+                    dataIndex: 'status',
+                    key: 'status',
+                    title: '状态',
+                },
+                {
+                    dataIndex: 'registerNum',
+                    key: 'registerNum',
+                    title: '注册会员数',
+                },
+                {
+                    dataIndex: 'sourceNum',
+                    key: 'sourceNum',
+                    title: '创建来源会员数',
+                },
+            ],
+            tableLoading: false,
             dataObj: {}
         }
     },
@@ -63,6 +119,7 @@ export default {
 
 <style lang="less" scoped>
     .detail{
+        height: 100%;
         &-header{
             display: flex;
             justify-content: space-between;
@@ -78,6 +135,8 @@ export default {
             }
         }
         &-main{
+            height: calc(100% - 58px);
+            overflow: auto;
             &-title{
                 font-size: 16px;
                 color: #7f7f7f;

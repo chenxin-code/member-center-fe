@@ -28,6 +28,8 @@ export default {
     GET_CLiENT: '/times/member-center/client/api/v1/list', // 获取第三方来源列表
     GET_CLIENTDETAIL: '/times/member-center/client/api/v1/detail', // 获取第三方来源详情详情
     GET_TASKDETAIL: '/times/member-center/task/api/v1/detail', // 获取任务详情
+    GET_DEALINGLIST: '/times/member-center/behaviour/api/v1/behaviour/list', // 获取行为列表
+    GET_DEALINGDETAIL: '/times/member-center/behaviour/api/v1/behaviour/detail', // 获取行为日志
     //会员中心:张
     MEMBER_LIST: option.member + '/api/v1/member/list',
     CLIENT_LIST: option.client + '/api/v1/list',
