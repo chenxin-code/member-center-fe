@@ -509,7 +509,6 @@ export default {
     }
   },
   methods: {
-    moment,
     handleOk() {
       if (this.bangdouModalType === 1) {
         this.modalLoading = true;

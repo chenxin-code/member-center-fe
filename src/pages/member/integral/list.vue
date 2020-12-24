@@ -268,7 +268,6 @@ export default {
     });
   },
   methods: {
-    moment,
     // async getDataInit() {
     //   await this.getClientList();
     //   await this.getMemberList();
