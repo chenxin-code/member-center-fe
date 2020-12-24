@@ -43,5 +43,14 @@ export default [
     menuKey: 'access-manager',
     group: 'hygl',
     path: '/access-manager'
+  },
+  {
+    title: '积分管理',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/xinxi_show.png'),
+    iconHide: require('@/assets/img/menu/xinxi_hide.png'),
+    menuKey: 'integralManage',
+    group: 'hygl',
+    path: '/integralManage'
   }
 ];

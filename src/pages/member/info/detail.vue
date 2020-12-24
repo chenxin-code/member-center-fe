@@ -51,10 +51,10 @@
                     <img class="item-middle-img" :src="bangdouImage" />
                     <span class="item-middle-text">{{ memberDetails.integral }}</span>
                   </div>
-                  <!-- <div class="right-item right-item-bottom">
-                    <div class="right-item-bottom-left">邦豆充值</div>
-                    <div class="right-item-bottom-right">邦豆抵扣</div>
-                  </div> -->
+                  <div class="right-item right-item-bottom">
+                    <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
+                    <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
+                  </div>
                 </div>
               </div>
             </a-col>
@@ -448,6 +448,14 @@ export default {
   },
   methods: {
     moment,
+    bangdouHandle(type) {
+      if (type === 1) {
+        alert('充值');
+      } else if (type === 2) {
+        alert('抵扣');
+      }
+    },
+
     loadAvatarError(e) {
       e.target.src = defaultAvatar;
     },
@@ -798,14 +806,20 @@ export default {
           }
 
           .right-item-bottom {
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: #4b7afb;
+
             .right-item-bottom-left {
-              padding: 2px 4px;
-              margin-right: 20px;
-              background: skyblue;
+              margin-right: 10px;
+              padding: 6px 8px;
+              border-radius: 2px;
+              border: 1px solid #5380fb;
             }
             .right-item-bottom-right {
-              padding: 2px 4px;
-              border: 1px solid skyblue;
+              padding: 6px 8px;
+              border-radius: 2px;
+              border: 1px solid #5380fb;
             }
           }
         }
