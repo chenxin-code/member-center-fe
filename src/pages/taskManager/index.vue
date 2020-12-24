@@ -73,7 +73,7 @@ export default {
                     placeholder: "全部",
                     name: 'status',
                     selectOptions: [
-                        {id: null, name: '全部'},
+                        {id: '', name: '全部'},
                         {id: '0', name: '禁用'},
                         {id: '1', name: '启用'}
                     ]
@@ -221,7 +221,7 @@ export default {
                     if (item.name === 'taskSource') {
                         return {
                             ...item,
-                            selectOptions: [].concat({id: null, name: '全部'}, sourceList)
+                            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
                         }
                     } else {
                         return item

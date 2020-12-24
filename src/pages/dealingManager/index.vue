@@ -60,7 +60,7 @@ export default {
                     placeholder: "全部",
                     name: 'type',
                     selectOptions: [
-                        {id: null, name: '全部'},
+                        {id: '', name: '全部'},
                         {id: '1', name: '消费'},
                         {id: '2', name: '其他'}
                     ]
