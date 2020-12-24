@@ -82,9 +82,9 @@
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
-              <span :class="{ isClicked: dateType === 1 }" @click="getMemberTongJiDate(1)">本日</span>
-              <span :class="{ isClicked: dateType === 2 }" @click="getMemberTongJiDate(2)">本月</span>
-              <span :class="{ isClicked: dateType === 3 }" @click="getMemberTongJiDate(3)">本年</span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 1 }" @click="getMemberTongJiDate(1)">本日</span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 2 }" @click="getMemberTongJiDate(2)">本月</span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 3 }" @click="getMemberTongJiDate(3)">本年</span>
             </div>
             <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
           </div>
