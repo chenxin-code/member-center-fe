@@ -52,8 +52,8 @@
                     <span class="item-middle-text">{{ memberDetails.integral }}</span>
                   </div>
                   <div class="right-item right-item-bottom">
-                    <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
-                    <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
+                    <div class="right-item-bottom-left" @click="bangdouAdd">邦豆充值</div>
+                    <div class="right-item-bottom-right" @click="bangdouSub">邦豆抵扣</div>
                   </div>
                 </div>
               </div>
@@ -448,12 +448,11 @@ export default {
   },
   methods: {
     moment,
-    bangdouHandle(type) {
-      if (type === 1) {
-        alert('充值');
-      } else if (type === 2) {
-        alert('抵扣');
-      }
+    bangdouAdd(type) {
+      alert('充值');
+    },
+    bangdouSub(type) {
+      alert('抵扣');
     },
 
     loadAvatarError(e) {
