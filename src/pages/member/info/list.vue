@@ -204,17 +204,19 @@ export default {
       return param => {
         let tempStr = '';
         if (param.memberCardRelats.length > 1) {
-          param.memberCardRelats.slice(0, 1).forEach(element => {
-            if (element.levelName) {
-              tempStr += element.levelName;
-            }
-          });
-          // param.memberCardRelats.forEach(element => {
+          // param.memberCardRelats.slice(0, 1).forEach(element => {
           //   if (element.levelName) {
-          //     tempStr += element.levelName + ',';
+          //     tempStr += element.levelName;
           //   }
           // });
-          // tempStr = tempStr.substring(0, tempStr.length - 1);
+
+          param.memberCardRelats.forEach(element => {
+            if (element.levelName) {
+              tempStr += element.levelName + ',';
+            }
+          });
+          tempStr = tempStr.substring(0, tempStr.length - 1);
+
         } else if (param.memberCardRelats.length === 1) {
           param.memberCardRelats.forEach(element => {
             if (element.levelName) {

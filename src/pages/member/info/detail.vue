@@ -52,8 +52,8 @@
                     <span class="item-middle-text">{{ memberDetails.integral }}</span>
                   </div>
                   <div class="right-item right-item-bottom">
-                    <div class="right-item-bottom-left" @click="bangdouAdd">邦豆充值</div>
-                    <div class="right-item-bottom-right" @click="bangdouSub">邦豆抵扣</div>
+                    <div class="right-item-bottom-left" @click="bangdouHandle('add')">邦豆充值</div>
+                    <div class="right-item-bottom-right" @click="bangdouHandle('sub')">邦豆抵扣</div>
                   </div>
                 </div>
               </div>
@@ -228,6 +228,46 @@
         </div>
       </a-row>
     </div>
+    <!-- modal对话框 -->
+    <a-modal :centered="true" v-model="visibleBangdou" :title="bangdouModalTitle" on-ok="handleOk">
+      <template slot="footer">
+        <a-button key="back" @click="visibleBangdou = false">
+          取消
+        </a-button>
+        <a-button key="submit" type="primary" :loading="modalLoading" @click="handleOk">
+          确定
+        </a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item>
+          <div :style="modalInputStyle">
+            <div :style="modalInputStyleTop">
+              <span style="color:red">*</span>
+              <span>邦豆数量</span>
+            </div>
+            <a-input-number
+              v-model="bangdouAddVal"
+              :min="0"
+              defaultValue="0"
+              style="width:267px;"
+              placeholder="请输入邦豆数量"
+            />
+          </div>
+          <div :style="modalInputStyle">
+            <div :style="modalInputStyleTop">
+              <span style="color:red">*</span>
+              <span>备注</span>
+            </div>
+            <a-textarea
+              v-model="bangdouAddRemark"
+              :auto-size="{ minRows: 1, maxRows: 5 }"
+              style="width:267px;"
+              placeholder="请输入备注"
+            />
+          </div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -320,6 +360,28 @@ export default {
   },
   data() {
     return {
+      //bangdou modal:start
+      modalInputStyle: {
+        display: 'flex',
+        'flex-direction': 'row',
+        'justify-content': 'flex-start',
+        'align-items': 'center'
+      },
+      modalInputStyleTop: {
+        width: '67px',
+        'margin-right': '10px',
+        display: 'flex',
+        'flex-direction': 'row',
+        'justify-content': 'flex-end',
+        'align-items': 'center'
+      },
+      modalLoading: false,
+      bangdouModalTitle: '',
+      visibleBangdou: false,
+      bangdouModalType: '',
+      bangdouAddVal: 0,
+      bangdouAddRemark: '',
+      //bangdou modal:end
       bangdouImage,
       memberId: '',
       memberDetails: {},
@@ -448,13 +510,43 @@ export default {
   },
   methods: {
     moment,
-    bangdouAdd(type) {
-      alert('充值');
-    },
-    bangdouSub(type) {
-      alert('抵扣');
-    },
+    handleOk() {
+      if (this.bangdouModalType === 'add') {
+        this.modalLoading = true;
+        console.log('bangdouModalType 1:>> ', this.bangdouModalType);
+        console.log('bangdouAddVal 1:>> ', this.bangdouAddVal);
+        console.log('bangdouAddRemark 1:>> ', this.bangdouAddRemark);
+        setTimeout(() => {
+          this.visibleBangdou = false;
+          this.modalLoading = false;
+        }, 3000);
+      } else if (this.bangdouModalType === 'sub') {
+        this.modalLoading = true;
+        console.log('bangdouModalType 2:>> ', this.bangdouModalType);
+        console.log('bangdouAddVal 2:>> ', this.bangdouAddVal);
+        console.log('bangdouAddRemark 2:>> ', this.bangdouAddRemark);
 
+        setTimeout(() => {
+          this.visibleBangdou = false;
+          this.modalLoading = false;
+        }, 3000);
+      }
+    },
+    bangdouHandle(type) {
+      console.log('bangdouHandle');
+      return;
+      this.bangdouModalType = '';
+      this.bangdouAddVal = 0
+      this.bangdouAddRemark = ''
+      this.visibleBangdou = true;
+      if (type === 'add') {
+        this.bangdouModalType = 'add';
+        this.bangdouModalTitle = '邦豆充值';
+      } else if (type === 'sub') {
+        this.bangdouModalType = 'sub';
+        this.bangdouModalTitle = '邦豆扣减';
+      }
+    },
     loadAvatarError(e) {
       e.target.src = defaultAvatar;
     },
