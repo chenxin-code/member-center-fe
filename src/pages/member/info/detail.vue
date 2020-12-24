@@ -52,8 +52,8 @@
                     <span class="item-middle-text">{{ memberDetails.integral }}</span>
                   </div>
                   <div class="right-item right-item-bottom">
-                    <div class="right-item-bottom-left" @click="bangdouHandle('add')">邦豆充值</div>
-                    <div class="right-item-bottom-right" @click="bangdouHandle('sub')">邦豆抵扣</div>
+                    <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
+                    <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
                   </div>
                 </div>
               </div>
@@ -511,20 +511,21 @@ export default {
   methods: {
     moment,
     handleOk() {
-      if (this.bangdouModalType === 'add') {
+      if (this.bangdouModalType === 1) {
         this.modalLoading = true;
-        console.log('bangdouModalType 1:>> ', this.bangdouModalType);
-        console.log('bangdouAddVal 1:>> ', this.bangdouAddVal);
-        console.log('bangdouAddRemark 1:>> ', this.bangdouAddRemark);
+        // console.log('bangdouModalType 1:>> ', this.bangdouModalType);
+        // console.log('bangdouAddVal 1:>> ', this.bangdouAddVal);
+        // console.log('bangdouAddRemark 1:>> ', this.bangdouAddRemark);
+
         setTimeout(() => {
           this.visibleBangdou = false;
           this.modalLoading = false;
         }, 3000);
-      } else if (this.bangdouModalType === 'sub') {
+      } else if (this.bangdouModalType === 2) {
         this.modalLoading = true;
-        console.log('bangdouModalType 2:>> ', this.bangdouModalType);
-        console.log('bangdouAddVal 2:>> ', this.bangdouAddVal);
-        console.log('bangdouAddRemark 2:>> ', this.bangdouAddRemark);
+        // console.log('bangdouModalType 2:>> ', this.bangdouModalType);
+        // console.log('bangdouAddVal 2:>> ', this.bangdouAddVal);
+        // console.log('bangdouAddRemark 2:>> ', this.bangdouAddRemark);
 
         setTimeout(() => {
           this.visibleBangdou = false;
@@ -533,17 +534,15 @@ export default {
       }
     },
     bangdouHandle(type) {
-      console.log('bangdouHandle');
-      return;
-      this.bangdouModalType = '';
-      this.bangdouAddVal = 0
-      this.bangdouAddRemark = ''
-      this.visibleBangdou = true;
-      if (type === 'add') {
-        this.bangdouModalType = 'add';
+      this.bangdouModalType = ''; //类型
+      this.bangdouAddVal = 0; //充值帮豆
+      this.bangdouAddRemark = ''; //抵扣帮豆
+      this.visibleBangdou = true; //显示对话框
+      if (type === 1) {
+        this.bangdouModalType = 1;
         this.bangdouModalTitle = '邦豆充值';
-      } else if (type === 'sub') {
-        this.bangdouModalType = 'sub';
+      } else if (type === 2) {
+        this.bangdouModalType = 2;
         this.bangdouModalTitle = '邦豆扣减';
       }
     },
