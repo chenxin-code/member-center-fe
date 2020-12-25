@@ -70,7 +70,7 @@ const routes = [
                     menu: '/memberInfo',
                     authKeys: [''],
                     bread: [{ path: '/memberInfo', name: '会员信息' }],
-                    // isUseCache: false,
+                    isUseCache: false,
                     keepAlive: true
                 },
                 component: MemberInfo
@@ -96,7 +96,9 @@ const routes = [
                 meta: {
                     menu: '/integralManage',
                     authKeys: [''],
-                    bread: [{ path: '/integralManage', name: '积分管理' }]
+                    bread: [{ path: '/integralManage', name: '积分管理' }],
+                    isUseCache: false,
+                    keepAlive: true
                 },
                 component: IntegralManage
             },
@@ -192,6 +194,7 @@ const routes = [
                     menu: '/dealing',
                     authKeys: [''],
                     bread: [{ path: '/dealing', name: '行为管理' }],
+                    isUseCache: false,
                     keepAlive: true
                 },
                 component: Dealing

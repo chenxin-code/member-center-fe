@@ -121,7 +121,6 @@ export default {
         setTimeout( () => {
             this.scrollY = this.$refs.contentMain.offsetHeight - 290 + 'px';
         }, 0)
-        
     },
     methods: {
         onSearch(args) {
@@ -166,21 +165,41 @@ export default {
             .finally( () => this.tableLoading = false)
         },
     },
-    // beforeRouteEnter(to, from, next) {
-    //     console.log('1111111', to, from, next)
-    //     if (from.name === 'dealing_detail') {
-    //         to.meta.keepAlive = true;
-    //     } else {
-    //         to.meta.keepAlive = false;
-    //     }
-    //     next();
-    // },
-    beforeRouteLeave(to, from, next) {
-        console.log('2222222', to, from, next)
-        if (to.name === 'dealing_detail') {
-            to.meta.keepAlive = true;
+    activated() {
+        // isUseCache为false时才重新刷新获取数据
+        // 通过这个控制刷新
+        if (!this.$route.meta.isUseCache) {
+            console.log('-------', this.$refs)
+            //重置data
+            this.total = 0;
+            this.current = 1;
+            this.pageSize = 10;
+            this.rangeTime = [];
+            this.name = ''; 
+            this.type = ''; 
+            //初始化加载数据
+            this.$refs.form.form.resetFields();
+            this.getTaskList();
+        }
+
+        //重置
+        this.$route.meta.isUseCache = false;
+    },
+
+    beforeRouteEnter(to, from, next) {
+        if (from.name === 'dealing_detail') {
+            to.meta.isUseCache = true;
         } else {
-            to.meta.keepAlive = false;
+            to.meta.isUseCache = false;
+        }
+
+        next();
+    },
+    beforeRouteLeave(to, from, next) {
+        if (to.name === 'dealing_detail') {
+            to.meta.isUseCache = true;
+        } else {
+            to.meta.isUseCache = false;
         }
 
         next();
