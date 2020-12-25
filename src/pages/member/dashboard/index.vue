@@ -99,8 +99,13 @@
             <a-row>
               <a-col :span="24">
                 <a-card :loading="loadingDate">
-                  <!-- <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale"> -->
-                  <v-chart :force-fit="true" :height="lineHeight" :data="lineData" :scale="lineScale">
+                  <v-chart
+                    :force-fit="true"
+                    :height="lineHeight"
+                    :data="lineData"
+                    :scale="lineScale"
+                    :padding="['auto', '50', 'auto', 'auto']"
+                  >
                     <v-tooltip />
                     <v-axis />
                     <v-legend />

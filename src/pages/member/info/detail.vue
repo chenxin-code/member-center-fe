@@ -238,10 +238,10 @@
       on-ok="handleOk"
     >
       <template slot="footer">
-        <a-button key="back" @click="visibleBangdou = false">
+        <a-button :disabled="modalLoading" key="back" @click="visibleBangdou = false">
           取消
         </a-button>
-        <a-button key="submit" type="primary" :loading="modalLoading" @click="handleOk">
+        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handleOk">
           确定
         </a-button>
       </template>
@@ -254,7 +254,7 @@
             </div>
             <a-input-number
               v-model="bangdouAddVal"
-              :min="0"
+              min="0"
               defaultValue="0"
               style="width:267px;"
               placeholder="请输入邦豆数量"

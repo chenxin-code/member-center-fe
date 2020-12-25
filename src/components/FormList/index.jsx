@@ -73,7 +73,7 @@ const FormList = {
         case 'input':
           return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
         case 'inputNumber':
-          return <a-input-number v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
+          return <a-input-number min="0" v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
         case 'select':
           return (
             <a-select

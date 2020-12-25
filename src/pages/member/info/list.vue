@@ -91,8 +91,7 @@ export default {
           label: '手机号',
           type: 'inputNumber',
           name: 'phoneNo',
-          placeholder: '请输入',
-          min: 0
+          placeholder: '请输入'
         },
         {
           type: 'button',
