@@ -42,7 +42,7 @@
 
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData)" style="margin-left:20px;">详情</a>
+            <a @click="goDetail(rowData)">查看</a>
           </div>
         </template>
       </a-table>
@@ -53,6 +53,7 @@
         show-size-changer
         :default-current="current"
         :page-size.sync="pageSize"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="onShowSizeChange"
         @showSizeChange="onShowSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
@@ -216,7 +217,6 @@ export default {
             }
           });
           tempStr = tempStr.substring(0, tempStr.length - 1);
-
         } else if (param.memberCardRelats.length === 1) {
           param.memberCardRelats.forEach(element => {
             if (element.levelName) {
@@ -377,6 +377,26 @@ export default {
           });
       });
     }
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'memberInfoDetail') {
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+
+    next();
+  },
+
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'memberInfoDetail') {
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+
+    next();
   },
   watch: {
     formList: {

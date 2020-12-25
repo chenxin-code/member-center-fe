@@ -37,7 +37,8 @@
                   <div class="left-bottom-left" style="padding-right:5px;">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.sourceName }} {{ momentStrHms(memberDetails.createTime) }}
+                      {{ item.clientName ? item.clientName : '' }} {{ momentStrHms(item.createTime) }}
+                      {{ item.type === 1 ? '(创建)' : '' }}
                     </div>
                   </div>
                 </div>
@@ -49,7 +50,7 @@
                   <div class="right-item right-item-top">邦豆</div>
                   <div class="right-item right-item-middle">
                     <img class="item-middle-img" :src="bangdouImage" />
-                    <span class="item-middle-text">{{ memberDetails.integral }}</span>
+                    <span class="item-middle-text">{{ memberIntegral }}</span>
                   </div>
                   <div class="right-item right-item-bottom">
                     <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
@@ -137,7 +138,7 @@
                     show-size-changer
                     :default-current="integralCurrent"
                     :page-size.sync="integralPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingIntegral"
                     @showSizeChange="pagingIntegral"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -174,7 +175,7 @@
                     show-size-changer
                     :default-current="grownCurrent"
                     :page-size.sync="grownPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingGrown"
                     @showSizeChange="pagingGrown"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -216,7 +217,7 @@
                     show-size-changer
                     :default-current="behaviourCurrent"
                     :page-size.sync="behaviourPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingBehaviour"
                     @showSizeChange="pagingBehaviour"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -229,7 +230,13 @@
       </a-row>
     </div>
     <!-- modal对话框 -->
-    <a-modal :centered="true" v-model="visibleBangdou" :title="bangdouModalTitle" on-ok="handleOk">
+    <a-modal
+      :centered="true"
+      v-model="visibleBangdou"
+      :title="bangdouModalTitle"
+      :maskClosable="false"
+      on-ok="handleOk"
+    >
       <template slot="footer">
         <a-button key="back" @click="visibleBangdou = false">
           取消
@@ -360,6 +367,7 @@ export default {
   },
   data() {
     return {
+      memberIntegral: '',
       //bangdou modal:start
       modalInputStyle: {
         display: 'flex',
@@ -509,29 +517,30 @@ export default {
     }
   },
   methods: {
-    moment,
     handleOk() {
-      if (this.bangdouModalType === 1) {
-        this.modalLoading = true;
-        // console.log('bangdouModalType 1:>> ', this.bangdouModalType);
-        // console.log('bangdouAddVal 1:>> ', this.bangdouAddVal);
-        // console.log('bangdouAddRemark 1:>> ', this.bangdouAddRemark);
+      this.modalLoading = true;
 
-        setTimeout(() => {
+      const param = {
+        memberId: this.memberId,
+        type: this.bangdouModalType,
+        integral: this.bangdouAddVal,
+        notes: this.bangdouAddRemark
+      };
+
+      console.log('handleOk param :>> ', param);
+
+      api
+        .payOrDeductionIntegral(param)
+        .finally(() => {
           this.visibleBangdou = false;
           this.modalLoading = false;
-        }, 3000);
-      } else if (this.bangdouModalType === 2) {
-        this.modalLoading = true;
-        // console.log('bangdouModalType 2:>> ', this.bangdouModalType);
-        // console.log('bangdouAddVal 2:>> ', this.bangdouAddVal);
-        // console.log('bangdouAddRemark 2:>> ', this.bangdouAddRemark);
-
-        setTimeout(() => {
-          this.visibleBangdou = false;
-          this.modalLoading = false;
-        }, 3000);
-      }
+        })
+        .then(res => {
+          console.log('payOrDeductionIntegral res :>> ', res);
+          if (res.code === 200) {
+            this.memberIntegral = res.data;
+          }
+        });
     },
     bangdouHandle(type) {
       this.bangdouModalType = ''; //类型
@@ -597,6 +606,8 @@ export default {
               this.$set(this.memberDetails, key, element);
             }
           }
+
+          this.memberIntegral = this.memberDetails.integral;
           console.log('this.memberDetails :>> ', this.memberDetails);
         }
       });
@@ -625,21 +636,20 @@ export default {
 
         api
           .getIntegralRecord(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getIntegralRecord res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.integralTotal = res.data.total;
               this.integralDataSource.splice(0, this.integralDataSource.length);
               res.data.records.forEach((element, index) => {
                 this.integralDataSource.push(element);
               });
-
               console.log('this.integralDataSource :>> ', this.integralDataSource);
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },
@@ -667,9 +677,12 @@ export default {
 
         api
           .getGrownLog(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getGrownLog res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.grownTotal = res.data.total;
               this.grownDataSource.splice(0, this.grownDataSource.length);
@@ -677,9 +690,6 @@ export default {
                 this.grownDataSource.push(element);
               });
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },
@@ -704,9 +714,12 @@ export default {
 
         api
           .getBehaviourList(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getBehaviourList res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.behaviourTotal = res.data.total;
               this.behaviourDataSource.splice(0, this.behaviourDataSource.length);
@@ -714,9 +727,6 @@ export default {
                 this.behaviourDataSource.push(element);
               });
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },

@@ -116,7 +116,7 @@ export default {
     components: {
       FilterForm
     },
-    mounted () {
+    created () {
         this.getTaskList()
         setTimeout( () => {
             this.scrollY = this.$refs.contentMain.offsetHeight - 290 + 'px';
@@ -165,24 +165,26 @@ export default {
             })
             .finally( () => this.tableLoading = false)
         },
-        beforeRouteEnter(to, from, next) {
-            if (from.name === 'dealing_detail') {
-                to.meta.keepAlive = true;
-            } else {
-                to.meta.keepAlive = false;
-            }
-            next();
-        },
-        beforeRouteLeave(to, from, next) {
-            if (to.name === 'dealing_detail') {
-                to.meta.keepAlive = true;
-            } else {
-                to.meta.keepAlive = false;
-            }
+    },
+    // beforeRouteEnter(to, from, next) {
+    //     console.log('1111111', to, from, next)
+    //     if (from.name === 'dealing_detail') {
+    //         to.meta.keepAlive = true;
+    //     } else {
+    //         to.meta.keepAlive = false;
+    //     }
+    //     next();
+    // },
+    beforeRouteLeave(to, from, next) {
+        console.log('2222222', to, from, next)
+        if (to.name === 'dealing_detail') {
+            to.meta.keepAlive = true;
+        } else {
+            to.meta.keepAlive = false;
+        }
 
-            next();
-        },
-    }
+        next();
+    },
 }
 </script>
 <style lang="less" scoped>

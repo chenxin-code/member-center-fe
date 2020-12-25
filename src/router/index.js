@@ -69,7 +69,9 @@ const routes = [
                 meta: {
                     menu: '/memberInfo',
                     authKeys: [''],
-                    bread: [{ path: '/memberInfo', name: '会员信息' }]
+                    bread: [{ path: '/memberInfo', name: '会员信息' }],
+                    // isUseCache: false,
+                    keepAlive: true
                 },
                 component: MemberInfo
             },
@@ -189,10 +191,8 @@ const routes = [
                 meta: {
                     menu: '/dealing',
                     authKeys: [''],
-                    bread: [
-                        { path: '/dealing', name: '行为管理' },
-                    ],
-                    keepAlive: true,
+                    bread: [{ path: '/dealing', name: '行为管理' }],
+                    keepAlive: true
                 },
                 component: Dealing
             },
@@ -205,11 +205,11 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/dealing', name: '行为管理' },
-                        { path: '/dealing/detail', name: '行为日志' },
+                        { path: '/dealing/detail', name: '行为日志' }
                     ]
                 },
                 component: DealingDetail
-            },
+            }
         ]
     },
     {

@@ -82,9 +82,15 @@
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
-              <span :class="{ isClicked: dateType === 1 }" @click="getMemberTongJiDate(1)">本日</span>
-              <span :class="{ isClicked: dateType === 2 }" @click="getMemberTongJiDate(2)">本月</span>
-              <span :class="{ isClicked: dateType === 3 }" @click="getMemberTongJiDate(3)">本年</span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 1 }" @click="getMemberTongJiDate(1)">
+                本日
+              </span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 2 }" @click="getMemberTongJiDate(2)">
+                本月
+              </span>
+              <span style="cursor: pointer;" :class="{ isClicked: dateType === 3 }" @click="getMemberTongJiDate(3)">
+                本年
+              </span>
             </div>
             <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
           </div>
@@ -93,7 +99,8 @@
             <a-row>
               <a-col :span="24">
                 <a-card :loading="loadingDate">
-                  <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale">
+                  <!-- <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale"> -->
+                  <v-chart :force-fit="true" :height="lineHeight" :data="lineData" :scale="lineScale">
                     <v-tooltip />
                     <v-axis />
                     <v-legend />
@@ -175,6 +182,8 @@ export default {
         stroke: '#000'
       },
       //会员数量:折线图
+      clientHeight: document.documentElement.clientHeight,
+      lineHeight: 308,
       jointimeStart: '',
       jointimeEnd: '',
       dayRange: '',
@@ -473,7 +482,24 @@ export default {
     //初始化校验token和用户信息
     this.checkLoginUser();
   },
+  mounted() {
+    window.onresize = () => {
+      this.clientHeight = document.documentElement.clientHeight;
+    };
+  },
   watch: {
+    clientHeight: {
+      handler(newVal) {
+        let tempVal = newVal - 492;
+        if (tempVal < 308) {
+          this.lineHeight = 308;
+        } else {
+          this.lineHeight = newVal - 492;
+        }
+      },
+      immediate: true, //刷新加载 立马触发一次handler
+      deep: true // 可以深度检测到 ownerList 对象的属性值的变化
+    },
     quarterData: {
       handler(newVal) {
         this.quarterAreaData.splice(0, this.quarterAreaData.length);

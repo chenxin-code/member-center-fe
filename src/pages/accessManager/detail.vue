@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div class="detail-header">
-      <div class="detail-header-title">接入平台详情</div>
+      <div class="detail-header-title">接入系统详情</div>
       <span class="detail-header-fallback" @click="$store.dispatch('FALLBACK')">
         返回
       </span>
@@ -39,8 +39,8 @@
       </p>
       <div class="detail-main-items">
         <a-table :columns="columns" :data-source="tableData" :row-key="(r, i) => i" bordered>
-          <template slot="appDescribeSlot" slot-scope="rowData">
-            <span>{{ '#' + rowData.appDescribe + '#' }}</span>
+          <template slot="isEnableSlot" slot-scope="rowData">
+            <span>{{ showEnable(rowData.isEnable) }}</span>
           </template>
         </a-table>
       </div>
@@ -56,33 +56,28 @@ import moment from 'moment';
 const columns = [
   {
     title: '来源名称',
-    dataIndex: 'appName',
-    key: 'appName'
+    dataIndex: 'sourceName',
+    key: 'sourceName'
   },
   {
     title: '来源标识',
-    dataIndex: 'appCode',
-    key: 'appCode'
+    dataIndex: 'sourceCode',
+    key: 'sourceCode'
   },
   {
     title: '状态',
-    key: 'appDescribeSlot',
-    scopedSlots: { customRender: 'appDescribeSlot' }
+    key: 'isEnableSlot',
+    scopedSlots: { customRender: 'isEnableSlot' }
   },
-  // {
-  //   title: '状态',
-  //   dataIndex: 'appDescribe',
-  //   key: 'appDescribe'
-  // },
   {
     title: '注册会员数',
-    dataIndex: 'memberCount',
-    key: 'memberCount'
+    dataIndex: 'count',
+    key: 'count'
   },
   {
     title: '创建来源会员数',
-    dataIndex: 'createTime',
-    key: 'createTime'
+    dataIndex: 'sourceCreateNum',
+    key: 'sourceCreateNum'
   }
 ];
 
@@ -91,19 +86,20 @@ export default {
   data() {
     return {
       tableData: [],
+      dataObj: {},
       columns,
       dataList1: [
         {
           label: '接入系统名称: ',
-          name: 'appCode'
-        },
-        {
-          label: 'AppKey: ',
           name: 'appName'
         },
         {
+          label: 'AppKey: ',
+          name: 'appCode'
+        },
+        {
           label: 'AppSecret: ',
-          name: 'memberCount'
+          name: 'appSecret'
         },
         {
           label: '接入系统简介: ',
@@ -117,15 +113,27 @@ export default {
       dataList2: [
         {
           label: '注册会员: ',
-          name: 'appCode'
+          name: 'memberCount'
         },
         {
           label: '创建来源会员: ',
-          name: 'appName'
+          name: 'sourceCreateNum'
         }
-      ],
-      dataObj: {}
+      ]
     };
+  },
+  computed: {
+    showEnable() {
+      return param => {
+        if (param === 0) {
+          return '启用';
+        } else if (param === 1) {
+          return '禁用';
+        } else {
+          return '';
+        }
+      };
+    }
   },
   mounted() {
     this.initData(this.$route.query.code);
@@ -134,9 +142,10 @@ export default {
     moment,
     initData(code) {
       api.getClientDetail({ appCode: code }).then(res => {
+        console.log('getClientDetail res :>> ', res);
         if (res.code === 200) {
           this.dataObj = res.data;
-          this.tableData.push(res.data);
+          this.tableData = res.data.sourceVos;
         }
       });
     }

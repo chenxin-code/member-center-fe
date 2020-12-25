@@ -40,6 +40,7 @@ export default {
     INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.member + '/api/v1/member/behaviour/list',
-    MEMBER_TONGJI: '/times/member-center/member/api/v1/member/statistics',
-    MEMBER_TONGJI_DATE: '/times/member-center/member/api/v1/member/num-statistics'
+    MEMBER_TONGJI: option.member + '/api/v1/member/statistics',
+    MEMBER_TONGJI_DATE: option.member + '/api/v1/member/num-statistics',
+    INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction'
 };
