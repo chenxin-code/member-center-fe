@@ -43,22 +43,22 @@ export default [{
         group: 'hygl',
         path: '/access-manager'
     },
-    {
-        title: '行为管理',
-        authKeys: [''],
-        icon: require('@/assets/img/menu/client_show.png'),
-        iconHide: require('@/assets/img/menu/client_hide.png'),
-        menuKey: 'dealing',
-        group: 'hygl',
-        path: '/dealing'
-    },
-    {
-        title: '积分管理',
-        authKeys: [''],
-        icon: require('@/assets/img/menu/xinxi_show.png'),
-        iconHide: require('@/assets/img/menu/xinxi_hide.png'),
-        menuKey: 'integralManage',
-        group: 'hygl',
-        path: '/integralManage'
-    }
+    // {
+    //     title: '行为管理',
+    //     authKeys: [''],
+    //     icon: require('@/assets/img/menu/client_show.png'),
+    //     iconHide: require('@/assets/img/menu/client_hide.png'),
+    //     menuKey: 'dealing',
+    //     group: 'hygl',
+    //     path: '/dealing'
+    // },
+    // {
+    //     title: '积分管理',
+    //     authKeys: [''],
+    //     icon: require('@/assets/img/menu/xinxi_show.png'),
+    //     iconHide: require('@/assets/img/menu/xinxi_hide.png'),
+    //     menuKey: 'integralManage',
+    //     group: 'hygl',
+    //     path: '/integralManage'
+    // }
 ];

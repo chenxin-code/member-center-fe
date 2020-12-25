@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="detail-main-lever detail-main-items">
+            <!-- <div class="detail-main-lever detail-main-items">
                 <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />等级信息</p>
                 <div class="detail-main-items-cont">
                     <a-table
@@ -26,8 +26,8 @@
                         :pagination="false"
                     ></a-table>
                 </div>
-            </div>
-            
+            </div> -->
+
         </div>
     </div>
 </template>
