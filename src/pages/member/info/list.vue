@@ -89,7 +89,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'input',
+          type: 'inputNumber',
           name: 'phoneNo',
           placeholder: '请输入'
         },
@@ -388,7 +388,6 @@ export default {
 
     next();
   },
-
   beforeRouteLeave(to, from, next) {
     if (to.name === 'memberInfoDetail') {
       to.meta.keepAlive = true;

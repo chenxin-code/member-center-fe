@@ -72,6 +72,8 @@ const FormList = {
       switch (type) {
         case 'input':
           return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
+        case 'inputNumber':
+          return <a-input-number v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
         case 'select':
           return (
             <a-select
