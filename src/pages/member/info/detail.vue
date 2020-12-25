@@ -137,7 +137,7 @@
                     show-size-changer
                     :default-current="integralCurrent"
                     :page-size.sync="integralPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
                     @change="pagingIntegral"
                     @showSizeChange="pagingIntegral"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -174,7 +174,7 @@
                     show-size-changer
                     :default-current="grownCurrent"
                     :page-size.sync="grownPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
                     @change="pagingGrown"
                     @showSizeChange="pagingGrown"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -216,7 +216,7 @@
                     show-size-changer
                     :default-current="behaviourCurrent"
                     :page-size.sync="behaviourPageSize"
-                    :pageSizeOptions="['10', '20', '50', '100']"
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
                     @change="pagingBehaviour"
                     @showSizeChange="pagingBehaviour"
                     style="margin-top:30px;width:100%;text-align: right;"
