@@ -144,10 +144,10 @@ export default {
                 }
             ],
             dataList: [],
-            taskKey: '', 
-            taskDate: [], 
-            taskName: '', 
-            taskSource: '', 
+            taskKey: '',
+            taskDate: [],
+            taskName: '',
+            taskSource: '',
             status: null
         }
     },
@@ -211,7 +211,7 @@ export default {
         getTaskSource() {
             let sourceList = []
             api.getTaskSource()
-            .then( res => 
+            .then( res =>
                 sourceList = res.data.map(item => {
                     return {id: item.appCode, name: item.appName}
                 })

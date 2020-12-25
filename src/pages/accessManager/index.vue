@@ -66,7 +66,7 @@ export default {
         }
         &-main-boxs{
             width: 348px;
-            height: 400px;  
+            height: 400px;
             background: #fff;
             border-radius: 2px;
             border: 1px solid rgba(233, 233, 233, 1);
