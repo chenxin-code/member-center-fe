@@ -254,7 +254,7 @@
             </div>
             <a-input-number
               v-model="bangdouAddVal"
-              min="0"
+              :min="0"
               defaultValue="0"
               style="width:267px;"
               placeholder="请输入邦豆数量"

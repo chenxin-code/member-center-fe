@@ -44,7 +44,8 @@ const FormList = {
   },
   data() {
     return {
-      form: null
+      form: null,
+      minVal: 0
     };
   },
   created: function() {
@@ -73,7 +74,14 @@ const FormList = {
         case 'input':
           return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
         case 'inputNumber':
-          return <a-input-number min="0" v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
+          return (
+            <a-input-number
+              min={this.minVal}
+              v-decorator={[name, { rules: rules }]}
+              {...others}
+              placeholder={attrs.placeholder}
+            />
+          );
         case 'select':
           return (
             <a-select
