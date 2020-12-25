@@ -538,11 +538,7 @@ export default {
         .then(res => {
           console.log('payOrDeductionIntegral res :>> ', res);
           if (res.code === 200) {
-            if (this.bangdouModalType === 1) {
-              this.memberIntegral += this.bangdouAddVal;
-            } else if (this.bangdouModalType === 2) {
-              this.memberIntegral -= this.bangdouAddVal;
-            }
+            this.memberIntegral = res.data;
           }
         });
     },
@@ -640,21 +636,20 @@ export default {
 
         api
           .getIntegralRecord(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getIntegralRecord res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.integralTotal = res.data.total;
               this.integralDataSource.splice(0, this.integralDataSource.length);
               res.data.records.forEach((element, index) => {
                 this.integralDataSource.push(element);
               });
-
               console.log('this.integralDataSource :>> ', this.integralDataSource);
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },
@@ -682,9 +677,12 @@ export default {
 
         api
           .getGrownLog(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getGrownLog res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.grownTotal = res.data.total;
               this.grownDataSource.splice(0, this.grownDataSource.length);
@@ -692,9 +690,6 @@ export default {
                 this.grownDataSource.push(element);
               });
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },
@@ -719,9 +714,12 @@ export default {
 
         api
           .getBehaviourList(param)
+          .finally(() => {
+            this.tableLoading = false;
+          })
           .then(res => {
             console.log('getBehaviourList res :>> ', res);
-            this.tableLoading = false;
+            // this.tableLoading = false;
             if (res.code === 200) {
               this.behaviourTotal = res.data.total;
               this.behaviourDataSource.splice(0, this.behaviourDataSource.length);
@@ -729,9 +727,6 @@ export default {
                 this.behaviourDataSource.push(element);
               });
             }
-          })
-          .finally(() => {
-            this.tableLoading = false;
           });
       });
     },
