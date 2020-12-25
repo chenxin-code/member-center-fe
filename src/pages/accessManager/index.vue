@@ -1,6 +1,6 @@
 <template>
     <div class="access">
-        <div class="access-header">会员卡</div>
+        <div class="access-header">接入系统管理</div>
         <div class="access-main">
             <a-row type="flex" justify="start" align="middle">
                 <a-col :span="8" v-for="item in list" :key="item.title">
