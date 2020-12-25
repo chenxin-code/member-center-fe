@@ -123,8 +123,8 @@ export default {
                 },
                 {
                     title: '对应行为',
-                    key: 'behaviourId',
-                    dataIndex: 'behaviourId'
+                    key: 'behaviourName',
+                    dataIndex: 'behaviourName'
                 },
                 {
                     title: '任务来源',
@@ -135,7 +135,7 @@ export default {
                     title: '创建时间',
                     key: 'createTime',
                     dataIndex: 'createTime',
-                    customRender: text => moment(text).format('YYYY-MM-DD')
+                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
                 },
                 {
                     title: '操作',
