@@ -30,7 +30,7 @@
                         v-model="current"
                         :default-current="current"
                         :page-size.sync="pageSize"
-                        :pageSizeOptions="['10','20','50','100']"
+                        :pageSizeOptions="['10','20', '30', '40', '50','100']"
                         @change="onShowSizeChange"
                         @showSizeChange="onShowSizeChange"
                         style="margin-top:30px;width:100%;text-align: right;"
@@ -173,7 +173,7 @@ export default {
         },
 
         onCheck(record) {
-            this.$router.push({name: 'task_detail', query: {id: record.id}});
+            // this.$router.push({name: 'task_detail', query: {id: record.id}});
         },
 
         onShowSizeChange(current, pageSize) {

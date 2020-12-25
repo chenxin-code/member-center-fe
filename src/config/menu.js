@@ -35,7 +35,7 @@ export default [{
         path: '/task-manager'
     },
     {
-        title: '接入平台管理',
+        title: '接入系统管理',
         authKeys: [''],
         icon: require('@/assets/img/menu/client_show.png'),
         iconHide: require('@/assets/img/menu/client_hide.png'),
