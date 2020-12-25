@@ -71,7 +71,7 @@ export default {
         {
           label: '类型',
           type: 'select',
-          name: 'memberSourceCode',
+          name: 'integralt',
           placeholder: '请选择',
           selectOptions: []
         },
@@ -314,8 +314,8 @@ export default {
         }
       });
     },
-    //获取表格数据
-    getMemberList() {
+    //获取积分列表
+    getIntegralList() {
       this.tableLoading = true;
       this.$nextTick(() => {
         let memberSourceCode = '';
@@ -355,7 +355,7 @@ export default {
         console.log('getMemberList para :>> ', para);
 
         return api
-          .getMemberList(para)
+          .getIntegralList(para)
           .then(res => {
             this.tableLoading = false;
             console.log('getMemberList res :>> ', res);
