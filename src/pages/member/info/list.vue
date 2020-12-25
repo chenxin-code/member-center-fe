@@ -399,9 +399,6 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    console.log('beforeRouteEnter to :>> ', to);
-    console.log('beforeRouteEnter from :>> ', from);
-    to.meta.keepAlive = true;
     if (from.name === 'memberInfoDetail') {
       to.meta.isUseCache = true;
     } else {
@@ -411,8 +408,6 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    console.log('beforeRouteLeave to :>> ', to);
-    console.log('beforeRouteLeave from :>> ', from);
     if (to.name === 'memberInfoDetail') {
       to.meta.isUseCache = true;
     } else {
