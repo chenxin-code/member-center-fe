@@ -58,7 +58,7 @@ const routes = [
           menu: '/memberInfo',
           authKeys: [''],
           bread: [{ path: '/memberInfo', name: '会员信息' }],
-          // isUseCache: false,
+          isUseCache: false,
           keepAlive: true
         },
         component: MemberInfo
@@ -85,8 +85,8 @@ const routes = [
           menu: '/integralManage',
           authKeys: [''],
           bread: [{ path: '/integralManage', name: '积分管理' }],
-          // isUseCache: false,
-          // keepAlive: true
+          isUseCache: false,
+          keepAlive: true
         },
         component: IntegralManage
       },

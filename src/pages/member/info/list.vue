@@ -91,7 +91,8 @@ export default {
           label: '手机号',
           type: 'inputNumber',
           name: 'phoneNo',
-          placeholder: '请输入'
+          placeholder: '请输入',
+          min: 0
         },
         {
           type: 'button',
@@ -379,20 +380,43 @@ export default {
     }
   },
 
+  activated() {
+    // isUseCache为false时才重新刷新获取数据
+    // 通过这个控制刷新
+    if (!this.$route.meta.isUseCache) {
+      //重置data
+      this.total = 0;
+      this.current = 1;
+      this.pageSize = 10;
+
+      //初始化加载数据
+      this.getClientList();
+      this.getMemberList();
+    }
+
+    //重置
+    this.$route.meta.isUseCache = false;
+  },
+
   beforeRouteEnter(to, from, next) {
+    console.log('beforeRouteEnter to :>> ', to);
+    console.log('beforeRouteEnter from :>> ', from);
+    to.meta.keepAlive = true;
     if (from.name === 'memberInfoDetail') {
-      to.meta.keepAlive = true;
+      to.meta.isUseCache = true;
     } else {
-      to.meta.keepAlive = false;
+      to.meta.isUseCache = false;
     }
 
     next();
   },
   beforeRouteLeave(to, from, next) {
+    console.log('beforeRouteLeave to :>> ', to);
+    console.log('beforeRouteLeave from :>> ', from);
     if (to.name === 'memberInfoDetail') {
-      to.meta.keepAlive = true;
+      to.meta.isUseCache = true;
     } else {
-      to.meta.keepAlive = false;
+      to.meta.isUseCache = false;
     }
 
     next();
@@ -418,6 +442,10 @@ export default {
   .content-main {
     ::v-deep .ant-btn {
       width: 98px !important;
+    }
+
+    ::v-deep .ant-input-number {
+      width: 100%;
     }
   }
 }
