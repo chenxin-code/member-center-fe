@@ -191,7 +191,8 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/dealing', name: '行为管理' },
-                    ]
+                    ],
+                    keepAlive: true,
                 },
                 component: Dealing
             },

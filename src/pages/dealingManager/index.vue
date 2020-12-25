@@ -82,6 +82,7 @@ export default {
                     dataIndex: 'type',
                     key: 'type',
                     title: '行为类型',
+                    customRender: text => text === 1 ? '消费' : '其他'
                 },
                 {
                     title: '行为名称',
@@ -164,7 +165,23 @@ export default {
             })
             .finally( () => this.tableLoading = false)
         },
+        beforeRouteEnter(to, from, next) {
+            if (from.name === 'dealing_detail') {
+                to.meta.keepAlive = true;
+            } else {
+                to.meta.keepAlive = false;
+            }
+            next();
+        },
+        beforeRouteLeave(to, from, next) {
+            if (to.name === 'dealing_detail') {
+                to.meta.keepAlive = true;
+            } else {
+                to.meta.keepAlive = false;
+            }
 
+            next();
+        },
     }
 }
 </script>

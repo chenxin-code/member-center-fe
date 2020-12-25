@@ -8,11 +8,13 @@
             <div class="detail-main-base detail-main-items">
                 <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基本信息</p>
                 <div class="detail-main-items-cont">
-                    <img :src="dataObj.memberCardImage" class="detail-main-items-cont-img" alt="">
                     <div class="detail-main-items-cont-info">
-                        <p class="detail-main-items-cont-info-box" v-for="item in dataList" :key="item.label">
+                        <p class="detail-main-items-cont-info-box" v-for="item in baseList" :key="item.label">
                             <span class="detail-main-items-cont-info-box-label">{{item.label}}</span>
-                            <span class="detail-main-items-cont-info-box-value">{{dataObj[item.name] || ''}}</span>
+                            <span v-if="item.name === 'isUsing'" class="detail-main-items-cont-info-box-value">{{baseObj[item.name] === 0 ? '禁用' : '启用'}}</span>
+                            <span v-else-if="item.name === 'type'" class="detail-main-items-cont-info-box-value">{{baseObj[item.name] === 1 ? '消费' : '其他'}}</span>
+                            <span v-else-if="item.name === 'createTime'" class="detail-main-items-cont-info-box-value">{{moment(baseObj[item.name]).format('YYYY-MM-DD HH:mm')}}</span>
+                            <span v-else class="detail-main-items-cont-info-box-value">{{baseObj[item.name] || ''}}</span>
                         </p>
                     </div>
                 </div>
@@ -20,12 +22,31 @@
             <div class="detail-main-lever detail-main-items">
                 <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />行为日志</p>
                 <div class="detail-main-items-cont">
-                    
+                    <FilterForm
+                        rowCol="3"
+                        :formList="this.formList"
+                        :onSubmit="this.onSearch"
+                    />
                     <a-table
+                        :style="{marginTop: '20px'}"
                         :columns="columns"
-                        :data-source="dataObj.levelList"
+                        :data-source="logList"
                         :pagination="false"
+                        :loading="tableLoading"
                     ></a-table>
+                    <a-pagination
+                        :total="total"
+                        :show-total="total => `共 ${total} 条`"
+                        show-quick-jumper
+                        show-size-changer
+                        v-model="current"
+                        :default-current="current"
+                        :page-size.sync="pageSize"
+                        :pageSizeOptions="['10','20', '30', '40', '50','100']"
+                        @change="onShowSizeChange"
+                        @showSizeChange="onShowSizeChange"
+                        style="margin-top:30px;width:100%;text-align: right;"
+                    />
                 </div>
             </div>
             
@@ -34,82 +55,145 @@
 </template>
 
 <script>
-import api from '@/api'
+import api from '@/api';
+import FilterForm from '@/components/FilterGroup/index.jsx';
+import moment from 'moment';
 export default {
     name: 'dealing_detail',
+    components: {
+      FilterForm
+    },
     data() {
         return {
-            dataList: [
+            tableLoading: false,
+            pageSize: 10,
+            current: 1,
+            total: null,
+            baseList: [
                 {
                     label: '行为类型：',
-                    name: 'id'
+                    name: 'type'
                 },
                 {
                     label: '行为名称：',
-                    name: 'memberCardName',
+                    name: 'name',
                 },
                 {
                     label: '行为来源：',
-                    name: 'memberCount'
+                    name: 'sourceName'
                 },
                 {
                     label: '创建时间：',
-                    name: 'memo',
+                    name: 'createTime',
                 },
                 {
                     label: '状态：',
-                    name: 'memberCardSourceName'
+                    name: 'isUsing'
                 },
             ],
             columns: [
                 {
                     title: '记录时间',
-                    dataIndex: 'levelImage',
-                    key: 'levelImage',
-                    customRender: text => <img src={text} style="width: 99px; height: 54px" />
+                    dataIndex: 'createTime',
+                    key: 'createTime',
+                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
                 },
                 {
                     title: '行为描述',
-                    dataIndex: 'levelIcon',
-                    key: 'levelIcon',
-                    customRender: text => <img src={text} style="width: 60px; height: 31px"/>
+                    dataIndex: 'memo',
+                    key: 'memo',
                 },
                 {
                     title: '会员昵称',
-                    dataIndex: 'levelName',
-                    key: 'levelName',
+                    dataIndex: 'memberName',
+                    key: 'memberName',
                 },
                 {
                     title: '会员UUID',
-                    dataIndex: 'ranges',
-                    key: 'ranges',
-                    customRender: (text, record) => <span>{`${record.rangeBegin}-${record.rangeEnd}`}</span>
+                    dataIndex: 'memberId',
+                    key: 'memberId',
                 },
                 {
                     title: '会员手机号',
                     dataIndex: 'test',
                     key: 'test',
-                    customRender: (text) => '敬请期待'
+                    customRender: (text, record) => '+' + record.phoneAreaCode + record.phone
                 },
             ],
-            dataObj: {},
-            cardId: null,
+            formList: [
+                {
+                    label: '记录时间：',
+                    type: 'rangePicker',
+                    name: 'rangeTime',
+                },
+                {
+                    label: "唯一标识：",
+                    name: "memberId",
+                    type: "input",
+                    placeholder: "请输入",
+                },
+                {
+                    label: "手机号：",
+                    name: "phone",
+                    type: "input",
+                    placeholder: "请输入",
+                },
+            ],
+            baseObj: {},
+            logList: [],
+            id: null,
+            memberId: '',
+            phone: '',
+            rangeTime: [],
         }
     },
     mounted () {
-        this.initData(this.$route.query.cardId);
-        this.cardId = this.$route.query.cardId;
+        this.id = this.$route.query.id;
+        this.initData(this.$route.query.id);
+        this.getLog()
     },
     methods: {
+        moment,
         initData(id) {
-            api.getCardDetail({cardId: id})
+            api.getDealingDetail({behaviourId: id})
             .then(res => {
-                this.dataObj = res.data
+                this.baseObj = res.data
             })
+        },
+        getLog() {
+            this.tableLoading = true;
+            var args = {
+                behaviourId: this.id,
+                pageIndex: this.current,
+                pageSize: this.pageSize,
+                memberId: this.memberId,
+                phone: this.phone,
+                createTimeStart: this.rangeTime.length ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
+                createTimeEnd: this.rangeTime.length ? moment(this.rangeTime[1]).format('YYYY-MM-DD') : null,
+            }
+            api.getDealingLog(args)
+            .then( res => {
+                this.tableLoading = false;
+                this.logList = res.data.records;
+                this.total = res.data.total;
+            })
+            .finally( () => this.tableLoading = false)
+        }, 
+        onSearch(args) {
+            const { memberId, phone, rangeTime, } = args
+            this.memberId = memberId || '';
+            this.phone = phone || '';
+            this.rangeTime = rangeTime || []
+            this.getLog()
+        },
+        onShowSizeChange(current, pageSize) {
+            this.current = current;
+            this.pageSize = pageSize;
+            this.getLog()
         },
         goBack() {
             this.$router.push({name: 'dealing'})
-        }
+        },
     }
 }
 </script>
