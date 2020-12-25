@@ -30,6 +30,7 @@ export default {
     GET_TASKDETAIL: '/times/member-center/task/api/v1/detail', // 获取任务详情
     GET_DEALINGLIST: '/times/member-center/behaviour/api/v1/behaviour/list', // 获取行为列表
     GET_DEALINGDETAIL: '/times/member-center/behaviour/api/v1/behaviour/detail', // 获取行为日志
+
     //会员中心:张
     MEMBER_LIST: option.member + '/api/v1/member/list',
     CLIENT_LIST: option.client + '/api/v1/list',
@@ -39,6 +40,7 @@ export default {
     INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.member + '/api/v1/member/behaviour/list',
-    MEMBER_TONGJI: '/times/member-center/member/api/v1/member/statistics',
-    MEMBER_TONGJI_DATE: '/times/member-center/member/api/v1/member/num-statistics'
+    MEMBER_TONGJI: option.member+'/api/v1/member/statistics',
+    MEMBER_TONGJI_DATE: option.member+'/api/v1/member/num-statistics',
+    INTEGRAL_PAY_DEDUCTION: option.member+'/api/v1/member/integralPayOrDeduction'
 };
