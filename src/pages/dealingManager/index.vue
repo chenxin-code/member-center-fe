@@ -1,6 +1,6 @@
 <template>
     <div class="taskManager">
-        <div class="taskManager-header">任务管理</div>
+        <div class="taskManager-header">行为管理</div>
         <div class="taskManager-main" ref="contentMain">
             <a-row type="flex" style="height:100%;flex-flow: row;">
                 <a-col flex="auto" style="padding:20px 10px;height:100%;">
@@ -46,88 +46,50 @@ import FilterForm from '@/components/FilterGroup/index.jsx';
 import moment from 'moment';
 import api from "@/api";
 export default {
-    name: "task-manager",
+    name: 'dealing',
     data() {
         return {
-            scrollY: 100,
             pageSize: 10,
             current: 1,
             total: null,
             tableLoading: false,
             formList: [
                 {
-                    label: "任务名称",
-                    name: "taskName",
-                    type: "input",
-                    placeholder: "请输入",
-                },
-                {
-                    label: '任务Key',
-                    type: "input",
-                    placeholder: "请输入",
-                    name: 'taskKey'
-                },
-                {
-                    label: '任务状态',
+                    label: '行为类型',
                     type: 'select',
                     placeholder: "全部",
-                    name: 'status',
+                    name: 'type',
                     selectOptions: [
                         {id: '', name: '全部'},
-                        {id: '0', name: '禁用'},
-                        {id: '1', name: '启用'}
+                        {id: '1', name: '消费'},
+                        {id: '2', name: '其他'}
                     ]
                 },
                 {
-                    label: "任务来源",
-                    type: "select",
-                    name: "taskSource",
-                    placeholder: "全部",
-                    selectOptions: [],
-                    rules: [],
-                    initialValue: "全部",
+                    label: '行为名称',
+                    type: "input",
+                    placeholder: "请输入",
+                    name: 'name'
                 },
                 {
-                    label: '任务时间',
+                    label: '创建时间',
                     type: 'rangePicker',
-                    name: 'taskDate',
+                    name: 'createTime',
                 }
             ],
             columns: [
                 {
-                    dataIndex: 'taskKey',
-                    key: 'id',
-                    title: '任务key',
+                    dataIndex: 'type',
+                    key: 'type',
+                    title: '行为类型',
                 },
                 {
-                    title: '任务名称',
-                    key: 'taskName',
-                    dataIndex: 'taskName'
+                    title: '行为名称',
+                    key: 'name',
+                    dataIndex: 'name'
                 },
                 {
-                    title: '任务有效期(天)',
-                    key: 'validity',
-                    dataIndex: 'validity'
-                },
-                {
-                    title: '是否周期性',
-                    key: 'isPeriodic',
-                    dataIndex: 'isPeriodic',
-                    customRender: (text) => text === 1 ? '是' : '否'
-                },
-                {
-                    title: '状态',
-                    key: 'status',
-                    dataIndex: 'status',
-                    customRender: text => text === 0 ? '禁用' : '启用'
-                },
-                {
-                    title: '对应行为',
-                    key: 'behaviourName',
-                    dataIndex: 'behaviourName'
-                },
-                {
-                    title: '任务来源',
+                    title: '行为来源',
                     key: 'sourceName',
                     dataIndex: 'sourceName'
                 },
@@ -135,7 +97,7 @@ export default {
                     title: '创建时间',
                     key: 'createTime',
                     dataIndex: 'createTime',
-                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
+                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
                 },
                 {
                     title: '操作',
@@ -144,36 +106,33 @@ export default {
                 }
             ],
             dataList: [],
-            taskKey: '', 
-            taskDate: [], 
-            taskName: '', 
-            taskSource: '', 
-            status: null
+            rangeTime: [], 
+            name: '', 
+            type: '', 
+            scrollY: 100,
         }
     },
     components: {
       FilterForm
     },
     mounted () {
-        this.getTaskSource()
         this.getTaskList()
         setTimeout( () => {
-            this.scrollY = this.$refs.contentMain.offsetHeight - 340 + 'px';
+            this.scrollY = this.$refs.contentMain.offsetHeight - 290 + 'px';
         }, 0)
+        
     },
     methods: {
         onSearch(args) {
-            const { taskKey, taskDate, taskName, taskSource, status } = args
-            this.taskKey = taskKey || null,
-            this.taskName = taskName || null,
-            this.taskSource = taskSource || null,
-            this.status = status || null,
-            this.taskDate = taskDate || [],
+            const { type, name, createTime } = args
+            this.name = name || null,
+            this.type = type || null,
+            this.rangeTime = createTime || [],
             this.getTaskList()
         },
 
         onCheck(record) {
-            this.$router.push({name: 'task_detail', query: {id: record.id}});
+            this.$router.push({name: 'dealing_detail', query: {id: record.id}});
         },
 
         onShowSizeChange(current, pageSize) {
@@ -187,14 +146,12 @@ export default {
             let args = {
                 pageIndex: this.current,
                 pageSize: this.pageSize,
-                createTimeStart: this.taskDate.length ? moment(this.taskDate[0]).format('YYYY-MM-DD') : null,
-                createTimeEnd: this.taskDate.length ? moment(this.taskDate[1]).format('YYYY-MM-DD') : null,
-                status: this.status,
-                taskKey: this.taskKey,
-                taskName: this.taskName,
-                taskSource: this.taskSource,
+                createTimeStart: this.rangeTime.length > 0 ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
+                createTimeEnd: this.rangeTime.length > 0 ? moment(this.rangeTime[1]).format('YYYY-MM-DD') : null,
+                type: this.type,
+                name: this.name,
             }
-            api.getTaskList(args)
+            api.getDealingList(args)
             .then( res => {
                 this.tableLoading = false;
                 this.dataList = res.data.records.map((item, index) => {
@@ -208,35 +165,12 @@ export default {
             .finally( () => this.tableLoading = false)
         },
 
-        getTaskSource() {
-            let sourceList = []
-            api.getTaskSource()
-            .then( res => 
-                sourceList = res.data.map(item => {
-                    return {id: item.appCode, name: item.appName}
-                })
-            )
-            .then( () => {
-                this.formList = this.formList.map( item => {
-                    if (item.name === 'taskSource') {
-                        return {
-                            ...item,
-                            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
-                        }
-                    } else {
-                        return item
-                    }
-                })
-            })
-        }
     }
 }
 </script>
-
 <style lang="less" scoped>
     .taskManager{
         height: 100%;
-        overflow: hide;
         &-header{
             border-bottom: 1px solid #e8e8e8;
             line-height: 60px;

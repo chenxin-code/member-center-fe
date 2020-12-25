@@ -15,6 +15,8 @@ const MemberInfo = () =>
     import ('@/pages/member/info/list');
 const MemberInfoDetail = () =>
     import ('@/pages/member/info/detail');
+const IntegralManage = () =>
+    import ('@/pages/member/integral/list');
 
 const TaskManager = () =>
     import ('@/pages/taskManager/index');
@@ -28,8 +30,11 @@ const Card = () =>
 const CardDetail = () =>
     import ('@/pages/card/detail');
 
-// const CardEdited = () =>
-//     import ('@/pages/card/edited');
+const Dealing = () =>
+    import ('@/pages/dealingManager/index');
+
+const DealingDetail = () =>
+    import ('@/pages/dealingManager/detail');
 
 const AccessManager = () =>
     import ('@/pages/accessManager/index');
@@ -83,6 +88,17 @@ const routes = [
                 component: MemberInfoDetail
             },
             {
+                path: '/integralManage',
+                name: 'integralManage',
+                menuKey: 'integralManage',
+                meta: {
+                    menu: '/integralManage',
+                    authKeys: [''],
+                    bread: [{ path: '/integralManage', name: '积分管理' }]
+                },
+                component: IntegralManage
+            },
+            {
                 path: '/card',
                 name: 'card',
                 menuKey: 'card',
@@ -105,25 +121,11 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/card', name: '会员卡列表' },
-                        { path: '/card/detail', name: '会员卡详情' },
+                        { path: '/card/detail', name: '会员卡详情' }
                     ]
                 },
                 component: CardDetail
             },
-            // {
-            //     path: '/card/edited',
-            //     name: 'card_edited',
-            //     menuKey: 'card',
-            //     meta: {
-            //         menu: '/card',
-            //         authKeys: [''],
-            //         bread: [
-            //             { path: '/card', name: '会员卡列表' },
-            //             { path: '/card/edited', name: '会员卡详情编辑' },
-            //         ]
-            //     },
-            //     component: CardEdited
-            // },
             {
                 path: '/task-manager',
                 name: 'task-manager',
@@ -147,7 +149,7 @@ const routes = [
                     authKeys: [''],
                     bread: [
                         { path: '/task-manager', name: '任务管理' },
-                        { path: '/task-manager/detail', name: '任务详情' },
+                        { path: '/task-manager/detail', name: '任务详情' }
                     ]
                 },
                 component: TaskDetail
@@ -179,6 +181,33 @@ const routes = [
                     ]
                 },
                 component: DccessDetail
+            },
+            {
+                path: '/dealing',
+                name: 'dealing',
+                menuKey: 'dealing',
+                meta: {
+                    menu: '/dealing',
+                    authKeys: [''],
+                    bread: [
+                        { path: '/dealing', name: '行为管理' },
+                    ]
+                },
+                component: Dealing
+            },
+            {
+                path: '/dealing/detail',
+                name: 'dealing_detail',
+                menuKey: 'dealing',
+                meta: {
+                    menu: '/dealing',
+                    authKeys: [''],
+                    bread: [
+                        { path: '/dealing', name: '行为管理' },
+                        { path: '/dealing/detail', name: '行为日志' },
+                    ]
+                },
+                component: DealingDetail
             },
         ]
     },

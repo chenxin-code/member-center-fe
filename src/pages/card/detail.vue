@@ -5,12 +5,29 @@
             <p class="detail-header-btn" @click="goEdit()">编辑</p>
         </div>
         <div class="detail-main">
-            <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
-            <div class="detail-main-items" v-for="item in dataList" :key="item.label">
-                <span class="detail-main-items-label">{{item.label}}</span>
-                <img v-if="item.name === 'memberCardImage'" class="detail-main-items-value detail-main-items-img" :src="dataObj[item.name]" />
-                <span v-else class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
+            <div class="detail-main-base detail-main-items">
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基本信息</p>
+                <div class="detail-main-items-cont">
+                    <img :src="dataObj.memberCardImage" class="detail-main-items-cont-img" alt="">
+                    <div class="detail-main-items-cont-info">
+                        <p class="detail-main-items-cont-info-box" v-for="item in dataList" :key="item.label">
+                            <span class="detail-main-items-cont-info-box-label">{{item.label}}</span>
+                            <span class="detail-main-items-cont-info-box-value">{{dataObj[item.name] || ''}}</span>
+                        </p>
+                    </div>
+                </div>
             </div>
+            <div class="detail-main-lever detail-main-items">
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />等级信息</p>
+                <div class="detail-main-items-cont">
+                    <a-table
+                        :columns="columns"
+                        :data-source="dataObj.levelList"
+                        :pagination="false"
+                    ></a-table>
+                </div>
+            </div>
+            
         </div>
     </div>
 </template>
@@ -42,9 +59,41 @@ export default {
                     label: '所属系统：',
                     name: 'memberCardSourceName'
                 },
+            ],
+            columns: [
                 {
-                    label: '卡片封面：',
-                    name: 'memberCardImage'
+                    title: '层级卡面',
+                    dataIndex: 'levelImage',
+                    key: 'levelImage',
+                    customRender: text => <img src={text} style="width: 99px; height: 54px" />
+                },
+                {
+                    title: '层级图标',
+                    dataIndex: 'levelIcon',
+                    key: 'levelIcon',
+                    customRender: text => <img src={text} style="width: 60px; height: 31px"/>
+                },
+                {
+                    title: '层级名称',
+                    dataIndex: 'levelName',
+                    key: 'levelName',
+                },
+                {
+                    title: '成长值',
+                    dataIndex: 'ranges',
+                    key: 'ranges',
+                    customRender: (text, record) => <span>{`${record.rangeBegin}-${record.rangeEnd}`}</span>
+                },
+                {
+                    title: '层级权益',
+                    dataIndex: 'test',
+                    key: 'test',
+                    customRender: (text) => '敬请期待'
+                },
+                {
+                    title: '层级有效期',
+                    dataIndex: 'validity',
+                    key: 'validity',
                 },
             ],
             dataObj: {},
@@ -71,6 +120,7 @@ export default {
 
 <style lang="less" scoped>
     .detail{
+        height: 100%;
         &-header{
             display: flex;
             justify-content: space-between;
@@ -86,24 +136,39 @@ export default {
             }
         }
         &-main{
-            &-title{
-                font-size: 16px;
-                color: #7f7f7f;
-                padding-left: 35px;
-                line-height: 50px;
-                margin: 0;
+            height: calc(100% - 58px);
+            overflow: auto;
+            border-top: 0px solid;
+            padding: 0 20px;
+            &-base{
+                border-bottom: 1px dashed #E9E9E9;
             }
             &-items{
-                color: #686868;
-                margin-bottom: 20px;
-                &-label{
-                    display: inline-block;
-                    width: 120px;
-                    text-align: right;
+                color: #666;
+                &-title{
+                    font-size: 16px;
+                    margin: 0;
+                    padding-top: 20px;
                 }
-                &-img{
-                    width: 258px;
-                    vertical-align: top;
+                &-cont{
+                    padding: 20px 10px;
+                    &-img{
+                        width: 300px;
+                        height: 179px;
+                        vertical-align: middle;
+                    }
+                    &-info{
+                        display: inline-block;
+                        vertical-align: middle;
+                        &-box{
+                            &-label{
+                                width: 120px;
+                                display: inline-block;
+                                text-align: right;
+                                color: #333;
+                            }
+                        }
+                    }
                 }
             }
         }
