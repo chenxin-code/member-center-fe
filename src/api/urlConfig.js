@@ -40,15 +40,8 @@ export default {
     INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.member + '/api/v1/member/behaviour/list',
-<<<<<<< HEAD
     MEMBER_TONGJI: option.member + '/api/v1/member/statistics',
     MEMBER_TONGJI_DATE: option.member + '/api/v1/member/num-statistics',
-    INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction'
+    INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction',
+    INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list'
 };
-=======
-    MEMBER_TONGJI: option.member+'/api/v1/member/statistics',
-    MEMBER_TONGJI_DATE: option.member+'/api/v1/member/num-statistics',
-    INTEGRAL_PAY_DEDUCTION: option.member+'/api/v1/member/integralPayOrDeduction',
-    INTEGRAL_LIST:'/times/member-center/integral-record/api/v1/integral-record/list'
-};
->>>>>>> 638aca18395388840bd591ade4a980f6483ffb77
