@@ -2,6 +2,7 @@
     <div class="detail">
         <div class="detail-header">
             <p class="detail-header-title">任务详情</p>
+            <p class="detail-header-btn" @click="goBack()">返回</p>
         </div>
         <div class="detail-main">
             <!-- <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p> -->
@@ -81,6 +82,9 @@ export default {
                     {result: `奖励成长值${res.data.awardGrow},奖励邦豆${res.data.awardIntegral}`},
                 )
             })
+        },
+        goBack() {
+            this.$router.push({name: 'task-manager'})
         }
     }
 }
