@@ -84,9 +84,9 @@ const routes = [
         meta: {
           menu: '/integralManage',
           authKeys: [''],
-          bread: [{ path: '/integralManage', name: '积分管理' }],
-          isUseCache: false,
-          keepAlive: true
+          bread: [{ path: '/integralManage', name: '积分管理' }]
+          // isUseCache: false,
+          // keepAlive: true
         },
         component: IntegralManage
       },

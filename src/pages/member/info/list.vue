@@ -235,20 +235,20 @@ export default {
         let tempStr = '';
         if (param.memberSources.length > 1) {
           // param.memberSources.slice(0, 1).forEach(element => {
-          //   if (element.sourceName) {
-          //     tempStr += element.sourceName;
+          //   if (element.clientName) {
+          //     tempStr += element.clientName;
           //   }
           // });
           param.memberSources.forEach(element => {
-            if (element.sourceName) {
-              tempStr += element.sourceName + ',';
+            if (element.clientName) {
+              tempStr += element.clientName + ',';
             }
           });
           tempStr = tempStr.substring(0, tempStr.length - 1);
         } else if (param.memberSources.length === 1) {
           param.memberSources.forEach(element => {
-            if (element.sourceName) {
-              tempStr += element.sourceName;
+            if (element.clientName) {
+              tempStr += element.clientName;
             }
           });
         } else {
@@ -259,10 +259,6 @@ export default {
     }
   },
   created() {
-    // //初始化加载数据
-    // // this.getDataInit();
-    // this.getClientList();
-    // this.getMemberList();
   },
   mounted() {
     const timer1 = setTimeout(() => {
@@ -273,11 +269,6 @@ export default {
     });
   },
   methods: {
-    moment,
-    // async getDataInit() {
-    //   await this.getClientList();
-    //   await this.getMemberList();
-    // },
     //查询按钮
     onQuery() {
       this.current = 1;
@@ -389,18 +380,7 @@ export default {
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
-      this.$refs.memberForm.setFieldsValue({
-        memberSourceCode: ''
-      });
-      this.$refs.memberForm.setFieldsValue({
-        memberCode: ''
-      });
-      this.$refs.memberForm.setFieldsValue({
-        phoneNo: ''
-      });
-      this.$refs.memberForm.setFieldsValue({
-        jointime: null
-      });
+      this.$refs.memberForm.form.resetFields();
 
       //初始化加载数据
       this.getClientList();
