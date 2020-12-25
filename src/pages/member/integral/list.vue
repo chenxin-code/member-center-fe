@@ -1,8 +1,8 @@
 <template>
-  <div id="member-info">
-    <div class="content-header">会员信息</div>
+  <div id="integral-manage">
+    <div class="content-header">积分管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList ref="memberForm" rowCol="4" :formList="formList" :onSubmit="onQuery" />
+      <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -39,12 +39,6 @@
             <span v-html="showLevel(rowData)"></span>
           </div>
         </template>
-
-        <template slot="detailsSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <a @click="goDetail(rowData)" style="margin-left:20px;">详情</a>
-          </div>
-        </template>
       </a-table>
       <a-pagination
         :total="total"
@@ -69,10 +63,17 @@ import moment from 'moment';
 // console.log('mock :>> ', mock);
 
 export default {
-  name: 'memberInfo',
+  name: 'integralManage',
   data() {
     return {
       formList: [
+        {
+          label: '类型',
+          type: 'select',
+          name: 'memberSourceCode',
+          placeholder: '请选择',
+          selectOptions: []
+        },
         {
           label: '创建来源',
           type: 'select',
@@ -81,17 +82,24 @@ export default {
           selectOptions: []
         },
         {
+          label: '加入时间',
+          type: 'rangePicker',
+          name: 'jointime'
+        },
+        {
           label: '唯一标识',
           type: 'input',
           name: 'memberCode',
           placeholder: '请输入'
         },
+
         {
           label: '手机号',
           type: 'input',
           name: 'phoneNo',
           placeholder: '请输入'
         },
+
         {
           type: 'button',
           buttonName: '查询',
@@ -99,11 +107,6 @@ export default {
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
-        },
-        {
-          label: '加入时间',
-          type: 'rangePicker',
-          name: 'jointime'
         }
       ],
       //表格高度
@@ -150,11 +153,6 @@ export default {
           title: '时代邻里会员卡等级',
           key: 'levelNameSlot',
           scopedSlots: { customRender: 'levelNameSlot' }
-        },
-        {
-          title: '操作',
-          key: 'detailsSlot',
-          scopedSlots: { customRender: 'detailsSlot' }
         }
       ],
       tableData: [],
@@ -204,19 +202,17 @@ export default {
       return param => {
         let tempStr = '';
         if (param.memberCardRelats.length > 1) {
-          // param.memberCardRelats.slice(0, 1).forEach(element => {
-          //   if (element.levelName) {
-          //     tempStr += element.levelName;
-          //   }
-          // });
-
-          param.memberCardRelats.forEach(element => {
+          param.memberCardRelats.slice(0, 1).forEach(element => {
             if (element.levelName) {
-              tempStr += element.levelName + ',';
+              tempStr += element.levelName;
             }
           });
-          tempStr = tempStr.substring(0, tempStr.length - 1);
-
+          // param.memberCardRelats.forEach(element => {
+          //   if (element.levelName) {
+          //     tempStr += element.levelName + ',';
+          //   }
+          // });
+          // tempStr = tempStr.substring(0, tempStr.length - 1);
         } else if (param.memberCardRelats.length === 1) {
           param.memberCardRelats.forEach(element => {
             if (element.levelName) {
@@ -392,7 +388,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#member-info {
+#integral-manage {
   height: 100%;
   overflow: hidden;
 
