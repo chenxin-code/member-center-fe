@@ -47,7 +47,7 @@
         show-size-changer
         :default-current="current"
         :page-size.sync="pageSize"
-        :pageSizeOptions="['10', '20', '30','40','50', '100']"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="onShowSizeChange"
         @showSizeChange="onShowSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
@@ -115,43 +115,42 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '唯一标识',
+          title: '积分变动',
           dataIndex: 'memberCode',
           key: 'memberCode'
         },
         {
-          title: '姓名',
+          title: '类型',
           dataIndex: 'memberName',
           key: 'memberName'
         },
         {
-          title: '手机号',
-          // dataIndex: 'phone',
+          title: '来源',
           key: 'phone',
           scopedSlots: { customRender: 'phoneNoSlot' }
         },
         {
-          title: '性别',
+          title: '描述',
           key: 'sexSlot',
           scopedSlots: { customRender: 'sexSlot' }
         },
         {
-          title: '创建来源',
+          title: '会员昵称',
           key: 'memberSourceSlot',
           scopedSlots: { customRender: 'memberSourceSlot' }
         },
         {
-          title: '加入时间',
+          title: '会员手机号',
           key: 'jointimeSlot',
           scopedSlots: { customRender: 'jointimeSlot' }
         },
         {
-          title: '邦豆值',
+          title: '会员唯一标识',
           dataIndex: 'integral',
           key: 'integral'
         },
         {
-          title: '时代邻里会员卡等级',
+          title: '时间',
           key: 'levelNameSlot',
           scopedSlots: { customRender: 'levelNameSlot' }
         }
@@ -203,17 +202,17 @@ export default {
       return param => {
         let tempStr = '';
         if (param.memberCardRelats.length > 1) {
-          param.memberCardRelats.slice(0, 1).forEach(element => {
-            if (element.levelName) {
-              tempStr += element.levelName;
-            }
-          });
-          // param.memberCardRelats.forEach(element => {
+          // param.memberCardRelats.slice(0, 1).forEach(element => {
           //   if (element.levelName) {
-          //     tempStr += element.levelName + ',';
+          //     tempStr += element.levelName;
           //   }
           // });
-          // tempStr = tempStr.substring(0, tempStr.length - 1);
+          param.memberCardRelats.forEach(element => {
+            if (element.levelName) {
+              tempStr += element.levelName + ',';
+            }
+          });
+          tempStr = tempStr.substring(0, tempStr.length - 1);
         } else if (param.memberCardRelats.length === 1) {
           param.memberCardRelats.forEach(element => {
             if (element.levelName) {
