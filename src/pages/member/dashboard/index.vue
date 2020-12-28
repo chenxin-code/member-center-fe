@@ -155,8 +155,6 @@ export default {
         'percent',
         {
           formatter: (val, item) => {
-            console.log('item :>> ', item);
-            console.log('val :>> ', val);
             return val;
           }
         }
