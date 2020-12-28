@@ -69,7 +69,9 @@ const routes = [
                 meta: {
                     menu: '/memberInfo',
                     authKeys: [''],
-                    bread: [{ path: '/memberInfo', name: '会员信息' }]
+                    bread: [{ path: '/memberInfo', name: '会员信息' }],
+                    isUseCache: false,
+                    keepAlive: true
                 },
                 component: MemberInfo
             },
