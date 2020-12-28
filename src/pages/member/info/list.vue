@@ -268,14 +268,6 @@ export default {
     });
   },
   methods: {
-<<<<<<< HEAD
-=======
-    // moment,
-    // async getDataInit() {
-    //   await this.getClientList();
-    //   await this.getMemberList();
-    // },
->>>>>>> uat
     //查询按钮
     onQuery() {
       this.current = 1;

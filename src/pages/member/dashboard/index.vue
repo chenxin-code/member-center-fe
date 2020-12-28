@@ -99,10 +99,6 @@
             <a-row>
               <a-col :span="24">
                 <a-card :loading="loadingDate">
-<<<<<<< HEAD
-=======
-                  <!-- <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale"> -->
->>>>>>> uat
                   <v-chart
                     :force-fit="true"
                     :height="lineHeight"
