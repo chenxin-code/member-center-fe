@@ -45,7 +45,7 @@ export default {
             })
         },
         onCheck(code) {
-            this.$router.push({name: 'access_detail', query: {code}})
+            // this.$router.push({name: 'access_detail', query: {code}})
         }
     }
 }

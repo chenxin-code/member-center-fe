@@ -52,10 +52,10 @@
                     <img class="item-middle-img" :src="bangdouImage" />
                     <span class="item-middle-text">{{ memberIntegral }}</span>
                   </div>
-                  <div class="right-item right-item-bottom">
+                  <!-- <div class="right-item right-item-bottom">
                     <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
                     <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </a-col>
@@ -138,7 +138,11 @@
                     show-size-changer
                     :default-current="integralCurrent"
                     :page-size.sync="integralPageSize"
+<<<<<<< HEAD
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+=======
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
+>>>>>>> uat
                     @change="pagingIntegral"
                     @showSizeChange="pagingIntegral"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -175,7 +179,11 @@
                     show-size-changer
                     :default-current="grownCurrent"
                     :page-size.sync="grownPageSize"
+<<<<<<< HEAD
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+=======
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
+>>>>>>> uat
                     @change="pagingGrown"
                     @showSizeChange="pagingGrown"
                     style="margin-top:30px;width:100%;text-align: right;"
@@ -217,7 +225,11 @@
                     show-size-changer
                     :default-current="behaviourCurrent"
                     :page-size.sync="behaviourPageSize"
+<<<<<<< HEAD
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+=======
+                    :pageSizeOptions="['10', '20','30','40', '50', '100']"
+>>>>>>> uat
                     @change="pagingBehaviour"
                     @showSizeChange="pagingBehaviour"
                     style="margin-top:30px;width:100%;text-align: right;"

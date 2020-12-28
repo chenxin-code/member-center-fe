@@ -47,7 +47,7 @@ export default {
             })
         },
         goDetail(id) {
-            this.$router.push({name: 'card_detail', query: {cardId: id}})
+            // this.$router.push({name: 'card_detail', query: {cardId: id}})
         }
     }
 }
