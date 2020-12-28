@@ -258,10 +258,6 @@ export default {
     }
   },
   created() {
-    //初始化加载数据
-    // this.getDataInit();
-    this.getClientList();
-    this.getMemberList();
   },
   mounted() {
     const timer1 = setTimeout(() => {
@@ -272,11 +268,6 @@ export default {
     });
   },
   methods: {
-    // moment,
-    // async getDataInit() {
-    //   await this.getClientList();
-    //   await this.getMemberList();
-    // },
     //查询按钮
     onQuery() {
       this.current = 1;
@@ -377,6 +368,44 @@ export default {
           });
       });
     }
+  },
+  activated() {
+    console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
+    // isUseCache为false时才重新刷新获取数据
+    // 通过这个控制刷新
+    if (!this.$route.meta.isUseCache) {
+      //重置data
+      this.total = 0;
+      this.current = 1;
+      this.pageSize = 10;
+      this.$refs.memberForm.form.resetFields();
+
+      //初始化加载数据
+      this.getClientList();
+      this.getMemberList();
+    }
+
+    //重置
+    this.$route.meta.isUseCache = false;
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'memberInfoDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'memberInfoDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+
+    next();
   },
   watch: {
     formList: {
