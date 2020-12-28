@@ -6,7 +6,7 @@ metadata:
     run: member-center-fe
   name: member-center-fe
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       run: nginx
