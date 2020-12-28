@@ -316,7 +316,9 @@ export default {
           });
           this.pieData1.splice(0, this.pieData1.length);
           dv1.rows.forEach(element => {
-            this.pieData1.push(element);
+            if (element.count !== 0) {
+              this.pieData1.push(element);
+            }
           });
           console.log('pieData1 :>> ', this.pieData1);
           // --------------------------------------
@@ -337,7 +339,9 @@ export default {
           });
           this.pieData2.splice(0, this.pieData2.length);
           dv2.rows.forEach(element => {
-            this.pieData2.push(element);
+            if (element.count !== 0) {
+              this.pieData2.push(element);
+            }
           });
           console.log('pieData2 :>> ', this.pieData2);
           // --------------------------------------
