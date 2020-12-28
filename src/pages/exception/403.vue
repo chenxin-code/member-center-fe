@@ -12,9 +12,9 @@
 export default {
   name: 'Exception403',
   methods: {
-    toLogin () {
-      this.$router.push({ path: '/login' })
+    toLogin() {
+      this.$router.replace({ path: '/portal' });
     }
   }
-}
+};
 </script>

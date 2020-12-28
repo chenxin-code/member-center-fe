@@ -9,12 +9,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'Exception500',
-    methods: {
-      toLogin () {
-        this.$router.push({ path: '/login' })
-      }
+export default {
+  name: 'Exception500',
+  methods: {
+    toLogin() {
+      this.$router.replace({ path: '/portal' });
     }
   }
+};
 </script>

@@ -23,7 +23,7 @@
           :row-selection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectChange,
-            columnWidth: '40px',
+            columnWidth: '40px'
           }"
           :columns="columns"
           :data-source="allHide ? [] : listData"
@@ -38,12 +38,7 @@
       </div>
 
       <div class="btn-box">
-        <a-button
-          type="primary"
-          icon="right"
-          @click="toRight"
-          :disabled="selectedRows.length == 0"
-        />
+        <a-button type="primary" icon="right" @click="toRight" :disabled="selectedRows.length == 0" />
       </div>
 
       <!-- 右边表格 -->
@@ -52,12 +47,7 @@
           <div class="num">
             {{ rightData.length ? `已选${rightData.length}个` : `未选择` }}
           </div>
-          <a-button
-            type="primary"
-            :disabled="rightRows.length == 0"
-            @click="del_right"
-            >删除</a-button
-          >
+          <a-button type="primary" :disabled="rightRows.length == 0" @click="del_right">删除</a-button>
         </div>
         <a-table
           :row-key="(r, i) => i"
@@ -66,7 +56,7 @@
           :row-selection="{
             selectedRowKeys: rightRowKey,
             onChange: rightSelectChange,
-            columnWidth: '40px',
+            columnWidth: '40px'
           }"
           :columns="columns"
           :data-source="rightData"
@@ -83,50 +73,58 @@
 
 <script>
 export default {
-  name: "ShuttleBox",
+  name: 'ShuttleBox',
   props: {
-    tableLoading:{ //左侧表格 加载状态
+    tableLoading: {
+      //左侧表格 加载状态
       type: Boolean,
-      default: false,
+      default: false
     },
-    pagination:{ // 表格是否有 分页插槽
+    pagination: {
+      // 表格是否有 分页插槽
       type: Boolean,
-      default: false,
+      default: false
     },
-    modalWidth: { // 模态框宽度
+    modalWidth: {
+      // 模态框宽度
       type: Number,
-      default: 960,
+      default: 960
     },
-    visible: { // 弹框是否显示
+    visible: {
+      // 弹框是否显示
       type: Boolean,
-      default: false,
+      default: false
     },
-    title: { // 弹框名称
+    title: {
+      // 弹框名称
       type: String,
-      default: "选择项目",
+      default: '选择项目'
     },
-    dataSource: { // 表格数据源
+    dataSource: {
+      // 表格数据源
       type: Array,
-      default: () => [],
+      default: () => []
     },
-    columns: { // 表格的表头设置
+    columns: {
+      // 表格的表头设置
       type: Array,
-      default: () => [],
+      default: () => []
     },
-    selectData: { // 已经选择的右边数据
+    selectData: {
+      // 已经选择的右边数据
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   watch: {
     visible(newVal) {
       // 监听弹框显示
       if (newVal) {
         this.$nextTick(() => {
-          let boxWrap = this.$refs["leftRef"].offsetHeight; // 外层盒子高度
-          let left_head = this.$refs["left_head"].offsetHeight; // 左边头部高度
-          let right_head = this.$refs["right_head"].offsetHeight; // 右边头部的高度
-          let pagiH = this.pagination ? 40 : 0 // 底部是否有表格分页
+          let boxWrap = this.$refs['leftRef'].offsetHeight; // 外层盒子高度
+          let left_head = this.$refs['left_head'].offsetHeight; // 左边头部高度
+          let right_head = this.$refs['right_head'].offsetHeight; // 右边头部的高度
+          let pagiH = this.pagination ? 40 : 0; // 底部是否有表格分页
           this.leftH = boxWrap - 37 - left_head - pagiH; // 左边表格高度  (37表头高度)
           this.rightH = boxWrap - 37 - right_head; // 右边表格高度
         });
@@ -144,7 +142,7 @@ export default {
         this.isShow = false;
         this.listData = JSON.parse(JSON.stringify(newVal));
         this.listData.length &&
-          this.listData.forEach((e) => {
+          this.listData.forEach(e => {
             e.isHide = false;
             e.key = e.id;
           });
@@ -159,14 +157,14 @@ export default {
         this.rightRows = []; // 右边表格勾选的数据
       },
       deep: true,
-      immediate: true, //立即执行
+      immediate: true //立即执行
     },
     selectData: {
       handler(newVal) {
         // console.log(newVal,'右边变化了')
         this.rightData = JSON.parse(JSON.stringify(newVal));
         this.rightData.length &&
-          this.rightData.forEach((e) => {
+          this.rightData.forEach(e => {
             e.isHide = false;
             e.key = e.id;
           });
@@ -175,8 +173,8 @@ export default {
         });
       },
       deep: true,
-      immediate: true, //立即执行
-    },
+      immediate: true //立即执行
+    }
   },
   data() {
     return {
@@ -192,7 +190,7 @@ export default {
       rightRows: [], // 右边表格勾选的数据
 
       allHide: false,
-      isShow: true,
+      isShow: true
     };
   },
   mounted() {},
@@ -200,21 +198,21 @@ export default {
     // 控制表格某一行是否隐藏
     rowClassName(record, index) {
       if (record.isHide == true) {
-        return "hide";
+        return 'hide';
       }
     },
 
     onCancel() {
-      this.$emit("handle", {
-        type: "cancel",
+      this.$emit('handle', {
+        type: 'cancel'
       });
       this.rightData = this.selectData; // 点击取消了，没有选择，复制成原来的
       this.checkShow(); // 重新校验左边显示
     },
     onOk() {
-      this.$emit("handle", {
-        type: "ok",
-        data: this.rightData,
+      this.$emit('handle', {
+        type: 'ok',
+        data: this.rightData
       });
     },
 
@@ -250,7 +248,7 @@ export default {
     // 删除右边 （向左穿梭）
     del_right() {
       if (this.rightRows.length) {
-        let arr = this.rightData.filter((e) => {
+        let arr = this.rightData.filter(e => {
           // 过滤没有选中的项，重新赋值新的右边表格
           if (!this.rightRows.includes(e)) {
             return e;
@@ -275,11 +273,9 @@ export default {
             e.isHide = true;
           }
         });
-      this.allHide = this.listData.length
-        ? this.listData.every((e) => e.isHide)
-        : false; // 判断所有的行都隐藏了, 表格显示空状态
-    },
-  },
+      this.allHide = this.listData.length ? this.listData.every(e => e.isHide) : false; // 判断所有的行都隐藏了, 表格显示空状态
+    }
+  }
 };
 </script>
 
@@ -299,7 +295,7 @@ export default {
     .left-head {
       width: 100%;
     }
-    .pagination{
+    .pagination {
       height: 40px;
       display: flex;
       align-items: center;
@@ -324,15 +320,15 @@ export default {
   }
 }
 
-// /deep/ .ant-empty-normal {
+// .ant-empty-normal {
 //     margin: 140px 0 !important;
 // }
 
-/deep/ .hide {
+.hide {
   display: none;
 }
 
-/deep/ .ant-modal-body{
+.ant-modal-body {
   padding: 15px;
 }
 </style>
