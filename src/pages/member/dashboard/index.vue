@@ -53,7 +53,7 @@
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
-              <v-pie position="percent" color="item" :v-style="pieStyle1" :label="labelConfig" />
+              <v-pie position="percent" :color="pieItem1" :v-style="pieStyle1" :label="labelConfig" />
               <v-coord type="theta" />
             </v-chart>
           </div>
@@ -68,7 +68,7 @@
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
-              <v-pie position="percent" color="item" :v-style="pieStyle2" :label="labelConfig" />
+              <v-pie position="percent" :color="pieItem2" :v-style="pieStyle2" :label="labelConfig" />
               <v-coord type="theta" />
             </v-chart>
           </div>
@@ -99,8 +99,13 @@
             <a-row>
               <a-col :span="24">
                 <a-card :loading="loadingDate">
-                  <!-- <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale"> -->
-                  <v-chart :force-fit="true" :height="lineHeight" :data="lineData" :scale="lineScale" :padding="['auto', '50', 'auto', 'auto']">
+                  <v-chart
+                    :force-fit="true"
+                    :height="lineHeight"
+                    :data="lineData"
+                    :scale="lineScale"
+                    :padding="['auto', '50', 'auto', 'auto']"
+                  >
                     <v-tooltip />
                     <v-axis />
                     <v-legend />
@@ -142,6 +147,8 @@ export default {
   },
   data() {
     return {
+      pieItem1: ['item', ['#84ACFF', '#8BF5CA', '#9EB2D6']],
+      pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
       loading: true,
       loadingDate: true,
       labelConfig: [
