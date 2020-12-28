@@ -49,7 +49,7 @@
         <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员来源</span>
-            <v-chart :forceFit="true" :height="250" :data="pieData1" :scale="pieScale1">
+            <v-chart :padding="['30', '24', 'auto', '24']" :forceFit="true" :height="200" :data="pieData1" :scale="pieScale1">
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
