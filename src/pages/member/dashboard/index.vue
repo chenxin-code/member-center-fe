@@ -99,7 +99,6 @@
             <a-row>
               <a-col :span="24">
                 <a-card :loading="loadingDate">
-                  <!-- <v-chart :force-fit="true" :height="308" :data="lineData" :scale="lineScale"> -->
                   <v-chart
                     :force-fit="true"
                     :height="lineHeight"
@@ -156,8 +155,6 @@ export default {
         'percent',
         {
           formatter: (val, item) => {
-            console.log('item :>> ', item);
-            console.log('val :>> ', val);
             return val;
           }
         }
