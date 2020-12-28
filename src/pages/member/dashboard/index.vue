@@ -53,7 +53,7 @@
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
-              <v-pie position="percent" :color="pieItem1" :v-style="pieStyle1" :label="labelConfig" />
+              <v-pie position="percent" :color="pieItem1" :v-style="pieStyle1" :label="labelConfig1" />
               <v-coord type="theta" />
             </v-chart>
           </div>
@@ -68,7 +68,7 @@
               <v-tooltip :showTitle="false" dataKey="item*percent" />
               <v-axis />
               <v-legend dataKey="item" />
-              <v-pie position="percent" :color="pieItem2" :v-style="pieStyle2" :label="labelConfig" />
+              <v-pie position="percent" :color="pieItem2" :v-style="pieStyle2" :label="labelConfig2" />
               <v-coord type="theta" />
             </v-chart>
           </div>
@@ -151,8 +151,16 @@ export default {
       pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
       loading: true,
       loadingDate: true,
-      labelConfig: [
-        'percent',
+      labelConfig1: [
+        'count',
+        {
+          formatter: (val, item) => {
+            return val;
+          }
+        }
+      ],
+      labelConfig2: [
+        'count',
         {
           formatter: (val, item) => {
             return val;
@@ -170,7 +178,9 @@ export default {
         {
           dataKey: 'percent',
           min: 0,
-          formatter: '.0%'
+          formatter: function(text, item) {
+            return parseFloat(text * 100).toFixed(6) + '%';
+          }
         }
       ],
       pieStyle1: {
@@ -182,7 +192,9 @@ export default {
         {
           dataKey: 'percent',
           min: 0,
-          formatter: '.0%'
+          formatter: function(text, item) {
+            return parseFloat(text * 100).toFixed(6) + '%';
+          }
         }
       ],
       pieStyle2: {
