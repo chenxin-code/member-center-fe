@@ -173,7 +173,7 @@ export default {
         },
 
         onCheck(record) {
-            // this.$router.push({name: 'task_detail', query: {id: record.id}});
+            this.$router.push({name: 'task_detail', query: {id: record.id}});
         },
 
         onShowSizeChange(current, pageSize) {

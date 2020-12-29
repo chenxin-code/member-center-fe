@@ -19,7 +19,7 @@
         <span v-else class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
       </div>
     </div>
-    <!-- <div class="detail-main">
+    <div class="detail-main">
       <p class="detail-main-title">
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         会员信息
@@ -45,7 +45,7 @@
         </a-table>
       </div>
       <div class="detail-main-blank"></div>
-    </div> -->
+    </div>
   </div>
 </template>
 
