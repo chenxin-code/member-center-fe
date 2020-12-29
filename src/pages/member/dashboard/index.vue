@@ -259,9 +259,10 @@ export default {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
-      await this.getMemberTongJi();
-      await this.getMemberTongJiDate(this.dateType);
+      this.getMemberTongJi();
+      this.getMemberTongJiDate(this.dateType);
     },
+
     getLoginUrl() {
       return api.getLoginUrl().then(res => {
         console.log('getLoginUrl res :>> ', res);
