@@ -2,7 +2,7 @@
     <div class="detail">
         <div class="detail-header">
             <p class="detail-header-title">会员卡详情</p>
-            <p class="detail-header-btn" @click="goEdit()">编辑</p>
+            <p class="detail-header-btn" @click="goBack()">返回</p>
         </div>
         <div class="detail-main">
             <div class="detail-main-base detail-main-items">
@@ -111,8 +111,8 @@ export default {
                 this.dataObj = res.data
             })
         },
-        goEdit() {
-            // this.$router.push({name: 'card_edited', query: {cardId: this.cardId}})
+        goBack() {
+            this.$router.push({name: 'card'})
         }
     }
 }
