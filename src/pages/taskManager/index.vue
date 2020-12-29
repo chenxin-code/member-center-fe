@@ -229,7 +229,47 @@ export default {
                 })
             })
         }
-    }
+    },
+    activated() {
+        // isUseCache为false时才重新刷新获取数据
+        // 通过这个控制刷新
+        if (!this.$route.meta.isUseCache) {
+            //重置data
+            this.total = 0;
+            this.current = 1;
+            this.pageSize = 10;
+            this.taskKey = '';
+            this.taskDate = [];
+            this.taskName = '';
+            this.taskSource = '';
+            this.status = null;
+            //初始化加载数据
+            this.$refs.form.form.resetFields();
+            this.getTaskList();
+        }
+
+        //重置
+        this.$route.meta.isUseCache = false;
+    },
+
+    beforeRouteEnter(to, from, next) {
+        if (from.name === 'task_detail') {
+            to.meta.isUseCache = true;
+        } else {
+            to.meta.isUseCache = false;
+        }
+
+        next();
+    },
+    beforeRouteLeave(to, from, next) {
+        if (to.name === 'task_detail') {
+            to.meta.isUseCache = true;
+        } else {
+            to.meta.isUseCache = false;
+        }
+
+        next();
+    },
 }
 </script>
 
