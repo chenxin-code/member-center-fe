@@ -74,7 +74,12 @@ export default {
           type: 'select',
           name: 'memberSourceCode',
           placeholder: '请选择',
-          selectOptions: []
+          selectOptions: [
+            {
+              id: '',
+              name: '全部'
+            }
+          ]
         },
         {
           label: '加入时间',
@@ -240,18 +245,13 @@ export default {
       return api.getClientList().then(res => {
         console.log('getClientList res :>> ', res);
         if (res.code === 200) {
-          const project = {
-            id: '',
-            name: '全部'
-          };
-          this.formList[1].selectOptions.splice(1, this.formList[0].length);
+          this.formList[1].selectOptions.splice(1, this.formList[1].selectOptions.length);
           res.data.forEach(element => {
             let tempObj = {};
             tempObj.id = element.appCode;
             tempObj.name = element.appName;
             this.formList[1].selectOptions.push(tempObj);
           });
-          this.formList[1].selectOptions.unshift(project);
         }
       });
     },
@@ -317,41 +317,41 @@ export default {
     }
   },
 
-  // activated() {
-  //   console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
-  //   // isUseCache为false时才重新刷新获取数据
-  //   // 通过这个控制刷新
-  //   if (!this.$route.meta.isUseCache) {
-  //     //重置data
-  //     this.total = 0;
-  //     this.current = 1;
-  //     this.pageSize = 10;
-  //     this.$refs.memberForm.form.resetFields();
+  activated() {
+    console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
+    // isUseCache为false时才重新刷新获取数据
+    // 通过这个控制刷新
+    if (!this.$route.meta.isUseCache) {
+      //重置data
+      this.total = 0;
+      this.current = 1;
+      this.pageSize = 10;
+      this.$refs.memberForm.form.resetFields();
 
-  //     //初始化加载数据
-  //     this.getClientList();
-  //     this.getIntegralList();
-  //   }
+      //初始化加载数据
+      this.getClientList();
+      this.getIntegralList();
+    }
 
-  //   //重置
-  //   this.$route.meta.isUseCache = false;
-  // },
-  // beforeRouteEnter(to, from, next) {
-  //   if (from.name === 'integralManageDetail') {
-  //     to.meta.isUseCache = true;
-  //   } else {
-  //     to.meta.isUseCache = false;
-  //   }
-  //   next();
-  // },
-  // beforeRouteLeave(to, from, next) {
-  //   if (to.name === 'integralManageDetail') {
-  //     to.meta.isUseCache = true;
-  //   } else {
-  //     to.meta.isUseCache = false;
-  //   }
-  //   next();
-  // },
+    //重置
+    this.$route.meta.isUseCache = false;
+  },
+  beforeRouteEnter(to, from, next) {
+    if (from.name === 'integralManageDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'integralManageDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+    next();
+  },
   watch: {
     formList: {
       handler: function(newVal) {
