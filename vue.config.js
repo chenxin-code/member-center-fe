@@ -136,7 +136,7 @@ const vueConfig = {
 
   devServer: {
     open: true,
-    localhost: '0.0.0.0',
+    host: '0.0.0.0',
     port: 8080,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
