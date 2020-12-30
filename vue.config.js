@@ -136,22 +136,22 @@ const vueConfig = {
 
   devServer: {
     open: true,
-    // development server port 8080
+    host: '0.0.0.0',
     port: 8080,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
-      '/times/': {
-        target: 'http://8.129.64.205:20000/', //会员中心后端ip地址及端口
-        // target: 'http://member-uat-members-linli.timesgroup.cn:50001/', //会员中心后端ip地址及端口
+      '/times': {
+        target: 'http://8.129.64.205:20000', //会员中心后端ip地址及端口
+        // target: 'http://member-uat-members-linli.timesgroup.cn:50001', //会员中心后端ip地址及端口
         ws: true, //是否支持WebSocket
         changeOrigin: true //是否开启跨域
       }
       //oss是图片预览的时候才使用
-      // '/oss-backend/': {
+      // '/oss-backend': {
       //   target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
       //   changeOrigin: true
       // },
-      // '/oss-frontend/': {
+      // '/oss-frontend': {
       //   target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
       //   changeOrigin: true
       // }

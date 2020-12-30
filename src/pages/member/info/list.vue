@@ -122,7 +122,7 @@ export default {
           key: 'memberCode'
         },
         {
-          title: '姓名',
+          title: '昵称',
           dataIndex: 'memberName',
           key: 'memberName'
         },

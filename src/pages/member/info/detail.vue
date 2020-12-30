@@ -20,7 +20,7 @@
                   </div>
                   <div class="left-top-right">
                     <div>会员唯一标识:{{ memberDetails.memberCode }}</div>
-                    <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
+                    <div v-html="`会员手机号:+${memberDetails.phoneAreaCode || ''} ${memberDetails.phone || ''}`"></div>
                   </div>
                 </div>
                 <div class="base-left-middle">
