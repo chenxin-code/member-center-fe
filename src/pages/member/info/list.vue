@@ -369,7 +369,6 @@ export default {
       });
     }
   },
-
   activated() {
     console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
     // isUseCache为false时才重新刷新获取数据

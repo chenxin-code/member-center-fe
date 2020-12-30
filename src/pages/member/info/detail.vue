@@ -2,16 +2,16 @@
   <div id="member-info-detail">
     <div class="content-header">
       会员详情
-      <span class="fallback" @click="FALLBACK" style="cursor:pointer">返回</span>
+      <span class="fallback" @click="FALLBACK" style="cursor: pointer">返回</span>
     </div>
     <div class="content-main">
-      <a-row style="height:100%;">
+      <a-row style="height: 100%">
         <!-- 基础信息 -->
         <div class="member-base">
           <div class="base-title">
             <div class="base-title-content">基础信息</div>
           </div>
-          <a-row class="base-row" style="padding:16px;border-bottom: 1px dashed #ccc;">
+          <a-row class="base-row" style="padding: 16px; border-bottom: 1px dashed #ccc">
             <a-col :span="16">
               <div class="base-left">
                 <div class="base-left-top">
@@ -19,13 +19,13 @@
                     <img class="base-avatar" :src="memberDetails.memberImage" @error="loadAvatarError" />
                   </div>
                   <div class="left-top-right">
-                    <div>会员ID:{{ memberId }}</div>
+                    <div>会员唯一标识:{{ memberDetails.memberCode }}</div>
                     <div v-html="`会员手机号:+${memberDetails.phoneAreaCode} ${memberDetails.phone}`"></div>
                   </div>
                 </div>
                 <div class="base-left-middle">
                   <div class="left-middle-item">昵称: {{ memberDetails.memberName }}</div>
-                  <div class="left-middle-item">姓名: {{ memberDetails.memberName }}</div>
+                  <div class="left-middle-item">姓名: {{ memberDetails.realName || '' }}</div>
                   <div class="left-middle-item">性别: {{ sexStr(memberDetails.sex) }}</div>
                   <div class="left-middle-item">证件类型: {{ cardTypeStr(memberDetails.cardType) }}</div>
                   <div class="left-middle-item">证件号: {{ memberDetails.cardNo }}</div>
@@ -34,10 +34,10 @@
                   <div class="left-middle-item">邮箱: {{ memberDetails.email }}</div>
                 </div>
                 <div class="base-left-bottom">
-                  <div class="left-bottom-left" style="padding-right:5px;">接入来源:</div>
+                  <div class="left-bottom-left" style="padding-right: 5px">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.clientName ? item.clientName : '' }} {{ momentStrHms(item.createTime) }}
+                      {{ item.sourceName ? item.sourceName : '' }} {{ momentStrHms(item.createTime) }}
                       {{ item.type === 1 ? '(创建)' : '' }}
                     </div>
                   </div>
@@ -66,7 +66,7 @@
           <div class="card-title">
             <div class="card-title-content">会员卡信息</div>
           </div>
-          <a-row style="padding:16px;border-bottom: 1px dashed #ccc;">
+          <a-row style="padding: 16px; border-bottom: 1px dashed #ccc">
             <a-col :span="24">
               <div class="card-row" v-for="item in memberDetails.memberCardRelats" :key="item.id">
                 <div class="card-row-inner">
@@ -112,7 +112,7 @@
                 <div
                   class="content-main-tab"
                   ref="contentMainTab"
-                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                  style="padding: 20px 20px 10px 20px; margin-bottom: 20px"
                 >
                   <FormList ref="memberForm1" rowCol="2" :formList="formList1" :onSubmit="onQuery1" />
                   <a-table
@@ -123,11 +123,16 @@
                     :row-key="(r, i) => i"
                     :loading="tableLoading"
                     :selectable="false"
-                    style="width:100%;margin-top:8px;"
+                    style="width: 100%; margin-top: 8px"
                   >
+                    <template slot="integralChangeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="showIntegralChange(rowData)"></span>
+                      </div>
+                    </template>
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="momentStr(rowData.createTime)"></span>
+                        <span v-html="momentStrHms(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -141,7 +146,7 @@
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingIntegral"
                     @showSizeChange="pagingIntegral"
-                    style="margin-top:30px;width:100%;text-align: right;"
+                    style="margin-top: 30px; width: 100%; text-align: right"
                   />
                 </div>
               </a-tab-pane>
@@ -149,7 +154,7 @@
                 <div
                   class="content-main-tab"
                   ref="contentMainTab"
-                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                  style="padding: 20px 20px 10px 20px; margin-bottom: 20px"
                 >
                   <FormList ref="memberForm2" rowCol="2" :formList="formList2" :onSubmit="onQuery2" />
                   <a-table
@@ -160,11 +165,16 @@
                     :row-key="(r, i) => i"
                     :loading="tableLoading"
                     :selectable="false"
-                    style="width:100%;margin-top:8px;"
+                    style="width: 100%; margin-top: 8px"
                   >
+                    <template slot="growthChangeSlot" slot-scope="rowData">
+                      <div class="editable-row-operations">
+                        <span v-html="showGrowthChange(rowData)"></span>
+                      </div>
+                    </template>
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="momentStr(rowData.createTime)"></span>
+                        <span v-html="momentStrHms(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -178,7 +188,7 @@
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingGrown"
                     @showSizeChange="pagingGrown"
-                    style="margin-top:30px;width:100%;text-align: right;"
+                    style="margin-top: 30px; width: 100%; text-align: right"
                   />
                 </div>
               </a-tab-pane>
@@ -186,7 +196,7 @@
                 <div
                   class="content-main-tab"
                   ref="contentMainTab"
-                  style="padding: 20px 20px 10px 20px;margin-bottom:20px;"
+                  style="padding: 20px 20px 10px 20px; margin-bottom: 20px"
                 >
                   <FormList ref="memberForm3" rowCol="2" :formList="formList3" :onSubmit="onQuery3" />
                   <a-table
@@ -197,16 +207,16 @@
                     :row-key="(r, i) => i"
                     :loading="tableLoading"
                     :selectable="false"
-                    style="width:100%;margin-top:8px;"
+                    style="width: 100%; margin-top: 8px"
                   >
                     <template slot="behaviourTypeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="behaviourTypeStr(rowData)"></span>
+                        <span v-html="behaviourTypeStr(rowData.behaviourType)"></span>
                       </div>
                     </template>
                     <template slot="createTimeSlot" slot-scope="rowData">
                       <div class="editable-row-operations">
-                        <span v-html="momentStr(rowData.createTime)"></span>
+                        <span v-html="momentStrHms(rowData.createTime)"></span>
                       </div>
                     </template>
                   </a-table>
@@ -220,7 +230,7 @@
                     :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
                     @change="pagingBehaviour"
                     @showSizeChange="pagingBehaviour"
-                    style="margin-top:30px;width:100%;text-align: right;"
+                    style="margin-top: 30px; width: 100%; text-align: right"
                   />
                 </div>
               </a-tab-pane>
@@ -238,9 +248,7 @@
       on-ok="handleOk"
     >
       <template slot="footer">
-        <a-button :disabled="modalLoading" key="back" @click="visibleBangdou = false">
-          取消
-        </a-button>
+        <a-button :disabled="modalLoading" key="back" @click="visibleBangdou = false">取消</a-button>
         <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handleOk">
           确定
         </a-button>
@@ -249,26 +257,26 @@
         <a-form-item>
           <div :style="modalInputStyle">
             <div :style="modalInputStyleTop">
-              <span style="color:red">*</span>
+              <span style="color: red">*</span>
               <span>邦豆数量</span>
             </div>
             <a-input-number
               v-model="bangdouAddVal"
-              :min="0"
-              defaultValue="0"
-              style="width:267px;"
+              :min="1"
+              defaultValue="1"
+              style="width: 267px"
               placeholder="请输入邦豆数量"
             />
           </div>
           <div :style="modalInputStyle">
             <div :style="modalInputStyleTop">
-              <span style="color:red">*</span>
+              <span style="color: red">*</span>
               <span>备注</span>
             </div>
             <a-textarea
               v-model="bangdouAddRemark"
               :auto-size="{ minRows: 1, maxRows: 5 }"
-              style="width:267px;"
+              style="width: 267px"
               placeholder="请输入备注"
             />
           </div>
@@ -305,13 +313,18 @@ const allColumns = {
     },
     {
       title: '积分变动',
-      dataIndex: 'integralChange',
-      key: 'integralChange'
+      key: 'integralChangeSlot',
+      scopedSlots: { customRender: 'integralChangeSlot' }
     },
     {
       title: '描述',
       dataIndex: 'describe',
       key: 'describe'
+    },
+    {
+      title: '操作人',
+      dataIndex: 'createUserName',
+      key: 'createUserName'
     },
     {
       title: '记录时间',
@@ -322,8 +335,8 @@ const allColumns = {
   grownColumns: [
     {
       title: '成长值变动',
-      dataIndex: 'growthChange',
-      key: 'growthChange'
+      key: 'growthChangeSlot',
+      scopedSlots: { customRender: 'growthChangeSlot' }
     },
     {
       title: '描述',
@@ -387,7 +400,7 @@ export default {
       bangdouModalTitle: '',
       visibleBangdou: false,
       bangdouModalType: '',
-      bangdouAddVal: 0,
+      bangdouAddVal: 1,
       bangdouAddRemark: '',
       //bangdou modal:end
       bangdouImage,
@@ -462,6 +475,28 @@ export default {
     };
   },
   computed: {
+    showGrowthChange() {
+      return param => {
+        if (param.changeType === 1) {
+          return '+' + param.growthChange;
+        } else if (param.changeType === 2) {
+          return '-' + param.growthChange;
+        } else {
+          return '';
+        }
+      };
+    },
+    showIntegralChange() {
+      return param => {
+        if (param.changeType === 1) {
+          return '+' + param.integralChange;
+        } else if (param.changeType === 2) {
+          return '-' + param.integralChange;
+        } else {
+          return '';
+        }
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -483,9 +518,9 @@ export default {
     behaviourTypeStr() {
       return param => {
         let str = '';
-        if (param === 1) {
+        if (param === '1') {
           str = '消费';
-        } else if (param === 2) {
+        } else if (param === '2') {
           str = '其他';
         } else {
           str = '';
@@ -544,7 +579,7 @@ export default {
     },
     bangdouHandle(type) {
       this.bangdouModalType = ''; //类型
-      this.bangdouAddVal = 0; //充值帮豆
+      this.bangdouAddVal = 1; //充值帮豆
       this.bangdouAddRemark = ''; //抵扣帮豆
       this.visibleBangdou = true; //显示对话框
       if (type === 1) {
