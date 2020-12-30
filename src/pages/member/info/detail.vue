@@ -37,7 +37,7 @@
                   <div class="left-bottom-left" style="padding-right: 5px">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.clientName ? item.clientName : '' }} {{ momentStrHms(item.createTime) }}
+                      {{ item.sourceName ? item.sourceName : '' }} {{ momentStrHms(item.createTime) }}
                       {{ item.type === 1 ? '(创建)' : '' }}
                     </div>
                   </div>
