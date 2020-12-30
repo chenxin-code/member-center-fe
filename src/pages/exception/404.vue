@@ -13,7 +13,7 @@ export default {
   name: 'Exception404',
   methods: {
     toPortal () {
-      this.$router.replace({ path: '/portal' });
+      this.$router.replace({ path: '/' });
     }
   }
 }

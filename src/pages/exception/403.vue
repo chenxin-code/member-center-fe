@@ -13,7 +13,7 @@ export default {
   name: 'Exception403',
   methods: {
     toLogin() {
-      this.$router.replace({ path: '/portal' });
+      this.$router.replace({ path: '/' });
     }
   }
 };
