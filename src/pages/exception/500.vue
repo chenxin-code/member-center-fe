@@ -2,7 +2,7 @@
   <a-result status="500" title="500" sub-title="Sorry, the server is reporting an error.">
     <template #extra>
       <a-button type="primary" @click="toLogin">
-        Back Home
+        Go Back
       </a-button>
     </template>
   </a-result>
