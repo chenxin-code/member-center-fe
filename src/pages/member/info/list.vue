@@ -79,7 +79,12 @@ export default {
           type: 'select',
           name: 'memberSourceCode',
           placeholder: '请选择',
-          selectOptions: []
+          selectOptions: [
+            {
+              id: '',
+              name: '全部'
+            }
+          ]
         },
         {
           label: '唯一标识',
@@ -89,7 +94,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'input',
+          type: 'inputNumber',
           name: 'phoneNo',
           placeholder: '请输入'
         },
@@ -234,20 +239,20 @@ export default {
         let tempStr = '';
         if (param.memberSources.length > 1) {
           // param.memberSources.slice(0, 1).forEach(element => {
-          //   if (element.sourceName) {
-          //     tempStr += element.sourceName;
+          //   if (element.clientName) {
+          //     tempStr += element.clientName;
           //   }
           // });
           param.memberSources.forEach(element => {
-            if (element.sourceName) {
-              tempStr += element.sourceName + ',';
+            if (element.clientName) {
+              tempStr += element.clientName + ',';
             }
           });
           tempStr = tempStr.substring(0, tempStr.length - 1);
         } else if (param.memberSources.length === 1) {
           param.memberSources.forEach(element => {
-            if (element.sourceName) {
-              tempStr += element.sourceName;
+            if (element.clientName) {
+              tempStr += element.clientName;
             }
           });
         } else {
@@ -257,8 +262,7 @@ export default {
       };
     }
   },
-  created() {
-  },
+  created() {},
   mounted() {
     const timer1 = setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 275 + 'px';
@@ -295,18 +299,13 @@ export default {
       return api.getClientList().then(res => {
         console.log('getClientList res :>> ', res);
         if (res.code === 200) {
-          const project = {
-            id: '',
-            name: '全部'
-          };
-          this.formList[0].selectOptions.splice(1, this.formList[0].length);
+          this.formList[0].selectOptions.splice(1, this.formList[0].selectOptions.length);
           res.data.forEach(element => {
             let tempObj = {};
             tempObj.id = element.appCode;
             tempObj.name = element.appName;
             this.formList[0].selectOptions.push(tempObj);
           });
-          this.formList[0].selectOptions.unshift(project);
         }
       });
     },
@@ -369,11 +368,13 @@ export default {
       });
     }
   },
+
   activated() {
     console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      console.log('this.formList[0].selectOptions :>> ', this.formList[0].selectOptions);
       //重置data
       this.total = 0;
       this.current = 1;
@@ -428,6 +429,10 @@ export default {
   .content-main {
     ::v-deep .ant-btn {
       width: 98px !important;
+    }
+
+    ::v-deep .ant-input-number {
+      width: 100%;
     }
   }
 }
