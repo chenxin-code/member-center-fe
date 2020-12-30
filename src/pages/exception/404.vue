@@ -12,9 +12,10 @@
 export default {
   name: 'Exception404',
   methods: {
-    toPortal () {
-      this.$router.replace({ path: '/' });
+    toPortal() {
+      // this.$router.replace({ path: '/' });
+      this.$router.go(-1);
     }
   }
-}
+};
 </script>

@@ -13,7 +13,8 @@ export default {
   name: 'Exception500',
   methods: {
     toLogin() {
-      this.$router.replace({ path: '/' });
+      // this.$router.replace({ path: '/' });
+      this.$router.go(-1);
     }
   }
 };
