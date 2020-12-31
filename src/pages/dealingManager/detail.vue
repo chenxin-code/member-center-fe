@@ -49,7 +49,7 @@
                     />
                 </div>
             </div>
-            
+
         </div>
     </div>
 </template>
@@ -178,7 +178,7 @@ export default {
                 this.total = res.data.total;
             })
             .finally( () => this.tableLoading = false)
-        }, 
+        },
         onSearch(args) {
             const { memberCode, phone, rangeTime, } = args
             this.memberCode = memberCode || '';

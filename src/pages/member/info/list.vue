@@ -273,9 +273,10 @@ export default {
   },
   methods: {
     //查询按钮
-    onQuery() {
+    onQuery(params) {
+      // console.log('params :>> ', params);
       this.current = 1;
-      this.getMemberList();
+      this.getMemberList(true);
     },
     //查看微应用详情
     goDetail(param) {
@@ -310,7 +311,10 @@ export default {
       });
     },
     //获取表格数据
-    getMemberList() {
+    getMemberList(isQuery = false) {
+      if (isQuery) {
+        this.current = 1;
+      }
       this.tableLoading = true;
       this.$nextTick(() => {
         let memberSourceCode = '';
@@ -331,7 +335,10 @@ export default {
 
         let jointimeStart = '';
         let jointimeEnd = '';
-        if (this.$refs.memberForm.getFieldsValue().jointime) {
+        if (
+          Object.prototype.toString.call(this.$refs.memberForm.getFieldsValue().jointime) === '[object Array]' &&
+          this.$refs.memberForm.getFieldsValue().jointime.length > 1
+        ) {
           jointimeStart = moment(this.$refs.memberForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.memberForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
         }
