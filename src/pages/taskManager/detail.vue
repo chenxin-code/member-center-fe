@@ -73,7 +73,6 @@ export default {
         initData(id) {
             api.getTaskDetail({taskId: id})
             .then( res => {
-                console.log(res)
                 this.dataObj = Object.assign(
                     res.data,
                     {createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss')},

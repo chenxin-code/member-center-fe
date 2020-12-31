@@ -164,11 +164,12 @@ export default {
     methods: {
         onSearch(args) {
             const { taskKey, taskDate, taskName, taskSource, status } = args
-            this.taskKey = taskKey || null,
-            this.taskName = taskName || null,
-            this.taskSource = taskSource || null,
-            this.status = status || null,
-            this.taskDate = taskDate || [],
+            this.taskKey = taskKey || null;
+            this.taskName = taskName || null;
+            this.taskSource = taskSource || null;
+            this.status = status || null;
+            this.taskDate = taskDate || [];
+            this.current = 1;
             this.getTaskList()
         },
 
