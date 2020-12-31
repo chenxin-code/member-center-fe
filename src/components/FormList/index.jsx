@@ -114,7 +114,12 @@ const FormList = {
     },
     handleSubmit(e) {
       e.preventDefault();
-      this.onSubmit();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          this.onSubmit(values);
+        }
+      });
+      // this.onSubmit();
     }
   },
   render() {
