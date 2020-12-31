@@ -124,11 +124,12 @@ export default {
     },
     methods: {
         onSearch(args) {
-            const { type, name, createTime } = args
-            this.name = name || null,
-            this.type = type || null,
-            this.rangeTime = createTime || [],
-            this.getTaskList()
+            const { type, name, createTime } = args;
+            this.name = name || null;
+            this.type = type || null;
+            this.rangeTime = createTime || [];
+            this.current = 1;
+            this.getTaskList();
         },
 
         onCheck(record) {
@@ -169,7 +170,6 @@ export default {
         // isUseCache为false时才重新刷新获取数据
         // 通过这个控制刷新
         if (!this.$route.meta.isUseCache) {
-            console.log('-------', this.$refs)
             //重置data
             this.total = 0;
             this.current = 1;
