@@ -109,9 +109,9 @@ export default {
                     key: 'memberName',
                 },
                 {
-                    title: '会员UUID',
-                    dataIndex: 'memberId',
-                    key: 'memberId',
+                    title: '会员唯一标识',
+                    dataIndex: 'memberCode',
+                    key: 'memberCode',
                 },
                 {
                     title: '会员手机号',
@@ -128,7 +128,7 @@ export default {
                 },
                 {
                     label: "唯一标识：",
-                    name: "memberId",
+                    name: "memberCode",
                     type: "input",
                     placeholder: "请输入",
                 },
@@ -142,7 +142,7 @@ export default {
             baseObj: {},
             logList: [],
             id: null,
-            memberId: '',
+            memberCode: '',
             phone: '',
             rangeTime: [],
         }
@@ -166,7 +166,7 @@ export default {
                 behaviourId: this.id,
                 pageIndex: this.current,
                 pageSize: this.pageSize,
-                memberId: this.memberId,
+                memberCode: this.memberCode,
                 phone: this.phone,
                 createTimeStart: this.rangeTime.length ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
                 createTimeEnd: this.rangeTime.length ? moment(this.rangeTime[1]).format('YYYY-MM-DD') : null,
@@ -180,8 +180,8 @@ export default {
             .finally( () => this.tableLoading = false)
         }, 
         onSearch(args) {
-            const { memberId, phone, rangeTime, } = args
-            this.memberId = memberId || '';
+            const { memberCode, phone, rangeTime, } = args
+            this.memberCode = memberCode || '';
             this.phone = phone || '';
             this.rangeTime = rangeTime || []
             this.getLog()
