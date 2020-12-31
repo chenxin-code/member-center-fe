@@ -89,17 +89,19 @@ const routes = [
                 },
                 component: MemberInfoDetail
             },
-            // {
-            //     path: '/integralManage',
-            //     name: 'integralManage',
-            //     menuKey: 'integralManage',
-            //     meta: {
-            //         menu: '/integralManage',
-            //         authKeys: [''],
-            //         bread: [{ path: '/integralManage', name: '积分管理' }]
-            //     },
-            //     component: IntegralManage
-            // },
+            {
+                path: '/integralManage',
+                name: 'integralManage',
+                menuKey: 'integralManage',
+                meta: {
+                    menu: '/integralManage',
+                    authKeys: [''],
+                    bread: [{ path: '/integralManage', name: '积分管理' }],
+                    isUseCache: false,
+                    keepAlive: true
+                },
+                component: IntegralManage
+            },
             {
                 path: '/card',
                 name: 'card',
@@ -138,7 +140,9 @@ const routes = [
                     bread: [{
                         path: '/task-manager',
                         name: '任务管理'
-                    }]
+                    }],
+                    isUseCache: false,
+                    keepAlive: true
                 },
                 component: TaskManager
             },
@@ -184,33 +188,33 @@ const routes = [
                 },
                 component: DccessDetail
             },
-            // {
-            //     path: '/dealing',
-            //     name: 'dealing',
-            //     menuKey: 'dealing',
-            //     meta: {
-            //         menu: '/dealing',
-            //         authKeys: [''],
-            //         bread: [
-            //             { path: '/dealing', name: '行为管理' },
-            //         ]
-            //     },
-            //     component: Dealing
-            // },
-            // {
-            //     path: '/dealing/detail',
-            //     name: 'dealing_detail',
-            //     menuKey: 'dealing',
-            //     meta: {
-            //         menu: '/dealing',
-            //         authKeys: [''],
-            //         bread: [
-            //             { path: '/dealing', name: '行为管理' },
-            //             { path: '/dealing/detail', name: '行为日志' },
-            //         ]
-            //     },
-            //     component: DealingDetail
-            // },
+            {
+                path: '/dealing',
+                name: 'dealing',
+                menuKey: 'dealing',
+                meta: {
+                    menu: '/dealing',
+                    authKeys: [''],
+                    bread: [{ path: '/dealing', name: '行为管理' }],
+                    isUseCache: false,
+                    keepAlive: true
+                },
+                component: Dealing
+            },
+            {
+                path: '/dealing/detail',
+                name: 'dealing_detail',
+                menuKey: 'dealing',
+                meta: {
+                    menu: '/dealing',
+                    authKeys: [''],
+                    bread: [
+                        { path: '/dealing', name: '行为管理' },
+                        { path: '/dealing/detail', name: '行为日志' }
+                    ]
+                },
+                component: DealingDetail
+            }
         ]
     },
     {
