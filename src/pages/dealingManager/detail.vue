@@ -183,7 +183,8 @@ export default {
             const { memberCode, phone, rangeTime, } = args
             this.memberCode = memberCode || '';
             this.phone = phone || '';
-            this.rangeTime = rangeTime || []
+            this.rangeTime = rangeTime || [];
+            this.current = 1;
             this.getLog()
         },
         onShowSizeChange(current, pageSize) {
