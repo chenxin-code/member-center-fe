@@ -276,7 +276,7 @@ export default {
     onQuery(params) {
       // console.log('params :>> ', params);
       this.current = 1;
-      this.getMemberList();
+      this.getMemberList(true);
     },
     //查看微应用详情
     goDetail(param) {
@@ -311,7 +311,10 @@ export default {
       });
     },
     //获取表格数据
-    getMemberList() {
+    getMemberList(isQuery = false) {
+      if (isQuery) {
+        this.current = 1;
+      }
       this.tableLoading = true;
       this.$nextTick(() => {
         let memberSourceCode = '';
