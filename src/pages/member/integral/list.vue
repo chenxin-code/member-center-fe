@@ -14,6 +14,11 @@
         :selectable="false"
         :loading="tableLoading"
       >
+        <template slot="integralChangeSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="showIntegralChange(rowData)"></span>
+          </div>
+        </template>
         <template slot="phoneNoSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
@@ -115,8 +120,8 @@ export default {
       tableColumns: [
         {
           title: '积分变动',
-          dataIndex: 'integralChange',
-          key: 'integralChange'
+          key: 'integralChangeSlot',
+          scopedSlots: { customRender: 'integralChangeSlot' }
         },
         {
           title: '类型',
@@ -172,6 +177,17 @@ export default {
     FormList
   },
   computed: {
+    showIntegralChange() {
+      return param => {
+        if (param.changeType === 1) {
+          return '+' + param.integralChange;
+        } else if (param.changeType === 2) {
+          return '-' + param.integralChange;
+        } else {
+          return '';
+        }
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -204,11 +220,7 @@ export default {
       };
     }
   },
-  created() {
-    //初始化加载数据
-    this.getClientList();
-    this.getIntegralList();
-  },
+  created() {},
   mounted() {
     const timer1 = setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 275 + 'px';
