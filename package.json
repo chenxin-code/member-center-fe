@@ -1,5 +1,5 @@
 {
-    "name": "member-center-fe",
+  "name": "member-center-fe",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -73,7 +73,7 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 7 versions",
+    "not ie <= 10"
   ]
 }
