@@ -2,7 +2,7 @@
     <div class="detail">
         <div class="detail-header">
             <p class="detail-header-title">会员卡详情</p>
-            <p class="detail-header-btn" @click="goEdit()">编辑</p>
+            <p class="detail-header-btn" @click="goBack()">返回</p>
         </div>
         <div class="detail-main">
             <div class="detail-main-base detail-main-items">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="detail-main-lever detail-main-items">
+            <div class="detail-main-lever detail-main-items">
                 <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />等级信息</p>
                 <div class="detail-main-items-cont">
                     <a-table
@@ -26,7 +26,7 @@
                         :pagination="false"
                     ></a-table>
                 </div>
-            </div> -->
+            </div>
 
         </div>
     </div>
@@ -111,8 +111,8 @@ export default {
                 this.dataObj = res.data
             })
         },
-        goEdit() {
-            // this.$router.push({name: 'card_edited', query: {cardId: this.cardId}})
+        goBack() {
+            this.$router.push({name: 'card'})
         }
     }
 }

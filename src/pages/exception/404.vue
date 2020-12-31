@@ -2,7 +2,7 @@
   <a-result status="404" title="404" sub-title="Sorry, the page you visited does not exist.">
     <template #extra>
       <a-button type="primary" @click="toPortal">
-        Back Home
+        Go Back
       </a-button>
     </template>
   </a-result>
@@ -12,9 +12,10 @@
 export default {
   name: 'Exception404',
   methods: {
-    toPortal () {
-      this.$router.replace({ path: '/portal' });
+    toPortal() {
+      // this.$router.replace({ path: '/' });
+      this.$router.go(-1);
     }
   }
-}
+};
 </script>

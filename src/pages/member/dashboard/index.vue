@@ -165,6 +165,7 @@ export default {
       loadingDate: true,
       labelConfig1: [
         'count',
+        // 'percent',
         {
           formatter: (val, item) => {
             return val;
@@ -173,6 +174,7 @@ export default {
       ],
       labelConfig2: [
         'count',
+        // 'percent',
         {
           formatter: (val, item) => {
             return val;
@@ -255,15 +257,12 @@ export default {
   },
   methods: {
     async checkLoginUser() {
-      this.loading = true;
-      this.loadingDate = true;
       await this.getLoginUrl();
       await this.getUserInfo();
-      await this.getMemberTongJi();
-      await this.getMemberTongJiDate(this.dateType);
-      this.loading = false;
-      this.loadingDate = false;
+      this.getMemberTongJi();
+      this.getMemberTongJiDate(this.dateType);
     },
+
     getLoginUrl() {
       return api.getLoginUrl().then(res => {
         console.log('getLoginUrl res :>> ', res);
@@ -293,74 +292,79 @@ export default {
     },
     //获取会员统计
     getMemberTongJi() {
-      return api.getMemberTongJi().then(res => {
-        console.log('getMemberTongJi res :>> ', res);
-        if (res.code === 200) {
-          for (const key in res.data) {
-            if (Object.hasOwnProperty.call(res.data, key)) {
-              const element = res.data[key];
-              this.$set(this.tongJiData, key, element);
+      this.loading = true;
+      return api
+        .getMemberTongJi()
+        .finally(() => {
+          this.loading = false;
+        })
+        .then(res => {
+          console.log('getMemberTongJi res :>> ', res);
+          if (res.code === 200) {
+            for (const key in res.data) {
+              if (Object.hasOwnProperty.call(res.data, key)) {
+                const element = res.data[key];
+                this.$set(this.tongJiData, key, element);
+              }
             }
+            console.log('this.tongJiData :>> ', this.tongJiData); //测试
+            // --------------------------------------
+            //季度新增
+            this.quarterData.splice(0, this.quarterData.length);
+            res.data.quarterStatisticsVo.forEach(element => {
+              this.quarterData.push(element);
+            });
+            console.log('this.quarterData :>> ', this.quarterData);
+            // --------------------------------------
+            //会员来源
+            const pieSourceData1 = [];
+            res.data.memberSourceStatisticsVos.forEach(element => {
+              let temp = {};
+              temp.item = element.memberSourceName;
+              temp.count = element.memberCount;
+              pieSourceData1.push(temp);
+            });
+            const dv1 = new DataSet.View().source(pieSourceData1);
+            dv1.transform({
+              type: 'percent',
+              field: 'count',
+              dimension: 'item',
+              as: 'percent'
+            });
+            this.pieData1.splice(0, this.pieData1.length);
+            dv1.rows.forEach(element => {
+              if (element.count !== 0) {
+                this.pieData1.push(element);
+              }
+            });
+            console.log('pieData1 :>> ', this.pieData1);
+            // --------------------------------------
+            //会员等级
+            const pieSourceData2 = [];
+            res.data.memberLevelStatisticsVos.forEach(element => {
+              let temp = {};
+              temp.item = element.memberLevelName;
+              temp.count = element.memberCount;
+              pieSourceData2.push(temp);
+            });
+            const dv2 = new DataSet.View().source(pieSourceData2);
+            dv2.transform({
+              type: 'percent',
+              field: 'count',
+              dimension: 'item',
+              as: 'percent'
+            });
+            this.pieData2.splice(0, this.pieData2.length);
+            dv2.rows.forEach(element => {
+              if (element.count !== 0) {
+                this.pieData2.push(element);
+              }
+            });
+            console.log('pieData2 :>> ', this.pieData2);
+            // --------------------------------------
           }
-          console.log('this.tongJiData :>> ', this.tongJiData); //测试
-          // --------------------------------------
-          //季度新增
-          this.quarterData.splice(0, this.quarterData.length);
-          res.data.quarterStatisticsVo.forEach(element => {
-            this.quarterData.push(element);
-          });
-          console.log('this.quarterData :>> ', this.quarterData);
-          // --------------------------------------
-          //会员来源
-          const pieSourceData1 = [];
-          res.data.memberSourceStatisticsVos.forEach(element => {
-            let temp = {};
-            temp.item = element.memberSourceName;
-            temp.count = element.memberCount;
-            pieSourceData1.push(temp);
-          });
-          const dv1 = new DataSet.View().source(pieSourceData1);
-          dv1.transform({
-            type: 'percent',
-            field: 'count',
-            dimension: 'item',
-            as: 'percent'
-          });
-          this.pieData1.splice(0, this.pieData1.length);
-          dv1.rows.forEach(element => {
-            if (element.count !== 0) {
-              this.pieData1.push(element);
-            }
-          });
-          console.log('pieData1 :>> ', this.pieData1);
-          // --------------------------------------
-          //会员等级
-          const pieSourceData2 = [];
-          res.data.memberLevelStatisticsVos.forEach(element => {
-            let temp = {};
-            temp.item = element.memberLevelName;
-            temp.count = element.memberCount;
-            pieSourceData2.push(temp);
-          });
-          const dv2 = new DataSet.View().source(pieSourceData2);
-          dv2.transform({
-            type: 'percent',
-            field: 'count',
-            dimension: 'item',
-            as: 'percent'
-          });
-          this.pieData2.splice(0, this.pieData2.length);
-          dv2.rows.forEach(element => {
-            if (element.count !== 0) {
-              this.pieData2.push(element);
-            }
-          });
-          console.log('pieData2 :>> ', this.pieData2);
-          // --------------------------------------
-        }
-      });
+        });
     },
-
     handleRangePicker(dateVal) {
       this.dateType = 4;
       console.log('handleRangePicker dateVal :>> ', dateVal);
@@ -391,9 +395,11 @@ export default {
 
       return api
         .getMemberTongJiDate(param)
+        .finally(() => {
+          this.loadingDate = false;
+        })
         .then(res => {
           console.log('getMemberTongJiDate res :>> ', res);
-          this.loadingDate = false;
           if (res.code === 200) {
             if (this.dateType === 3) {
               const lineSourceData = [];
@@ -491,9 +497,6 @@ export default {
               console.log('lineData :>> ', this.lineData);
             }
           }
-        })
-        .finally(() => {
-          this.loadingDate = false;
         });
     }
   },

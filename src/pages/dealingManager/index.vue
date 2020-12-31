@@ -82,6 +82,7 @@ export default {
                     dataIndex: 'type',
                     key: 'type',
                     title: '行为类型',
+                    customRender: text => text === 1 ? '消费' : '其他'
                 },
                 {
                     title: '行为名称',
@@ -115,12 +116,11 @@ export default {
     components: {
       FilterForm
     },
-    mounted () {
+    created () {
         this.getTaskList()
         setTimeout( () => {
             this.scrollY = this.$refs.contentMain.offsetHeight - 290 + 'px';
         }, 0)
-        
     },
     methods: {
         onSearch(args) {
@@ -164,8 +164,46 @@ export default {
             })
             .finally( () => this.tableLoading = false)
         },
+    },
+    activated() {
+        // isUseCache为false时才重新刷新获取数据
+        // 通过这个控制刷新
+        if (!this.$route.meta.isUseCache) {
+            console.log('-------', this.$refs)
+            //重置data
+            this.total = 0;
+            this.current = 1;
+            this.pageSize = 10;
+            this.rangeTime = [];
+            this.name = ''; 
+            this.type = ''; 
+            //初始化加载数据
+            this.$refs.form.form.resetFields();
+            this.getTaskList();
+        }
 
-    }
+        //重置
+        this.$route.meta.isUseCache = false;
+    },
+
+    beforeRouteEnter(to, from, next) {
+        if (from.name === 'dealing_detail') {
+            to.meta.isUseCache = true;
+        } else {
+            to.meta.isUseCache = false;
+        }
+
+        next();
+    },
+    beforeRouteLeave(to, from, next) {
+        if (to.name === 'dealing_detail') {
+            to.meta.isUseCache = true;
+        } else {
+            to.meta.isUseCache = false;
+        }
+
+        next();
+    },
 }
 </script>
 <style lang="less" scoped>

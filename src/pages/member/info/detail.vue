@@ -37,7 +37,7 @@
                   <div class="left-bottom-left" style="padding-right: 5px">接入来源:</div>
                   <div class="left-bottom-right">
                     <div v-for="item in memberDetails.memberSources" :key="item.id">
-                      {{ item.sourceName ? item.sourceName : '' }} {{ momentStrHms(item.createTime) }}
+                      {{ item.clientName ? item.clientName : '' }} {{ momentStrHms(item.createTime) }}
                       {{ item.type === 1 ? '(创建)' : '' }}
                     </div>
                   </div>
@@ -52,10 +52,10 @@
                     <img class="item-middle-img" :src="bangdouImage" />
                     <span class="item-middle-text">{{ memberIntegral }}</span>
                   </div>
-                  <!-- <div class="right-item right-item-bottom">
+                  <div class="right-item right-item-bottom">
                     <div class="right-item-bottom-left" @click="bangdouHandle(1)">邦豆充值</div>
                     <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
-                  </div> -->
+                  </div>
                 </div>
               </div>
             </a-col>
