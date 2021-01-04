@@ -5,7 +5,7 @@
             <p class="detail-header-btn" @click="goBack()">返回</p>
         </div>
         <div class="detail-main">
-            <!-- <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p> -->
+            <p class="detail-main-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基础信息</p>
             <div class="detail-main-items" v-for="item in dataList" :key="item.label">
                 <span class="detail-main-items-label">{{item.label}}</span>
                 <span class="detail-main-items-value">{{dataObj[item.name] || ''}}</span>
