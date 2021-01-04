@@ -1,0 +1,78 @@
+{
+  "code": 200,
+  "data": {
+    "memberLevelStatisticsVos": [
+      {
+        "memberCount": 720887,
+        "memberLevelId": 1,
+        "memberLevelName": "普通会员"
+      },
+      {
+        "memberCount": 8,
+        "memberLevelId": 2,
+        "memberLevelName": "铜牌会员"
+      },
+      {
+        "memberCount": 8,
+        "memberLevelId": 3,
+        "memberLevelName": "银牌会员"
+      },
+      {
+        "memberCount": 1,
+        "memberLevelId": 4,
+        "memberLevelName": "金牌会员"
+      },
+      {
+        "memberCount": 2,
+        "memberLevelId": 5,
+        "memberLevelName": "钻石会员"
+      }
+    ],
+    "memberSourceStatisticsVos": [
+      {
+        "memberCount": 0,
+        "memberSourceCode": "sys_dichan",
+        "memberSourceName": "地产"
+      },
+      {
+        "memberCount": 720906,
+        "memberSourceCode": "sys_linlibang",
+        "memberSourceName": "邻里邦PRO"
+      },
+      {
+        "memberCount": 0,
+        "memberSourceCode": "sys_linlimall",
+        "memberSourceName": "邻里商城"
+      },
+      {
+        "memberCount": 0,
+        "memberSourceCode": "sys_membercenter",
+        "memberSourceName": "会员中心"
+      }
+    ],
+    "months": [],
+    "quarter": 1,
+    "quarterNewNum": 11,
+    "quarterStatisticsVo": [
+      {
+        "date": "2021-01-01",
+        "memberCount": 0
+      },
+      {
+        "date": "2021-01-02",
+        "memberCount": 0
+      },
+      {
+        "date": "2021-01-03",
+        "memberCount": 0
+      },
+      {
+        "date": "2021-01-04",
+        "memberCount": 11
+      }
+    ],
+    "sum": 720906,
+    "todayNewNum": 11
+  },
+  "message": "success"
+}

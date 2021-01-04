@@ -257,29 +257,37 @@
         <a-form-item>
           <div :style="modalInputStyle">
             <div :style="modalInputStyleTop">
-              <span style="color: red">*</span>
+              <span style="color: red;">*</span>
               <span>邦豆数量</span>
             </div>
             <a-input-number
               v-model="bangdouAddVal"
               :min="1"
               defaultValue="1"
-              style="width: 267px"
+              style="width: 267px;"
+              :style="bangdouAddValNull ? bangdouAddNullStyle1 : ''"
               placeholder="请输入邦豆数量"
             />
           </div>
+          <div v-if="bangdouAddValNull" :style="bangdouAddNullStyle2">
+            请输入邦豆数量
+          </div>
           <div :style="modalInputStyle">
             <div :style="modalInputStyleTop">
-              <span style="color: red">*</span>
+              <span style="color: red;">*</span>
               <span>备注</span>
             </div>
             <a-textarea
               v-model="bangdouAddRemark"
-              maxLength="20"
+              :maxLength="20"
               :auto-size="{ minRows: 1, maxRows: 2 }"
-              style="width: 267px"
+              style="width: 267px;"
+              :style="bangdouAddRemarkNull ? bangdouAddNullStyle1 : ''"
               placeholder="请输入备注"
             />
+          </div>
+          <div v-if="bangdouAddRemarkNull" :style="bangdouAddNullStyle2">
+            请输入备注
           </div>
         </a-form-item>
       </a-form>
@@ -381,8 +389,21 @@ export default {
   },
   data() {
     return {
+      bangdouAddValNull: false,
+      bangdouAddRemarkNull: false,
       memberIntegral: '',
       //bangdou modal:start
+      bangdouAddNullStyle1: {
+        color: 'red',
+        borderColor: 'red'
+      },
+      bangdouAddNullStyle2: {
+        color: 'red',
+        borderColor: 'red',
+        padding: '5px 0 5px 77px',
+        fontSize: '14px',
+        lineHeight: '14px'
+      },
       modalInputStyle: {
         display: 'flex',
         'flex-direction': 'row',
@@ -412,7 +433,7 @@ export default {
       tableLoading: false,
       formList1: [
         {
-          label: '加入时间',
+          label: '记录时间',
           type: 'rangePicker',
           name: 'jointime1'
         },
@@ -427,7 +448,7 @@ export default {
       ],
       formList2: [
         {
-          label: '加入时间',
+          label: '记录时间',
           type: 'rangePicker',
           name: 'jointime2'
         },
@@ -442,7 +463,7 @@ export default {
       ],
       formList3: [
         {
-          label: '加入时间',
+          label: '记录时间',
           type: 'rangePicker',
           name: 'jointime3'
         },
@@ -554,21 +575,15 @@ export default {
   },
   methods: {
     handleOk() {
-      if (!this.bangdouAddVal) {
-        this.$notification['error']({
-          message: '错误',
-          description: '请输入邦豆数量',
-          placement: 'topRight'
-        });
-        return;
-      }
+      if (!this.bangdouAddVal || !this.bangdouAddRemark) {
+        if (!this.bangdouAddVal) {
+          this.bangdouAddValNull = true;
+        }
 
-      if (!this.bangdouAddRemark) {
-        this.$notification['error']({
-          message: '错误',
-          description: '请输入备注',
-          placement: 'topRight'
-        });
+        if (!this.bangdouAddRemark) {
+          this.bangdouAddRemarkNull = true;
+        }
+
         return;
       }
 
@@ -825,6 +840,17 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       clearTimeout(timer1);
     });
+  },
+  watch: {
+    visibleBangdou: {
+      handler(newVal) {
+        if (!newVal) {
+          this.bangdouAddValNull = false;
+          this.bangdouAddRemarkNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    }
   }
 };
 </script>
