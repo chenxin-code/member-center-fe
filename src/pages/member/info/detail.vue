@@ -974,6 +974,7 @@ export default {
               padding: 6px 8px;
               border-radius: 2px;
               border: 1px solid #5380fb;
+              cursor: pointer;
             }
           }
         }
