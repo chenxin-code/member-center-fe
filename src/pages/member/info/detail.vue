@@ -850,6 +850,22 @@ export default {
         }
       },
       immediate: true //刷新加载 立马触发一次handler
+    },
+    bangdouAddVal: {
+      handler(newVal) {
+        if (newVal) {
+          this.bangdouAddValNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    bangdouAddRemark: {
+      handler(newVal) {
+        if (newVal) {
+          this.bangdouAddRemarkNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
     }
   }
 };
