@@ -96,7 +96,7 @@ export default {
                     title: '记录时间',
                     dataIndex: 'createTime',
                     key: 'createTime',
-                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
+                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
                 },
                 {
                     title: '行为描述',
