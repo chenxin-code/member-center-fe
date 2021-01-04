@@ -75,7 +75,7 @@ export default {
           ]
         },
         {
-          label: '创建来源',
+          label: '来源',
           type: 'select',
           name: 'memberSourceCode',
           placeholder: '请选择',
@@ -87,7 +87,7 @@ export default {
           ]
         },
         {
-          label: '加入时间',
+          label: '时间',
           type: 'rangePicker',
           name: 'jointime'
         },
