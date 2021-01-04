@@ -553,6 +553,24 @@ export default {
   },
   methods: {
     handleOk() {
+      if (!this.bangdouAddVal) {
+        this.$notification['error']({
+          message: '错误',
+          description: '请输入邦豆数量',
+          placement: 'topRight'
+        });
+        return;
+      }
+
+      if (!this.bangdouAddRemark) {
+        this.$notification['error']({
+          message: '错误',
+          description: '请输入备注',
+          placement: 'topRight'
+        });
+        return;
+      }
+
       this.modalLoading = true;
 
       const param = {
@@ -950,6 +968,7 @@ export default {
               padding: 6px 8px;
               border-radius: 2px;
               border: 1px solid #5380fb;
+              cursor: pointer;
             }
             .right-item-bottom-right {
               padding: 6px 8px;
