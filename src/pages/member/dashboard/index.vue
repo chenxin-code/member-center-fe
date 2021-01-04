@@ -148,6 +148,9 @@ import { ChartCard } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
+import mock from './mock'
+console.log('mock :>> ', mock);
+
 //饼图：会员来源+会员等级 + 折线图：会员数量
 const DataSet = require('@antv/data-set');
 
@@ -300,6 +303,8 @@ export default {
         })
         .then(res => {
           console.log('getMemberTongJi res :>> ', res);
+          // res = mock;//mock数据
+
           if (res.code === 200) {
             for (const key in res.data) {
               if (Object.hasOwnProperty.call(res.data, key)) {
