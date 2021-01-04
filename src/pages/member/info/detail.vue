@@ -275,7 +275,8 @@
             </div>
             <a-textarea
               v-model="bangdouAddRemark"
-              :auto-size="{ minRows: 1, maxRows: 5 }"
+              maxLength="20"
+              :auto-size="{ minRows: 1, maxRows: 2 }"
               style="width: 267px"
               placeholder="请输入备注"
             />
