@@ -148,8 +148,8 @@ import { ChartCard } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
-import mock from './mock'
-console.log('mock :>> ', mock);
+// import mock from './mock'
+// console.log('mock :>> ', mock);
 
 //饼图：会员来源+会员等级 + 折线图：会员数量
 const DataSet = require('@antv/data-set');
