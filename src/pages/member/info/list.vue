@@ -21,7 +21,7 @@
         </template>
         <template slot="sexSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="sexStr(rowData)"></span>
+            <span v-html="sexStr(rowData.sex)"></span>
           </div>
         </template>
         <template slot="memberSourceSlot" slot-scope="rowData">
