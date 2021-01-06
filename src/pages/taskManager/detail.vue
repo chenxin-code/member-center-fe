@@ -48,7 +48,7 @@ export default {
                 },
                 {
                     label: '任务来源：',
-                    name: 'source'
+                    name: 'sourceName'
                 },
                 {
                     label: '领取条件：',

@@ -826,7 +826,7 @@ export default {
     console.log('detail this.$store :>> ', this.$store);
     console.log('this.$route :>> ', this.$route);
 
-    this.memberId = JSON.parse(window.sessionStorage.routerParams).id;
+    this.memberId = this.$route.query.id;
     this.getMemberDetail();
   },
   mounted() {
