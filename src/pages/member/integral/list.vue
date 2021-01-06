@@ -241,7 +241,7 @@ export default {
       console.log('param :>> ', param);
       this.$router.push({
         name: 'memberInfoDetail',
-        params: {
+        query: {
           id: param.memberId
         }
       });

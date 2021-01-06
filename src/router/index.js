@@ -110,8 +110,8 @@ const routes = [
                     menu: '/card',
                     authKeys: [''],
                     bread: [{
-                        path: '/card_detail',
-                        name: '会员卡详情'
+                        path: '/card',
+                        name: '会员卡列表'
                     }]
                 },
                 component: Card
