@@ -40,7 +40,11 @@ export default {
     INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.member + '/api/v1/member/behaviour/list',
-    MEMBER_TONGJI: option.member + '/api/v1/member/statistics',
+    MEMBER_TONGJI: option.member + '/api/v1/member/statistics',//会员统计
+    TODAY_NEWNUM:'/times/member-center/member/api/v1/member/statisticsTodayNewNum',//今日新增
+    QUARTER_NEWNUM:'/times/member-center/member/api/v1/member/statisticsQuarterNewNum',//季度新增
+    MEMBER_SOURCE:'/times/member-center/member/api/v1/member/statisticsMemberSource',//会员来源
+    MEMBER_LEVEL:'/times/member-center/member/api/v1/member/statisticsMemberLevel',//会员等级
     MEMBER_TONGJI_DATE: option.member + '/api/v1/member/num-statistics',
     INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction',
     INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list'

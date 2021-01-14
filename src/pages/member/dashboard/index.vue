@@ -5,13 +5,13 @@
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
         <chart-card
           class="today-new"
-          :loading="loading"
+          :loading="loading1"
           title="今日新增数量 (人)"
-          :total="`${numFormat(tongJiData.todayNewNum)}人`"
+          :total="`${numFormat(todayNewNum.todayNewNum)}人`"
         >
           <template slot="footer">
             会员总数量:
-            <span style="padding-left:10px;">{{ tongJiData.sum | NumberFormat }}</span>
+            <span style="padding-left:10px;">{{ todayNewNum.sum | NumberFormat }}</span>
           </template>
         </chart-card>
       </a-col>
@@ -20,9 +20,9 @@
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
         <chart-card
           class="quarter-new"
-          :loading="loading"
+          :loading="loading2"
           title="季度新增数量 (人)"
-          :total="tongJiData.quarterNewNum | NumberFormat"
+          :total="quarterNewNum | NumberFormat"
         >
           <div>
             <div class="antv-chart-mini">
@@ -36,7 +36,7 @@
           </div>
           <template slot="footer">
             <div class="quarter-footer">
-              <div class="quarter-footer-item" v-for="(item, index) in quarterStr(tongJiData.quarter)" :key="index">
+              <div class="quarter-footer-item" v-for="(item, index) in quarterStr(quarter)" :key="index">
                 {{ item }}
               </div>
             </div>
@@ -46,7 +46,7 @@
 
       <!-- 会员来源 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
+        <a-card :loading="loading3" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员来源</span>
             <v-chart
@@ -67,7 +67,7 @@
       </a-col>
       <!-- 会员等级 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }" class="pie">
-        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
+        <a-card :loading="loading4" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员等级</span>
             <v-chart
@@ -164,7 +164,10 @@ export default {
     return {
       pieItem1: ['item', ['#84ACFF', '#8BF5CA', '#9EB2D6']],
       pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
-      loading: true,
+      loading1: true,
+      loading2: true,
+      loading3: true,
+      loading4: true,
       loadingDate: true,
       labelConfig1: [
         'count',
@@ -184,8 +187,10 @@ export default {
           }
         }
       ],
-      tongJiData: {},
+      todayNewNum: {}, //今日新增
       //面积图:季度新增
+      quarterNewNum: '',
+      quarter: '',
       quarterData: [],
       quarterAreaData: [],
       //饼图：会员来源+会员等级
@@ -262,7 +267,11 @@ export default {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
-      this.getMemberTongJi();
+      // this.getMemberTongJi();
+      this.getQuarterNewNum();
+      this.getTodayNewNum();
+      this.getMemberSource();
+      this.getMemberLevel();
       this.getMemberTongJiDate(this.dateType);
     },
 
@@ -293,34 +302,63 @@ export default {
         }
       });
     },
-    //获取会员统计
-    getMemberTongJi() {
-      this.loading = true;
+    //获取会员统计:今日新增
+    getTodayNewNum() {
+      this.loading1 = true;
       return api
-        .getMemberTongJi()
+        .getTodayNewNum()
         .finally(() => {
-          this.loading = false;
+          this.loading1 = false;
         })
         .then(res => {
-          console.log('getMemberTongJi res :>> ', res);
-          // res = mock;//mock数据
+          console.log('getTodayNewNum res :>> ', res);
 
           if (res.code === 200) {
             for (const key in res.data) {
               if (Object.hasOwnProperty.call(res.data, key)) {
                 const element = res.data[key];
-                this.$set(this.tongJiData, key, element);
+                this.$set(this.todayNewNum, key, element);
               }
             }
-            console.log('this.tongJiData :>> ', this.tongJiData); //测试
-            // --------------------------------------
+            console.log('this.todayNewNum :>> ', this.todayNewNum); //测试
+          }
+        });
+    },
+    //获取会员统计:季度新增
+    getQuarterNewNum() {
+      this.loading2 = true;
+      return api
+        .getQuarterNewNum()
+        .finally(() => {
+          this.loading2 = false;
+        })
+        .then(res => {
+          console.log('getQuarterNewNum res :>> ', res);
+
+          if (res.code === 200) {
             //季度新增
+            this.quarter = res.data.quarter;
+            this.quarterNewNum = res.data.quarterNewNum;
             this.quarterData.splice(0, this.quarterData.length);
             res.data.quarterStatisticsVo.forEach(element => {
               this.quarterData.push(element);
             });
             console.log('this.quarterData :>> ', this.quarterData);
-            // --------------------------------------
+          }
+        });
+    },
+    //获取会员统计:会员来源
+    getMemberSource() {
+      this.loading3 = true;
+      return api
+        .getMemberSource()
+        .finally(() => {
+          this.loading3 = false;
+        })
+        .then(res => {
+          console.log('getMemberSource res :>> ', res);
+
+          if (res.code === 200) {
             //会员来源
             const pieSourceData1 = [];
             res.data.memberSourceStatisticsVos.forEach(element => {
@@ -343,7 +381,21 @@ export default {
               }
             });
             console.log('pieData1 :>> ', this.pieData1);
-            // --------------------------------------
+          }
+        });
+    },
+    //获取会员统计:会员等级
+    getMemberLevel() {
+      this.loading4 = true;
+      return api
+        .getMemberLevel()
+        .finally(() => {
+          this.loading4 = false;
+        })
+        .then(res => {
+          console.log('getMemberLevel res :>> ', res);
+
+          if (res.code === 200) {
             //会员等级
             const pieSourceData2 = [];
             res.data.memberLevelStatisticsVos.forEach(element => {
@@ -366,7 +418,6 @@ export default {
               }
             });
             console.log('pieData2 :>> ', this.pieData2);
-            // --------------------------------------
           }
         });
     },
