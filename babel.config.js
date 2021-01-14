@@ -7,7 +7,6 @@ if (process.env.NODE_ENV === 'production') {
   tempArr.push(tempObj);
   consoleRemovePlugins.push(tempArr)
 }
-// console.log('consoleRemovePlugins :>> ', consoleRemovePlugins);
 module.exports = {
   presets: ['@vue/cli-plugin-babel/preset'],
   plugins: consoleRemovePlugins
