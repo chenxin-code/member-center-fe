@@ -47,5 +47,7 @@ export default {
     MEMBER_LEVEL:'/times/member-center/member/api/v1/member/statisticsMemberLevel',//会员等级
     MEMBER_TONGJI_DATE: option.member + '/api/v1/member/num-statistics',
     INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction',
-    INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list'
+    INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list',
+    //卡券
+    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list'
 };

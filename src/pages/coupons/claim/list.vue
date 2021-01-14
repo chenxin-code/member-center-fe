@@ -14,24 +14,14 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="integralChangeSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="showIntegralChange(rowData)"></span>
-          </div>
-        </template>
-        <template slot="phoneNoSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
-          </div>
-        </template>
-        <template slot="changeTypeSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="showChangeType(rowData.changeType)"></span>
-          </div>
-        </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStrHms(rowData.receiveTime)"></span>
+          </div>
+        </template>
+        <template slot="detailsSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <a @click="goDetail(rowData)">查看卡券</a>
           </div>
         </template>
       </a-table>
@@ -59,20 +49,20 @@ import moment from 'moment';
 // console.log('mock :>> ', mock);
 
 export default {
-  name: 'integralManage',
+  name: 'couponsClaim',
   data() {
     return {
       formList: [
         {
           label: '卡券id',
           type: 'input',
-          name: 'memberCode',
+          name: 'couponId',
           placeholder: '请输入'
         },
         {
           label: '卡券标题',
           type: 'input',
-          name: 'memberCode',
+          name: 'couponTitle',
           placeholder: '请输入'
         },
         {
@@ -83,7 +73,8 @@ export default {
         {
           label: '会员唯一标识',
           type: 'input',
-          name: 'memberCode',
+          name: 'memberId',
+          // name: 'memberCode',
           placeholder: '请输入'
         },
         {
@@ -106,24 +97,19 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '积分变动',
-          key: 'integralChangeSlot',
-          scopedSlots: { customRender: 'integralChangeSlot' }
+          title: '卡券id',
+          dataIndex: 'id',
+          key: 'id'
         },
         {
-          title: '类型',
-          key: 'changeTypeSlot',
-          scopedSlots: { customRender: 'changeTypeSlot' }
+          title: '卡券标题',
+          dataIndex: 'couponTitle',
+          key: 'couponTitle'
         },
         {
-          title: '来源',
-          dataIndex: 'clientName',
-          key: 'clientName'
-        },
-        {
-          title: '描述',
-          dataIndex: 'describe',
-          key: 'describe'
+          title: '领取时间',
+          key: 'jointimeSlot',
+          scopedSlots: { customRender: 'jointimeSlot' }
         },
         {
           title: '会员昵称',
@@ -131,25 +117,21 @@ export default {
           key: 'memberName'
         },
         {
-          title: '会员手机号',
-          key: 'phoneNoSlot',
-          scopedSlots: { customRender: 'phoneNoSlot' }
-        },
-        {
           title: '会员唯一标识',
-          dataIndex: 'memberCode',
-          key: 'memberCode'
-        },
-        // jointimeSlot
-        {
-          title: '时间',
-          key: 'jointimeSlot',
-          scopedSlots: { customRender: 'jointimeSlot' }
+          // dataIndex: 'memberCode',
+          // key: 'memberCode',
+          dataIndex: 'memberId',
+          key: 'memberId'
         },
         {
-          title: '操作人',
-          dataIndex: 'createUserName',
-          key: 'createUserName'
+          title: '会员手机号',
+          dataIndex: 'phone',
+          key: 'phone'
+        },
+        {
+          title: '操作',
+          key: 'detailsSlot',
+          scopedSlots: { customRender: 'detailsSlot' }
         }
       ],
       tableData: [],
@@ -164,17 +146,6 @@ export default {
     FormList
   },
   computed: {
-    showIntegralChange() {
-      return param => {
-        if (param.changeType === 1) {
-          return '+' + param.integralChange;
-        } else if (param.changeType === 2) {
-          return '-' + param.integralChange;
-        } else {
-          return '';
-        }
-      };
-    },
     momentStr() {
       return param => {
         if (!param) {
@@ -221,7 +192,7 @@ export default {
     onQuery(params) {
       // console.log('params :>> ', params);
       this.current = 1;
-      this.getIntegralList(true);
+      this.getClaimCancel(true);
     },
     //查看微应用详情
     goDetail(param) {
@@ -237,28 +208,33 @@ export default {
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;
-      this.getIntegralList();
+      this.getClaimCancel();
     },
 
     //获取积分列表
-    getIntegralList(isQuery = false) {
+    getClaimCancel(isQuery = false) {
       if (isQuery) {
         this.current = 1;
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let type = '';
-        let memberSourceCode = '';
-        if (this.$refs.memberForm.getFieldsValue().type) {
-          type = this.$refs.memberForm.getFieldsValue().type;
+        let couponId = '';
+        let couponTitle = '';
+        if (this.$refs.memberForm.getFieldsValue().couponId) {
+          couponId = this.$refs.memberForm.getFieldsValue().couponId;
         }
-        if (this.$refs.memberForm.getFieldsValue().memberSourceCode) {
-          memberSourceCode = this.$refs.memberForm.getFieldsValue().memberSourceCode;
+        if (this.$refs.memberForm.getFieldsValue().couponTitle) {
+          couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
         }
 
-        let memberCode = '';
-        if (this.$refs.memberForm.getFieldsValue().memberCode) {
-          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
+        // let memberCode = '';
+        // if (this.$refs.memberForm.getFieldsValue().memberCode) {
+        //   memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
+        // }
+
+        let memberId = '';
+        if (this.$refs.memberForm.getFieldsValue().memberId) {
+          memberId = this.$refs.memberForm.getFieldsValue().memberId;
         }
 
         let phoneNo = '';
@@ -277,27 +253,29 @@ export default {
         }
 
         const para = {
-          type: type,
-          clientCode: memberSourceCode,
-          memberCode: memberCode,
-          phone: phoneNo,
-          createTimeStart: jointimeStart,
-          createTimeEnd: jointimeEnd,
+          status: 1,
           pageIndex: this.current,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          couponId: couponId, //卡券id
+          title: couponTitle, //卡券标题
+          createTimeStart: jointimeStart, //领取开始时间
+          createTimeEnd: jointimeEnd, //领取结束时间
+          memberId: memberId, //会员唯一标识
+          phone: phoneNo //手机号
         };
 
-        console.log('getIntegralList para :>> ', para);
+        console.log('getClaimCancel para :>> ', para);
 
         return api
-          .getIntegralList(para)
+          .getClaimCancel(para)
           .finally(() => {
             this.tableLoading = false;
           })
           .then(res => {
-            console.log('getIntegralList res :>> ', res);
+            console.log('getClaimCancel res :>> ', res);
             if (res.code === 200) {
-              this.total = res.data.total;
+              // this.total = res.data.total;
+              this.total = res.data.records.length;
               this.tableData.splice(0, this.tableData.length);
               res.data.records.forEach((element, index) => {
                 this.tableData.push(element);
@@ -320,7 +298,7 @@ export default {
       this.$refs.memberForm.form.resetFields();
 
       //初始化加载数据
-      this.getIntegralList();
+      this.getClaimCancel();
     }
 
     //重置

@@ -18,3 +18,5 @@ export const getMemberLevel = data => fetchApi(URL.MEMBER_LEVEL, data, 'GET');//
 export const getMemberTongJiDate = data => fetchApi(URL.MEMBER_TONGJI_DATE, data, 'GET');
 export const payOrDeductionIntegral = data => fetchApi(URL.INTEGRAL_PAY_DEDUCTION, data, 'POST');
 export const getIntegralList = data => fetchApi(URL.INTEGRAL_LIST, data, 'GET');
+//卡券
+export const getClaimCancel = data => fetchApi(URL.CLAIM_CANCEL, data, 'GET');
