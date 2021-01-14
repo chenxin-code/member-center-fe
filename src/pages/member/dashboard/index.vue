@@ -104,7 +104,13 @@
                 本年
               </span>
             </div>
-            <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
+            <a-range-picker
+              :placeholder="['开始时间', '结束时间']"
+              format="YYYY-MM-DD"
+              :value="rangePickerValue"
+              @change="handleRangePicker"
+              :style="{ width: '256px' }"
+            />
           </div>
 
           <a-tab-pane tab="会员数量" key="1">
@@ -162,6 +168,7 @@ export default {
   },
   data() {
     return {
+      rangePickerValue: [],
       pieItem1: ['item', ['#84ACFF', '#8BF5CA', '#9EB2D6']],
       pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
       loading1: true,
@@ -267,7 +274,6 @@ export default {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
-      // this.getMemberTongJi();
       this.getQuarterNewNum();
       this.getTodayNewNum();
       this.getMemberSource();
@@ -421,12 +427,15 @@ export default {
           }
         });
     },
-    handleRangePicker(dateVal) {
+    handleRangePicker(dates, dateStrings) {
+      console.log('handleRangePicker dates :>> ', dates);
+      console.log('handleRangePicker dateStrings :>> ', dateStrings);
       this.dateType = 4;
-      console.log('handleRangePicker dateVal :>> ', dateVal);
-      this.jointimeStart = moment(dateVal[0]).format('YYYY-MM-DD');
-      this.jointimeEnd = moment(dateVal[1]).format('YYYY-MM-DD');
-      this.dayRange = moment(dateVal[1]).diff(moment(dateVal[0]), 'day'); //相差天数
+      this.rangePickerValue = dates;
+
+      this.jointimeStart = dateStrings[0];
+      this.jointimeEnd = dateStrings[1];
+      this.dayRange = moment(dateStrings[1]).diff(moment(dateStrings[0]), 'day'); //相差天数
       console.log('相差天数 handleRangePicker dayRange :>> ', this.dayRange);
       if (this.dayRange > 90) {
         this.$warning({
@@ -440,6 +449,9 @@ export default {
     getMemberTongJiDate(dateTypeParam) {
       this.loadingDate = true;
       this.dateType = dateTypeParam; //存dateType
+      if (this.dateType === 1 || this.dateType === 2 || this.dateType === 3) {
+        this.rangePickerValue = [];
+      }
       console.log('getMemberTongJiDate this.dateType :>> ', this.dateType);
       const param = {
         type: this.dateType,
