@@ -8,30 +8,15 @@
         :columns="tableColumns"
         :data-source="tableData"
         :pagination="false"
-        :scroll="{ y: scrollY }"
+        :scroll="{ x: 1038, y: scrollY }"
         :rowKey="(r, i) => i"
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="integralChangeSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="showIntegralChange(rowData)"></span>
-          </div>
-        </template>
-        <template slot="phoneNoSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="`+${rowData.phoneAreaCode} ${rowData.phone}`"></span>
-          </div>
-        </template>
-        <template slot="changeTypeSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="showChangeType(rowData.changeType)"></span>
-          </div>
-        </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.receiveTime)"></span>
+            <span v-html="momentStrHms(rowData.offTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
@@ -88,8 +73,8 @@ export default {
         {
           label: '会员唯一标识',
           type: 'input',
-          name: 'memberId',
-          // name: 'memberCode',
+          // name: 'memberId',
+          name: 'memberCode',
           placeholder: '请输入'
         },
         {
@@ -114,39 +99,71 @@ export default {
         {
           title: '卡券id',
           dataIndex: 'id',
-          key: 'id'
+          key: 'id',
+          width: 150
         },
         {
           title: '卡券标题',
           dataIndex: 'couponTitle',
-          key: 'couponTitle'
+          key: 'couponTitle',
+          width: 150
         },
         {
-          title: '领取时间',
+          title: '核销时间',
           key: 'jointimeSlot',
-          scopedSlots: { customRender: 'jointimeSlot' }
+          scopedSlots: { customRender: 'jointimeSlot' },
+          width: 150
         },
         {
           title: '会员昵称',
           dataIndex: 'memberName',
-          key: 'memberName'
+          key: 'memberName',
+          width: 150
         },
         {
           title: '会员唯一标识',
-          // dataIndex: 'memberCode',
-          // key: 'memberCode',
-          dataIndex: 'memberId',
-          key: 'memberId'
+          dataIndex: 'memberCode',
+          key: 'memberCode',
+          // dataIndex: 'memberId',
+          // key: 'memberId',
+          width: 150
         },
         {
           title: '会员手机号',
           dataIndex: 'phone',
-          key: 'phone'
+          key: 'phone',
+          width: 150
+        },
+        {
+          title: '订单/账单号',
+          dataIndex: 'orderNo',
+          key: 'orderNo',
+          width: 150
+        },
+        {
+          title: '订单/账单类型',
+          dataIndex: 'orderType',
+          key: 'orderType',
+          width: 150
+        },
+        {
+          title: '订单/账单金额',
+          dataIndex: 'orderAmount',
+          key: 'orderAmount',
+          width: 150
+        },
+        {
+          title: '核销金额',
+          dataIndex: 'offAmount',
+          key: 'offAmount',
+          width: 150
         },
         {
           title: '操作',
           key: 'detailsSlot',
-          scopedSlots: { customRender: 'detailsSlot' }
+          scopedSlots: { customRender: 'detailsSlot' },
+          fixed: 'right',
+          width: 100
         }
       ],
       tableData: [],
@@ -253,15 +270,15 @@ export default {
           couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
         }
 
-        // let memberCode = '';
-        // if (this.$refs.memberForm.getFieldsValue().memberCode) {
-        //   memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
-        // }
-
-        let memberId = '';
-        if (this.$refs.memberForm.getFieldsValue().memberId) {
-          memberId = this.$refs.memberForm.getFieldsValue().memberId;
+        let memberCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberCode) {
+          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
         }
+
+        // let memberId = '';
+        // if (this.$refs.memberForm.getFieldsValue().memberId) {
+        //   memberId = this.$refs.memberForm.getFieldsValue().memberId;
+        // }
 
         let phoneNo = '';
         if (this.$refs.memberForm.getFieldsValue().phoneNo) {
@@ -286,7 +303,7 @@ export default {
           title: couponTitle, //卡券标题
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
-          memberId: memberId, //会员唯一标识
+          memberId: memberCode, //会员唯一标识
           phone: phoneNo //手机号
         };
 

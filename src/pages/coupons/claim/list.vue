@@ -73,8 +73,8 @@ export default {
         {
           label: '会员唯一标识',
           type: 'input',
-          name: 'memberId',
-          // name: 'memberCode',
+          // name: 'memberId',
+          name: 'memberCode',
           placeholder: '请输入'
         },
         {
@@ -118,10 +118,10 @@ export default {
         },
         {
           title: '会员唯一标识',
-          // dataIndex: 'memberCode',
-          // key: 'memberCode',
-          dataIndex: 'memberId',
-          key: 'memberId'
+          dataIndex: 'memberCode',
+          key: 'memberCode',
+          // dataIndex: 'memberId',
+          // key: 'memberId'
         },
         {
           title: '会员手机号',
@@ -227,15 +227,15 @@ export default {
           couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
         }
 
-        // let memberCode = '';
-        // if (this.$refs.memberForm.getFieldsValue().memberCode) {
-        //   memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
-        // }
-
-        let memberId = '';
-        if (this.$refs.memberForm.getFieldsValue().memberId) {
-          memberId = this.$refs.memberForm.getFieldsValue().memberId;
+        let memberCode = '';
+        if (this.$refs.memberForm.getFieldsValue().memberCode) {
+          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
         }
+
+        // let memberId = '';
+        // if (this.$refs.memberForm.getFieldsValue().memberId) {
+        //   memberId = this.$refs.memberForm.getFieldsValue().memberId;
+        // }
 
         let phoneNo = '';
         if (this.$refs.memberForm.getFieldsValue().phoneNo) {
@@ -260,7 +260,7 @@ export default {
           title: couponTitle, //卡券标题
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
-          memberId: memberId, //会员唯一标识
+          memberId: memberCode, //会员唯一标识
           phone: phoneNo //手机号
         };
 
