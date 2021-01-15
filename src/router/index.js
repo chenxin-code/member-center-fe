@@ -33,6 +33,10 @@ const DccessDetail = () => import('@/pages/accessManager/detail');
 //2.0卡券领取
 const CouponsClaim = () => import('@/pages/coupons/claim/list');
 const CouponsCancel = () => import('@/pages/coupons/cancel/list');
+const CouponsManage = () => import('@/pages/coupons/manage/list');
+const CouponsManageAdd = () => import('@/pages/coupons/manage/add');
+const CouponsManageAddDone = () => import('@/pages/coupons/manage/done');
+const CouponsManageDetail = () => import('@/pages/coupons/manage/detail');
 
 const routes = [
   //首页:home
@@ -93,6 +97,62 @@ const routes = [
           keepAlive: true
         },
         component: IntegralManage
+      },
+      {
+        path: '/couponsManage',
+        name: 'couponsManage',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [{ path: '/couponsManage', name: '卡券管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: CouponsManage
+      },
+      {
+        path: '/couponsManage/add',
+        name: 'couponsManageAdd',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/add', name: '卡券创建' }
+          ]
+        },
+        component: CouponsManageAdd
+      },
+      {
+        path: '/couponsManage/add/done',
+        name: 'couponsManageAddDone',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/add', name: '卡券创建' },
+            { path: '/couponsManage/add/done', name: '卡券创建完成' }
+          ]
+        },
+        component: CouponsManageAddDone
+      },
+      {
+        path: '/couponsManage/detail',
+        name: 'couponsManageDetail',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/detail', name: '卡券详情' }
+          ]
+        },
+        component: CouponsManageDetail
       },
       {
         path: '/couponsClaim',

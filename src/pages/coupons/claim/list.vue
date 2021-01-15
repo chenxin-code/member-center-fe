@@ -194,11 +194,11 @@ export default {
       this.current = 1;
       this.getClaimCancel(true);
     },
-    //查看微应用详情
+    //查看卡券详情
     goDetail(param) {
       console.log('param :>> ', param);
       this.$router.push({
-        name: 'memberInfoDetail',
+        name: 'couponsManageDetail',
         query: {
           id: param.memberId
         }

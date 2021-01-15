@@ -63,6 +63,15 @@ export default [
     path: '/integralManage'
   },
   {
+    title: '卡券管理',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/jifen_show.png'),
+    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    menuKey: 'couponsManage',
+    group: 'hyzx',
+    path: '/couponsManage'
+  },
+  {
     title: '卡券领取记录',
     authKeys: [''],
     icon: require('@/assets/img/menu/jifen_show.png'),
