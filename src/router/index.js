@@ -30,7 +30,6 @@ const AccessManager = () => import('@/pages/accessManager/index');
 const DccessDetail = () => import('@/pages/accessManager/detail');
 
 // 卡券
-//2.0卡券领取
 const CouponsClaim = () => import('@/pages/coupons/claim/list');
 const CouponsCancel = () => import('@/pages/coupons/cancel/list');
 const CouponsManage = () => import('@/pages/coupons/manage/list');
