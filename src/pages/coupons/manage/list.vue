@@ -28,7 +28,7 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData)">查看卡券</a>
+            <a @click="goDetail(rowData)">查看</a>
           </div>
         </template>
       </a-table>
