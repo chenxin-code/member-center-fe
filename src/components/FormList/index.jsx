@@ -29,6 +29,14 @@ const FormList = {
       type: Array,
       default: []
     },
+    labelCol: {
+      type: Object,
+      default: () => ({ span: 6 })
+    },
+    wrapperCol: {
+      type: Object,
+      default: () => ({ span: 18 })
+    },
     rowCol: {
       type: [Number, String],
       default: 3
@@ -127,8 +135,8 @@ const FormList = {
       <a-form
         form={this.form}
         autoComplete='off'
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={this.labelCol}
+        wrapperCol={this.wrapperCol}
         {...this.formSetting}
         onSubmit={this.handleSubmit}>
         <a-row gutter={24}>

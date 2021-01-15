@@ -2,7 +2,14 @@
   <div id="coupons-cancel">
     <div class="content-header">卡券管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onQuery" />
+      <FormList
+        ref="memberForm"
+        :labelCol="{ span: 9 }"
+        :wrapperCol="{ span: 15 }"
+        :rowCol="4"
+        :formList="formList"
+        :onSubmit="onQuery"
+      />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -54,7 +61,7 @@ export default {
     return {
       formList: [
         {
-          label: '卡券id',
+          label: '卡券类型',
           type: 'input',
           name: 'couponId',
           placeholder: '请输入'
@@ -66,21 +73,10 @@ export default {
           placeholder: '请输入'
         },
         {
-          label: '核销时间',
-          type: 'rangePicker',
-          name: 'jointime'
-        },
-        {
           label: '会员唯一标识',
           type: 'input',
           // name: 'memberId',
           name: 'memberCode',
-          placeholder: '请输入'
-        },
-        {
-          label: '手机号',
-          type: 'inputNumber',
-          name: 'phoneNo',
           placeholder: '请输入'
         },
         {
@@ -90,6 +86,23 @@ export default {
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
+        },
+        {
+          label: '卡券手机',
+          type: 'inputNumber',
+          name: 'phoneNo',
+          placeholder: '请输入'
+        },
+        {
+          label: '卡券手机',
+          type: 'inputNumber',
+          name: 'phoneNo',
+          placeholder: '请输入'
+        },
+        {
+          label: '核销时间',
+          type: 'rangePicker',
+          name: 'jointime'
         }
       ],
       //表格高度
