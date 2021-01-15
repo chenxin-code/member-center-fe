@@ -15,7 +15,7 @@
         :columns="tableColumns"
         :data-source="tableData"
         :pagination="false"
-        :scroll="{ x: 1038, y: scrollY }"
+        :scroll="{ x: 988, y: scrollY }"
         :rowKey="(r, i) => i"
         style="width:100%;margin-top:8px;"
         :selectable="false"
@@ -28,7 +28,9 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData)">查看</a>
+            <a style="padding-right: 10px;" @click="goDetail(rowData)">查看</a>
+            <a style="padding-right: 10px;" @click="goAdd(rowData)">复制</a>
+            <a @click="goAdd(rowData)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -176,7 +178,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
           fixed: 'right',
-          width: 100
+          width: 150
         }
       ],
       tableData: [],
@@ -260,6 +262,17 @@ export default {
         }
       });
     },
+    //查看卡券创建
+    goAdd(param) {
+      console.log('param :>> ', param);
+      this.$router.push({
+        name: 'couponsManageAdd',
+        query: {
+          id: param.memberId
+        }
+      });
+    },
+
     // 分页
     onShowSizeChange(current, pageSize) {
       this.current = current;
