@@ -4,9 +4,9 @@
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList
         ref="memberForm"
-        :labelCol="{ span: 9 }"
-        :wrapperCol="{ span: 15 }"
-        :rowCol="4"
+        :labelCol="{ span: 6 }"
+        :wrapperCol="{ span: 18 }"
+        :rowCol="3"
         :formList="formList"
         :onSubmit="onQuery"
       />
@@ -64,9 +64,14 @@ export default {
       formList: [
         {
           label: '卡券类型',
-          type: 'input',
-          name: 'couponId',
-          placeholder: '请输入'
+          type: 'select',
+          name: 'type',
+          placeholder: '请选择',
+          selectOptions: [
+            { name: '全部', id: '' },
+            { name: '增加', id: 1 },
+            { name: '减少', id: 2 }
+          ]
         },
         {
           label: '卡券标题',
@@ -75,11 +80,42 @@ export default {
           placeholder: '请输入'
         },
         {
-          label: '会员唯一标识',
-          type: 'input',
-          // name: 'memberId',
-          name: 'memberCode',
-          placeholder: '请输入'
+          label: '卡券业务类型',
+          type: 'select',
+          name: 'type',
+          placeholder: '请选择',
+          selectOptions: [
+            { name: '全部', id: '' },
+            { name: '增加', id: 1 },
+            { name: '减少', id: 2 }
+          ]
+        },
+        // {
+        //   label: '卡券来源',
+        //   type: 'select',
+        //   name: 'type',
+        //   placeholder: '请选择',
+        //   selectOptions: [
+        //     { name: '全部', id: '' },
+        //     { name: '增加', id: 1 },
+        //     { name: '减少', id: 2 }
+        //   ]
+        // },
+        {
+          label: '卡券状态',
+          type: 'select',
+          name: 'type',
+          placeholder: '请选择',
+          selectOptions: [
+            { name: '全部', id: '' },
+            { name: '增加', id: 1 },
+            { name: '减少', id: 2 }
+          ]
+        },
+        {
+          label: '发放时间',
+          type: 'rangePicker',
+          name: 'jointime'
         },
         {
           type: 'button',
@@ -88,23 +124,6 @@ export default {
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
-        },
-        {
-          label: '卡券手机',
-          type: 'inputNumber',
-          name: 'phoneNo',
-          placeholder: '请输入'
-        },
-        {
-          label: '卡券手机',
-          type: 'inputNumber',
-          name: 'phoneNo',
-          placeholder: '请输入'
-        },
-        {
-          label: '核销时间',
-          type: 'rangePicker',
-          name: 'jointime'
         }
       ],
       //表格高度
@@ -124,53 +143,87 @@ export default {
           width: 150
         },
         {
-          title: '核销时间',
+          title: '卡券副标题',
+          dataIndex: 'couponSubhead',
+          key: 'couponSubhead',
+          width: 150
+        },
+        {
+          title: '卡券类型',
+          dataIndex: 'couponType',
+          key: 'couponType',
+          width: 150
+        },
+        {
+          title: '卡券业务类型',
+          dataIndex: 'activity',
+          key: 'activity',
+          width: 150
+        },
+        {
+          title: '卡券面值金额',
+          dataIndex: 'amount',
+          key: 'amount',
+          width: 150
+        },
+        {
+          title: '卡券有效期',
+          dataIndex: 'validity',
+          key: 'validity',
+          width: 150
+        },
+        // {
+        //   title: '卡券来源',
+        //   dataIndex: 'validity',
+        //   key: 'validity',
+        //   width: 150
+        // },
+        {
+          title: '发放方式',
+          dataIndex: 'releaseForm',
+          key: 'releaseForm',
+          width: 150
+        },
+        {
+          title: '发放数量',
+          dataIndex: 'releaseCount',
+          key: 'releaseCount',
+          width: 150
+        },
+        {
+          title: '领取数量',
+          dataIndex: 'receiveCount',
+          key: 'receiveCount',
+          width: 150
+        },
+        {
+          title: '核销数量',
+          dataIndex: 'offCount',
+          key: 'offCount',
+          width: 150
+        },
+        // {
+        //   title: '过期数量',
+        //   dataIndex: 'offCount',
+        //   key: 'offCount',
+        //   width: 150
+        // },
+        {
+          title: '状态',
+          dataIndex: 'couponStatus',
+          key: 'couponStatus',
+          width: 150
+        },
+        {
+          title: '操作人员',
+          dataIndex: 'operator',
+          key: 'operator',
+          width: 150
+        },
+        {
+          title: '创建时间',
           key: 'jointimeSlot',
           scopedSlots: { customRender: 'jointimeSlot' },
-          width: 150
-        },
-        {
-          title: '会员昵称',
-          dataIndex: 'memberName',
-          key: 'memberName',
-          width: 150
-        },
-        {
-          title: '会员唯一标识',
-          dataIndex: 'memberCode',
-          key: 'memberCode',
-          // dataIndex: 'memberId',
-          // key: 'memberId',
-          width: 150
-        },
-        {
-          title: '会员手机号',
-          dataIndex: 'phone',
-          key: 'phone',
-          width: 150
-        },
-        {
-          title: '订单/账单号',
-          dataIndex: 'orderNo',
-          key: 'orderNo',
-          width: 150
-        },
-        {
-          title: '订单/账单类型',
-          dataIndex: 'orderType',
-          key: 'orderType',
-          width: 150
-        },
-        {
-          title: '订单/账单金额',
-          dataIndex: 'orderAmount',
-          key: 'orderAmount',
-          width: 150
-        },
-        {
-          title: '核销金额',
-          dataIndex: 'offAmount',
-          key: 'offAmount',
           width: 150
         },
         {
@@ -250,7 +303,7 @@ export default {
     onQuery(params) {
       // console.log('params :>> ', params);
       this.current = 1;
-      this.getClaimCancel(true);
+      this.getCouponsList(true);
     },
     //查看卡券详情
     goDetail(param) {
@@ -277,11 +330,11 @@ export default {
     onShowSizeChange(current, pageSize) {
       this.current = current;
       this.pageSize = pageSize;
-      this.getClaimCancel();
+      this.getCouponsList();
     },
 
     //获取积分列表
-    getClaimCancel(isQuery = false) {
+    getCouponsList(isQuery = false) {
       if (isQuery) {
         this.current = 1;
       }
@@ -322,26 +375,27 @@ export default {
         }
 
         const para = {
-          status: 2,
-          pageIndex: this.current,
-          pageSize: this.pageSize,
-          couponId: couponId, //卡券id
+          pageIndex: this.current, //起始页
+          pageSize: this.pageSize, //每页展示条数
+          activity: '', //卡券业务类型
+          // createTimeStart: jointimeStart, //开始时间
+          // createTimeEnd: jointimeEnd, //结束时间
+          createTimeStart: '', //开始时间
+          createTimeEnd: '', //结束时间
+          status: '', //卡券状态
           title: couponTitle, //卡券标题
-          createTimeStart: jointimeStart, //领取开始时间
-          createTimeEnd: jointimeEnd, //领取结束时间
-          memberId: memberCode, //会员唯一标识
-          phone: phoneNo //手机号
+          type: '' //卡券类型
         };
 
-        console.log('getClaimCancel para :>> ', para);
+        console.log('getCouponsList para :>> ', para);
 
         return api
-          .getClaimCancel(para)
+          .getCouponsList(para)
           .finally(() => {
             this.tableLoading = false;
           })
           .then(res => {
-            console.log('getClaimCancel res :>> ', res);
+            console.log('getCouponsList res :>> ', res);
             if (res.code === 200) {
               // this.total = res.data.total;
               this.total = res.data.records.length;
@@ -367,7 +421,7 @@ export default {
       this.$refs.memberForm.form.resetFields();
 
       //初始化加载数据
-      this.getClaimCancel();
+      this.getCouponsList();
     }
 
     //重置

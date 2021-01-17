@@ -49,5 +49,6 @@ export default {
     INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction',
     INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list',
     //卡券
+    COUPONS_LIST:'/times/member-center/coupon/api/v1/coupon/list',
     CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list'
 };
