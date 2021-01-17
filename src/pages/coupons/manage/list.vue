@@ -1,12 +1,13 @@
 <template>
-  <div id="coupons-cancel">
+  <div id="coupons-list">
     <div class="content-header">卡券管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList
+        routePath="/couponsManage/add"
         ref="memberForm"
-        :labelCol="{ span: 6 }"
-        :wrapperCol="{ span: 18 }"
-        :rowCol="3"
+        :labelCol="{ span: 9 }"
+        :wrapperCol="{ span: 15 }"
+        :rowCol="4"
         :formList="formList"
         :onSubmit="onQuery"
       />
@@ -23,7 +24,7 @@
       >
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.offTime)"></span>
+            <span v-html="momentStrHms(rowData.createTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
@@ -90,17 +91,14 @@ export default {
             { name: '减少', id: 2 }
           ]
         },
-        // {
-        //   label: '卡券来源',
-        //   type: 'select',
-        //   name: 'type',
-        //   placeholder: '请选择',
-        //   selectOptions: [
-        //     { name: '全部', id: '' },
-        //     { name: '增加', id: 1 },
-        //     { name: '减少', id: 2 }
-        //   ]
-        // },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        },
         {
           label: '卡券状态',
           type: 'select',
@@ -113,14 +111,19 @@ export default {
           ]
         },
         {
-          label: '发放时间',
+          label: '创建时间',
           type: 'rangePicker',
           name: 'jointime'
         },
         {
-          type: 'button',
-          buttonName: '查询',
-          htmlType: 'submit',
+          label: '空占位符',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        },
+        {
+          type: 'btn-default',
+          buttonName: '新建卡券',
+          htmlType: 'button',
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
@@ -460,7 +463,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#coupons-cancel {
+#coupons-list {
   height: 100%;
   overflow: hidden;
 

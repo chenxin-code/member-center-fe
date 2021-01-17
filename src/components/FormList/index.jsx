@@ -29,6 +29,10 @@ const FormList = {
       type: Array,
       default: []
     },
+    routePath: {
+      type: String,
+      default: ''
+    },
     labelCol: {
       type: Object,
       default: () => ({ span: 6 })
@@ -76,6 +80,7 @@ const FormList = {
         buttonName,
         buttonType = 'primary',
         htmlType = 'submit',
+        htmlTypeBtnDefault = 'button',
         ...others
       } = attrs;
       switch (type) {
@@ -116,8 +121,20 @@ const FormList = {
               {buttonName}
             </a-button>
           );
+        case 'btn-default':
+          return (
+            <a-button onClick={this.handleBtnClick} type={buttonType} html-type={htmlTypeBtnDefault} {...others}>
+              {buttonName}
+            </a-button>
+          );
         default:
           return null;
+      }
+    },
+    handleBtnClick(e) {
+      e.preventDefault();
+      if (this.routePath) {
+        this.$router.push(this.routePath);
       }
     },
     handleSubmit(e) {
@@ -127,7 +144,6 @@ const FormList = {
           this.onSubmit(values);
         }
       });
-      // this.onSubmit();
     }
   },
   render() {

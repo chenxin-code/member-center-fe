@@ -148,7 +148,7 @@ const routes = [
           authKeys: [''],
           bread: [
             { path: '/couponsManage', name: '卡券管理' },
-            { path: '/couponsManage/detail', name: '卡券详情' }
+            { path: '/couponsManage/detail', name: '卡券查看' }
           ]
         },
         component: CouponsManageDetail
