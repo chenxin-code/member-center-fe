@@ -622,6 +622,7 @@ export default {
 
 <style lang="less" scoped>
 .member-dashboard {
+  height: 100%;
   background: #f0f2f5 !important;
   background-color: #f0f2f5 !important;
 
@@ -685,75 +686,75 @@ export default {
       border: none !important;
     }
   }
-}
 
-.quarter-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  .quarter-footer-item {
-    flex: 1;
+  .quarter-footer {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-  }
-}
 
-.pie-source {
-  height: 250px !important;
-  background-color: #fff;
-  position: relative;
-  top: 0;
-  left: 0;
-
-  .pie-title {
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #666666;
-    position: absolute;
-    top: 20px;
-    left: 24px;
+    .quarter-footer-item {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
+  .pie-source {
+    height: 250px !important;
+    background-color: #fff;
+    position: relative;
+    top: 0;
+    left: 0;
+
+    .pie-title {
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      position: absolute;
+      top: 20px;
+      left: 24px;
+    }
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: center;
+      align-content: center;
+    }
   }
-}
 
-.isClicked {
-  color: #4b7afb;
-}
+  .isClicked {
+    color: #4b7afb;
+  }
 
-.antv-chart-mini {
-  position: relative;
-  width: 100%;
-
-  .chart-wrapper {
-    position: absolute;
-    bottom: -28px;
+  .antv-chart-mini {
+    position: relative;
     width: 100%;
+
+    .chart-wrapper {
+      position: absolute;
+      bottom: -28px;
+      width: 100%;
+    }
   }
-}
 
-.extra-wrapper {
-  line-height: 55px;
-  padding-right: 24px;
+  .extra-wrapper {
+    line-height: 55px;
+    padding-right: 24px;
 
-  .extra-item {
-    display: inline-block;
-    margin-right: 24px;
-
-    span {
+    .extra-item {
       display: inline-block;
-      margin-left: 24px;
+      margin-right: 24px;
+
+      span {
+        display: inline-block;
+        margin-left: 24px;
+      }
     }
   }
 }

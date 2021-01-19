@@ -4,34 +4,211 @@
       卡券查看
       <span class="fallback" @click="FALLBACK" style="cursor: pointer">返回</span>
     </div>
-    <div class="content-main">
+    <div class="coupons-main">
       <a-row style="height: 100%">
         <!-- 卡券基础信息 -->
         <div class="coupons-common coupons-base">
           <div class="common-title">
             <div class="common-title-content">卡券基础信息</div>
           </div>
-          <a-row class="common-row" style="padding: 16px; border-bottom: 1px dashed #ccc">
+          <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-single-column">
-                <div class="single-column-right">卡券标题:</div>
-                <div class="single-column-left">物业抵扣券</div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
               </div>
-              <div class="common-single-column">
-                <div class="single-column-right">卡券标题:</div>
-                <div class="single-column-left">物业抵扣券</div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券路由:</div>
+                    <div class="column-left">我是路由</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">
+                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <!-- <div class="column-left">物业抵扣券</div> -->
+                    <div class="column-left">
+                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                    </div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">卡券副的标题:</div>
+                    <!-- <div class="column-left">物业抵扣券</div> -->
+                    <div class="column-left">
+                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">成本价:</div>
+                    <div class="column-left">50元</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">使用说明:</div>
+                    <div class="column-left">
+                      <a-textarea
+                        v-model="useRemark"
+                        :maxLength="20"
+                        :auto-size="{ minRows: 2, maxRows: 5 }"
+                        style="width: 267px;"
+                        placeholder="请输入备注"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </a-col>
-          </a-row>
-        </div>
-
-        <!-- 卡券发放信息 -->
-        <div class="coupons-common coupons-release">
-          <div class="common-title">
-            <div class="common-title-content">卡券发放信息</div>
-          </div>
-          <a-row class="common-row" style="padding: 16px; border-bottom: 1px dashed #ccc">
-            <a-col :span="24"></a-col>
           </a-row>
         </div>
 
@@ -40,18 +217,51 @@
           <div class="common-title">
             <div class="common-title-content">卡券记录信息</div>
           </div>
-          <a-row class="common-row" style="padding: 16px; border-bottom: 1px dashed #ccc">
-            <a-col :span="24"></a-col>
-          </a-row>
-        </div>
-
-        <!-- 卡券数据 -->
-        <div class="coupons-common coupons-data">
-          <div class="common-title">
-            <div class="common-title-content">卡券数据</div>
-          </div>
-          <a-row class="common-row" style="padding: 16px; border-bottom: 1px dashed #ccc">
-            <a-col :span="24"></a-col>
+          <a-row class="common-row">
+            <a-col :span="24">
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券标题:</div>
+                    <div class="column-left">物业抵扣券</div>
+                  </div>
+                </div>
+              </div>
+            </a-col>
           </a-row>
         </div>
       </a-row>
@@ -73,7 +283,8 @@ export default {
   data() {
     return {
       memberId: '',
-      memberDetails: {}
+      memberDetails: {},
+      useRemark:''
     };
   },
   computed: {
@@ -177,14 +388,17 @@ export default {
 <style lang="less" scoped>
 #coupons-detail {
   height: 100%;
+  overflow-y: auto;
+  padding-bottom: 20px;
 
   .content-header {
     .fallback {
       cursor: pointer;
     }
   }
-  .content-main {
+  .coupons-main {
     .coupons-common {
+      background-color: #fff;
       .common-title {
         color: #666;
         padding: 5px 0 0 26px;
@@ -197,15 +411,64 @@ export default {
         }
       }
       .common-row {
+        padding: 16px;
+        border-bottom: 1px dashed #ccc;
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: stretch;
         align-items: center;
+
+        .common-column-wrapp {
+          padding-left: 80px;
+          margin-bottom: 20px;
+          background-color: #eee;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: flex-start;
+          .common-column {
+            padding-right: 50px;
+            .column-item {
+              padding-bottom: 10px;
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-start;
+              align-items: flex-start;
+
+              .column-right {
+                padding-right: 5px;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+              }
+              .column-left {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+              }
+            }
+            .column-item:last-child {
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        .common-column-wrapp:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .common-row:last-child {
+        border: none;
       }
     }
 
-    .coupons-base {
-    }
+    // .coupons-base {
+    // }
+    // .coupons-record {
+    // }
   }
 }
 </style>
