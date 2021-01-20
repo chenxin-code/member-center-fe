@@ -209,6 +209,7 @@
                     <div class="column-item">
                       <div class="column-right">上传优惠券封面图:</div>
                       <div class="column-left">
+                        <!-- http://dev.linli590.cn:8000/advertise/popUpSet -->
                         <a-input placeholder="请输入商户id，多个以,间隔" allow-clear v-model="commercialTenants" />
                         <div>{{ commercialTenants }}</div>
                       </div>
