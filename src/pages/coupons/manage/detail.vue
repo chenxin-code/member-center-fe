@@ -195,12 +195,13 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">使用说明:</div>
+                    <div class="column-right" @click="log">使用说明:</div>
                     <div class="column-left">
                       <a-textarea
                         v-model="useRemark"
-                        :maxLength="20"
-                        :auto-size="{ minRows: 2, maxRows: 5 }"
+                        :disabled="true"
+                        :maxLength="50"
+                        :auto-size="{ minRows: 3, maxRows: 5 }"
                         style="width: 267px;"
                         placeholder="请输入备注"
                       />
@@ -284,7 +285,7 @@ export default {
     return {
       memberId: '',
       memberDetails: {},
-      useRemark:''
+      useRemark: '1.请在有效期内使用;\n2.只能在指定商铺使用;'
     };
   },
   computed: {
@@ -318,6 +319,9 @@ export default {
   },
   methods: {
     ...mapActions(['FALLBACK']),
+    log() {
+      console.log(this.useRemark);
+    },
     getMemberDetail() {
       const param = {
         memberId: this.memberId
@@ -388,8 +392,6 @@ export default {
 <style lang="less" scoped>
 #coupons-detail {
   height: 100%;
-  overflow-y: auto;
-  padding-bottom: 20px;
 
   .content-header {
     .fallback {
@@ -397,6 +399,8 @@ export default {
     }
   }
   .coupons-main {
+    height: calc(100% - 50px);
+    overflow-y: auto;
     .coupons-common {
       background-color: #fff;
       .common-title {
@@ -421,7 +425,7 @@ export default {
         .common-column-wrapp {
           padding-left: 80px;
           margin-bottom: 20px;
-          background-color: #eee;
+          // background-color: #eee;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -447,6 +451,12 @@ export default {
                 flex-direction: row;
                 justify-content: flex-start;
                 align-items: center;
+
+                .ant-input-disabled {
+                  background-color: #fff;
+                  width: 500px !important;
+                  color: #2c3e50;
+                }
               }
             }
             .column-item:last-child {

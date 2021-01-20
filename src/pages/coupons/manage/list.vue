@@ -400,6 +400,15 @@ export default {
           .then(res => {
             console.log('getCouponsList res :>> ', res);
             if (res.code === 200) {
+              // if (Object.prototype.toString.call(res.data) !== '[object Object]') {
+              //   //res.data非对象阻断
+              //   return;
+              // }
+              // if (Object.prototype.toString.call(res.data.records) !== '[object Array]') {
+              //   //res.data.records非数组阻断
+              //   return;
+              // }
+
               // this.total = res.data.total;
               this.total = res.data.records.length;
               this.tableData.splice(0, this.tableData.length);
