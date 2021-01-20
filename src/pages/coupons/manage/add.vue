@@ -57,12 +57,15 @@
                   <div class="column-item">
                     <div class="column-right">代金券金额:</div>
                     <div class="column-left">
-                      <a-input placeholder="请输入代金券金额" allow-clear v-model="voucherAmount" />
-                      <div>{{ voucherAmount }}</div>
+                      <template v-show="couponType === 10">
+                        <a-input placeholder="请输入代金券金额" allow-clear v-model="voucherAmount" />
+                        <div>{{ voucherAmount }}</div>
+                      </template>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- 有效期类型 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
