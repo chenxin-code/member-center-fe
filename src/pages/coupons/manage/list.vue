@@ -319,12 +319,12 @@ export default {
       });
     },
     //查看卡券创建
-    goAdd(paramData) {
-      console.log('paramData :>> ', paramData);
+    goAdd(param) {
+      console.log('param :>> ', param);
       this.$router.push({
         name: 'couponsManageAdd',
-        params: {
-          rowData: paramData
+        query: {
+          id: param.id
         }
       });
     },

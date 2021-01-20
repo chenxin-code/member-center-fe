@@ -13,6 +13,7 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
+              <!-- 卡券标题 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
@@ -21,6 +22,7 @@
                   </div>
                 </div>
               </div>
+              <!-- 卡券副标题 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
@@ -29,6 +31,7 @@
                   </div>
                 </div>
               </div>
+              <!-- 卡券类型 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
@@ -36,19 +39,20 @@
                     <div class="column-left">{{ couponDetails.couponType }}</div>
                   </div>
                 </div>
-                <div class="common-column">
+                <!-- <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券类型:</div>
                     <div class="column-left">{{ couponDetails.couponType }}</div>
                   </div>
-                </div>
-                <div class="common-column">
+                </div> -->
+                <!-- <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券类型:</div>
                     <div class="column-left">{{ couponDetails.couponType }}</div>
                   </div>
-                </div>
+                </div> -->
               </div>
+              <!-- 代金券金额 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
@@ -56,7 +60,7 @@
                     <div class="column-left">{{ couponDetails.voucherAmount }}</div>
                   </div>
                 </div>
-                <div class="common-column">
+                <!-- <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">代金券金额:</div>
                     <div class="column-left">{{ couponDetails.voucherAmount }}</div>
@@ -67,7 +71,7 @@
                     <div class="column-right">代金券金额:</div>
                     <div class="column-left">{{ couponDetails.voucherAmount }}</div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div class="common-column-wrapp">
                 <div class="common-column">
@@ -95,36 +99,14 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">选择日期:</div>
-                    <div class="column-left">物业抵扣券</div>
-                  </div>
-                </div>
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">有效期:</div>
-                    <div class="column-left">物业抵扣券</div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- <div class="common-column-wrapp">
+              <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券来源:</div>
-                    <div class="column-left">我是卡券来源</div>
+                    <div class="column-left">{{couponDetails.source}}</div>
                   </div>
                 </div>
-              </div> -->
-              <!-- <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券路由:</div>
-                    <div class="column-left">我是卡券路由</div>
-                  </div>
-                </div>
-              </div> -->
+              </div>
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
