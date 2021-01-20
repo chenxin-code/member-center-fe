@@ -4,8 +4,8 @@
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
+      <!-- :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" -->
       <a-table
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :columns="tableColumns"
         :data-source="tableData"
         :pagination="false"
@@ -63,8 +63,8 @@ export default {
   name: 'integralManage',
   data() {
     return {
-      selectedRowKeys: [],
-      selectedRowData: {},
+      // selectedRowKeys: [],表格单选
+      // selectedRowData: {},表格单选
       formList: [
         {
           label: '类型',
@@ -233,15 +233,13 @@ export default {
     });
   },
   methods: {
-    onSelectChange(selectedVal, selectedRows) {
-      //切换分页要清空selectedRowKeys
-      this.selectedRowKeys = selectedVal;
-      this.selectedRowKeys.splice(0, this.selectedRowKeys.length - 1);
-      this.selectedRowData = selectedRows[selectedRows.length - 1];
-
-      console.log('this.selectedRowKeys :>> ', this.selectedRowKeys);
-      console.log('this.selectedRowData :>> ', this.selectedRowData);
-    },
+    // onSelectChange(selectedVal, selectedRows) {
+    //   console.log('onSelectChange selectedRows :>> ', selectedRows);
+    //   //切换分页要清空selectedRowKeys
+    //   this.selectedRowKeys = selectedVal;
+    //   this.selectedRowKeys.splice(0, this.selectedRowKeys.length - 1);
+    //   this.selectedRowData = selectedRows[selectedRows.length - 1] || {};
+    // },
     //查询按钮
     onQuery(params) {
       // console.log('params :>> ', params);
@@ -260,7 +258,7 @@ export default {
     },
     // 分页
     onShowSizeChange(current, pageSize) {
-      this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
+      // this.selectedRowKeys.splice(0, this.selectedRowKeys.length); //表格单选
       this.current = current;
       this.pageSize = pageSize;
       this.getIntegralList();
@@ -412,6 +410,10 @@ export default {
 
     ::v-deep .ant-input-number {
       width: 100%;
+    }
+
+    ::v-deep .ant-table-thead .ant-checkbox-inner{
+      display:none;
     }
   }
 }
