@@ -477,8 +477,9 @@ export default {
 
     // .coupons-base {
     // }
-    // .coupons-record {
-    // }
+    .coupons-record {
+      padding-bottom: 100px;
+    }
   }
 }
 </style>
