@@ -310,11 +310,11 @@ export default {
     },
     //查看卡券详情
     goDetail(param) {
-      console.log('param :>> ', param);
+      console.log('goDetail param :>> ', param);
       this.$router.push({
         name: 'couponsManageDetail',
         query: {
-          id: param.memberId
+          id: param.id
         }
       });
     },

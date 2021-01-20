@@ -50,5 +50,6 @@ export default {
     INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list',
     //卡券
     COUPONS_LIST:'/times/member-center/coupon/api/v1/coupon/list',
-    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list'
+    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list',
+    COUPON_DETAIL:'/times/member-center/coupon/api/v1/coupon/detail'
 };

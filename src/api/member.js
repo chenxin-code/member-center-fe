@@ -21,3 +21,4 @@ export const getIntegralList = data => fetchApi(URL.INTEGRAL_LIST, data, 'GET');
 //卡券
 export const getCouponsList = data => fetchApi(URL.COUPONS_LIST, data, 'GET');
 export const getClaimCancel = data => fetchApi(URL.CLAIM_CANCEL, data, 'GET');
+export const getCouponDetail = data => fetchApi(URL.COUPON_DETAIL, data, 'GET');
