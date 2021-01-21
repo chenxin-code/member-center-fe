@@ -299,7 +299,7 @@ export default {
         { name: '会员中心', code: 40 },
         { name: '收费中心', code: 50 }
       ],
-      couponBusinessType: 20,
+      couponBusinessType: 20, //卡券业务类型
       couponBusinessTypes: [
         { name: '物业费', code: 10 },
         { name: '购物券', code: 20 }

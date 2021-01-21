@@ -31,93 +31,99 @@
                   </div>
                 </div>
               </div>
-              <!-- 卡券类型 -->
+              <!-- 卡券类型/代金券金额  -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType }}</div>
+                    <div class="column-left">{{ couponDetails.couponType || '代金券' }}</div>
                   </div>
-                </div>
-                <!-- <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType }}</div>
-                  </div>
-                </div> -->
-                <!-- <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType }}</div>
-                  </div>
-                </div> -->
-              </div>
-              <!-- 代金券金额 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">代金券金额:</div>
-                    <div class="column-left">{{ couponDetails.voucherAmount }}</div>
-                  </div>
-                </div>
-                <!-- <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left">{{ couponDetails.voucherAmount }}</div>
+                    <div class="column-left">{{ couponDetails.voucherAmount || 100 }}元</div>
                   </div>
                 </div>
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left">{{ couponDetails.voucherAmount }}</div>
+                    <div class="column-right">卡券类型:</div>
+                    <div class="column-left">{{ couponDetails.couponType || '满减券' }}</div>
                   </div>
-                </div> -->
+                  <div class="column-item">
+                    <div class="column-right">代金券金额:</div>
+                    <div class="column-left">
+                      满{{ couponDetails.satisfyAmount || 1000 }}元抵扣{{
+                        couponDetails.fullReductionDiscountAmount || 1000
+                      }}元
+                    </div>
+                  </div>
+                </div>
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券类型:</div>
+                    <div class="column-left">{{ couponDetails.couponType || '折扣券' }}</div>
+                  </div>
+                  <div class="column-item">
+                    <div class="column-right">代金券金额:</div>
+                    <div class="column-left">
+                      满{{ couponDetails.satisfyAmount || 1000 }}元{{ couponDetails.discountRatio || 98 }}折最高抵扣{{
+                        couponDetails.discountMaxDeduction || 1000
+                      }}元
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!-- 有效期类型 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ couponDetails.validityType }}</div>
+                    <div class="column-left">{{ couponDetails.validityType || '固定有效期' }}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityStartTime }}~{{ couponDetails.validityEndTime }}
+                      {{ couponDetails.validityStartTime || '2015-10-02 22:00:00' }}~{{
+                        couponDetails.validityEndTime || '2015-10-10 23:00:00'
+                      }}
                     </div>
                   </div>
                 </div>
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ couponDetails.validityType }}</div>
+                    <div class="column-left">{{ couponDetails.validityType || '相对有效期' }}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">有效期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityDayNums }}天, 领取后{{ couponDetails.takeEffectDayNums }}天生效
+                      {{ couponDetails.validityDayNums || 100 }}天, 领取后{{
+                        couponDetails.takeEffectDayNums || 3
+                      }}天生效
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- 卡券来源 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券来源:</div>
-                    <div class="column-left">{{couponDetails.source}}</div>
+                    <div class="column-left">{{ couponDetails.source || '邻里邦Pro'}}</div>
                   </div>
                 </div>
               </div>
+              <!-- 卡券业务类型 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">物业费</div>
+                    <div class="column-left">{{ couponDetails.couponBusinessType || '物业费'}}</div>
                   </div>
                 </div>
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">购物券</div>
+                    <div class="column-left">{{ couponDetails.couponBusinessType || '购物券'}}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">分类:</div>
@@ -137,7 +143,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">购物券</div>
+                    <div class="column-left">{{ couponDetails.couponBusinessType || '购物券'}}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">分类:</div>
@@ -157,7 +163,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">购物券</div>
+                    <div class="column-left">{{ couponDetails.couponBusinessType || '购物券'}}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">分类:</div>
@@ -175,14 +181,16 @@
                   </div>
                 </div>
               </div>
+              <!-- 成本价 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">成本价:</div>
-                    <div class="column-left">{{ couponDetails.cost }}元</div>
+                    <div class="column-left">{{ couponDetails.cost || 50}}元</div>
                   </div>
                 </div>
               </div>
+              <!-- 使用说明 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
@@ -373,9 +381,8 @@ export default {
         align-items: center;
 
         .common-column-wrapp {
-          padding-left: 80px;
-          margin-bottom: 20px;
-          // background-color: #eee;
+          // padding-left: 80px;
+          margin-bottom: 30px;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -390,6 +397,7 @@ export default {
               align-items: flex-start;
 
               .column-right {
+                width: 150px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;
