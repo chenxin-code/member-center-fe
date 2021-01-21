@@ -358,7 +358,7 @@ export default {
       alert('提交按钮');
     },
     handleCancle() {
-      this.$router.replace({path: '/couponsManage'});
+      this.$router.replace({ path: '/couponsManage' });
     },
     handleRangePicker(dates, dateStrings) {
       console.log('handleRangePicker dates :>> ', dates);

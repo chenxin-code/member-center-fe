@@ -206,12 +206,38 @@
                       </div>
                       <span>{{ merchandises }}</span>
                     </div>
-                    <div class="column-item">
+                    <div class="column-item column-form">
                       <div class="column-right">上传优惠券封面图:</div>
                       <div class="column-left">
-                        <!-- http://dev.linli590.cn:8000/advertise/popUpSet -->
-                        <a-input placeholder="请输入商户id，多个以,间隔" allow-clear v-model="commercialTenants" />
-                        <div>{{ commercialTenants }}</div>
+                        <a-form :form="conponForm">
+                          <a-form-item>
+                            <a-spin :spinning="picUploading">
+                              <a-upload
+                                name="avatar"
+                                accept="image/jpeg,image/jpg,image/png"
+                                list-type="picture-card"
+                                :file-list="fileList"
+                                v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
+                                :before-upload="() => false"
+                                @preview="handlePreview"
+                                @change="addPic"
+                              >
+                                <div v-if="fileList.length < 1">
+                                  <a-icon type="plus" />
+                                  <div class="ant-upload-text">
+                                    上传图片
+                                  </div>
+                                </div>
+                              </a-upload>
+                              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                                <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                              </a-modal>
+                            </a-spin>
+                            <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                              建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
+                            </span>
+                          </a-form-item>
+                        </a-form>
                       </div>
                     </div>
                   </template>
@@ -246,6 +272,15 @@
                   </div>
                 </div>
               </div>
+              <!-- 提交和取消 -->
+              <div class="common-submit-cancle">
+                <div class="common-btn common-submit">
+                  <a-button type="primary" @click="handleSubmit">提交</a-button>
+                </div>
+                <div class="common-btn common-cancle">
+                  <a-button type="primary" @click="handleCancle">取消</a-button>
+                </div>
+              </div>
             </a-col>
           </a-row>
         </div>
@@ -255,16 +290,25 @@
 </template>
 
 <script>
-import moment from 'moment';
 import api from '@/api';
+import moment from 'moment';
+import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'memberInfoDetail',
+  name: 'couponsManageNew',
   components: {},
   data() {
     return {
+      //////////上传图片///////////
+      conponForm: this.$form.createForm(this, { name: 'conponForm' }),
+      previewVisible: false,
+      previewImage: '',
+      fileList: [],
+      picUploading: false,
+      btnLoading: false,
+      //////////上传图片///////////
       memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
       // couponDetails: {},
       couponTitle: '',
@@ -345,6 +389,103 @@ export default {
   },
   methods: {
     ...mapActions(['FALLBACK']),
+    //////////上传图片///////////
+    addPic({ fileList = [] } = {}) {
+      if (this.fileList.length > 0) {
+        const that = this;
+        that.$confirm({
+          title: '删除图片',
+          content: '确定删除图片吗？',
+          centered: true,
+          okText: '确定',
+          cancelText: '取消',
+          onOk() {
+            const para = {
+              filePath: that.fileList[0].url,
+              type: 1
+            };
+            that.picUploading = true;
+            api
+              .deleteImage(para)
+              .then(res => {
+                if (res.code === 200) {
+                  that.fileList = [];
+                  that.conponForm.setFieldsValue({
+                    imageUrl: ''
+                  });
+                }
+              })
+              .finally(() => {
+                that.picUploading = false;
+              });
+          }
+        });
+      } else {
+        debounce(() => {
+          const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+          if (!isJpgOrPng) {
+            this.$message.error('图片格式错误，请重新上传');
+          } else {
+            const imgSize = fileList[0].size / 1024 / 1024 < 5;
+            if (!imgSize) {
+              this.$message.error('图片过大，请重新上传');
+            } else {
+              this.picUploading = true;
+              const formData = new FormData();
+              console.log('fileList :>> ', fileList);
+              fileList.forEach(file => {
+                formData.append('file', file.originFileObj);
+              });
+              formData.append('programCode', 'sys-member-center');
+              console.log('formData.get(file) :>> ', formData.get('file'));
+              console.log('formData.get(programCode) :>> ', formData.get('programCode'));
+
+              api
+                .updateImage(formData)
+                .finally(() => {
+                  this.picUploading = false;
+                })
+                .then(res => {
+                  if (res.code === 200) {
+                    console.log(this.fileList);
+                    this.conponForm.setFieldsValue({
+                      imageUrl: res.data
+                    });
+                    this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
+                  }
+                });
+            }
+          }
+        });
+      }
+    },
+    handleCancel() {
+      debounce(() => {
+        this.previewVisible = false;
+      });
+    },
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await this.getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    //////////上传图片///////////
+    handleSubmit() {
+      alert('提交按钮');
+    },
+    handleCancle() {
+      this.$router.replace({ path: '/couponsManage' });
+    },
     handleRangePicker(dates, dateStrings) {
       console.log('handleRangePicker dates :>> ', dates);
       console.log('handleRangePicker dateStrings :>> ', dateStrings);
@@ -367,7 +508,7 @@ export default {
     couponBusinessTypeSelect(value) {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
-    },
+    }
     // getCouponDetail() {
     //   const param = {
     //     couponId: this.$route.query.id
@@ -390,19 +531,10 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getCouponDetail();
+    // this.getCouponDetail();
   },
   mounted() {},
-  watch: {
-    // bangdouAddRemark: {
-    //   handler(newVal) {
-    //     if (newVal) {
-    //       this.bangdouAddRemarkNull = false;
-    //     }
-    //   },
-    //   immediate: true //刷新加载 立马触发一次handler
-    // }
-  }
+  watch: {}
 };
 </script>
 
@@ -504,11 +636,51 @@ export default {
               justify-content: flex-start;
               align-items: flex-start;
             }
+
+            .column-item.column-form {
+              padding-bottom: 10px;
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-start;
+              align-items: flex-start;
+
+              ::v-deep .ant-upload.ant-upload-select-picture-card {
+                margin-bottom: 0;
+              }
+            }
           }
         }
 
-        .common-column-wrapp:last-child {
-          margin-bottom: 0;
+        // .common-column-wrapp:last-child {
+        //   margin-bottom: 0;
+        // }
+
+        .common-submit-cancle {
+          padding: 30px 0 0 150px;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+
+          .common-btn {
+            margin-right: 50px;
+
+            ::v-deep .ant-btn {
+              width: 90px;
+              height: 40px;
+              border-radius: 8px;
+              font-size: 18px;
+              font-weight: 500;
+            }
+          }
+
+          .common-cancle {
+            ::v-deep .ant-btn {
+              color: #666;
+              background-color: #fff;
+              border-color: #ccc;
+            }
+          }
         }
       }
 
@@ -518,7 +690,7 @@ export default {
     }
 
     .coupons-base {
-      padding-bottom: 100px;
+      padding-bottom: 50px;
     }
   }
 }
