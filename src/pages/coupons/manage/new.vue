@@ -55,7 +55,7 @@
                       'couponType',
                       {
                         initialValue: couponTypes[0].code,
-                        rules: [{ required: true, message: '卡券标题不能为空' }]
+                        rules: [{ required: true, message: '卡券类型不能为空' }]
                       }
                     ]"
                     @change="couponTypeSelect"
@@ -169,7 +169,8 @@
                       v-decorator="[
                         'discountRatio',
                         {
-                          initialValue: 0
+                          initialValue: 0,
+                          rules: [{ required: true, message: '折扣比例不能为空' }]
                         }
                       ]"
                       placeholder="请输入折扣比例，支持小数点后2位"
@@ -185,7 +186,8 @@
                     v-decorator="[
                       'validityType',
                       {
-                        initialValue: validityTypes[0].code
+                        initialValue: validityTypes[0].code,
+                        rules: [{ required: true, message: '有效期类型不能为空' }]
                       }
                     ]"
                     @change="validityTypeSelect"
@@ -224,7 +226,8 @@
                       v-decorator="[
                         'validityDayNums',
                         {
-                          initialValue: 1
+                          initialValue: 1,
+                          rules: [{ required: true, message: '有效天数不能为空' }]
                         }
                       ]"
                       placeholder="请输入有效天数，1-999"
@@ -240,12 +243,14 @@
                       v-decorator="[
                         'takeEffectDayNums',
                         {
-                          initialValue: 1
+                          initialValue: 1,
+                          rules: [{ required: true, message: '领取后几天后生效不能为空' }]
                         }
                       ]"
                       placeholder="输入天数，1-999"
                       allow-clear
                     />
+                    <div>takeEffectDayNums:{{ takeEffectDayNums }}</div>
                   </a-form-item>
                 </template>
 
@@ -295,7 +300,8 @@
                       v-decorator="[
                         'classification',
                         {
-                          initialValue: 1
+                          initialValue: 1,
+                          rules: [{ required: true, message: '商城订单类型不能为空' }]
                         }
                       ]"
                     >
@@ -462,8 +468,8 @@ export default {
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //固定有效期-卡券有效期开始时间
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
-      validityDayNums: '', //相对有效期-卡券有效天数
-      takeEffectDayNums: '', //相对有效期-领取后几天后生效
+      validityDayNums: 1, //相对有效期-卡券有效天数
+      takeEffectDayNums: 1, //相对有效期-领取后几天后生效
       source: 10, //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
         { name: '地产', code: 10 },
@@ -620,6 +626,8 @@ export default {
         console.log('handleSubmit validateFields err :>> ', err);
         if (!err) {
           console.log('handleSubmit values :>> ', values);
+          console.log('this.fileList[0].url :>> ', this.fileList[0].url);
+          return;
           this.getCouponCreate(values);
         }
       });
@@ -710,7 +718,6 @@ export default {
         console.log('getCouponDetail res :>> ', res);
         if (res.code === 200) {
           const data = res.data;
-          this.typeId = res.data.type;
           this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.advertPicture };
           this.$nextTick(() => {
             this.form.setFieldsValue({
@@ -735,43 +742,34 @@ export default {
     getCouponCreate(values) {
       console.log('getCouponCreate values :>> ', values);
       const param = {
-        classification: values.classification || '',
-        commercialTenants: values.commercialTenants || '',
-        cost: values.cost || '',
-        couponBusinessType: values.couponBusinessType || '',
+        classification: this.classification || '',
+        commercialTenants: this.commercialTenants || '',
+        cost: this.cost || '',
+        couponBusinessType: this.couponBusinessType || '',
         // couponId: '',
-        couponImage: values.couponImage || '',
-        couponSubhead: values.couponSubhead || '',
-        couponTitle: values.couponTitle || '',
-        couponType: values.couponType || '',
-        createOperator: values.createOperator || '',
-        createTime: values.createTime || '',
-        dateTime: values.dateTime || '',
-        discountMaxDeduction: values.discountMaxDeduction || '',
-        discountRatio: values.discountRatio || '',
-        fullReductionDiscountAmount: values.fullReductionDiscountAmount || '',
-        memo: values.memo || '',
-        merchandises: values.merchandises || '',
-        satisfyAmount: values.satisfyAmount || '',
-        source: values.source || '',
-        takeEffectDayNums: values.takeEffectDayNums || '',
-        validityDayNums: values.validityDayNums || '',
+        couponImage: this.fileList[0].url || '',
+        couponSubhead: this.couponSubhead || '',
+        couponTitle: this.couponTitle || '',
+        couponType: this.couponType || '',
+        createOperator: this.createOperator || '',
+        createTime: this.createTime || '',
+        dateTime: this.dateTime || '',
+        discountMaxDeduction: this.discountMaxDeduction || '',
+        discountRatio: this.discountRatio || '',
+        fullReductionDiscountAmount: this.fullReductionDiscountAmount || '',
+        memo: this.memo || '',
+        merchandises: this.merchandises || '',
+        satisfyAmount: this.satisfyAmount || '',
+        source: this.source || '',
+        takeEffectDayNums: this.takeEffectDayNums || '',
+        validityDayNums: this.validityDayNums || '',
         validityEndTime: this.validityEndTime || '',
         validityStartTime: this.validityStartTime || '',
-        validityType: values.validityType || '',
-        voucherAmount: values.voucherAmount || ''
+        validityType: this.validityType || '',
+        voucherAmount: this.voucherAmount || ''
       };
-
-      // console.log('getCouponCreate param1 :>> ', param);
-      // for (const key in param) {
-      //   if (Object.hasOwnProperty.call(param, key)) {
-      //     if (param[key] === '') {
-      //       delete param[key];
-      //     }
-      //   }
-      // }
       // const paramData = { couponBasisVo: param }
-      console.log('getCouponCreate param2 :>> ', param);
+      console.log('getCouponCreate param :>> ', param);
 
       // return;
 
