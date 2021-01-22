@@ -400,7 +400,6 @@ export default {
       submitLoading: false,
       //////////上传图片///////////
       memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
-      // couponDetails: {},
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
@@ -612,6 +611,40 @@ export default {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
     },
+
+    //获取详情
+    getCouponDetail() {
+      const param = {
+        couponId: this.$route.query.id
+      };
+      console.log('getCouponDetail param :>> ', param);
+      api.getCouponDetail(param).then(res => {
+        console.log('getCouponDetail res :>> ', res);
+        if (res.code === 200) {
+          console.log('getCouponDetail res.data :>> ', res.data);
+          const data = res.data;
+          this.typeId = res.data.type;
+          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.advertPicture };
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              title: data.title,
+              status: data.status.toString(),
+              type: data.type.toString(),
+              imageUrl: data.advertPicture,
+              date: [moment(data.startValidTime).format('YYYY-MM-DD'), moment(data.endValidTime).format('YYYY-MM-DD')],
+              url: data.url,
+              isYouZan: data.youzan,
+              richText: data.customContent,
+              model: Number(data.microappId),
+              miniId: data.miniId,
+              miniPath: data.miniPath,
+              isShowTitle: data.isShowTitle
+            });
+          });
+        }
+      });
+    },
+
     getCouponCreate(values) {
       console.log('getCouponCreate values :>> ', values);
       const param = {
@@ -664,8 +697,7 @@ export default {
         .then(res => {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
-            console.log('res.data :>> ', res.data);
-            // console.log('this.couponDetails :>> ', this.couponDetails);
+            console.log('getCouponCreate res.data :>> ', res.data);
           }
         });
     }
