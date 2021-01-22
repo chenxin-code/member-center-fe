@@ -219,15 +219,16 @@
                                 :file-list="fileList"
                                 v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
                                 :before-upload="() => false"
+                                :remove="deleteOssImage"
                                 @preview="handlePreview"
                                 @change="addPic"
                               >
-                                <div v-if="fileList.length < 1">
+                                <template v-if="fileList.length < 1">
                                   <a-icon type="plus" />
                                   <div class="ant-upload-text">
                                     上传图片
                                   </div>
-                                </div>
+                                </template>
                               </a-upload>
                               <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
                                 <img class="img" alt="example" style="width: 100%" :src="previewImage" />
@@ -275,7 +276,7 @@
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
                 <div class="common-btn common-submit">
-                  <a-button type="primary" @click="handleSubmit">提交</a-button>
+                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit">提交</a-button>
                 </div>
                 <div class="common-btn common-cancle">
                   <a-button type="primary" @click="handleCancle">取消</a-button>
@@ -307,7 +308,7 @@ export default {
       previewImage: '',
       fileList: [],
       picUploading: false,
-      btnLoading: false,
+      submitLoading: false,
       //////////上传图片///////////
       memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
       // couponDetails: {},
@@ -390,74 +391,84 @@ export default {
   methods: {
     ...mapActions(['FALLBACK']),
     //////////上传图片///////////
+
+    //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
     addPic({ fileList = [] } = {}) {
-      if (this.fileList.length > 0) {
-        const that = this;
-        that.$confirm({
-          title: '删除图片',
-          content: '确定删除图片吗？',
-          centered: true,
-          okText: '确定',
-          cancelText: '取消',
-          onOk() {
-            const para = {
-              filePath: that.fileList[0].url,
-              type: 1
-            };
-            that.picUploading = true;
+      console.log('addPic fileList:>> ', fileList);
+      if (fileList.length > 0) {
+        const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+        if (!isJpgOrPng) {
+          this.$message.error('图片格式错误，请重新上传');
+        } else {
+          const imgSize = fileList[0].size / 1024 / 1024 < 5;
+          if (!imgSize) {
+            this.$message.error('图片过大，请重新上传');
+          } else {
+            this.picUploading = true;
+            const formData = new FormData();
+            console.log('fileList :>> ', fileList);
+            fileList.forEach(file => {
+              formData.append('file', file.originFileObj);
+            });
+            formData.append('programCode', 'sys-member-center');
+            console.log('formData.get(file) :>> ', formData.get('file'));
+            console.log('formData.get(programCode) :>> ', formData.get('programCode'));
+
             api
-              .deleteImage(para)
+              .updateImage(formData)
+              .finally(() => {
+                this.picUploading = false;
+              })
               .then(res => {
                 if (res.code === 200) {
-                  that.fileList = [];
-                  that.conponForm.setFieldsValue({
-                    imageUrl: ''
+                  console.log(this.fileList);
+                  this.conponForm.setFieldsValue({
+                    imageUrl: res.data
                   });
+                  this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
                 }
-              })
-              .finally(() => {
-                that.picUploading = false;
               });
           }
-        });
-      } else {
-        debounce(() => {
-          const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
-          if (!isJpgOrPng) {
-            this.$message.error('图片格式错误，请重新上传');
-          } else {
-            const imgSize = fileList[0].size / 1024 / 1024 < 5;
-            if (!imgSize) {
-              this.$message.error('图片过大，请重新上传');
-            } else {
-              this.picUploading = true;
-              const formData = new FormData();
-              console.log('fileList :>> ', fileList);
-              fileList.forEach(file => {
-                formData.append('file', file.originFileObj);
-              });
-              formData.append('programCode', 'sys-member-center');
-              console.log('formData.get(file) :>> ', formData.get('file'));
-              console.log('formData.get(programCode) :>> ', formData.get('programCode'));
-
-              api
-                .updateImage(formData)
-                .finally(() => {
-                  this.picUploading = false;
-                })
-                .then(res => {
-                  if (res.code === 200) {
-                    console.log(this.fileList);
-                    this.conponForm.setFieldsValue({
-                      imageUrl: res.data
-                    });
-                    this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
-                  }
-                });
-            }
-          }
-        });
+        }
       }
+    },
+    handleRemove(file) {
+      console.log('handleRemove');
+      const index = this.fileList.indexOf(file);
+      const newFileList = this.fileList.slice();
+      newFileList.splice(index, 1);
+      this.fileList = newFileList;
+    },
+    deleteOssImage() {
+      console.log('deleteOssImage');
+      const that = this;
+      that.$confirm({
+        title: '删除图片111',
+        content: '确定删除图片吗？',
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk() {
+          const para = {
+            filePath: that.fileList[0].url,
+            type: 1
+          };
+          that.picUploading = true;
+          api
+            .deleteImage(para)
+            .then(res => {
+              if (res.code === 200) {
+                that.fileList = [];
+                that.conponForm.setFieldsValue({
+                  imageUrl: ''
+                });
+              }
+            })
+            .finally(() => {
+              that.picUploading = false;
+            });
+        }
+      });
     },
     handleCancel() {
       debounce(() => {
@@ -480,8 +491,15 @@ export default {
       this.previewVisible = true;
     },
     //////////上传图片///////////
-    handleSubmit() {
-      alert('提交按钮');
+    async handleSubmit() {
+      this.submitLoading = true;
+      await new Promise(resolve => {
+        setTimeout(() => {
+          return resolve();
+        }, 2000);
+      });
+      // await this.getCouponCreate();
+      this.submitLoading = false;
     },
     handleCancle() {
       this.$router.replace({ path: '/couponsManage' });
@@ -508,30 +526,47 @@ export default {
     couponBusinessTypeSelect(value) {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
+    },
+    getCouponCreate() {
+      const param = {
+        classification: this.classification,
+        commercialTenants: this.commercialTenants,
+        cost: this.cost,
+        couponBusinessType: this.couponBusinessType,
+        // couponId: this.couponId,
+        couponImage: this.couponImage,
+        couponSubhead: this.couponSubhead,
+        couponTitle: this.couponTitle,
+        couponType: this.couponType,
+        createOperator: this.createOperator,
+        createTime: this.createTime,
+        dateTime: this.dateTime,
+        discountMaxDeduction: this.discountMaxDeduction,
+        discountRatio: this.discountRatio,
+        fullReductionDiscountAmount: this.fullReductionDiscountAmount,
+        memo: this.memo,
+        merchandises: this.merchandises,
+        satisfyAmount: this.satisfyAmount,
+        source: this.source,
+        takeEffectDayNums: this.takeEffectDayNums,
+        validityDayNums: this.validityDayNums,
+        validityEndTime: this.validityEndTime,
+        validityStartTime: this.validityStartTime,
+        validityType: this.validityType,
+        voucherAmount: this.voucherAmount
+      };
+      console.log('getCouponCreate param :>> ', param);
+      api.getCouponCreate({ couponBasisVo: param }).then(res => {
+        console.log('getCouponCreate res :>> ', res);
+        if (res.code === 200) {
+          console.log('res.data :>> ', res.data);
+          // console.log('this.couponDetails :>> ', this.couponDetails);
+        }
+      });
     }
-    // getCouponDetail() {
-    //   const param = {
-    //     couponId: this.$route.query.id
-    //   };
-    //   console.log('getCouponDetail param :>> ', param);
-    //   api.getCouponDetail(param).then(res => {
-    //     console.log('getCouponDetail res :>> ', res);
-    //     if (res.code === 200) {
-    //       console.log('res.data :>> ', res.data);
-    //       for (const key in res.data) {
-    //         if (Object.hasOwnProperty.call(res.data, key)) {
-    //           const element = res.data[key];
-    //           this.$set(this.couponDetails, key, element);
-    //         }
-    //       }
-    //       console.log('this.couponDetails :>> ', this.couponDetails);
-    //     }
-    //   });
-    // }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    // this.getCouponDetail();
   },
   mounted() {},
   watch: {}
@@ -666,8 +701,8 @@ export default {
             margin-right: 50px;
 
             ::v-deep .ant-btn {
-              width: 90px;
-              height: 40px;
+              box-sizing: content-box;
+              padding: 2px 15px;
               border-radius: 8px;
               font-size: 18px;
               font-weight: 500;

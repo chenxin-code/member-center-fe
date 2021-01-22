@@ -206,12 +206,39 @@
                       </div>
                       <span>{{ merchandises }}</span>
                     </div>
-                    <div class="column-item">
+                    <div class="column-item column-form">
                       <div class="column-right">上传优惠券封面图:</div>
                       <div class="column-left">
-                        <!-- http://dev.linli590.cn:8000/advertise/popUpSet -->
-                        <a-input placeholder="请输入商户id，多个以,间隔" allow-clear v-model="commercialTenants" />
-                        <div>{{ commercialTenants }}</div>
+                        <a-form :form="conponForm">
+                          <a-form-item>
+                            <a-spin :spinning="picUploading">
+                              <a-upload
+                                name="avatar"
+                                accept="image/jpeg,image/jpg,image/png"
+                                list-type="picture-card"
+                                :file-list="fileList"
+                                v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
+                                :before-upload="() => false"
+                                :remove="deleteOssImage"
+                                @preview="handlePreview"
+                                @change="addPic"
+                              >
+                                <template v-if="fileList.length < 1">
+                                  <a-icon type="plus" />
+                                  <div class="ant-upload-text">
+                                    上传图片
+                                  </div>
+                                </template>
+                              </a-upload>
+                              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                                <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                              </a-modal>
+                            </a-spin>
+                            <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                              建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
+                            </span>
+                          </a-form-item>
+                        </a-form>
                       </div>
                     </div>
                   </template>
@@ -264,18 +291,27 @@
 </template>
 
 <script>
-import moment from 'moment';
 import api from '@/api';
+import moment from 'moment';
+import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'memberInfoDetail',
+  name: 'couponsManageNew',
   components: {},
   data() {
     return {
+      //////////上传图片///////////
+      conponForm: this.$form.createForm(this, { name: 'conponForm' }),
+      previewVisible: false,
+      previewImage: '',
+      fileList: [],
+      picUploading: false,
+      btnLoading: false,
+      //////////上传图片///////////
       memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
-      couponDetails: {},
+      // couponDetails: {},
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
@@ -354,6 +390,107 @@ export default {
   },
   methods: {
     ...mapActions(['FALLBACK']),
+    //////////上传图片///////////
+
+    //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
+    addPic({ fileList = [] } = {}) {
+      console.log('addPic fileList:>> ', fileList);
+      if (fileList.length > 0) {
+        const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+        if (!isJpgOrPng) {
+          this.$message.error('图片格式错误，请重新上传');
+        } else {
+          const imgSize = fileList[0].size / 1024 / 1024 < 5;
+          if (!imgSize) {
+            this.$message.error('图片过大，请重新上传');
+          } else {
+            this.picUploading = true;
+            const formData = new FormData();
+            console.log('fileList :>> ', fileList);
+            fileList.forEach(file => {
+              formData.append('file', file.originFileObj);
+            });
+            formData.append('programCode', 'sys-member-center');
+            console.log('formData.get(file) :>> ', formData.get('file'));
+            console.log('formData.get(programCode) :>> ', formData.get('programCode'));
+
+            api
+              .updateImage(formData)
+              .finally(() => {
+                this.picUploading = false;
+              })
+              .then(res => {
+                if (res.code === 200) {
+                  console.log(this.fileList);
+                  this.conponForm.setFieldsValue({
+                    imageUrl: res.data
+                  });
+                  this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
+                }
+              });
+          }
+        }
+      }
+    },
+    handleRemove(file) {
+      console.log('handleRemove');
+      const index = this.fileList.indexOf(file);
+      const newFileList = this.fileList.slice();
+      newFileList.splice(index, 1);
+      this.fileList = newFileList;
+    },
+    deleteOssImage() {
+      console.log('deleteOssImage');
+      const that = this;
+      that.$confirm({
+        title: '删除图片111',
+        content: '确定删除图片吗？',
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk() {
+          const para = {
+            filePath: that.fileList[0].url,
+            type: 1
+          };
+          that.picUploading = true;
+          api
+            .deleteImage(para)
+            .then(res => {
+              if (res.code === 200) {
+                that.fileList = [];
+                that.conponForm.setFieldsValue({
+                  imageUrl: ''
+                });
+              }
+            })
+            .finally(() => {
+              that.picUploading = false;
+            });
+        }
+      });
+    },
+    handleCancel() {
+      debounce(() => {
+        this.previewVisible = false;
+      });
+    },
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await this.getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    //////////上传图片///////////
     handleSubmit() {
       alert('提交按钮');
     },
@@ -382,42 +519,33 @@ export default {
     couponBusinessTypeSelect(value) {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
-    },
-    getCouponDetail() {
-      const param = {
-        couponId: this.$route.query.id
-      };
-      console.log('getCouponDetail param :>> ', param);
-      api.getCouponDetail(param).then(res => {
-        console.log('getCouponDetail res :>> ', res);
-        if (res.code === 200) {
-          console.log('res.data :>> ', res.data);
-          for (const key in res.data) {
-            if (Object.hasOwnProperty.call(res.data, key)) {
-              const element = res.data[key];
-              this.$set(this.couponDetails, key, element);
-            }
-          }
-          console.log('this.couponDetails :>> ', this.couponDetails);
-        }
-      });
     }
+    // getCouponDetail() {
+    //   const param = {
+    //     couponId: this.$route.query.id
+    //   };
+    //   console.log('getCouponDetail param :>> ', param);
+    //   api.getCouponDetail(param).then(res => {
+    //     console.log('getCouponDetail res :>> ', res);
+    //     if (res.code === 200) {
+    //       console.log('res.data :>> ', res.data);
+    //       for (const key in res.data) {
+    //         if (Object.hasOwnProperty.call(res.data, key)) {
+    //           const element = res.data[key];
+    //           this.$set(this.couponDetails, key, element);
+    //         }
+    //       }
+    //       console.log('this.couponDetails :>> ', this.couponDetails);
+    //     }
+    //   });
+    // }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getCouponDetail();
+    // this.getCouponDetail();
   },
   mounted() {},
-  watch: {
-    // bangdouAddRemark: {
-    //   handler(newVal) {
-    //     if (newVal) {
-    //       this.bangdouAddRemarkNull = false;
-    //     }
-    //   },
-    //   immediate: true //刷新加载 立马触发一次handler
-    // }
-  }
+  watch: {}
 };
 </script>
 
@@ -518,6 +646,18 @@ export default {
               flex-direction: row;
               justify-content: flex-start;
               align-items: flex-start;
+            }
+
+            .column-item.column-form {
+              padding-bottom: 10px;
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-start;
+              align-items: flex-start;
+
+              ::v-deep .ant-upload.ant-upload-select-picture-card {
+                margin-bottom: 0;
+              }
             }
           }
         }
