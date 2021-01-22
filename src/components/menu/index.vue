@@ -112,14 +112,14 @@ export default {
     $route: 'setMenus',
     menus: {
       handler(newVal) {
-        console.log('menus newVal:>> ', newVal);
+        // console.log('menus newVal:>> ', newVal);
       },
       immediate: true, //刷新加载 立马触发一次handler
       deep: true // 可以深度检测到 ownerList 对象的属性值的变化
     },
     openKeys: {
       handler(newVal) {
-        console.log('openKeys newVal:>> ', newVal);
+        // console.log('openKeys newVal:>> ', newVal);
       },
       immediate: true,
       deep: true

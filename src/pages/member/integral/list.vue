@@ -4,7 +4,9 @@
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
+      <!-- :row-selection="{ type: 'radio', selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" -->
       <a-table
+        :row-selection="{ type: 'radio', selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :columns="tableColumns"
         :data-source="tableData"
         :pagination="false"
@@ -62,6 +64,8 @@ export default {
   name: 'integralManage',
   data() {
     return {
+      selectedRowKeys: [], //表格单选
+      selectedRowData: {}, //表格单选
       formList: [
         {
           label: '类型',
@@ -230,6 +234,15 @@ export default {
     });
   },
   methods: {
+    onSelectChange(selectedKeys, selectedRows) {
+      console.log('onSelectChange selectedKeys :>> ', selectedKeys);
+      console.log('onSelectChange selectedRows :>> ', selectedRows);
+      //切换分页要清空selectedRowKeys
+      this.selectedRowKeys = selectedKeys;
+      this.selectedRowData = selectedRows[0];
+      console.log('this.selectedRowKeys :>> ', this.selectedRowKeys);
+      console.log('this.selectedRowData :>> ', this.selectedRowData);
+    },
     //查询按钮
     onQuery(params) {
       // console.log('params :>> ', params);
@@ -248,6 +261,9 @@ export default {
     },
     // 分页
     onShowSizeChange(current, pageSize) {
+      this.selectedRowKeys = []; //表格单选
+      this.selectedRowData = {}; //表格单选
+      this.$forceUpdate(); //表格单选
       this.current = current;
       this.pageSize = pageSize;
       this.getIntegralList();
@@ -399,6 +415,10 @@ export default {
 
     ::v-deep .ant-input-number {
       width: 100%;
+    }
+
+    ::v-deep .ant-table-thead .ant-checkbox-inner {
+      display: none;
     }
   }
 }

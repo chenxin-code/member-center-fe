@@ -20,6 +20,9 @@ export default {
     PERMISSION: '/times/user-center/permission/api/v2/permissions/get', //获取权限信息
     /* ------暂时用不到----- */
 
+    IMAGE_UPDATE: '/times/member-pub-center/file/api/v1/upload', //图片上传(单张)
+    IMAGE_DELETE: '/times/member-pub-center/file/api/v1/delete',//图片删除
+
     //会员中心:庄
     GET_TASKlIST: '/times/member-center/task/api/v1/list', // 获取任务列表
     GET_TASKSOURCE: '/times/member-center/client/api/v1/list', // 获取任务来源
@@ -50,5 +53,6 @@ export default {
     INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list',
     //卡券
     COUPONS_LIST:'/times/member-center/coupon/api/v1/coupon/list',
-    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list'
+    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list',
+    COUPON_DETAIL:'/times/member-center/coupon/api/v1/coupon/detail'
 };

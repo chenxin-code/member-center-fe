@@ -33,8 +33,9 @@ const DccessDetail = () => import('@/pages/accessManager/detail');
 const CouponsClaim = () => import('@/pages/coupons/claim/list');
 const CouponsCancel = () => import('@/pages/coupons/cancel/list');
 const CouponsManage = () => import('@/pages/coupons/manage/list');
-const CouponsManageAdd = () => import('@/pages/coupons/manage/add');
-const CouponsManageAddDone = () => import('@/pages/coupons/manage/done');
+const CouponsManageEdit = () => import('@/pages/coupons/manage/edit');
+const CouponsManageCopy = () => import('@/pages/coupons/manage/copy');
+const CouponsManageNew = () => import('@/pages/coupons/manage/new');
 const CouponsManageDetail = () => import('@/pages/coupons/manage/detail');
 const CouponsRelease = () => import('@/pages/coupons/release/index');
 const CouponsReleaseDetail = () => import('@/pages/coupons/release/detail');
@@ -114,33 +115,46 @@ const routes = [
         component: CouponsManage
       },
       {
-        path: '/couponsManage/add',
-        name: 'couponsManageAdd',
+        path: '/couponsManage/edit',
+        name: 'couponsManageEdit',
         menuKey: 'couponsManage',
         meta: {
           menu: '/couponsManage',
           authKeys: [''],
           bread: [
             { path: '/couponsManage', name: '卡券管理' },
-            { path: '/couponsManage/add', name: '卡券创建' }
+            { path: '/couponsManage/edit', name: '卡券创建' }
           ]
         },
-        component: CouponsManageAdd
+        component: CouponsManageEdit
       },
       {
-        path: '/couponsManage/add/done',
-        name: 'couponsManageAddDone',
+        path: '/couponsManage/copy',
+        name: 'couponsManageCopy',
         menuKey: 'couponsManage',
         meta: {
           menu: '/couponsManage',
           authKeys: [''],
           bread: [
             { path: '/couponsManage', name: '卡券管理' },
-            { path: '/couponsManage/add', name: '卡券创建' },
-            { path: '/couponsManage/add/done', name: '卡券创建完成' }
+            { path: '/couponsManage/copy', name: '卡券创建' }
           ]
         },
-        component: CouponsManageAddDone
+        component: CouponsManageCopy
+      },
+      {
+        path: '/couponsManage/new',
+        name: 'couponsManageNew',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/new', name: '卡券创建' }
+          ]
+        },
+        component: CouponsManageNew
       },
       {
         path: '/couponsManage/detail',

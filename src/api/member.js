@@ -1,6 +1,9 @@
 import { fetchApi } from '@/utils/ajax'
 import URL from './urlConfig'
 
+export const updateImage = data => fetchApi(URL.IMAGE_UPDATE, data, "POST");//图片上传(单张)
+export const deleteImage = data => fetchApi(URL.IMAGE_DELETE, data, "POST");//图片上传(单张)
+
 //会员列表
 export const getLoginUrl = data => fetchApi(URL.LOGIN_URL, data, 'GET');
 export const getClientList = data => fetchApi(URL.CLIENT_LIST, data, 'GET');
@@ -21,3 +24,4 @@ export const getIntegralList = data => fetchApi(URL.INTEGRAL_LIST, data, 'GET');
 //卡券
 export const getCouponsList = data => fetchApi(URL.COUPONS_LIST, data, 'GET');
 export const getClaimCancel = data => fetchApi(URL.CLAIM_CANCEL, data, 'GET');
+export const getCouponDetail = data => fetchApi(URL.COUPON_DETAIL, data, 'GET');
