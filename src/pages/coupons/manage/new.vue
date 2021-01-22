@@ -234,6 +234,8 @@
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
                     <a-input-number
+                      :min="1"
+                      :max="999"
                       @change="takeEffectDayNumsChange"
                       v-decorator="[
                         'takeEffectDayNums',

@@ -829,6 +829,10 @@ export default {
         justify-content: stretch;
         align-items: center;
 
+        ::v-deep .ant-form .ant-input-number {
+          width: 100%;
+        }
+
         .common-submit-cancle {
           padding: 30px 0 0 150px;
           display: flex;
