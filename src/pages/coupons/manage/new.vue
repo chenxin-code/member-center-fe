@@ -13,266 +13,355 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <!-- 卡券标题 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券标题:</div>
-                    <div class="column-left">
-                      <a-input placeholder="请输入卡券标题" allow-clear v-model="couponTitle" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 卡券副标题 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券副标题:</div>
-                    <div class="column-left">
-                      <a-input placeholder="请输入卡券标题" allow-clear v-model="couponSubhead" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 卡券类型 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券类型:</div>
-                    <div class="column-left">
-                      <a-select :default-value="couponTypes[0].code" @change="couponTypeSelect">
-                        <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
-                          {{ item.name }}
-                        </a-select-option>
-                      </a-select>
-                      <div>couponType:{{ couponType }}</div>
-                    </div>
-                  </div>
-                  <template v-if="couponType === 10">
-                    <div class="column-item">
-                      <div class="column-right">代金券金额:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入代金券金额" allow-clear v-model="voucherAmount" />
-                        <div>{{ voucherAmount }}</div>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="couponType === 20">
-                    <div class="column-item">
-                      <div class="column-right">满:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入代金券金额" allow-clear v-model="satisfyAmount" />
-                        <div>{{ satisfyAmount }}</div>
-                      </div>
-                      <span>元可用</span>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">抵扣金额:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入代金券金额" allow-clear v-model="fullReductionDiscountAmount" />
-                        <div>{{ fullReductionDiscountAmount }}</div>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="couponType === 30">
-                    <div class="column-item">
-                      <div class="column-right">满:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入" allow-clear v-model="satisfyAmount" />
-                        <div>{{ satisfyAmount }}</div>
-                      </div>
-                      <span>元可用</span>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">最高抵扣金额:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入折扣券最高抵扣金额" allow-clear v-model="discountMaxDeduction" />
-                        <div>{{ discountMaxDeduction }}</div>
-                      </div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">折扣（0-1）:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入折扣比例，支持小数点后2位" allow-clear v-model="discountRatio" />
-                        <div>{{ discountRatio }}</div>
-                      </div>
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <!-- 有效期类型 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">有效期类型:</div>
-                    <div class="column-left">
-                      <a-select :default-value="validityTypes[0].code" @change="validityTypeSelect">
-                        <a-select-option :value="item.code" v-for="(item, index) in validityTypes" :key="index">
-                          {{ item.name }}
-                        </a-select-option>
-                      </a-select>
-                      <div>validityType:{{ validityType }}</div>
-                    </div>
-                  </div>
-                  <template v-if="validityType === 10">
-                    <div class="column-item">
-                      <div class="column-right">选择日期:</div>
-                      <div class="column-left">
-                        <a-range-picker
-                          :placeholder="['开始时间', '结束时间']"
-                          format="YYYY-MM-DD"
-                          :value="rangePickerValue"
-                          @change="handleRangePicker"
-                        />
-                        <div>Start:{{ validityStartTime }} ～ End:{{ validityEndTime }}</div>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="validityType === 20">
-                    <div class="column-item">
-                      <div class="column-right">有效天数:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入有效天数，1-999" allow-clear v-model="validityDayNums" />
-                        <div>{{ validityDayNums }}</div>
-                      </div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">领取后几天后生效:</div>
-                      <div class="column-left">
-                        <a-input placeholder="输入天数，1-999" allow-clear v-model="takeEffectDayNums" />
-                        <div>{{ takeEffectDayNums }}</div>
-                      </div>
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <!-- 卡券平台 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券平台:</div>
-                    <div class="column-left">
-                      <a-select :default-value="sources[0].code" @change="sourceSelect">
-                        <a-select-option :value="item.code" v-for="(item, index) in sources" :key="index">
-                          {{ item.name }}
-                        </a-select-option>
-                      </a-select>
-                      <div>source:{{ source }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 卡券业务类型 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">
-                      <a-select :default-value="couponBusinessTypes[0].code" @change="couponBusinessTypeSelect">
-                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
-                          {{ item.name }}
-                        </a-select-option>
-                      </a-select>
-                      <div>couponBusinessType:{{ couponBusinessType }}</div>
-                    </div>
-                  </div>
-                  <template v-if="couponBusinessType === 20">
-                    <div class="column-item">
-                      <div class="column-right">商城订单类型:</div>
-                      <div class="column-left">
-                        <a-radio-group v-model="classification">
-                          <a-radio :value="1">
-                            A
-                          </a-radio>
-                          <a-radio :value="2">
-                            B
-                          </a-radio>
-                        </a-radio-group>
-                        <span>订单类型:{{ classification }}</span>
-                      </div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">商户id:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入商户id，多个以,间隔" allow-clear v-model="commercialTenants" />
-                      </div>
-                      <span>{{ commercialTenants }}</span>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">商品id:</div>
-                      <div class="column-left">
-                        <a-input placeholder="请输入商品id，多个以,间隔" allow-clear v-model="merchandises" />
-                      </div>
-                      <span>{{ merchandises }}</span>
-                    </div>
-                    <div class="column-item column-form">
-                      <div class="column-right">上传优惠券封面图:</div>
-                      <div class="column-left">
-                        <a-form :form="conponForm">
-                          <a-form-item>
-                            <a-spin :spinning="picUploading">
-                              <a-upload
-                                name="avatar"
-                                accept="image/jpeg,image/jpg,image/png"
-                                list-type="picture-card"
-                                :file-list="fileList"
-                                v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
-                                :before-upload="() => false"
-                                :remove="deleteOssImage"
-                                @preview="handlePreview"
-                                @change="addPic"
-                              >
-                                <template v-if="fileList.length < 1">
-                                  <a-icon type="plus" />
-                                  <div class="ant-upload-text">
-                                    上传图片
-                                  </div>
-                                </template>
-                              </a-upload>
-                              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                                <img class="img" alt="example" style="width: 100%" :src="previewImage" />
-                              </a-modal>
-                            </a-spin>
-                            <span style="margin-top:-20px;color:#999999;font-size:12px;">
-                              建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
-                            </span>
-                          </a-form-item>
-                        </a-form>
-                      </div>
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <!-- 成本价 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">成本价（可选）:</div>
-                    <div class="column-left">
-                      <a-input placeholder="请输入卡券的成本价，小数点后两位" allow-clear v-model="cost" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 使用说明 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item column-textarea">
-                    <div class="column-right">使用说明:</div>
-                    <div class="column-left">
-                      <a-textarea
-                        v-model="couponDetailsMemo"
-                        :disabled="false"
-                        :maxLength="50"
-                        :auto-size="{ minRows: 3, maxRows: 5 }"
-                        style="width: 267px;"
-                        placeholder="请输入使用说明，用户可见"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <a-form
+                :form="conponForm"
+                :label-col="{ span: 3 }"
+                :wrapper-col="{ span: 12 }"
+                style="height: 100%; overflow: auto"
+                autoComplete="off"
+              >
+                <!-- 卡券标题 -->
+                <a-form-item label="卡券标题">
+                  <a-input
+                    v-decorator="[
+                      'couponTitle',
+                      {
+                        rules: [
+                          { required: true, message: '卡券标题不能为空' },
+                          { whitespace: true, message: '卡券标题不能为空' }
+                        ]
+                      }
+                    ]"
+                    placeholder="请输入卡券标题"
+                    allow-clear
+                  />
+                </a-form-item>
+                <!-- 卡券副标题 -->
+                <a-form-item label="卡券副标题">
+                  <a-input v-decorator="['couponSubhead']" placeholder="请输入卡券副标题" allow-clear />
+                </a-form-item>
+                <!-- 卡券类型 -->
+                <a-form-item label="卡券类型">
+                  <a-select
+                    v-decorator="[
+                      'couponType',
+                      {
+                        initialValue: couponTypes[0].code,
+                        rules: [{ required: true, message: '卡券标题不能为空' }]
+                      }
+                    ]"
+                    @change="couponTypeSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <!-- 代金券:10 -->
+                <template v-if="couponType === 10">
+                  <a-form-item label="代金券金额">
+                    <a-input
+                      v-decorator="[
+                        'voucherAmount',
+                        {
+                          rules: [
+                            { required: true, message: '代金券金额不能为空' },
+                            { whitespace: true, message: '代金券金额不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入代金券金额"
+                      allow-clear
+                    />
+                  </a-form-item>
+                </template>
+                <!-- 满减券:20 -->
+                <template v-else-if="couponType === 20">
+                  <a-form-item label="满">
+                    <a-input
+                      v-decorator="[
+                        'satisfyAmount',
+                        {
+                          rules: [
+                            { required: true, message: '满多少金额可用不能为空' },
+                            { whitespace: true, message: '满多少金额可用不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="抵扣金额">
+                    <a-input
+                      v-decorator="[
+                        'fullReductionDiscountAmount',
+                        {
+                          rules: [
+                            { required: true, message: '抵扣金额不能为空' },
+                            { whitespace: true, message: '抵扣金额不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入满减券抵扣金额"
+                      allow-clear
+                    />
+                  </a-form-item>
+                </template>
+                <!-- 折扣券:40 -->
+                <template v-else-if="couponType === 40">
+                  <a-form-item label="满">
+                    <a-input
+                      v-decorator="[
+                        'satisfyAmount',
+                        {
+                          rules: [
+                            { required: true, message: '满多少金额可用不能为空' },
+                            { whitespace: true, message: '满多少金额可用不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="最高抵扣金额">
+                    <a-input
+                      v-decorator="[
+                        'discountMaxDeduction',
+                        {
+                          rules: [
+                            { required: true, message: '最高抵扣金额不能为空' },
+                            { whitespace: true, message: '最高抵扣金额不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入折扣券最高抵扣金额"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="抵扣金额">
+                    <a-input
+                      v-decorator="[
+                        'discountRatio',
+                        {
+                          rules: [
+                            { required: true, message: '折扣比例不能为空' },
+                            { whitespace: true, message: '折扣比例不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入折扣比例，支持小数点后2位"
+                      allow-clear
+                    />
+                  </a-form-item>
+                </template>
+
+                <!-- 有效期类型 -->
+                <a-form-item label="有效期类型">
+                  <a-select
+                    v-decorator="[
+                      'validityType',
+                      {
+                        initialValue: validityTypes[0].code,
+                        rules: [{ required: true, message: '有效期类型不能为空' }]
+                      }
+                    ]"
+                    @change="validityTypeSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in validityTypes" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <!-- 固定有效期:1 -->
+                <template v-if="validityType === 1">
+                  <a-form-item label="选择日期">
+                    <a-range-picker
+                      v-decorator="[
+                        'rangePickerValue',
+                        {
+                          rules: [{ type: 'array', required: true, message: '日期不能为空,请选择日期!' }]
+                        }
+                      ]"
+                      :placeholder="['开始时间', '结束时间']"
+                      format="YYYY-MM-DD"
+                      @change="handleRangePicker"
+                    />
+                  </a-form-item>
+                </template>
+                <!-- 相对有效期:2 -->
+                <template v-else-if="validityType === 2">
+                  <a-form-item label="有效天数">
+                    <a-input
+                      v-decorator="[
+                        'validityDayNums',
+                        {
+                          rules: [
+                            { required: true, message: '有效天数不能为空' },
+                            { whitespace: true, message: '有效天数不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入有效天数，1-999"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="领取后几天后生效">
+                    <a-input
+                      v-decorator="[
+                        'takeEffectDayNums',
+                        {
+                          rules: [
+                            { required: true, message: '领取后几天后生效不能为空' },
+                            { whitespace: true, message: '领取后几天后生效不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="输入天数，1-999"
+                      allow-clear
+                    />
+                  </a-form-item>
+                </template>
+
+                <!-- 卡券平台 -->
+                <a-form-item label="卡券平台">
+                  <a-select
+                    v-decorator="[
+                      'source',
+                      {
+                        initialValue: sources[0].code,
+                        rules: [{ required: true, message: '卡券平台不能为空' }]
+                      }
+                    ]"
+                    @change="sourceSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in sources" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+
+                <!-- 卡券业务类型 -->
+                <a-form-item label="卡券业务类型">
+                  <a-select
+                    v-decorator="[
+                      'couponBusinessType',
+                      {
+                        initialValue: couponBusinessTypes[0].code,
+                        rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                      }
+                    ]"
+                    @change="couponBusinessTypeSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                  <!-- <div>{{couponBusinessType}}</div> -->
+                </a-form-item>
+
+                <!-- 购物券 -->
+                <template v-if="couponBusinessType === 4005">
+                  <a-form-item label="商城订单类型">
+                    <a-radio-group
+                      v-decorator="[
+                        'classification',
+                        {
+                          initialValue: 1,
+                          rules: [{ required: true, message: '商城订单类型不能为空' }]
+                        }
+                      ]"
+                    >
+                      <a-radio :value="1">
+                        全部
+                      </a-radio>
+                      <a-radio :value="2">
+                        零售
+                      </a-radio>
+                    </a-radio-group>
+                  </a-form-item>
+                  <a-form-item label="商户id">
+                    <a-input
+                      v-decorator="[
+                        'commercialTenants',
+                        {
+                          rules: [
+                            { required: true, message: '商户id不能为空' },
+                            { whitespace: true, message: '商户id不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入商户id，多个以,间隔"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="商品id">
+                    <a-input
+                      v-decorator="[
+                        'merchandises',
+                        {
+                          rules: [
+                            { required: true, message: '商品id不能为空' },
+                            { whitespace: true, message: '商品id不能为空' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入商品id，多个以,间隔"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item label="上传优惠券封面图">
+                    <a-spin :spinning="picUploading">
+                      <a-upload
+                        name="avatar"
+                        accept="image/jpeg,image/jpg,image/png"
+                        list-type="picture-card"
+                        :file-list="fileList"
+                        v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
+                        :before-upload="() => false"
+                        :remove="deleteOssImage"
+                        @preview="handlePreview"
+                        @change="addPic"
+                      >
+                        <template v-if="fileList.length < 1">
+                          <a-icon type="plus" />
+                          <div class="ant-upload-text">
+                            上传图片
+                          </div>
+                        </template>
+                      </a-upload>
+                      <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                        <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                      </a-modal>
+                    </a-spin>
+                    <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                      建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
+                    </span>
+                  </a-form-item>
+                </template>
+
+                <!-- 成本价 -->
+                <a-form-item label="成本价（可选）">
+                  <a-input v-decorator="['cost']" placeholder="请输入卡券的成本价，小数点后两位" allow-clear />
+                </a-form-item>
+                <!-- 使用说明 -->
+                <a-form-item label="使用说明">
+                  <a-textarea
+                    v-decorator="[
+                      'memo',
+                      {
+                        rules: [
+                          { required: true, message: '使用说明不能为空' },
+                          { whitespace: true, message: '使用说明不能为空' }
+                        ]
+                      }
+                    ]"
+                    :auto-size="{ minRows: 3, maxRows: 5 }"
+                    placeholder="请输入使用说明"
+                  />
+                </a-form-item>
+              </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
                 <div class="common-btn common-submit">
@@ -318,7 +407,7 @@ export default {
       couponTypes: [
         { name: '代金券', code: 10 },
         { name: '满减券', code: 20 },
-        { name: '折扣券', code: 30 }
+        { name: '折扣券', code: 40 }
       ],
 
       voucherAmount: '', //代金券抵扣金额
@@ -326,10 +415,10 @@ export default {
       fullReductionDiscountAmount: '', //满减券抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
       discountRatio: '', //折扣券 折扣比例
-      validityType: 10,
+      validityType: 1,
       validityTypes: [
-        { name: '固定有效期', code: 10 },
-        { name: '相对有效期', code: 20 }
+        { name: '固定有效期', code: 1 },
+        { name: '相对有效期', code: 2 }
       ],
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //固定有效期-卡券有效期开始时间
@@ -344,10 +433,10 @@ export default {
         { name: '会员中心', code: 40 },
         { name: '收费中心', code: 50 }
       ],
-      couponBusinessType: 20, //卡券业务类型
+      couponBusinessType: 4014, //卡券业务类型
       couponBusinessTypes: [
-        { name: '物业费', code: 10 },
-        { name: '购物券', code: 20 }
+        { name: '物业费', code: 4014 },
+        { name: '购物券', code: 4005 }
       ],
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
@@ -357,9 +446,6 @@ export default {
     };
   },
   computed: {
-    couponDetailsMemo() {
-      return this.memo ? this.memo : this.memoBackup;
-    },
     momentStr() {
       return param => {
         if (!param) {
@@ -492,14 +578,13 @@ export default {
     },
     //////////上传图片///////////
     async handleSubmit() {
-      this.submitLoading = true;
-      await new Promise(resolve => {
-        setTimeout(() => {
-          return resolve();
-        }, 2000);
+      this.conponForm.validateFields((err, values) => {
+        console.log('handleSubmit validateFields err :>> ', err);
+        if (!err) {
+          console.log('handleSubmit values :>> ', values);
+          this.getCouponCreate(values);
+        }
       });
-      // await this.getCouponCreate();
-      this.submitLoading = false;
     },
     handleCancle() {
       this.$router.replace({ path: '/couponsManage' });
@@ -527,42 +612,51 @@ export default {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
     },
-    getCouponCreate() {
+    getCouponCreate(values) {
+      console.log('getCouponCreate values :>> ', values);
       const param = {
-        classification: this.classification,
-        commercialTenants: this.commercialTenants,
-        cost: this.cost,
-        couponBusinessType: this.couponBusinessType,
-        // couponId: this.couponId,
-        couponImage: this.couponImage,
-        couponSubhead: this.couponSubhead,
-        couponTitle: this.couponTitle,
-        couponType: this.couponType,
-        createOperator: this.createOperator,
-        createTime: this.createTime,
-        dateTime: this.dateTime,
-        discountMaxDeduction: this.discountMaxDeduction,
-        discountRatio: this.discountRatio,
-        fullReductionDiscountAmount: this.fullReductionDiscountAmount,
-        memo: this.memo,
-        merchandises: this.merchandises,
-        satisfyAmount: this.satisfyAmount,
-        source: this.source,
-        takeEffectDayNums: this.takeEffectDayNums,
-        validityDayNums: this.validityDayNums,
-        validityEndTime: this.validityEndTime,
-        validityStartTime: this.validityStartTime,
-        validityType: this.validityType,
-        voucherAmount: this.voucherAmount
+        classification: values.classification || '',
+        commercialTenants: values.commercialTenants || '',
+        cost: values.cost || '',
+        couponBusinessType: values.couponBusinessType || '',
+        // couponId: '',
+        couponImage: values.couponImage || '',
+        couponSubhead: values.couponSubhead || '',
+        couponTitle: values.couponTitle || '',
+        couponType: values.couponType || '',
+        createOperator: values.createOperator || '',
+        createTime: values.createTime || '',
+        dateTime: values.dateTime || '',
+        discountMaxDeduction: values.discountMaxDeduction || '',
+        discountRatio: values.discountRatio || '',
+        fullReductionDiscountAmount: values.fullReductionDiscountAmount || '',
+        memo: values.memo || '',
+        merchandises: values.merchandises || '',
+        satisfyAmount: values.satisfyAmount || '',
+        source: values.source || '',
+        takeEffectDayNums: values.takeEffectDayNums || '',
+        validityDayNums: values.validityDayNums || '',
+        validityEndTime: this.validityEndTime || '',
+        validityStartTime: this.validityStartTime || '',
+        validityType: values.validityType || '',
+        voucherAmount: values.voucherAmount || ''
       };
+      // const paramData = { couponBasisVo: param }
       console.log('getCouponCreate param :>> ', param);
-      api.getCouponCreate({ couponBasisVo: param }).then(res => {
-        console.log('getCouponCreate res :>> ', res);
-        if (res.code === 200) {
-          console.log('res.data :>> ', res.data);
-          // console.log('this.couponDetails :>> ', this.couponDetails);
-        }
-      });
+
+      this.submitLoading = true;
+      api
+        .getCouponCreate(param)
+        .finally(() => {
+          this.submitLoading = false;
+        })
+        .then(res => {
+          console.log('getCouponCreate res :>> ', res);
+          if (res.code === 200) {
+            console.log('res.data :>> ', res.data);
+            // console.log('this.couponDetails :>> ', this.couponDetails);
+          }
+        });
     }
   },
   created() {
@@ -589,7 +683,7 @@ export default {
       background-color: #fff;
       .common-title {
         color: #666;
-        padding: 5px 0 0 26px;
+        padding: 20px 0 0 30px;
         .common-title-content {
           font-size: 16px;
           height: 16px;
@@ -599,7 +693,7 @@ export default {
         }
       }
       .common-row {
-        padding: 16px;
+        padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
         display: flex;
         flex-direction: row;
