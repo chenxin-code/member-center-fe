@@ -363,7 +363,7 @@ export default {
       background-color: #fff;
       .common-title {
         color: #666;
-        padding: 5px 0 0 26px;
+        padding: 20px 0 0 30px;
         .common-title-content {
           font-size: 16px;
           height: 16px;
@@ -373,7 +373,7 @@ export default {
         }
       }
       .common-row {
-        padding: 16px;
+        padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
         display: flex;
         flex-direction: row;
@@ -397,7 +397,7 @@ export default {
               align-items: flex-start;
 
               .column-right {
-                width: 150px;
+                width: 132.25px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;

@@ -641,8 +641,19 @@ export default {
         validityType: values.validityType || '',
         voucherAmount: values.voucherAmount || ''
       };
+
+      // console.log('getCouponCreate param1 :>> ', param);
+      // for (const key in param) {
+      //   if (Object.hasOwnProperty.call(param, key)) {
+      //     if (param[key] === '') {
+      //       delete param[key];
+      //     }
+      //   }
+      // }
       // const paramData = { couponBasisVo: param }
-      console.log('getCouponCreate param :>> ', param);
+      console.log('getCouponCreate param2 :>> ', param);
+
+      // return;
 
       this.submitLoading = true;
       api

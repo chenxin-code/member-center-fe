@@ -3,7 +3,7 @@
     <div class="content-header">卡券管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList
-        routePath="/couponsManage/add"
+        routePath="/couponsManage/new"
         ref="memberForm"
         :labelCol="{ span: 9 }"
         :wrapperCol="{ span: 15 }"
@@ -30,8 +30,8 @@
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData)">查看</a>
-            <a style="padding-right: 10px;" @click="goAdd(rowData)">复制</a>
-            <a @click="goAdd(rowData)">编辑</a>
+            <a style="padding-right: 10px;" @click="goCopy(rowData)">复制</a>
+            <a @click="goEdit(rowData)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -55,8 +55,6 @@
 import FormList from '@/components/FormList/index.jsx';
 import api from '@/api';
 import moment from 'moment';
-// import mock from './mock';
-// console.log('mock :>> ', mock);
 
 export default {
   name: 'couponsClaim',
@@ -318,13 +316,23 @@ export default {
         }
       });
     },
-    //查看卡券创建
-    goAdd(param) {
-      console.log('param :>> ', param);
+    //编辑卡券
+    goEdit(id) {
+      console.log('id :>> ', id);
       this.$router.push({
-        name: 'couponsManageAdd',
+        name: 'couponsManageEdit',
         query: {
-          id: param.id
+          id: id
+        }
+      });
+    },
+    //复制卡券
+    goCopy(id) {
+      console.log('id :>> ', id);
+      this.$router.push({
+        name: 'couponsManageCopy',
+        query: {
+          id: id
         }
       });
     },
