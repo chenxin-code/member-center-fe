@@ -72,6 +72,15 @@ export default [
     path: '/couponsManage'
   },
   {
+    title: '卡券派发',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/jifen_show.png'),
+    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    menuKey: 'couponsRelease',
+    group: 'hyzx',
+    path: '/couponsRelease'
+  },
+  {
     title: '卡券领取记录',
     authKeys: [''],
     icon: require('@/assets/img/menu/jifen_show.png'),

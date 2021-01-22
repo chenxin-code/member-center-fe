@@ -36,6 +36,9 @@ const CouponsManage = () => import('@/pages/coupons/manage/list');
 const CouponsManageAdd = () => import('@/pages/coupons/manage/add');
 const CouponsManageAddDone = () => import('@/pages/coupons/manage/done');
 const CouponsManageDetail = () => import('@/pages/coupons/manage/detail');
+const CouponsRelease = () => import('@/pages/coupons/release/index');
+const CouponsReleaseDetail = () => import('@/pages/coupons/release/detail');
+const CouponsReleaseCreate = () => import('@/pages/coupons/release/create');
 
 const routes = [
   //首页:home
@@ -297,7 +300,49 @@ const routes = [
           ]
         },
         component: DealingDetail
-      }
+      },
+      {
+        path: '/couponsRelease',
+        name: 'release',
+        menuKey: 'release',
+        meta: {
+          menu: '/release',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsRelease', name: '卡券派发' },
+          ]
+        },
+        component: CouponsRelease
+      },
+      {
+        path: '/couponsRelease/detail',
+        name: 'release_detail',
+        menuKey: 'release_detail',
+        meta: {
+          menu: '/release',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsRelease', name: '卡券派发' },
+            { path: '/couponsRelease/detail', name: '派发详情' },
+          ]
+        },
+        component: CouponsReleaseDetail
+      },
+      {
+        path: '/couponsRelease/create',
+        name: 'release_create',
+        menuKey: 'release_create',
+        meta: {
+          menu: '/release',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsRelease', name: '卡券派发' },
+            { path: '/couponsRelease/detail', name: '派发详情' },
+            { path: '/couponsRelease/create', name: '新建派发' },
+          ]
+        },
+        component: CouponsReleaseCreate
+      },
     ]
   },
   {
