@@ -23,6 +23,7 @@
                 <!-- 卡券标题 -->
                 <a-form-item label="卡券标题">
                   <a-input
+                    @change="couponTitleChange"
                     v-decorator="[
                       'couponTitle',
                       {
@@ -35,10 +36,17 @@
                     placeholder="请输入卡券标题"
                     allow-clear
                   />
+                  <div>couponTitle: {{ couponTitle }}</div>
                 </a-form-item>
                 <!-- 卡券副标题 -->
                 <a-form-item label="卡券副标题">
-                  <a-input v-decorator="['couponSubhead']" placeholder="请输入卡券副标题" allow-clear />
+                  <a-input
+                    @change="couponSubheadChange"
+                    v-decorator="['couponSubhead']"
+                    placeholder="请输入卡券副标题"
+                    allow-clear
+                  />
+                  <div>couponSubhead: {{ couponSubhead }}</div>
                 </a-form-item>
                 <!-- 卡券类型 -->
                 <a-form-item label="卡券类型">
@@ -56,11 +64,13 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
+                  <div>couponType: {{ couponType }}</div>
                 </a-form-item>
                 <!-- 代金券:10 -->
                 <template v-if="couponType === 10">
                   <a-form-item label="代金券金额">
                     <a-input
+                      @change="voucherAmountChange"
                       v-decorator="[
                         'voucherAmount',
                         {
@@ -73,12 +83,14 @@
                       placeholder="请输入代金券金额"
                       allow-clear
                     />
+                    <div>voucherAmount:{{ voucherAmount }}</div>
                   </a-form-item>
                 </template>
                 <!-- 满减券:20 -->
                 <template v-else-if="couponType === 20">
                   <a-form-item label="满">
                     <a-input
+                      @change="satisfyAmountChange"
                       v-decorator="[
                         'satisfyAmount',
                         {
@@ -91,9 +103,11 @@
                       placeholder="请输入"
                       allow-clear
                     />
+                    <div>satisfyAmount:{{ satisfyAmount }}</div>
                   </a-form-item>
                   <a-form-item label="抵扣金额">
                     <a-input
+                      @change="fullReductionDiscountAmountChange"
                       v-decorator="[
                         'fullReductionDiscountAmount',
                         {
@@ -106,12 +120,14 @@
                       placeholder="请输入满减券抵扣金额"
                       allow-clear
                     />
+                    <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div>
                   </a-form-item>
                 </template>
                 <!-- 折扣券:40 -->
                 <template v-else-if="couponType === 40">
                   <a-form-item label="满">
                     <a-input
+                      @change="satisfyAmountChange"
                       v-decorator="[
                         'satisfyAmount',
                         {
@@ -124,9 +140,11 @@
                       placeholder="请输入"
                       allow-clear
                     />
+                    <div>satisfyAmount:{{ satisfyAmount }}</div>
                   </a-form-item>
                   <a-form-item label="最高抵扣金额">
                     <a-input
+                      @change="discountMaxDeductionChange"
                       v-decorator="[
                         'discountMaxDeduction',
                         {
@@ -139,9 +157,11 @@
                       placeholder="请输入折扣券最高抵扣金额"
                       allow-clear
                     />
+                    <div>discountMaxDeduction:{{ discountMaxDeduction }}</div>
                   </a-form-item>
-                  <a-form-item label="抵扣金额">
+                  <a-form-item label="折扣（0-1）">
                     <a-input
+                      @change="discountRatioChange"
                       v-decorator="[
                         'discountRatio',
                         {
@@ -154,6 +174,7 @@
                       placeholder="请输入折扣比例，支持小数点后2位"
                       allow-clear
                     />
+                    <div>discountRatio:{{ discountRatio }}</div>
                   </a-form-item>
                 </template>
 
@@ -173,6 +194,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
+                  <div>validityType:{{ validityType }}</div>
                 </a-form-item>
                 <!-- 固定有效期:1 -->
                 <template v-if="validityType === 1">
@@ -188,12 +210,15 @@
                       format="YYYY-MM-DD"
                       @change="handleRangePicker"
                     />
+                    <div>validityStartTime:{{ validityStartTime }}</div>
+                    <div>validityEndTime:{{ validityEndTime }}</div>
                   </a-form-item>
                 </template>
                 <!-- 相对有效期:2 -->
                 <template v-else-if="validityType === 2">
                   <a-form-item label="有效天数">
                     <a-input
+                      @change="validityDayNumsChange"
                       v-decorator="[
                         'validityDayNums',
                         {
@@ -206,9 +231,11 @@
                       placeholder="请输入有效天数，1-999"
                       allow-clear
                     />
+                    <div>validityDayNums:{{ validityDayNums }}</div>
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
                     <a-input
+                      @change="takeEffectDayNumsChange"
                       v-decorator="[
                         'takeEffectDayNums',
                         {
@@ -240,6 +267,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
+                  <div>source:{{ source }}</div>
                 </a-form-item>
 
                 <!-- 卡券业务类型 -->
@@ -258,13 +286,14 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <!-- <div>{{couponBusinessType}}</div> -->
+                  <div>couponBusinessType:{{ couponBusinessType }}</div>
                 </a-form-item>
 
                 <!-- 购物券 -->
                 <template v-if="couponBusinessType === 4005">
                   <a-form-item label="商城订单类型">
                     <a-radio-group
+                      @change="classificationChange"
                       v-decorator="[
                         'classification',
                         {
@@ -280,9 +309,11 @@
                         零售
                       </a-radio>
                     </a-radio-group>
+                    <div>classification:{{ classification }}</div>
                   </a-form-item>
                   <a-form-item label="商户id">
                     <a-input
+                      @change="commercialTenantsChange"
                       v-decorator="[
                         'commercialTenants',
                         {
@@ -295,9 +326,11 @@
                       placeholder="请输入商户id，多个以,间隔"
                       allow-clear
                     />
+                    <div>commercialTenants:{{ commercialTenants }}</div>
                   </a-form-item>
                   <a-form-item label="商品id">
                     <a-input
+                      @change="merchandisesChange"
                       v-decorator="[
                         'merchandises',
                         {
@@ -310,6 +343,7 @@
                       placeholder="请输入商品id，多个以,间隔"
                       allow-clear
                     />
+                    <div>merchandises:{{ merchandises }}</div>
                   </a-form-item>
                   <a-form-item label="上传优惠券封面图">
                     <a-spin :spinning="picUploading">
@@ -343,11 +377,18 @@
 
                 <!-- 成本价 -->
                 <a-form-item label="成本价（可选）">
-                  <a-input v-decorator="['cost']" placeholder="请输入卡券的成本价，小数点后两位" allow-clear />
+                  <a-input
+                    @change="costChange"
+                    v-decorator="['cost']"
+                    placeholder="请输入卡券的成本价，小数点后两位"
+                    allow-clear
+                  />
+                  <div>cost:{{ cost }}</div>
                 </a-form-item>
                 <!-- 使用说明 -->
                 <a-form-item label="使用说明">
                   <a-textarea
+                    @change="memoChange"
                     v-decorator="[
                       'memo',
                       {
@@ -360,6 +401,7 @@
                     :auto-size="{ minRows: 3, maxRows: 5 }"
                     placeholder="请输入使用说明"
                   />
+                  <div>memo:{{ memo }}</div>
                 </a-form-item>
               </a-form>
               <!-- 提交和取消 -->
@@ -595,6 +637,53 @@ export default {
       this.validityStartTime = dateStrings[0];
       this.validityEndTime = dateStrings[1];
     },
+
+    //输入框
+    couponTitleChange(e) {
+      this.couponTitle = e.target.value;
+    },
+    couponSubheadChange(e) {
+      this.couponSubhead = e.target.value;
+    },
+    voucherAmountChange(e) {
+      this.voucherAmount = e.target.value;
+    },
+    satisfyAmountChange(e) {
+      this.satisfyAmount = e.target.value;
+    },
+    discountMaxDeductionChange(e) {
+      this.discountMaxDeduction = e.target.value;
+    },
+    discountRatioChange(e) {
+      this.discountRatio = e.target.value;
+    },
+    fullReductionDiscountAmountChange(e) {
+      this.fullReductionDiscountAmount = e.target.value;
+    },
+    validityDayNumsChange(e) {
+      this.validityDayNums = e.target.value;
+    },
+    takeEffectDayNumsChange(e) {
+      this.takeEffectDayNums = e.target.value;
+    },
+
+    classificationChange(e) {
+      this.classification = e.target.value;
+    },
+    commercialTenantsChange(e) {
+      this.commercialTenants = e.target.value;
+    },
+    merchandisesChange(e) {
+      this.merchandises = e.target.value;
+    },
+    costChange(e) {
+      this.cost = e.target.value;
+    },
+    memoChange(e) {
+      this.memo = e.target.value;
+    },
+
+    //下拉
     couponTypeSelect(value) {
       console.log('couponTypeSelect');
       this.couponType = value;
