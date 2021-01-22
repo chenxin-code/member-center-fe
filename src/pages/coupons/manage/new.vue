@@ -477,7 +477,6 @@ export default {
   methods: {
     ...mapActions(['FALLBACK']),
     //////////上传图片///////////
-
     //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
     addPic({ fileList = [] } = {}) {
       console.log('addPic fileList:>> ', fileList);
@@ -529,7 +528,7 @@ export default {
       console.log('deleteOssImage');
       const that = this;
       that.$confirm({
-        title: '删除图片111',
+        title: '删除图片',
         content: '确定删除图片吗？',
         centered: true,
         okText: '确定',

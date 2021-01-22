@@ -320,7 +320,7 @@
                         :file-list="fileList"
                         v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
                         :before-upload="() => false"
-                        :remove="deleteOssImage"
+                        :remove="handleRemove"
                         @preview="handlePreview"
                         @change="addPic"
                       >
@@ -528,7 +528,7 @@ export default {
       console.log('deleteOssImage');
       const that = this;
       that.$confirm({
-        title: '删除图片111',
+        title: '删除图片',
         content: '确定删除图片吗？',
         centered: true,
         okText: '确定',
