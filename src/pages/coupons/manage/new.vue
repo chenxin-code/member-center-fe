@@ -160,15 +160,16 @@
                     <div>discountMaxDeduction:{{ discountMaxDeduction }}</div>
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">
-                    <a-input
+                    <a-input-number
+                      :min="0"
+                      :max="1"
+                      :step="0.1"
+                      :precision="2"
                       @change="discountRatioChange"
                       v-decorator="[
                         'discountRatio',
                         {
-                          rules: [
-                            { required: true, message: '折扣比例不能为空' },
-                            { whitespace: true, message: '折扣比例不能为空' }
-                          ]
+                          initialValue: 0
                         }
                       ]"
                       placeholder="请输入折扣比例，支持小数点后2位"
@@ -184,8 +185,7 @@
                     v-decorator="[
                       'validityType',
                       {
-                        initialValue: validityTypes[0].code,
-                        rules: [{ required: true, message: '有效期类型不能为空' }]
+                        initialValue: validityTypes[0].code
                       }
                     ]"
                     @change="validityTypeSelect"
@@ -217,15 +217,14 @@
                 <!-- 相对有效期:2 -->
                 <template v-else-if="validityType === 2">
                   <a-form-item label="有效天数">
-                    <a-input
+                    <a-input-number
+                      :min="1"
+                      :max="999"
                       @change="validityDayNumsChange"
                       v-decorator="[
                         'validityDayNums',
                         {
-                          rules: [
-                            { required: true, message: '有效天数不能为空' },
-                            { whitespace: true, message: '有效天数不能为空' }
-                          ]
+                          initialValue: 1
                         }
                       ]"
                       placeholder="请输入有效天数，1-999"
@@ -234,15 +233,12 @@
                     <div>validityDayNums:{{ validityDayNums }}</div>
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
-                    <a-input
+                    <a-input-number
                       @change="takeEffectDayNumsChange"
                       v-decorator="[
                         'takeEffectDayNums',
                         {
-                          rules: [
-                            { required: true, message: '领取后几天后生效不能为空' },
-                            { whitespace: true, message: '领取后几天后生效不能为空' }
-                          ]
+                          initialValue: 1
                         }
                       ]"
                       placeholder="输入天数，1-999"
@@ -290,15 +286,14 @@
                 </a-form-item>
 
                 <!-- 购物券 -->
-                <template v-if="couponBusinessType === 4005">
+                <template v-if="couponBusinessType === '4005'">
                   <a-form-item label="商城订单类型">
                     <a-radio-group
                       @change="classificationChange"
                       v-decorator="[
                         'classification',
                         {
-                          initialValue: 1,
-                          rules: [{ required: true, message: '商城订单类型不能为空' }]
+                          initialValue: 1
                         }
                       ]"
                     >
@@ -456,7 +451,7 @@ export default {
       satisfyAmount: '', //	折扣券/满减券 满多少金额可用
       fullReductionDiscountAmount: '', //满减券抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
-      discountRatio: '', //折扣券 折扣比例
+      discountRatio: 0, //折扣券 折扣比例
       validityType: 1,
       validityTypes: [
         { name: '固定有效期', code: 1 },
@@ -475,10 +470,10 @@ export default {
         { name: '会员中心', code: 40 },
         { name: '收费中心', code: 50 }
       ],
-      couponBusinessType: 4014, //卡券业务类型
+      couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
-        { name: '物业费', code: 4014 },
-        { name: '购物券', code: 4005 }
+        { name: '物业费', code: '4014' },
+        { name: '购物券', code: '4005' }
       ],
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
@@ -583,6 +578,9 @@ export default {
           that.picUploading = true;
           api
             .deleteImage(para)
+            .finally(() => {
+              that.picUploading = false;
+            })
             .then(res => {
               if (res.code === 200) {
                 that.fileList = [];
@@ -590,9 +588,6 @@ export default {
                   imageUrl: ''
                 });
               }
-            })
-            .finally(() => {
-              that.picUploading = false;
             });
         }
       });
@@ -654,21 +649,18 @@ export default {
     discountMaxDeductionChange(e) {
       this.discountMaxDeduction = e.target.value;
     },
-    discountRatioChange(e) {
-      this.discountRatio = e.target.value;
+    discountRatioChange(newVal) {
+      console.log('discountRatioChange newVal :>> ', newVal);
+      this.discountRatio = newVal;
     },
     fullReductionDiscountAmountChange(e) {
       this.fullReductionDiscountAmount = e.target.value;
     },
-    validityDayNumsChange(e) {
-      this.validityDayNums = e.target.value;
+    validityDayNumsChange(newVal) {
+      this.validityDayNums = newVal;
     },
-    takeEffectDayNumsChange(e) {
-      this.takeEffectDayNums = e.target.value;
-    },
-
-    classificationChange(e) {
-      this.classification = e.target.value;
+    takeEffectDayNumsChange(newVal) {
+      this.takeEffectDayNums = newVal;
     },
     commercialTenantsChange(e) {
       this.commercialTenants = e.target.value;
@@ -681,6 +673,11 @@ export default {
     },
     memoChange(e) {
       this.memo = e.target.value;
+    },
+
+    //单选
+    classificationChange(e) {
+      this.classification = e.target.value;
     },
 
     //下拉
@@ -700,6 +697,39 @@ export default {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
     },
+
+    //获取详情
+    getCouponDetail() {
+      const param = {
+        couponId: this.$route.query.id
+      };
+      console.log('getCouponDetail param :>> ', param);
+      api.getCouponDetail(param).then(res => {
+        console.log('getCouponDetail res :>> ', res);
+        if (res.code === 200) {
+          const data = res.data;
+          this.typeId = res.data.type;
+          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.advertPicture };
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              title: data.title,
+              status: data.status.toString(),
+              type: data.type.toString(),
+              imageUrl: data.advertPicture,
+              date: [moment(data.startValidTime).format('YYYY-MM-DD'), moment(data.endValidTime).format('YYYY-MM-DD')],
+              url: data.url,
+              isYouZan: data.youzan,
+              richText: data.customContent,
+              model: Number(data.microappId),
+              miniId: data.miniId,
+              miniPath: data.miniPath,
+              isShowTitle: data.isShowTitle
+            });
+          });
+        }
+      });
+    },
+
     getCouponCreate(values) {
       console.log('getCouponCreate values :>> ', values);
       const param = {
@@ -798,6 +828,10 @@ export default {
         flex-direction: row;
         justify-content: stretch;
         align-items: center;
+
+        ::v-deep .ant-form .ant-input-number {
+          width: 100%;
+        }
 
         .common-submit-cancle {
           padding: 30px 0 0 150px;
