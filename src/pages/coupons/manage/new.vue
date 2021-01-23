@@ -169,7 +169,7 @@
                       v-decorator="[
                         'discountRatio',
                         {
-                          initialValue: 0,
+                          initialValue: 1,
                           rules: [{ required: true, message: '折扣比例不能为空' }]
                         }
                       ]"
@@ -357,7 +357,7 @@
                         :file-list="fileList"
                         v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
                         :before-upload="() => false"
-                        :remove="deleteOssImage"
+                        :remove="handleRemove"
                         @preview="handlePreview"
                         @change="addPic"
                       >
@@ -441,6 +441,7 @@ export default {
       previewVisible: false,
       previewImage: '',
       fileList: [],
+      couponImage: '',
       picUploading: false,
       submitLoading: false,
       //////////上传图片///////////
@@ -459,7 +460,7 @@ export default {
       satisfyAmount: '', //	折扣券/满减券 满多少金额可用
       fullReductionDiscountAmount: '', //满减券抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
-      discountRatio: 0, //折扣券 折扣比例
+      discountRatio: '', //折扣券 折扣比例
       validityType: 1,
       validityTypes: [
         { name: '固定有效期', code: 1 },
@@ -556,6 +557,7 @@ export default {
                     imageUrl: res.data
                   });
                   this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
+                  this.couponImage = this.fileList[0].url;
                 }
               });
           }
@@ -568,6 +570,7 @@ export default {
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
       this.fileList = newFileList;
+      this.couponImage = '';
     },
     deleteOssImage() {
       console.log('deleteOssImage');
@@ -592,6 +595,7 @@ export default {
             .then(res => {
               if (res.code === 200) {
                 that.fileList = [];
+                that.couponImage = '';
                 that.conponForm.setFieldsValue({
                   imageUrl: ''
                 });
@@ -621,17 +625,6 @@ export default {
       this.previewVisible = true;
     },
     //////////上传图片///////////
-    async handleSubmit() {
-      this.conponForm.validateFields((err, values) => {
-        console.log('handleSubmit validateFields err :>> ', err);
-        if (!err) {
-          console.log('handleSubmit values :>> ', values);
-          console.log('this.fileList[0].url :>> ', this.fileList[0].url);
-          return;
-          this.getCouponCreate(values);
-        }
-      });
-    },
     handleCancle() {
       this.$router.replace({ path: '/couponsManage' });
     },
@@ -739,40 +732,60 @@ export default {
       });
     },
 
-    getCouponCreate(values) {
-      console.log('getCouponCreate values :>> ', values);
+    handleSubmit() {
+      this.conponForm.validateFields((err, values) => {
+        console.log('handleSubmit validateFields err :>> ', err);
+        if (!err) {
+          console.log('handleSubmit values :>> ', values);
+          // console.log('this.fileList[0].url :>> ', this.fileList[0].url);
+          // return;
+          this.getCouponCreate();
+        }
+      });
+    },
+
+    getCouponCreate() {
+      console.log('getCouponCreate run');
       const param = {
-        classification: this.classification || '',
-        commercialTenants: this.commercialTenants || '',
-        cost: this.cost || '',
-        couponBusinessType: this.couponBusinessType || '',
+        classification: this.classification,
+        commercialTenants: this.commercialTenants,
+        cost: this.cost,
+        couponBusinessType: this.couponBusinessType,
         // couponId: '',
-        couponImage: this.fileList[0].url || '',
-        couponSubhead: this.couponSubhead || '',
-        couponTitle: this.couponTitle || '',
-        couponType: this.couponType || '',
-        createOperator: this.createOperator || '',
-        createTime: this.createTime || '',
-        dateTime: this.dateTime || '',
-        discountMaxDeduction: this.discountMaxDeduction || '',
-        discountRatio: this.discountRatio || '',
-        fullReductionDiscountAmount: this.fullReductionDiscountAmount || '',
-        memo: this.memo || '',
-        merchandises: this.merchandises || '',
-        satisfyAmount: this.satisfyAmount || '',
-        source: this.source || '',
-        takeEffectDayNums: this.takeEffectDayNums || '',
-        validityDayNums: this.validityDayNums || '',
-        validityEndTime: this.validityEndTime || '',
-        validityStartTime: this.validityStartTime || '',
-        validityType: this.validityType || '',
-        voucherAmount: this.voucherAmount || ''
+        couponImage: this.couponImage,
+        couponSubhead: this.couponSubhead,
+        couponTitle: this.couponTitle,
+        couponType: this.couponType,
+        // createOperator: this.createOperator,
+        // createTime: this.createTime,
+        // dateTime: this.dateTime,
+        discountMaxDeduction: this.discountMaxDeduction,
+        discountRatio: this.discountRatio,
+        fullReductionDiscountAmount: this.fullReductionDiscountAmount,
+        memo: this.memo,
+        merchandises: this.merchandises,
+        satisfyAmount: this.satisfyAmount,
+        source: this.source,
+        takeEffectDayNums: this.takeEffectDayNums,
+        validityDayNums: this.validityDayNums,
+        validityEndTime: this.validityEndTime,
+        validityStartTime: this.validityStartTime,
+        validityType: this.validityType,
+        voucherAmount: this.voucherAmount
       };
+
+      console.log('getCouponCreate param 001 :>> ', param);
+      for (const key in param) {
+        if (Object.hasOwnProperty.call(param, key)) {
+          if (param[key] === '' || param[key] === undefined || param[key] === null) {
+            delete param[key];
+          }
+        }
+      }
+      console.log('getCouponCreate param 002 :>> ', param);
+      // return false;
+
       // const paramData = { couponBasisVo: param }
-      console.log('getCouponCreate param :>> ', param);
-
-      // return;
-
       this.submitLoading = true;
       api
         .getCouponCreate(param)
@@ -792,7 +805,14 @@ export default {
     console.log('this.$route :>> ', this.$route);
   },
   mounted() {},
-  watch: {}
+  watch: {
+    couponImage: {
+      handler(newVal) {
+        console.log('couponImage newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+    }
+  }
 };
 </script>
 
