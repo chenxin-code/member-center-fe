@@ -2,15 +2,7 @@
   <div id="coupons-list">
     <div class="content-header">卡券管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList
-        routePath="/couponsManage/new"
-        ref="memberForm"
-        :labelCol="{ span: 9 }"
-        :wrapperCol="{ span: 15 }"
-        :rowCol="4"
-        :formList="formList"
-        :onSubmit="onQuery"
-      />
+      <FormList routePath="/couponsManage/new" ref="memberForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -70,13 +62,17 @@ export default {
             { name: '全部', id: '' },
             { name: '增加', id: 1 },
             { name: '减少', id: 2 }
-          ]
+          ],
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '卡券标题',
           type: 'input',
           name: 'couponTitle',
-          placeholder: '请输入'
+          placeholder: '请输入',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '卡券业务类型',
@@ -87,7 +83,9 @@ export default {
             { name: '全部', id: '' },
             { name: '增加', id: 1 },
             { name: '减少', id: 2 }
-          ]
+          ],
+          labelCol: { span: 9 },
+          wrapperCol: { span: 15 }
         },
         {
           type: 'button',
@@ -106,18 +104,22 @@ export default {
             { name: '全部', id: '' },
             { name: '增加', id: 1 },
             { name: '减少', id: 2 }
-          ]
+          ],
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'jointime'
+          name: 'jointime',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
-        {
-          label: '空占位符',
-          labelCol: { span: 0 },
-          wrapperCol: { span: 24 }
-        },
+        // {
+        //   label: '空占位符',
+        //   labelCol: { span: 0 },
+        //   wrapperCol: { span: 24 }
+        // },
         {
           type: 'btn-default',
           buttonName: '新建卡券',
@@ -491,6 +493,17 @@ export default {
 
     ::v-deep .ant-input-number {
       width: 100%;
+    }
+
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(6) {
+      width: 50%;
+
+      .ant-form-item-label {
+        width: calc(12.5% - 3px);
+      }
+      .ant-form-item-control-wrapper {
+        width: calc(87.5% + 3px);
+      }
     }
   }
 }
