@@ -21,9 +21,9 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goDetail(rowData)">查看</a>
-            <a style="padding-right: 10px;" @click="goCopy(rowData)">复制</a>
-            <a @click="goEdit(rowData)">编辑</a>
+            <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
+            <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
+            <a @click="goEdit(rowData.id)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -304,12 +304,12 @@ export default {
       this.getCouponsList(true);
     },
     //查看卡券详情
-    goDetail(param) {
-      console.log('goDetail param :>> ', param);
+    goDetail(id) {
+      console.log('goDetail id :>> ', id);
       this.$router.push({
         name: 'couponsManageDetail',
         query: {
-          id: param.id
+          id: id
         }
       });
     },
