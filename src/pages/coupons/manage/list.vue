@@ -115,11 +115,6 @@ export default {
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
-        // {
-        //   label: '空占位符',
-        //   labelCol: { span: 0 },
-        //   wrapperCol: { span: 24 }
-        // },
         {
           type: 'btn-default',
           buttonName: '新建卡券',
@@ -496,13 +491,13 @@ export default {
     }
 
     ::v-deep .ant-form > .ant-row > .ant-col:nth-child(6) {
-      width: 50%;
+      width: 50% !important;
 
       .ant-form-item-label {
-        width: calc(12.5% - 3px);
+        width: calc(12.5% - 3px) !important;
       }
       .ant-form-item-control-wrapper {
-        width: calc(87.5% + 3px);
+        width: calc(87.5% + 3px) !important;
       }
     }
   }
