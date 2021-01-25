@@ -169,7 +169,7 @@
                       v-decorator="[
                         'discountRatio',
                         {
-                          initialValue: 1,
+                          initialValue: '0.9',
                           rules: [{ required: true, message: '折扣比例不能为空' }]
                         }
                       ]"
@@ -410,7 +410,8 @@
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
                 <div class="common-btn common-submit">
-                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit">提交</a-button>
+                  <!-- <a-button :loading="submitLoading" type="primary" @click="handleSubmit">提交</a-button> -->
+                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit">保存</a-button>
                 </div>
                 <div class="common-btn common-cancle">
                   <a-button type="primary" @click="handleCancle">取消</a-button>
@@ -654,7 +655,7 @@ export default {
     },
     discountRatioChange(newVal) {
       console.log('discountRatioChange newVal :>> ', newVal);
-      this.discountRatio = newVal;
+      this.discountRatio = newVal.toString();
     },
     fullReductionDiscountAmountChange(e) {
       this.fullReductionDiscountAmount = e.target.value;
@@ -704,7 +705,8 @@ export default {
     //获取详情
     getCouponDetail() {
       const param = {
-        couponId: this.$route.query.id
+        // couponId: this.$route.query.id
+        couponId: 12285
       };
       console.log('getCouponDetail param :>> ', param);
       api.getCouponDetail(param).then(res => {
@@ -735,10 +737,9 @@ export default {
     handleSubmit() {
       this.conponForm.validateFields((err, values) => {
         console.log('handleSubmit validateFields err :>> ', err);
+        //没有错误的情况下
         if (!err) {
           console.log('handleSubmit values :>> ', values);
-          // console.log('this.fileList[0].url :>> ', this.fileList[0].url);
-          // return;
           this.getCouponCreate();
         }
       });
@@ -751,16 +752,17 @@ export default {
         commercialTenants: this.commercialTenants,
         cost: this.cost,
         couponBusinessType: this.couponBusinessType,
+        // couponCode: '',
         // couponId: '',
         couponImage: this.couponImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
         couponType: this.couponType,
-        // createOperator: this.createOperator,
-        // createTime: this.createTime,
-        // dateTime: this.dateTime,
+        // createOperator: '',
+        // createTime: '',
+        // dateTime: '',
         discountMaxDeduction: this.discountMaxDeduction,
-        discountRatio: this.discountRatio,
+        discountRatio: this.discountRatio.toString(),
         fullReductionDiscountAmount: this.fullReductionDiscountAmount,
         memo: this.memo,
         merchandises: this.merchandises,
@@ -774,18 +776,8 @@ export default {
         voucherAmount: this.voucherAmount
       };
 
-      console.log('getCouponCreate param 001 :>> ', param);
-      for (const key in param) {
-        if (Object.hasOwnProperty.call(param, key)) {
-          if (param[key] === '' || param[key] === undefined || param[key] === null) {
-            delete param[key];
-          }
-        }
-      }
-      console.log('getCouponCreate param 002 :>> ', param);
-      // return false;
+      console.log('getCouponCreate param :>> ', param);
 
-      // const paramData = { couponBasisVo: param }
       this.submitLoading = true;
       api
         .getCouponCreate(param)
@@ -796,7 +788,7 @@ export default {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            // console.log('this.couponDetails :>> ', this.couponDetails);
+            this.$router.replace({ path: '/couponsManage' });
           }
         });
     }
@@ -810,7 +802,7 @@ export default {
       handler(newVal) {
         console.log('couponImage newVal :>> ', newVal);
       },
-      immediate: true, //刷新加载立马触发一次handler
+      immediate: true //刷新加载立马触发一次handler
     }
   }
 };
