@@ -706,28 +706,25 @@ export default {
     getCouponDetail() {
       const param = {
         // couponId: this.$route.query.id
-        couponId: 12285
+        couponId: 12292
       };
-      console.log('getCouponDetail param :>> ', param);
       api.getCouponDetail(param).then(res => {
         console.log('getCouponDetail res :>> ', res);
         if (res.code === 200) {
-          const data = res.data;
-          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.advertPicture };
+          console.log('getCouponDetail res.data :>> ', res.data);
+          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.couponImage };
           this.$nextTick(() => {
-            this.form.setFieldsValue({
-              title: data.title,
-              status: data.status.toString(),
-              type: data.type.toString(),
-              imageUrl: data.advertPicture,
-              date: [moment(data.startValidTime).format('YYYY-MM-DD'), moment(data.endValidTime).format('YYYY-MM-DD')],
-              url: data.url,
-              isYouZan: data.youzan,
-              richText: data.customContent,
-              model: Number(data.microappId),
-              miniId: data.miniId,
-              miniPath: data.miniPath,
-              isShowTitle: data.isShowTitle
+            this.conponForm.setFieldsValue({
+              couponTitle: '123',
+              couponSubhead: '1234',
+              couponType: 10,
+              voucherAmount: '11',
+              validityType: 1,
+              rangePickerValue: [moment('2020-06-18'), moment('2020-06-19')],
+              source: 10,
+              couponBusinessType: '4014',
+              cost: '666',
+              memo: '999'
             });
           });
         }
@@ -795,6 +792,7 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getCouponDetail();
   },
   mounted() {},
   watch: {
