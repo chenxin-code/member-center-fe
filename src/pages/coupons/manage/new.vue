@@ -217,7 +217,7 @@
                   </a-form-item>
                 </template>
                 <!-- 相对有效期:2 -->
-                <template v-else-if="validityType === 2">
+                <template v-else-if="validityType === 3">
                   <a-form-item label="有效天数">
                     <a-input-number
                       :min="1"
@@ -355,7 +355,7 @@
                         accept="image/jpeg,image/jpg,image/png"
                         list-type="picture-card"
                         :file-list="fileList"
-                        v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
+                        v-decorator="['couponImage', { rules: [{ required: true, message: '图片不能为空' }] }]"
                         :before-upload="() => false"
                         :remove="handleRemove"
                         @preview="handlePreview"
@@ -465,20 +465,20 @@ export default {
       validityType: 1,
       validityTypes: [
         { name: '固定有效期', code: 1 },
-        { name: '相对有效期', code: 2 }
+        { name: '相对有效期', code: 3 }
       ],
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //固定有效期-卡券有效期开始时间
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 1, //相对有效期-领取后几天后生效
-      source: 10, //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
+      source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
-        { name: '地产', code: 10 },
-        { name: '邻里邦', code: 20 },
-        { name: '邻里商城', code: 30 },
-        { name: '会员中心', code: 40 },
-        { name: '收费中心', code: 50 }
+        { name: '地产', code: '10' },
+        { name: '邻里邦', code: '20' },
+        { name: '邻里商城', code: '30' },
+        { name: '会员中心', code: '40' },
+        { name: '收费中心', code: '50' }
       ],
       couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
@@ -555,7 +555,7 @@ export default {
                 if (res.code === 200) {
                   console.log(this.fileList);
                   this.conponForm.setFieldsValue({
-                    imageUrl: res.data
+                    couponImage: res.data
                   });
                   this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
                   this.couponImage = this.fileList[0].url;
@@ -598,7 +598,7 @@ export default {
                 that.fileList = [];
                 that.couponImage = '';
                 that.conponForm.setFieldsValue({
-                  imageUrl: ''
+                  couponImage: ''
                 });
               }
             });
@@ -688,10 +688,50 @@ export default {
     couponTypeSelect(value) {
       console.log('couponTypeSelect');
       this.couponType = value;
+
+      if (this.couponType === 10) {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            voucherAmount: this.voucherAmount,
+            rangePickerValue: [moment(this.validityStartTime), moment(this.validityEndTime)]
+          });
+        });
+      } else if (this.couponType === 20) {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            satisfyAmount: this.satisfyAmount,
+            fullReductionDiscountAmount: this.fullReductionDiscountAmount,
+            rangePickerValue: [moment(this.validityStartTime), moment(this.validityEndTime)]
+          });
+        });
+      } else if (this.couponType === 40) {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            satisfyAmount: this.satisfyAmount,
+            discountMaxDeduction: this.discountMaxDeduction,
+            discountRatio: this.discountRatio,
+            rangePickerValue: [moment(this.validityStartTime), moment(this.validityEndTime)]
+          });
+        });
+      }
     },
     validityTypeSelect(value) {
       console.log('validityTypeSelect');
       this.validityType = value;
+      if (this.validityType === 1) {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            rangePickerValue: [moment(this.validityStartTime), moment(this.validityEndTime)]
+          });
+        });
+      } else if (this.validityType === 3) {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            validityDayNums: this.validityDayNums,
+            takeEffectDayNums: this.takeEffectDayNums
+          });
+        });
+      }
     },
     sourceSelect(value) {
       console.log('sourceSelect');
@@ -700,35 +740,113 @@ export default {
     couponBusinessTypeSelect(value) {
       console.log('couponBusinessTypeSelect');
       this.couponBusinessType = value;
+      if (this.couponBusinessType === '4014') {
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            couponBusinessType: this.couponBusinessType
+          });
+        });
+      } else if (this.couponBusinessType === '4005') {
+        this.$nextTick(() => {
+          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: this.couponImage };
+          this.couponImage = this.fileList[0].url;
+          this.conponForm.setFieldsValue({
+            classification: this.classification,
+            commercialTenants: this.commercialTenants,
+            merchandises: this.merchandises,
+            couponImage: this.couponImage
+          });
+        });
+      }
     },
 
     //获取详情
     getCouponDetail() {
-      const param = {
-        // couponId: this.$route.query.id
-        couponId: 12292
+      // const param = {
+      //   // couponId: this.$route.query.id
+      //   couponId: 12292
+      // };
+      // api.getCouponDetail(param).then(res => {
+      //   // console.log('getCouponDetail res :>> ', res);
+      //   //////////////////mock/////////////////
+
+      const res = { data: '', code: 200 };
+      res.data = {
+        classification: 1,
+        commercialTenants: '123456',
+        cost: '',
+        couponBusinessType: '4014',
+        couponCode: '12285',
+        couponId: '',
+        couponImage:
+          'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
+        couponSubhead: '',
+        couponTitle: '卡券标题',
+        couponType: 10,
+        createOperator: '',
+        createTime: null,
+        dateTime: null,
+        discountMaxDeduction: '150',
+        discountRatio: '0.7',
+        fullReductionDiscountAmount: '100',
+        memo: '999',
+        merchandises: '123456',
+        satisfyAmount: '200',
+        source: '10',
+        state: 1,
+        takeEffectDayNums: 3,
+        validityDayNums: 30,
+        validityEndTime: '2020-01-24',
+        validityStartTime: '2021-01-23',
+        validityType: 1,
+        voucherAmount: '100'
       };
-      api.getCouponDetail(param).then(res => {
-        console.log('getCouponDetail res :>> ', res);
-        if (res.code === 200) {
-          console.log('getCouponDetail res.data :>> ', res.data);
-          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.couponImage };
-          this.$nextTick(() => {
-            this.conponForm.setFieldsValue({
-              couponTitle: '123',
-              couponSubhead: '1234',
-              couponType: 10,
-              voucherAmount: '11',
-              validityType: 1,
-              rangePickerValue: [moment('2020-06-18'), moment('2020-06-19')],
-              source: 10,
-              couponBusinessType: '4014',
-              cost: '666',
-              memo: '999'
-            });
+      //////////////////mock/////////////////
+
+      if (res.code === 200) {
+        console.log('getCouponDetail res.data :>> ', res.data);
+        this.classification = res.data.classification;
+        this.commercialTenants = res.data.commercialTenants;
+        this.couponImage = res.data.couponImage;
+        this.discountMaxDeduction = res.data.discountMaxDeduction;
+        this.discountRatio = res.data.discountRatio;
+        this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount;
+        this.merchandises = res.data.merchandises;
+        this.satisfyAmount = res.data.satisfyAmount;
+        this.state = res.data.state;
+        this.takeEffectDayNums = res.data.takeEffectDayNums;
+        this.validityDayNums = res.data.validityDayNums;
+        ////////////init show/////////
+        this.couponTitle = res.data.couponTitle;
+        this.couponSubhead = res.data.couponSubhead;
+        this.couponType = res.data.couponType;
+        this.voucherAmount = res.data.voucherAmount;
+        this.validityType = res.data.validityType;
+        this.validityStartTime = res.data.validityStartTime; //固定有效期-卡券有效期开始时间
+        this.validityEndTime = res.data.validityEndTime; //	固定有效期-卡券有效期结束时间
+        this.rangePickerValue = [moment(res.data.validityStartTime), moment(res.data.validityEndTime)];
+        this.source = res.data.source;
+        this.couponBusinessType = res.data.couponBusinessType;
+        this.cost = res.data.cost;
+        this.memo = res.data.memo;
+        /////////////init show/////////////
+
+        this.$nextTick(() => {
+          this.conponForm.setFieldsValue({
+            couponTitle: '卡券标题',
+            couponSubhead: '',
+            couponType: 10,
+            voucherAmount: '100',
+            validityType: 1,
+            rangePickerValue: [moment('2021-01-23'), moment('2020-01-24')],
+            source: '10',
+            couponBusinessType: '4014',
+            cost: '',
+            memo: '999'
           });
-        }
-      });
+        });
+      }
+      // });
     },
 
     handleSubmit() {
@@ -745,19 +863,20 @@ export default {
     getCouponCreate() {
       console.log('getCouponCreate run');
       const param = {
+        state: this.state,
         classification: this.classification,
         commercialTenants: this.commercialTenants,
         cost: this.cost,
         couponBusinessType: this.couponBusinessType,
-        // couponCode: '',
-        // couponId: '',
+        couponCode: '', //没用
+        couponId: '', //没用
         couponImage: this.couponImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
         couponType: this.couponType,
-        // createOperator: '',
-        // createTime: '',
-        // dateTime: '',
+        createOperator: '', //没用
+        createTime: '', //没用
+        dateTime: '', //没用
         discountMaxDeduction: this.discountMaxDeduction,
         discountRatio: this.discountRatio.toString(),
         fullReductionDiscountAmount: this.fullReductionDiscountAmount,
@@ -785,7 +904,7 @@ export default {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            this.$router.replace({ path: '/couponsManage' });
+            // this.$router.replace({ path: '/couponsManage' });
           }
         });
     }
@@ -800,7 +919,15 @@ export default {
       handler(newVal) {
         console.log('couponImage newVal :>> ', newVal);
       },
-      immediate: true //刷新加载立马触发一次handler
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    rangePickerValue: {
+      handler(newVal) {
+        console.log('rangePickerValue newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
   }
 };
