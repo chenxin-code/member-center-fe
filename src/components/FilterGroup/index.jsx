@@ -39,6 +39,12 @@ const FormList = {
     onSubmit: {
       type: Function,
       default: defaultFn
+    },
+    doubleBtn: false,
+    doubleBtnText: '',
+    doubleBtnEvent: {
+      type: Function,
+      default: defaultFn
     }
   },
   data() {
@@ -124,6 +130,7 @@ const FormList = {
             </a-col>
             <a-col span="2" offset="2">
                 <a-button style={{width: '100%'}} type="primary" html-type="submit" onClick={this.handleSubmit}>查询</a-button>
+              <a-button v-show={this.doubleBtn} style={{width: '100%', marginTop: '20px'}} type="primary" html-type="submit" onClick={this.doubleBtnEvent}>{this.doubleBtnText}</a-button>
             </a-col>
         </a-row>
       </a-form>

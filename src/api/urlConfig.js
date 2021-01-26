@@ -20,6 +20,9 @@ export default {
     PERMISSION: '/times/user-center/permission/api/v2/permissions/get', //获取权限信息
     /* ------暂时用不到----- */
 
+    IMAGE_UPDATE: '/times/member-pub-center/file/api/v1/upload', //图片上传(单张)
+    IMAGE_DELETE: '/times/member-pub-center/file/api/v1/delete',//图片删除
+
     //会员中心:庄
     GET_TASKlIST: '/times/member-center/task/api/v1/list', // 获取任务列表
     GET_TASKSOURCE: '/times/member-center/client/api/v1/list', // 获取任务来源
@@ -31,6 +34,12 @@ export default {
     GET_DEALINGLIST: '/times/member-center/behaviour/api/v1/behaviour/list', // 获取行为列表
     GET_DEALINGDETAIL: '/times/member-center/behaviour/api/v1/behaviour/detail', // 获取行为详情
     GET_DEALINGLOG: '/times/member-center/behaviour/api/v1/behaviour/log-list', // 获取行为日志
+    GET_RELEASELIST: '/times/member-center/coupon/api/v1/distribute/list', // 获取派发列表
+    GET_RELEASEDETAIL: '/times/member-center/coupon/api/v1/distribute/detail', // 获取派发详情
+    GET_RELEASEMEMBERDOWNLOAD: '/times/member-center/coupon/api/v1/download', // 下载会员信息
+    GET_COUPONLIST: '/times/member-center/coupon/api/v1/coupon/list', // 获取卡券列表
+    COUPONDISTRIBUTE: '/times/member-center/coupon/api/v1/assgin-member/distribute', // 卡券派发
+    GET_MEMBERLEVELLIST: '/times/member-center/member-card/api/v1/level/list', // 会员卡等级
     //会员中心:张
     MEMBER_LIST: option.member + '/api/v1/member/list',
     CLIENT_LIST: option.client + '/api/v1/list',
@@ -40,8 +49,18 @@ export default {
     INTEGRAL_RECORD: option.member + '/api/v1/member/integralRecord/list',
     GROWN_LOG: option.member + '/api/v1/member/grown_log/list',
     BEHAVIOUR_LIST: option.member + '/api/v1/member/behaviour/list',
-    MEMBER_TONGJI: option.member + '/api/v1/member/statistics',
+    MEMBER_TONGJI: option.member + '/api/v1/member/statistics',//会员统计
+    TODAY_NEWNUM:'/times/member-center/member/api/v1/member/statisticsTodayNewNum',//今日新增
+    QUARTER_NEWNUM:'/times/member-center/member/api/v1/member/statisticsQuarterNewNum',//季度新增
+    MEMBER_SOURCE:'/times/member-center/member/api/v1/member/statisticsMemberSource',//会员来源
+    MEMBER_LEVEL:'/times/member-center/member/api/v1/member/statisticsMemberLevel',//会员等级
     MEMBER_TONGJI_DATE: option.member + '/api/v1/member/num-statistics',
     INTEGRAL_PAY_DEDUCTION: option.member + '/api/v1/member/integralPayOrDeduction',
-    INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list'
+    INTEGRAL_LIST: '/times/member-center/integral-record/api/v1/integral-record/list',
+    //卡券
+    COUPONS_LIST:'/times/member-center/coupon/api/v1/coupon/list',
+    CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list',
+    COUPON_DETAIL:'/times/member-center/coupon/api/v1/coupon/detail',
+    COUPON_CREATE:'/times/member-center/coupon/api/v1/create',
+    COUPON_UPDATE:'/times/member-center/coupon/api/v1/update'
 };
