@@ -60,5 +60,7 @@ export default {
     //卡券
     COUPONS_LIST:'/times/member-center/coupon/api/v1/coupon/list',
     CLAIM_CANCEL:'/times/member-center/coupon/api/v1/coupon/releaseOrOff/list',
-    COUPON_DETAIL:'/times/member-center/coupon/api/v1/coupon/detail'
+    COUPON_DETAIL:'/times/member-center/coupon/api/v1/coupon/detail',
+    COUPON_CREATE:'/times/member-center/coupon/api/v1/create',
+    COUPON_UPDATE:'/times/member-center/coupon/api/v1/update'
 };

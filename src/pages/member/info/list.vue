@@ -418,10 +418,13 @@ export default {
   watch: {
     formList: {
       handler: function(newVal) {
-        this.$refs.memberForm.setFieldsValue({
-          memberSourceCode: this.formList[0].selectOptions[0].id
+        this.$nextTick(() => {
+          this.$refs.memberForm.setFieldsValue({
+            memberSourceCode: this.formList[0].selectOptions[0].id
+          });
         });
       },
+      immediate: true, //刷新加载立马触发一次handler
       deep: true
     }
   }
