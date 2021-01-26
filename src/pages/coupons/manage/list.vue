@@ -445,9 +445,20 @@ export default {
       //初始化加载数据
       this.getCouponsList();
     }
-
     //重置
     this.$route.meta.isUseCache = false;
+
+    this.$nextTick(() => {
+      this.$refs.memberForm.setFieldsValue({
+        couponType: this.formList[0].selectOptions[0].id
+      });
+      this.$refs.memberForm.setFieldsValue({
+        couponBusinessType: this.formList[2].selectOptions[0].id
+      });
+      this.$refs.memberForm.setFieldsValue({
+        couponStatus: this.formList[4].selectOptions[0].id
+      });
+    });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'integralManageDetail') {
@@ -465,26 +476,7 @@ export default {
     }
     next();
   },
-  watch: {
-    formList: {
-      handler: function(newVal) {
-        console.log('formList newVal :>> ', newVal);
-        this.$nextTick(() => {
-          this.$refs.memberForm.setFieldsValue({
-            couponType: this.formList[0].selectOptions[0].id
-          });
-          this.$refs.memberForm.setFieldsValue({
-            couponBusinessType: this.formList[2].selectOptions[0].id
-          });
-          this.$refs.memberForm.setFieldsValue({
-            couponStatus: this.formList[4].selectOptions[0].id
-          });
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    }
-  }
+  watch: {}
 };
 </script>
 

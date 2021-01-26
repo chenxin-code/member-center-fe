@@ -367,9 +367,17 @@ export default {
       this.getClientList();
       this.getIntegralList();
     }
-
     //重置
     this.$route.meta.isUseCache = false;
+
+    this.$nextTick(() => {
+      this.$refs.memberForm.setFieldsValue({
+        type: this.formList[0].selectOptions[0].id
+      });
+      this.$refs.memberForm.setFieldsValue({
+        memberSourceCode: this.formList[1].selectOptions[0].id
+      });
+    });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'integralManageDetail') {
@@ -387,22 +395,7 @@ export default {
     }
     next();
   },
-  watch: {
-    formList: {
-      handler: function(newVal) {
-        this.$nextTick(() => {
-          this.$refs.memberForm.setFieldsValue({
-            type: this.formList[0].selectOptions[0].id
-          });
-          this.$refs.memberForm.setFieldsValue({
-            memberSourceCode: this.formList[1].selectOptions[0].id
-          });
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    }
-  }
+  watch: {}
 };
 </script>
 
