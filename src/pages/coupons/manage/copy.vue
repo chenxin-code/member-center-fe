@@ -756,7 +756,7 @@ export default {
     //获取详情
     getCouponDetail() {
       const param = {
-        couponId: this.$route.query.id,
+        couponId: this.$route.query.id
       };
 
       console.log('getCouponDetail param :>> ', param);
@@ -798,9 +798,8 @@ export default {
         // //////////////////mock/////////////////
 
         if (res.code === 200) {
-
-          if (Object.prototype.toString.call(res.data) !== "[object Object]"){
-            res.data  ={}
+          if (Object.prototype.toString.call(res.data) !== '[object Object]') {
+            res.data = {};
           }
 
           // this.pcRuleId = res.data.pcRuleId || this.pcRuleId;//没用
