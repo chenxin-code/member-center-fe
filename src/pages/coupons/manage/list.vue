@@ -22,8 +22,8 @@
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
-            <a @click="goEdit(rowData.id)">编辑</a>
+            <a style="padding-right: 10px;" @click="goCopy(rowData.couTypeCode)">复制</a>
+            <a @click="goEdit(rowData.couTypeCode)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -56,12 +56,13 @@ export default {
         {
           label: '卡券类型',
           type: 'select',
-          name: 'type',
+          name: 'couponType',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '增加', id: 1 },
-            { name: '减少', id: 2 }
+            { name: '代金券', id: 10 },
+            { name: '满减券', id: 20 },
+            { name: '折扣券', id: 40 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -77,12 +78,12 @@ export default {
         {
           label: '卡券业务类型',
           type: 'select',
-          name: 'type',
+          name: 'couponBusinessType',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '增加', id: 1 },
-            { name: '减少', id: 2 }
+            { name: '物业费', id: '4014' },
+            { name: '购物券', id: '4005' }
           ],
           labelCol: { span: 9 },
           wrapperCol: { span: 15 }
@@ -95,15 +96,17 @@ export default {
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
         },
+        // 卡券状态 0：禁用; 1：启用; 2：逻辑删除; 3 临时保存；
         {
           label: '卡券状态',
           type: 'select',
-          name: 'type',
+          name: 'couponStatus',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '增加', id: 1 },
-            { name: '减少', id: 2 }
+            { name: '禁用', id: '0' },
+            { name: '启用', id: 1 },
+            { name: '保存', id: 3 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -348,28 +351,21 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let couponId = '';
-        let couponTitle = '';
-        if (this.$refs.memberForm.getFieldsValue().couponId) {
-          couponId = this.$refs.memberForm.getFieldsValue().couponId;
+        let couponType = ''; //卡券类型
+        let couponTitle = ''; //卡券标题
+        let couponBusinessType = ''; //卡券业务类型
+        let couponStatus = ''; //卡券状态
+        if (this.$refs.memberForm.getFieldsValue().couponType) {
+          couponType = this.$refs.memberForm.getFieldsValue().couponType;
         }
         if (this.$refs.memberForm.getFieldsValue().couponTitle) {
           couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
         }
-
-        let memberCode = '';
-        if (this.$refs.memberForm.getFieldsValue().memberCode) {
-          memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
+        if (this.$refs.memberForm.getFieldsValue().couponBusinessType) {
+          couponBusinessType = this.$refs.memberForm.getFieldsValue().couponBusinessType;
         }
-
-        // let memberId = '';
-        // if (this.$refs.memberForm.getFieldsValue().memberId) {
-        //   memberId = this.$refs.memberForm.getFieldsValue().memberId;
-        // }
-
-        let phoneNo = '';
-        if (this.$refs.memberForm.getFieldsValue().phoneNo) {
-          phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
+        if (this.$refs.memberForm.getFieldsValue().couponStatus) {
+          couponStatus = this.$refs.memberForm.getFieldsValue().couponStatus;
         }
 
         let jointimeStart = '';
@@ -385,14 +381,12 @@ export default {
         const para = {
           pageIndex: this.current, //起始页
           pageSize: this.pageSize, //每页展示条数
-          activity: '', //卡券业务类型
-          // createTimeStart: jointimeStart, //开始时间
-          // createTimeEnd: jointimeEnd, //结束时间
-          createTimeStart: '', //开始时间
-          createTimeEnd: '', //结束时间
-          status: '', //卡券状态
+          activity: couponBusinessType, //卡券业务类型
+          createTimeStart: jointimeStart, //开始时间
+          createTimeEnd: jointimeEnd, //结束时间
+          status: couponStatus, //卡券状态
           title: couponTitle, //卡券标题
-          type: '' //卡券类型
+          type: couponType //卡券类型
         };
 
         console.log('getCouponsList para :>> ', para);
@@ -405,17 +399,7 @@ export default {
           .then(res => {
             console.log('getCouponsList res :>> ', res);
             if (res.code === 200) {
-              // if (Object.prototype.toString.call(res.data) !== '[object Object]') {
-              //   //res.data非对象阻断
-              //   return;
-              // }
-              // if (Object.prototype.toString.call(res.data.records) !== '[object Array]') {
-              //   //res.data.records非数组阻断
-              //   return;
-              // }
-
-              // this.total = res.data.total;
-              this.total = res.data.records.length;
+              this.total = res.data.total;
               this.tableData.splice(0, this.tableData.length);
               res.data.records.forEach((element, index) => {
                 this.tableData.push(element);
@@ -463,13 +447,20 @@ export default {
   watch: {
     formList: {
       handler: function(newVal) {
-        this.$refs.memberForm.setFieldsValue({
-          type: this.formList[0].selectOptions[0].id
-        });
-        this.$refs.memberForm.setFieldsValue({
-          memberSourceCode: this.formList[1].selectOptions[0].id
+        console.log('formList newVal :>> ', newVal);
+        this.$nextTick(() => {
+          this.$refs.memberForm.setFieldsValue({
+            couponType: this.formList[0].selectOptions[0].id
+          });
+          this.$refs.memberForm.setFieldsValue({
+            couponBusinessType: this.formList[2].selectOptions[0].id
+          });
+          this.$refs.memberForm.setFieldsValue({
+            couponStatus: this.formList[4].selectOptions[0].id
+          });
         });
       },
+      immediate: true, //刷新加载立马触发一次handler
       deep: true
     }
   }

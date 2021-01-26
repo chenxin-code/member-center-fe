@@ -480,7 +480,7 @@ export default {
       couponImage: '',
       picUploading: false,
       //////////上传图片///////////
-      memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
+      // pcRuleId:'',//没用
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
@@ -675,6 +675,19 @@ export default {
       this.validityEndTime = dateStrings[1];
     },
 
+    /**
+     **判断日期格式为yyyy-mm-dd和正确的日期
+     */
+    isDateString(str) {
+      const reg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      if (str === '' || str === undefined || str === null) return false;
+      if (reg.test(str)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
     //输入框
     couponTitleChange(e) {
       this.couponTitle = e.target.value;
@@ -743,18 +756,21 @@ export default {
     //获取详情
     getCouponDetail() {
       const param = {
-        couponId: this.$route.query.id
-        // couponId: 12285
+        // couponId: this.$route.query.id,
+        couponId: 12361
       };
+      console.log('getCouponDetail param :>> ', param);
       api.getCouponDetail(param).then(res => {
         console.log('getCouponDetail res :>> ', res);
+
         //////////////////mock/////////////////
         res.data = {
+          // pcRuleId:136994,//没用
           classification: 1,
           commercialTenants: '123456',
           cost: '',
           couponBusinessType: '4014',
-          couponCode: '12285',
+          couponCode: this.$route.query.id,
           couponId: '',
           couponImage:
             'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
@@ -774,38 +790,51 @@ export default {
           state: 1,
           takeEffectDayNums: 3,
           validityDayNums: 30,
-          validityEndTime: '2020-01-24',
-          validityStartTime: '2021-01-23',
+          validityStartTime: '2021-01-11',
+          validityEndTime: '2020-01-22',
           validityType: 1,
           voucherAmount: '100'
         };
         //////////////////mock/////////////////
 
         if (res.code === 200) {
-          this.classification = res.data.classification;
-          this.commercialTenants = res.data.commercialTenants;
-          this.couponImage = res.data.couponImage;
-          this.discountMaxDeduction = res.data.discountMaxDeduction;
-          this.discountRatio = res.data.discountRatio;
-          this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount;
-          this.merchandises = res.data.merchandises;
-          this.satisfyAmount = res.data.satisfyAmount;
-          this.state = res.data.state;
-          this.takeEffectDayNums = res.data.takeEffectDayNums;
-          this.validityDayNums = res.data.validityDayNums;
+          // this.pcRuleId = res.data.pcRuleId || this.pcRuleId;//没用
+          this.classification = res.data.classification || this.classification;
+          this.commercialTenants = res.data.commercialTenants || this.commercialTenants;
+          this.couponImage = res.data.couponImage || this.couponImage;
+          this.discountMaxDeduction = res.data.discountMaxDeduction || this.discountMaxDeduction;
+          this.discountRatio = res.data.discountRatio || this.discountRatio;
+          this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount || this.fullReductionDiscountAmount;
+          this.merchandises = res.data.merchandises || this.merchandises;
+          this.satisfyAmount = res.data.satisfyAmount || this.satisfyAmount;
+          this.state = res.data.state || this.state;
+          this.takeEffectDayNums = res.data.takeEffectDayNums || this.takeEffectDayNums;
+          this.validityDayNums = res.data.validityDayNums || this.validityDayNums;
           ////////////init show/////////
-          this.couponTitle = res.data.couponTitle;
-          this.couponSubhead = res.data.couponSubhead;
-          this.couponType = res.data.couponType;
-          this.voucherAmount = res.data.voucherAmount;
-          this.validityType = res.data.validityType;
-          this.validityStartTime = res.data.validityStartTime; //固定有效期-卡券有效期开始时间
-          this.validityEndTime = res.data.validityEndTime; //	固定有效期-卡券有效期结束时间
-          this.rangePickerValue = [moment(res.data.validityStartTime), moment(res.data.validityEndTime)];
-          this.source = res.data.source;
-          this.couponBusinessType = res.data.couponBusinessType;
-          this.cost = res.data.cost;
-          this.memo = res.data.memo;
+          this.couponTitle = res.data.couponTitle || this.couponTitle;
+          this.couponSubhead = res.data.couponSubhead || this.couponSubhead;
+          this.couponType = res.data.couponType || this.couponType;
+          this.voucherAmount = res.data.voucherAmount || this.voucherAmount;
+          this.validityType = res.data.validityType || this.validityType;
+          ///////////日期//////////
+          this.validityStartTime = this.isDateString(this.momentStr(res.data.validityStartTime))
+            ? this.momentStr(res.data.validityStartTime)
+            : ''; //固定有效期-卡券有效期开始时间
+          this.validityEndTime = this.isDateString(this.momentStr(res.data.validityEndTime))
+            ? this.momentStr(res.data.validityEndTime)
+            : ''; //	固定有效期-卡券有效期结束时间
+          if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
+            this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
+          } else {
+            this.rangePickerValue = [];
+            this.validityStartTime = '';
+            this.validityEndTime = '';
+          }
+          ///////////日期//////////
+          this.source = res.data.source || this.source;
+          this.couponBusinessType = res.data.couponBusinessType || this.couponBusinessType;
+          this.cost = res.data.cost || this.cost;
+          this.memo = res.data.memo || this.memo;
           /////////////init show/////////////
         }
       });
@@ -824,20 +853,21 @@ export default {
 
     getCouponCreate(state, loadingType) {
       const param = {
+        // pcRuleId: this.pcRuleId,//没用
         state: state,
         classification: this.classification,
         commercialTenants: this.commercialTenants,
         cost: this.cost,
         couponBusinessType: this.couponBusinessType,
-        couponCode: '', //没用
-        couponId: '', //没用
+        // couponCode: '', //没用
+        // couponId: '',//没用
         couponImage: this.couponImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
         couponType: this.couponType,
-        createOperator: '', //没用
-        createTime: '', //没用
-        dateTime: '', //没用
+        // createOperator: '', //没用
+        // createTime: '', //没用
+        // dateTime: '', //没用
         discountMaxDeduction: this.discountMaxDeduction,
         discountRatio: this.discountRatio.toString(),
         fullReductionDiscountAmount: this.fullReductionDiscountAmount,
@@ -866,7 +896,7 @@ export default {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            // this.$router.replace({ path: '/couponsManage' });
+            this.$router.replace({ path: '/couponsManage' });
           }
         });
     }
@@ -893,14 +923,14 @@ export default {
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
+    },
+    rangePickerValue: {
+      handler(newVal) {
+        console.log('watch rangePickerValue newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
-    // rangePickerValue: {
-    //   handler(newVal) {
-    //     console.log('watch rangePickerValue newVal :>> ', newVal);
-    //   },
-    //   immediate: true, //刷新加载立马触发一次handler
-    //   deep: true
-    // }
   }
 };
 </script>

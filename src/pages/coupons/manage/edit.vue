@@ -480,7 +480,7 @@ export default {
       couponImage: '',
       picUploading: false,
       //////////上传图片///////////
-      memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
+      pcRuleId: '',
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
@@ -763,6 +763,7 @@ export default {
 
         // //////////////////mock/////////////////
         // res.data = {
+        //   pcRuleId:136994,
         //   classification: 1,
         //   commercialTenants: '123456',
         //   cost: '',
@@ -787,14 +788,15 @@ export default {
         //   state: 1,
         //   takeEffectDayNums: 3,
         //   validityDayNums: 30,
-        //   validityEndTime: '2020-01-24',
         //   validityStartTime: '2021-01-23',
+        //   validityEndTime: '2020-01-24',
         //   validityType: 1,
         //   voucherAmount: '100'
         // };
         // //////////////////mock/////////////////
 
         if (res.code === 200) {
+          this.pcRuleId = res.data.pcRuleId || this.pcRuleId;
           this.classification = res.data.classification || this.classification;
           this.commercialTenants = res.data.commercialTenants || this.commercialTenants;
           this.couponImage = res.data.couponImage || this.couponImage;
@@ -812,13 +814,21 @@ export default {
           this.couponType = res.data.couponType || this.couponType;
           this.voucherAmount = res.data.voucherAmount || this.voucherAmount;
           this.validityType = res.data.validityType || this.validityType;
-          this.validityStartTime = res.data.validityStartTime || this.validityStartTime; //固定有效期-卡券有效期开始时间
-          this.validityEndTime = res.data.validityEndTime || this.validityEndTime; //	固定有效期-卡券有效期结束时间
+          ///////////日期//////////
+          this.validityStartTime = this.isDateString(this.momentStr(res.data.validityStartTime))
+            ? this.momentStr(res.data.validityStartTime)
+            : ''; //固定有效期-卡券有效期开始时间
+          this.validityEndTime = this.isDateString(this.momentStr(res.data.validityEndTime))
+            ? this.momentStr(res.data.validityEndTime)
+            : ''; //	固定有效期-卡券有效期结束时间
           if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
-          } else{
+          } else {
             this.rangePickerValue = [];
+            this.validityStartTime = '';
+            this.validityEndTime = '';
           }
+          ///////////日期//////////
           this.source = res.data.source || this.source;
           this.couponBusinessType = res.data.couponBusinessType || this.couponBusinessType;
           this.cost = res.data.cost || this.cost;
@@ -841,7 +851,7 @@ export default {
 
     getCouponUpdate(state, loadingType) {
       const param = {
-        pcRuleId: 111,
+        pcRuleId: this.pcRuleId,
         state: state,
         classification: this.classification,
         commercialTenants: this.commercialTenants,
@@ -849,7 +859,6 @@ export default {
         couponBusinessType: this.couponBusinessType,
         couponCode: '', //没用
         couponId: this.$route.query.id,
-        // couponId: '12350',
         couponImage: this.couponImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
@@ -885,7 +894,7 @@ export default {
           console.log('getCouponUpdate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            // this.$router.replace({ path: '/couponsManage' });
+            this.$router.replace({ path: '/couponsManage' });
           }
         });
     }
