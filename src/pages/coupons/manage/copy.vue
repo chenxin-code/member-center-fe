@@ -27,6 +27,7 @@
                     v-decorator="[
                       'couponTitle',
                       {
+                        initialValue: couponTitle,
                         rules: [
                           { required: true, message: '卡券标题不能为空' },
                           { whitespace: true, message: '卡券标题不能为空' }
@@ -42,7 +43,12 @@
                 <a-form-item label="卡券副标题">
                   <a-input
                     @change="couponSubheadChange"
-                    v-decorator="['couponSubhead']"
+                    v-decorator="[
+                      'couponSubhead',
+                      {
+                        initialValue: couponSubhead
+                      }
+                    ]"
                     placeholder="请输入卡券副标题"
                     allow-clear
                   />
@@ -54,7 +60,7 @@
                     v-decorator="[
                       'couponType',
                       {
-                        initialValue: couponTypes[0].code,
+                        initialValue: couponType,
                         rules: [{ required: true, message: '卡券类型不能为空' }]
                       }
                     ]"
@@ -74,6 +80,7 @@
                       v-decorator="[
                         'voucherAmount',
                         {
+                          initialValue: voucherAmount,
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' }
@@ -94,6 +101,7 @@
                       v-decorator="[
                         'satisfyAmount',
                         {
+                          initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' }
@@ -111,6 +119,7 @@
                       v-decorator="[
                         'fullReductionDiscountAmount',
                         {
+                          initialValue: fullReductionDiscountAmount,
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
                             { whitespace: true, message: '抵扣金额不能为空' }
@@ -131,6 +140,7 @@
                       v-decorator="[
                         'satisfyAmount',
                         {
+                          initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' }
@@ -148,6 +158,7 @@
                       v-decorator="[
                         'discountMaxDeduction',
                         {
+                          initialValue: discountMaxDeduction,
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
                             { whitespace: true, message: '最高抵扣金额不能为空' }
@@ -169,7 +180,7 @@
                       v-decorator="[
                         'discountRatio',
                         {
-                          initialValue: '0.9',
+                          initialValue: discountRatio,
                           rules: [{ required: true, message: '折扣比例不能为空' }]
                         }
                       ]"
@@ -186,7 +197,7 @@
                     v-decorator="[
                       'validityType',
                       {
-                        initialValue: validityTypes[0].code,
+                        initialValue: validityType,
                         rules: [{ required: true, message: '有效期类型不能为空' }]
                       }
                     ]"
@@ -205,6 +216,7 @@
                       v-decorator="[
                         'rangePickerValue',
                         {
+                          initialValue: rangePickerValue,
                           rules: [{ type: 'array', required: true, message: '日期不能为空,请选择日期!' }]
                         }
                       ]"
@@ -226,7 +238,7 @@
                       v-decorator="[
                         'validityDayNums',
                         {
-                          initialValue: 1,
+                          initialValue: validityDayNums,
                           rules: [{ required: true, message: '有效天数不能为空' }]
                         }
                       ]"
@@ -243,7 +255,7 @@
                       v-decorator="[
                         'takeEffectDayNums',
                         {
-                          initialValue: 1,
+                          initialValue: takeEffectDayNums,
                           rules: [{ required: true, message: '领取后几天后生效不能为空' }]
                         }
                       ]"
@@ -260,7 +272,7 @@
                     v-decorator="[
                       'source',
                       {
-                        initialValue: sources[0].code,
+                        initialValue: source,
                         rules: [{ required: true, message: '卡券平台不能为空' }]
                       }
                     ]"
@@ -279,7 +291,7 @@
                     v-decorator="[
                       'couponBusinessType',
                       {
-                        initialValue: couponBusinessTypes[0].code,
+                        initialValue: couponBusinessType,
                         rules: [{ required: true, message: '卡券业务类型不能为空' }]
                       }
                     ]"
@@ -300,7 +312,7 @@
                       v-decorator="[
                         'classification',
                         {
-                          initialValue: 1,
+                          initialValue: classification,
                           rules: [{ required: true, message: '商城订单类型不能为空' }]
                         }
                       ]"
@@ -320,6 +332,7 @@
                       v-decorator="[
                         'commercialTenants',
                         {
+                          initialValue: commercialTenants,
                           rules: [
                             { required: true, message: '商户id不能为空' },
                             { whitespace: true, message: '商户id不能为空' }
@@ -337,6 +350,7 @@
                       v-decorator="[
                         'merchandises',
                         {
+                          initialValue: merchandises,
                           rules: [
                             { required: true, message: '商品id不能为空' },
                             { whitespace: true, message: '商品id不能为空' }
@@ -355,7 +369,10 @@
                         accept="image/jpeg,image/jpg,image/png"
                         list-type="picture-card"
                         :file-list="fileList"
-                        v-decorator="['imageUrl', { rules: [{ required: true, message: '图片不能为空' }] }]"
+                        v-decorator="[
+                          'couponImage',
+                          { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
+                        ]"
                         :before-upload="() => false"
                         :remove="handleRemove"
                         @preview="handlePreview"
@@ -382,7 +399,12 @@
                 <a-form-item label="成本价（可选）">
                   <a-input
                     @change="costChange"
-                    v-decorator="['cost']"
+                    v-decorator="[
+                      'cost',
+                      {
+                        initialValue: cost
+                      }
+                    ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
                     allow-clear
                   />
@@ -395,6 +417,7 @@
                     v-decorator="[
                       'memo',
                       {
+                        initialValue: memo,
                         rules: [
                           { required: true, message: '使用说明不能为空' },
                           { whitespace: true, message: '使用说明不能为空' }
@@ -410,8 +433,18 @@
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
                 <div class="common-btn common-submit">
-                  <!-- <a-button :loading="submitLoading" type="primary" @click="handleSubmit">提交</a-button> -->
-                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit">保存</a-button>
+                  <a-button
+                    style="margin-right: 20px;"
+                    :loading="saveLoading"
+                    type="primary"
+                    @click="handleSubmit(3, 'saveLoading')"
+                  >
+                    保存
+                  </a-button>
+
+                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit(1, 'submitLoading')">
+                    提交
+                  </a-button>
                 </div>
                 <div class="common-btn common-cancle">
                   <a-button type="primary" @click="handleCancle">取消</a-button>
@@ -437,6 +470,8 @@ export default {
   components: {},
   data() {
     return {
+      submitLoading: false,
+      saveLoading: false,
       //////////上传图片///////////
       conponForm: this.$form.createForm(this, { name: 'conponForm' }),
       previewVisible: false,
@@ -444,10 +479,8 @@ export default {
       fileList: [],
       couponImage: '',
       picUploading: false,
-      submitLoading: false,
       //////////上传图片///////////
       memoBackup: '1.请在有效期内使用;\n2.只能在指定商铺使用;',
-      // couponDetails: {},
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
@@ -461,7 +494,7 @@ export default {
       satisfyAmount: '', //	折扣券/满减券 满多少金额可用
       fullReductionDiscountAmount: '', //满减券抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
-      discountRatio: '', //折扣券 折扣比例
+      discountRatio: '0.9', //折扣券 折扣比例
       validityType: 1,
       validityTypes: [
         { name: '固定有效期', code: 1 },
@@ -472,13 +505,13 @@ export default {
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 1, //相对有效期-领取后几天后生效
-      source: 10, //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
+      source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
-        { name: '地产', code: 10 },
-        { name: '邻里邦', code: 20 },
-        { name: '邻里商城', code: 30 },
-        { name: '会员中心', code: 40 },
-        { name: '收费中心', code: 50 }
+        { name: '地产', code: '10' },
+        { name: '邻里邦', code: '20' },
+        { name: '邻里商城', code: '30' },
+        { name: '会员中心', code: '40' },
+        { name: '收费中心', code: '50' }
       ],
       couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
@@ -555,10 +588,15 @@ export default {
                 if (res.code === 200) {
                   console.log(this.fileList);
                   this.conponForm.setFieldsValue({
-                    imageUrl: res.data
+                    couponImage: res.data
                   });
-                  this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data ? res.data : '' };
-                  this.couponImage = this.fileList[0].url;
+                  this.$set(this.fileList, 0, {
+                    uid: '-1',
+                    name: 'image.png',
+                    status: 'done',
+                    url: res.data ? res.data : ''
+                  });
+                  this.couponImage = res.data ? res.data : '';
                 }
               });
           }
@@ -598,7 +636,7 @@ export default {
                 that.fileList = [];
                 that.couponImage = '';
                 that.conponForm.setFieldsValue({
-                  imageUrl: ''
+                  couponImage: ''
                 });
               }
             });
@@ -705,61 +743,101 @@ export default {
     //获取详情
     getCouponDetail() {
       const param = {
-        // couponId: this.$route.query.id
-        couponId: 12285
+        couponId: this.$route.query.id
+        // couponId: 12285
       };
       api.getCouponDetail(param).then(res => {
         console.log('getCouponDetail res :>> ', res);
+        //////////////////mock/////////////////
+        res.data = {
+          classification: 1,
+          commercialTenants: '123456',
+          cost: '',
+          couponBusinessType: '4014',
+          couponCode: '12285',
+          couponId: '',
+          couponImage:
+            'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
+          couponSubhead: '',
+          couponTitle: '卡券标题',
+          couponType: 10,
+          createOperator: '',
+          createTime: null,
+          dateTime: null,
+          discountMaxDeduction: '150',
+          discountRatio: '0.7',
+          fullReductionDiscountAmount: '100',
+          memo: 'mock 999',
+          merchandises: '123456',
+          satisfyAmount: '200',
+          source: '10',
+          state: 1,
+          takeEffectDayNums: 3,
+          validityDayNums: 30,
+          validityEndTime: '2020-01-24',
+          validityStartTime: '2021-01-23',
+          validityType: 1,
+          voucherAmount: '100'
+        };
+        //////////////////mock/////////////////
+
         if (res.code === 200) {
-          const data = res.data;
-          this.fileList[0] = { uid: '-1', name: 'image.png', status: 'done', url: res.data.advertPicture };
-          this.$nextTick(() => {
-            this.form.setFieldsValue({
-              title: data.title,
-              status: data.status.toString(),
-              type: data.type.toString(),
-              imageUrl: data.advertPicture,
-              date: [moment(data.startValidTime).format('YYYY-MM-DD'), moment(data.endValidTime).format('YYYY-MM-DD')],
-              url: data.url,
-              isYouZan: data.youzan,
-              richText: data.customContent,
-              model: Number(data.microappId),
-              miniId: data.miniId,
-              miniPath: data.miniPath,
-              isShowTitle: data.isShowTitle
-            });
-          });
+          this.classification = res.data.classification;
+          this.commercialTenants = res.data.commercialTenants;
+          this.couponImage = res.data.couponImage;
+          this.discountMaxDeduction = res.data.discountMaxDeduction;
+          this.discountRatio = res.data.discountRatio;
+          this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount;
+          this.merchandises = res.data.merchandises;
+          this.satisfyAmount = res.data.satisfyAmount;
+          this.state = res.data.state;
+          this.takeEffectDayNums = res.data.takeEffectDayNums;
+          this.validityDayNums = res.data.validityDayNums;
+          ////////////init show/////////
+          this.couponTitle = res.data.couponTitle;
+          this.couponSubhead = res.data.couponSubhead;
+          this.couponType = res.data.couponType;
+          this.voucherAmount = res.data.voucherAmount;
+          this.validityType = res.data.validityType;
+          this.validityStartTime = res.data.validityStartTime; //固定有效期-卡券有效期开始时间
+          this.validityEndTime = res.data.validityEndTime; //	固定有效期-卡券有效期结束时间
+          this.rangePickerValue = [moment(res.data.validityStartTime), moment(res.data.validityEndTime)];
+          this.source = res.data.source;
+          this.couponBusinessType = res.data.couponBusinessType;
+          this.cost = res.data.cost;
+          this.memo = res.data.memo;
+          /////////////init show/////////////
         }
       });
     },
 
-    handleSubmit() {
+    handleSubmit(state, loadingType) {
       this.conponForm.validateFields((err, values) => {
         console.log('handleSubmit validateFields err :>> ', err);
         //没有错误的情况下
         if (!err) {
           console.log('handleSubmit values :>> ', values);
-          this.getCouponCreate();
+          this.getCouponCreate(state, loadingType);
         }
       });
     },
 
-    getCouponCreate() {
-      console.log('getCouponCreate run');
+    getCouponCreate(state, loadingType) {
       const param = {
+        state: state,
         classification: this.classification,
         commercialTenants: this.commercialTenants,
         cost: this.cost,
         couponBusinessType: this.couponBusinessType,
-        // couponCode: '',
-        // couponId: '',
+        couponCode: '', //没用
+        couponId: '', //没用
         couponImage: this.couponImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
         couponType: this.couponType,
-        // createOperator: '',
-        // createTime: '',
-        // dateTime: '',
+        createOperator: '', //没用
+        createTime: '', //没用
+        dateTime: '', //没用
         discountMaxDeduction: this.discountMaxDeduction,
         discountRatio: this.discountRatio.toString(),
         fullReductionDiscountAmount: this.fullReductionDiscountAmount,
@@ -777,32 +855,52 @@ export default {
 
       console.log('getCouponCreate param :>> ', param);
 
-      this.submitLoading = true;
+      this[loadingType] = true;
+
       api
         .getCouponCreate(param)
         .finally(() => {
-          this.submitLoading = false;
+          this[loadingType] = false;
         })
         .then(res => {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            this.$router.replace({ path: '/couponsManage' });
+            // this.$router.replace({ path: '/couponsManage' });
           }
         });
     }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getCouponDetail();
   },
   mounted() {},
   watch: {
+    fileList: {
+      handler(newVal) {
+        console.log('watch fileList newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
     couponImage: {
       handler(newVal) {
-        console.log('couponImage newVal :>> ', newVal);
+        console.log('watch couponImage newVal :>> ', newVal);
+        if (newVal) {
+          this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
+        }
       },
-      immediate: true //刷新加载立马触发一次handler
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
+    // rangePickerValue: {
+    //   handler(newVal) {
+    //     console.log('watch rangePickerValue newVal :>> ', newVal);
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // }
   }
 };
 </script>
@@ -852,7 +950,7 @@ export default {
           align-items: center;
 
           .common-btn {
-            margin-right: 50px;
+            margin-right: 30px;
 
             ::v-deep .ant-btn {
               box-sizing: content-box;
