@@ -48,6 +48,25 @@
 import FilterForm from '@/components/FilterGroup/index.jsx';
 import moment from 'moment';
 import api from "@/api";
+
+const typeList = [
+    {id: '', name: '全部'},
+    {id: 10, name: '代金券'},
+    {id: 20, name: '满减券'},
+    {id: 40, name: '抵扣券'}
+]
+const activityList = [
+    {id: '', name: '全部'},
+    {id: 4014, name: '物业费'},
+    {id: 4005, name: '消费券'}
+]
+const conditionList = [
+    {id: '', name: '全部'},
+    {id: 1, name: '领券中心'},
+    {id: 2, name: '直接发放'},
+    {id: 3, name: '邦豆兑换'},
+    {id: 4, name: '卡密兑换'}
+]
 export default {
     name: "release",
     data() {
@@ -60,96 +79,87 @@ export default {
             formList: [
                 {
                     label: "卡券类型",
-                    name: "taskName",
+                    name: "type",
                     type: "select",
                     placeholder: "全部",
-                    selectOptions: [
-                        {id: '', name: '全部'},
-                        {id: '0', name: '已推送'},
-                        {id: '1', name: '定时推送'}
-                    ]
+                    selectOptions: typeList
                 },
                 {
                     label: '卡券标题',
                     type: "input",
                     placeholder: "请输入",
-                    name: 'taskKey'
+                    name: 'title'
                 },
                 {
                     label: '卡券业务类型',
                     type: 'select',
                     placeholder: "全部",
-                    name: 'status',
-                    selectOptions: [
-                        {id: '', name: '全部'},
-                        {id: '0', name: '已推送'},
-                        {id: '1', name: '定时推送'}
-                    ]
+                    name: 'activity',
+                    selectOptions: activityList
                 },
                 {
                     label: "派发类型",
                     type: "select",
-                    name: "taskSource",
+                    name: "condition",
                     placeholder: "全部",
-                    selectOptions: [
-                        {id: '', name: '全部'},
-                        {id: '0', name: '已推送'},
-                        {id: '1', name: '定时推送'}
-                    ],
+                    selectOptions: conditionList,
                     initialValue: "全部",
                 },
                 {
                     label: '派发时间',
                     type: 'rangePicker',
-                    name: 'taskDate',
+                    name: 'rangeDate',
                 }
             ],
             columns: [
                 {
-                    dataIndex: 'taskKey',
-                    key: 'id',
+                    dataIndex: 'couponId',
+                    key: 'couponId',
                     title: '卡券ID',
                 },
                 {
                     title: '卡券标题',
-                    key: 'taskName',
-                    dataIndex: 'taskName'
+                    key: 'couponTitle',
+                    dataIndex: 'couponTitle'
                 },
                 {
                     title: '卡券类型',
-                    key: 'validity',
-                    dataIndex: 'validity'
+                    key: 'couponType',
+                    dataIndex: 'couponType',
+                    customRender: text => typeList.filter(item => item.id == text)[0].name || ''
                 },
                 {
                     title: '卡券业务类',
-                    key: 'isPeriodic',
-                    dataIndex: 'isPeriodic',
+                    key: 'businessType',
+                    dataIndex: 'businessType',
+                    customRender: text => activityList.filter(item => item.id == text)[0].name || '' 
                 },
                 {
                     title: '卡券面值金额',
-                    key: 'status',
-                    dataIndex: 'status',
+                    key: 'faceAmount',
+                    dataIndex: 'faceAmount',
                 },
                 {
                     title: '卡券有效期',
-                    key: 'behaviourName',
-                    dataIndex: 'behaviourName'
+                    key: 'valiDays',
+                    dataIndex: 'valiDays'
                 },
                 {
                     title: '派发类型',
-                    key: 'sourceName',
-                    dataIndex: 'sourceName'
+                    key: 'condition',
+                    dataIndex: 'condition',
+                    customRender: text => conditionList.filter(item => item.id == text)[0].name || ''
                 },
                 {
                     title: '操作人员',
-                    key: 'sys',
-                    dataIndex: 'sys'
+                    key: 'updateUserName',
+                    dataIndex: 'updateUserName'
                 },
                 {
                     title: '派发时间',
                     key: 'createTime',
                     dataIndex: 'createTime',
-                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
+                    customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
                 },
                 {
                     title: '操作',
@@ -158,33 +168,33 @@ export default {
                 }
             ],
             dataList: [],
-            taskKey: '',
-            taskDate: [],
-            taskName: '',
-            taskSource: '',
-            status: null
+            activity: '',
+            condition: '',
+            title: '',
+            type: '',
+            rangeDate: [],
         }
     },
     components: {
       FilterForm
     },
     mounted () {
-        this.getTaskSource()
-        this.getTaskList()
+        this.getReleaseList()
         setTimeout( () => {
             this.scrollY = this.$refs.contentMain.offsetHeight - 340 + 'px';
         }, 0)
     },
     methods: {
         onSearch(args) {
-            const { taskKey, taskDate, taskName, taskSource, status } = args
-            this.taskKey = taskKey || null;
-            this.taskName = taskName || null;
-            this.taskSource = taskSource || null;
-            this.status = status || null;
-            this.taskDate = taskDate || [];
+            console.log(args)
+            const { activity, condition, title, type, rangeDate } = args
+            this.activity = activity || null;
+            this.condition = condition || null;
+            this.title = title || null;
+            this.type = type || null;
+            this.rangeDate = rangeDate || [];
             this.current = 1;
-            this.getTaskList()
+            this.getReleaseList()
         },
 
         onCheck(record) {
@@ -194,23 +204,24 @@ export default {
         onShowSizeChange(current, pageSize) {
             this.current = current;
             this.pageSize = pageSize;
-            this.getTaskList()
+            this.getReleaseList()
         },
 
-        getTaskList() {
+        getReleaseList() {
             this.tableLoading = true;
             let args = {
                 pageIndex: this.current,
                 pageSize: this.pageSize,
-                createTimeStart: this.taskDate.length ? moment(this.taskDate[0]).format('YYYY-MM-DD') : null,
-                createTimeEnd: this.taskDate.length ? moment(this.taskDate[1]).format('YYYY-MM-DD') : null,
-                status: this.status,
-                taskKey: this.taskKey,
-                taskName: this.taskName,
-                taskSource: this.taskSource,
+                createTimeStart: this.rangeDate.length ? moment(this.rangeDate[0]).format('YYYY-MM-DD') : null,
+                createTimeEnd: this.rangeDate.length ? moment(this.rangeDate[1]).format('YYYY-MM-DD') : null,
+                type: this.type,
+                title: this.title,
+                activity: this.activity,
+                condition: this.condition,
             }
-            api.getTaskList(args)
+            api.getReleaseList(args)
             .then( res => {
+                console.log(res)
                 this.tableLoading = false;
                 this.dataList = res.data.records.map((item, index) => {
                     return {
@@ -223,27 +234,6 @@ export default {
             .finally( () => this.tableLoading = false)
         },
 
-        getTaskSource() {
-            let sourceList = []
-            api.getTaskSource()
-            .then( res =>
-                sourceList = res.data.map(item => {
-                    return {id: item.appCode, name: item.appName}
-                })
-            )
-            .then( () => {
-                this.formList = this.formList.map( item => {
-                    if (item.name === 'taskSource') {
-                        return {
-                            ...item,
-                            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
-                        }
-                    } else {
-                        return item
-                    }
-                })
-            })
-        }
     },
     activated() {
         // isUseCache为false时才重新刷新获取数据
@@ -253,14 +243,13 @@ export default {
             this.total = 0;
             this.current = 1;
             this.pageSize = 10;
-            this.taskKey = '';
-            this.taskDate = [];
-            this.taskName = '';
-            this.taskSource = '';
-            this.status = null;
+            this.condition = '';
+            this.type = '';
+            this.title = '';
+            this.activity = '';
             //初始化加载数据
             this.$refs.form.form.resetFields();
-            this.getTaskList();
+            this.getReleaseList();
         }
 
         //重置
@@ -268,7 +257,7 @@ export default {
     },
 
     beforeRouteEnter(to, from, next) {
-        if (from.name === 'task_detail') {
+        if (from.name === 'release_detail') {
             to.meta.isUseCache = true;
         } else {
             to.meta.isUseCache = false;
@@ -277,7 +266,7 @@ export default {
         next();
     },
     beforeRouteLeave(to, from, next) {
-        if (to.name === 'task_detail') {
+        if (to.name === 'release_detail') {
             to.meta.isUseCache = true;
         } else {
             to.meta.isUseCache = false;

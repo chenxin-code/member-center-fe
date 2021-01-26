@@ -34,6 +34,12 @@ export default {
     GET_DEALINGLIST: '/times/member-center/behaviour/api/v1/behaviour/list', // 获取行为列表
     GET_DEALINGDETAIL: '/times/member-center/behaviour/api/v1/behaviour/detail', // 获取行为详情
     GET_DEALINGLOG: '/times/member-center/behaviour/api/v1/behaviour/log-list', // 获取行为日志
+    GET_RELEASELIST: '/times/member-center/coupon/api/v1/distribute/list', // 获取派发列表
+    GET_RELEASEDETAIL: '/times/member-center/coupon/api/v1/distribute/detail', // 获取派发详情
+    GET_RELEASEMEMBERDOWNLOAD: '/times/member-center/coupon/api/v1/download', // 下载会员信息
+    GET_COUPONLIST: '/times/member-center/coupon/api/v1/coupon/list', // 获取卡券列表
+    COUPONDISTRIBUTE: '/times/member-center/coupon/api/v1/assgin-member/distribute', // 卡券派发
+    GET_MEMBERLEVELLIST: '/times/member-center/member-card/api/v1/level/list', // 会员卡等级
     //会员中心:张
     MEMBER_LIST: option.member + '/api/v1/member/list',
     CLIENT_LIST: option.client + '/api/v1/list',

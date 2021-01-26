@@ -11,12 +11,18 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券基础信息
       </p>
-      <div class="detail-main-items" v-for="item in dataList1" :key="item.label">
-        <span class="detail-main-items-label">{{ item.label }}</span>
-        <span v-if="item.name === 'createTime'" class="detail-main-items-value">
-          {{ moment(dataObj[item.name]).format('YYYY-MM-DD HH:MM:SS') || '' }}
-        </span>
-        <span v-else class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
+      <div class="detail-main-items">
+            <span class="detail-main-items-label">卡券id：</span>
+            <span class="detail-main-items-value">{{dataObj.couponId}}</span>
+      </div>
+      <div class="detail-main-items">
+            <span class="detail-main-items-label">卡券标题：</span>
+            <span class="detail-main-items-value">{{dataObj.couponName}}</span>
+      </div>
+      <div class="detail-main-items">
+            <span class="detail-main-items-label">卡券有效期：</span>
+            <span v-show="dataObj.expirationType == 1" class="detail-main-items-value">{{`${moment(dataObj.startTime).format('YYYY-MM-DD HH:mm:ss')} ~ ${moment(dataObj.expirationTime).format('YYYY-MM-DD HH:mm:ss')}`}}</span>
+            <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">相对有效期，{{dataObj.offsetDays}}天</span>
       </div>
     </div>
     <div class="detail-main">
@@ -24,9 +30,51 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券发放信息
       </p>
-      <div class="detail-main-items" v-for="item in dataList2" :key="item.label">
-        <span class="detail-main-items-label">{{ item.label }}</span>
-        <span class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
+      <div class="detail-main-items">
+        <span class="detail-main-items-label">领取条件设置：</span>
+        <span class="detail-main-items-value">{{ filterValue(receiveType, dataObj.condition) }}</span>
+      </div>
+      <!-- 领取类型：领券中心 -->
+      <div v-show="dataObj.condition == 1">
+        <div class="detail-main-items" v-for="item in receiveCenter" :key="item.label">
+            <span class="detail-main-items-label">{{ item.label }}</span>
+            <span class="detail-main-items-value">{{ dataObj[item.name]}}</span>
+        </div>
+      </div>
+      <!-- 领取类型：邦豆兑换 -->
+      <div v-show="dataObj.condition == 3">
+        <div class="detail-main-items" v-for="item in bangdouList" :key="item.label">
+            <span class="detail-main-items-label">{{ item.label }}</span>
+            <span class="detail-main-items-value">{{ dataObj[item.name]}}</span>
+        </div>
+      </div>
+      <!-- 领取类型：卡密兑换 -->
+      <div v-show="dataObj.condition == 4">
+        <div class="detail-main-items">
+            <span class="detail-main-items-label">派发数量：</span>
+            <span class="detail-main-items-value">{{ dataObj.issuedCount }}</span>
+        </div>
+      </div>
+      <!-- 领取类型：直接发放 -->
+      <div v-show="dataObj.condition == 2">
+        <div class="detail-main-items">
+            <span class="detail-main-items-label">发放范围：</span>
+            <span class="detail-main-items-value">{{ filterValue(issueRangeList, dataObj.issuedRang) }}</span>
+        </div>
+        <div class="detail-main-items" v-show="dataObj.issuedRang == 2">
+            <span class="detail-main-items-label">指定会员：</span>
+            <span class="detail-main-items-value">
+                <a-button @click="downloadInfo"><a-icon type="download" />下载会员信息</a-button>
+            </span>
+        </div>
+        <div class="detail-main-items" v-show="dataObj.issuedRange == 3">
+            <span class="detail-main-items-label">接入系统：</span>
+            <span class="detail-main-items-value">{{ dataObj.clientName }}</span>
+        </div>
+        <div class="detail-main-items" v-show="dataObj.issuedRange == 4">
+            <span class="detail-main-items-label">会员卡：</span>
+            <span class="detail-main-items-value">{{ `${dataObj.memberCardName}，${dataObj.startLevelId}-${dataObj.endLevelId}` }}</span>
+        </div>
       </div>
     </div>
     <div class="detail-main">
@@ -34,9 +82,9 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券记录信息
       </p>
-      <div class="detail-main-items" v-for="item in dataList2" :key="item.label">
-        <span class="detail-main-items-label">{{ item.label }}</span>
-        <span class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
+      <div class="detail-main-items">
+        <span class="detail-main-items-label">卡券发放：</span>
+        <span class="detail-main-items-value">{{`${moment(dataObj.createTime).format('YYYY-MM-DD HH:mm:ss')} ${dataObj.operator}`}}</span>
       </div>
     </div>
     <div class="detail-main">
@@ -44,9 +92,10 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券数据
       </p>
-      <div class="detail-main-items" v-for="item in dataList2" :key="item.label">
+      <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
-        <span class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
+        <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
+        <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.href)">{{item.buttonTxt}}</a-button>
       </div>
     </div>
   </div>
@@ -55,74 +104,92 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
-
 export default {
   name: 'release_detail',
   data() {
     return {
-      tableData: [],
-      dataObj: {},
-      columns,
-      dataList1: [
-        {
-          label: '接入系统名称: ',
-          name: 'appName'
-        },
-        {
-          label: 'AppKey: ',
-          name: 'appCode'
-        },
-        {
-          label: 'AppSecret: ',
-          name: 'appSecret'
-        },
-        {
-          label: '接入系统简介: ',
-          name: 'appDescribe'
-        },
-        {
-          label: '创建时间: ',
-          name: 'createTime'
-        }
-      ],
-      dataList2: [
-        {
-          label: '注册会员: ',
-          name: 'memberCount'
-        },
-        {
-          label: '创建来源会员: ',
-          name: 'sourceCreateNum'
-        }
-      ]
+        receiveType: [
+            {label: '领券中心', value: 1},
+            {label: '直接发放', value: 2},
+            {label: '邦豆兑换', value: 3},
+            {label: '卡密兑换', value: 4},
+        ],
+        issueRangeList: [
+            { label: '全部会员', value: 1},
+            { label: '指定会员', value: 2},
+            { label: '接入系统', value: 3},
+            { label: '指定会员卡', value: 4},
+        ],
+        dataObj: {},
+        couponSourse: [
+            // { label: '线下卡密下载：' },
+            { label: '发放数量：', type: 'msg', name: 'issuedCount' },
+            { label: '领取数量：', type: 'href', name: 'received', url: 'couponsClaim', buttonTxt: '查看领取数量' },
+            { label: '核销数量：', type: 'href', name: 'offCount', url: 'couponsCancel', buttonTxt: '查看核销数量' },
+        ],
+        receiveCenter: [ //领券中心
+            { label: '派发数量：', name: 'issuedCount' },
+            { label: '每人领取数量限制：', name: 'perPersonLimit' },
+            { label: '每日领取数量限制：', name: 'perDayLimit' },
+            { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' },
+        ],
+        bangdouList: [
+            { label: '派发数量', name: 'issuedCount' },
+            { label: '邦豆兑换值', name: 'integrealCount' },
+            { label: '每人领取数量限制：', name: 'perPersonLimit' },
+            { label: '每日领取数量限制：', name: 'perDayLimit' },
+            { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' },
+        ],
     };
   },
-  computed: {
-    showEnable() {
-      return param => {
-        if (param === 0) {
-          return '启用';
-        } else if (param === 1) {
-          return '禁用';
-        } else {
-          return '';
-        }
-      };
-    }
-  },
   mounted() {
-    this.initData(this.$route.query.code);
+    this.initData(this.$route.query.id);
   },
   methods: {
     moment,
-    initData(code) {
-      api.getClientDetail({ appCode: code }).then(res => {
-        console.log('getClientDetail res :>> ', res);
+    initData(id) {
+      api.getReleaseDetail({id: id}).then(res => {
         if (res.code === 200) {
           this.dataObj = res.data;
-          this.tableData = res.data.sourceVos;
         }
       });
+    },
+    filterValue(list, type) {
+        return type && list.filter(item => item.value == type)[0].label
+    },
+    goCheck(url) {
+        this.$router.push({name: url})
+    },
+    downloadInfo () {
+        const args = {
+            couponCode: this.dataObj.couTypeCode
+        }
+        api.downReleseMember(Object.keys(args).reduce((pre, key) => {
+            pre.append([key], args[key]);
+            return pre;
+        }, new FormData()))
+        .then(
+            res => console.log('------')
+        )
+        .catch(
+            // 这块等有时间看下为啥走的err
+            err => this.download(err.text)
+        )
+    },
+    download (content) {
+        const filename = '会员信息.xlsx'
+        // 创建隐藏的可下载链接
+        var eleLink = document.createElement('a');
+        eleLink.download = filename;
+        eleLink.style.display = 'none';
+        // 字符内容转变成blob地址
+        var blob = new Blob([content], {type: 'application/vnd.ms-excel'});
+        eleLink.href = URL.createObjectURL(blob);
+        // 触发点击
+        document.body.appendChild(eleLink);
+        eleLink.click();
+        // 然后移除
+        document.body.removeChild(eleLink);
     }
   }
 };
@@ -172,7 +239,7 @@ export default {
       margin-bottom: 20px;
       &-label {
         display: inline-block;
-        width: 120px;
+        width: 180px;
         text-align: right;
         padding-right: 10px;
       }

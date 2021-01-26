@@ -40,6 +40,7 @@ const CouponsManageDetail = () => import('@/pages/coupons/manage/detail');
 const CouponsRelease = () => import('@/pages/coupons/release/index');
 const CouponsReleaseDetail = () => import('@/pages/coupons/release/detail');
 const CouponsReleaseCreate = () => import('@/pages/coupons/release/create');
+const CouponsReleaseStatus = () => import('@/pages/coupons/release/status');
 
 const routes = [
   //首页:home
@@ -351,11 +352,24 @@ const routes = [
           authKeys: [''],
           bread: [
             { path: '/couponsRelease', name: '卡券派发' },
-            { path: '/couponsRelease/detail', name: '派发详情' },
             { path: '/couponsRelease/create', name: '新建派发' },
           ]
         },
         component: CouponsReleaseCreate
+      },
+      {
+        path: '/couponsRelease/status',
+        name: 'release_status',
+        menuKey: 'release_status',
+        meta: {
+          menu: '/release',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsRelease', name: '卡券派发' },
+            { path: '/couponsRelease/status', name: '卡券发放完成' },
+          ]
+        },
+        component: CouponsReleaseStatus
       },
     ]
   },
