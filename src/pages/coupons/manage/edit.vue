@@ -796,6 +796,11 @@ export default {
         // //////////////////mock/////////////////
 
         if (res.code === 200) {
+
+          if (Object.prototype.toString.call(res.data) !== '[object Object]') {
+            res.data = {};
+          }
+
           this.pcRuleId = res.data.pcRuleId || this.pcRuleId;
           this.classification = res.data.classification || this.classification;
           this.commercialTenants = res.data.commercialTenants || this.commercialTenants;

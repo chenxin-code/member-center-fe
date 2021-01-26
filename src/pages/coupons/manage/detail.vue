@@ -33,38 +33,22 @@
               </div>
               <!-- 卡券类型/代金券金额  -->
               <div class="common-column-wrapp">
-                <div class="common-column" v-show='couponDetails.couponType === 10'>
+                <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType }}</div>
+                    <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
                   </div>
                   <div class="column-item">
                     <div class="column-right">代金券金额:</div>
-                    <div class="column-left">{{ couponDetails.voucherAmount || 100 }}元</div>
-                  </div>
-                </div>
-                <div class="common-column" v-show='couponDetails.couponType === 20'>
-                  <div class="column-item">
-                    <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType || '' }}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left">
+                    <div class="column-left" v-show="couponDetails.couponType === 10">
+                      {{ couponDetails.voucherAmount || '' }}元
+                    </div>
+                    <div class="column-left" v-show="couponDetails.couponType === 20">
                       满{{ couponDetails.satisfyAmount || '' }}元抵扣{{
                         couponDetails.fullReductionDiscountAmount || ''
                       }}元
                     </div>
-                  </div>
-                </div>
-                <div class="common-column" v-show='couponDetails.couponType === 40'>
-                  <div class="column-item">
-                    <div class="column-right">卡券类型:</div>
-                    <div class="column-left">{{ couponDetails.couponType || '' }}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left">
+                    <div class="column-left" v-show="couponDetails.couponType === 40">
                       满{{ couponDetails.satisfyAmount || '' }}元{{ couponDetails.discountRatio || '' }}折最高抵扣{{
                         couponDetails.discountMaxDeduction || ''
                       }}元
@@ -77,23 +61,15 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ couponDetails.validityType || '' }}</div>
+                    <div class="column-left">{{ validityTypeStr(couponDetails.validityType) }}</div>
                   </div>
-                  <div class="column-item">
+                  <div class="column-item" v-show="couponDetails.validityType === 1">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityStartTime || '' }}~{{
-                        couponDetails.validityEndTime || ''
-                      }}
+                      {{ couponDetails.validityStartTime || '' }} ~ {{ couponDetails.validityEndTime || '' }}
                     </div>
                   </div>
-                </div>
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ couponDetails.validityType || '' }}</div>
-                  </div>
-                  <div class="column-item">
+                  <div class="column-item" v-show="couponDetails.validityType === 3">
                     <div class="column-right">有效期:</div>
                     <div class="column-left">
                       {{ couponDetails.validityDayNums || '' }}天, 领取后{{
@@ -108,7 +84,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券来源:</div>
-                    <div class="column-left">{{ couponDetails.source || ''}}</div>
+                    <div class="column-left">{{ sourceStr(couponDetails.source) }}</div>
                   </div>
                 </div>
               </div>
@@ -117,66 +93,24 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">{{ couponDetails.couponBusinessType || '物业费'}}</div>
+                    <div class="column-left">{{ couponBusinessTypeStr(couponDetails.couponBusinessType) }}</div>
                   </div>
-                </div>
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">{{ couponDetails.couponBusinessType || ''}}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">分类:</div>
-                    <div class="column-left">平台抵扣券</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">平台抵扣券类型:</div>
-                    <div class="column-left">全部</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">优惠券封面:</div>
-                    <div class="column-left">
-                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                  <div v-if="couponDetails.couponBusinessType === '4005'">
+                    <div class="column-item">
+                      <div class="column-right">分类:</div>
+                      <div class="column-left">{{ classificationStr(couponDetails.classification) }}</div>
                     </div>
-                  </div>
-                </div>
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">{{ couponDetails.couponBusinessType || ''}}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">分类:</div>
-                    <div class="column-left">平台抵扣券</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">平台抵扣券类型:</div>
-                    <div class="column-left">全部</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">优惠券封面:</div>
-                    <div class="column-left">
-                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                    <div class="column-item">
+                      <div class="column-right">平台抵扣券类型:</div>
+                      <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
                     </div>
-                  </div>
-                </div>
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">卡券业务类型:</div>
-                    <div class="column-left">{{ couponDetails.couponBusinessType || ''}}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">分类:</div>
-                    <div class="column-left">平台抵扣券</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">平台抵扣券类型:</div>
-                    <div class="column-left">全部</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">优惠券封面:</div>
-                    <div class="column-left">
-                      <img src="../../../assets/img/member/lalala.png" width="75" height="70" alt="" />
+                    <div class="column-item">
+                      <div class="column-right">优惠券封面:</div>
+                      <div class="column-left">
+                        <div class="column-left-image">
+                          <img :src="couponDetails.couponImage" width="85" height="85" alt="" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -186,7 +120,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">成本价:</div>
-                    <div class="column-left">{{ couponDetails.cost || ''}}元</div>
+                    <div class="column-left">{{ couponDetails.cost || '' }}元</div>
                   </div>
                 </div>
               </div>
@@ -224,8 +158,8 @@
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.createTime || '2020-10-10 23:00:00' }}</div>
-                      <div>{{ couponDetails.createOperator || '望望 13900000001' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
+                      <div>{{ couponDetails.createOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
@@ -235,8 +169,8 @@
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.onTime || '2020-10-10 23:00:00' }}</div>
-                      <div>{{ couponDetails.onOperator || '望望 13900000001' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
+                      <div>{{ couponDetails.onOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
@@ -246,8 +180,8 @@
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.offTime || '2020-10-10 23:00:00' }}</div>
-                      <div>{{ couponDetails.offOperator || '望望 13900000001' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
+                      <div>{{ couponDetails.offOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
@@ -304,6 +238,69 @@ export default {
         }
         return str;
       };
+    },
+    couponTypeStr() {
+      return param => {
+        if (param === 10) {
+          return '代金券';
+        } else if (param === 20) {
+          return '满减券';
+        } else if (param === 40) {
+          return '折扣券';
+        } else {
+          return '';
+        }
+      };
+    },
+    validityTypeStr() {
+      return param => {
+        if (param === 1) {
+          return '固定有效期';
+        } else if (param === 3) {
+          return '相对有效期';
+        } else {
+          return '';
+        }
+      };
+    },
+    sourceStr() {
+      return param => {
+        if (param === '10') {
+          return '地产';
+        } else if (param === '20') {
+          return '邻里邦';
+        } else if (param === '30') {
+          return '邻里商城';
+        } else if (param === '40') {
+          return '会员中心';
+        } else if (param === '50') {
+          return '收费中心';
+        } else {
+          return '';
+        }
+      };
+    },
+    couponBusinessTypeStr() {
+      return param => {
+        if (param === '4014') {
+          return '物业费';
+        } else if (param === '4005') {
+          return '购物券';
+        } else {
+          return '';
+        }
+      };
+    },
+    classificationStr() {
+      return param => {
+        if (param === 1) {
+          return '全部';
+        } else if (param === 2) {
+          return '零售';
+        } else {
+          return '';
+        }
+      };
     }
   },
   methods: {
@@ -315,6 +312,47 @@ export default {
       console.log('getCouponDetail param :>> ', param);
       api.getCouponDetail(param).then(res => {
         console.log('getCouponDetail res :>> ', res);
+
+        // //////////////////mock/////////////////
+        // // const res = { data: {}, code: 200 };
+        // res.data = {
+        //   // pcRuleId:136994,//没用
+        //   couponTitle: '卡券标题',
+        //   couponSubhead: '卡副券标题',
+        //   // couponType: 10,//开关
+        //   couponType: 40,
+        //   voucherAmount: '100',
+        //   satisfyAmount: '200',
+        //   fullReductionDiscountAmount: '100',
+        //   discountMaxDeduction: '150',
+        //   discountRatio: '0.7',
+        //   // validityType: 1,//开关
+        //   validityType: 3,
+        //   validityStartTime: '2021-01-11',
+        //   validityEndTime: '2020-01-22',
+        //   validityDayNums: 30,
+        //   takeEffectDayNums: 3,
+        //   // source: '10',//开关
+        //   source: '30',
+        //   // couponBusinessType: '4014',//开关
+        //   couponBusinessType: '4005',
+        //   // classification: 1,//开关
+        //   classification: 2,
+        //   commercialTenants: '123456',
+        //   merchandises: '123456',
+        //   couponImage:
+        //     'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
+        //   cost: '666',
+        //   memo: 'memo memo memo 999',
+        //   createTime: '2020-10-10 23:00:00',
+        //   createOperator: '望望 13900000001',
+        //   onTime: '2020-10-10 23:00:00',
+        //   onOperator: '望望 13900000001',
+        //   offTime: '2020-10-10 23:00:00',
+        //   offOperator: '望望 13900000001'
+        // };
+        // //////////////////mock/////////////////
+
         if (res.code === 200) {
           console.log('res.data :>> ', res.data);
           for (const key in res.data) {
@@ -333,16 +371,7 @@ export default {
     this.getCouponDetail();
   },
   mounted() {},
-  watch: {
-    // bangdouAddRemark: {
-    //   handler(newVal) {
-    //     if (newVal) {
-    //       this.bangdouAddRemarkNull = false;
-    //     }
-    //   },
-    //   immediate: true //刷新加载 立马触发一次handler
-    // }
-  }
+  watch: {}
 };
 </script>
 
@@ -408,6 +437,18 @@ export default {
                 flex-direction: row;
                 justify-content: flex-start;
                 align-items: center;
+
+                .column-left-image {
+                  margin-left: 10px;
+                  width: 103px;
+                  height: 103px;
+                  border: 1px dashed #ccc;
+                  border-radius: 8px;
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: center;
+                  align-items: center;
+                }
 
                 .ant-input-disabled {
                   background-color: #fff;

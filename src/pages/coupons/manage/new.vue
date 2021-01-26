@@ -901,7 +901,7 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getCouponDetail();
+    // this.getCouponDetail();
   },
   mounted() {},
   watch: {

@@ -756,48 +756,53 @@ export default {
     //获取详情
     getCouponDetail() {
       const param = {
-        // couponId: this.$route.query.id,
-        couponId: 12361
+        couponId: this.$route.query.id,
       };
+
       console.log('getCouponDetail param :>> ', param);
       api.getCouponDetail(param).then(res => {
         console.log('getCouponDetail res :>> ', res);
 
-        //////////////////mock/////////////////
-        res.data = {
-          // pcRuleId:136994,//没用
-          classification: 1,
-          commercialTenants: '123456',
-          cost: '',
-          couponBusinessType: '4014',
-          couponCode: this.$route.query.id,
-          couponId: '',
-          couponImage:
-            'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
-          couponSubhead: '',
-          couponTitle: '卡券标题',
-          couponType: 10,
-          createOperator: '',
-          createTime: null,
-          dateTime: null,
-          discountMaxDeduction: '150',
-          discountRatio: '0.7',
-          fullReductionDiscountAmount: '100',
-          memo: 'mock 999',
-          merchandises: '123456',
-          satisfyAmount: '200',
-          source: '10',
-          state: 1,
-          takeEffectDayNums: 3,
-          validityDayNums: 30,
-          validityStartTime: '2021-01-11',
-          validityEndTime: '2020-01-22',
-          validityType: 1,
-          voucherAmount: '100'
-        };
-        //////////////////mock/////////////////
+        // //////////////////mock/////////////////
+        // res.data = {
+        //   // pcRuleId:136994,//没用
+        //   classification: 1,
+        //   commercialTenants: '123456',
+        //   cost: '',
+        //   couponBusinessType: '4014',
+        //   couponCode: this.$route.query.id,
+        //   couponId: '',
+        //   couponImage:
+        //     'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
+        //   couponSubhead: '',
+        //   couponTitle: '卡券标题',
+        //   couponType: 10,
+        //   createOperator: '',
+        //   createTime: null,
+        //   dateTime: null,
+        //   discountMaxDeduction: '150',
+        //   discountRatio: '0.7',
+        //   fullReductionDiscountAmount: '100',
+        //   memo: 'mock 999',
+        //   merchandises: '123456',
+        //   satisfyAmount: '200',
+        //   source: '10',
+        //   state: 1,
+        //   takeEffectDayNums: 3,
+        //   validityDayNums: 30,
+        //   validityStartTime: '2021-01-11',
+        //   validityEndTime: '2020-01-22',
+        //   validityType: 1,
+        //   voucherAmount: '100'
+        // };
+        // //////////////////mock/////////////////
 
         if (res.code === 200) {
+
+          if (Object.prototype.toString.call(res.data) !== "[object Object]"){
+            res.data  ={}
+          }
+
           // this.pcRuleId = res.data.pcRuleId || this.pcRuleId;//没用
           this.classification = res.data.classification || this.classification;
           this.commercialTenants = res.data.commercialTenants || this.commercialTenants;

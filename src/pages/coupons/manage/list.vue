@@ -14,6 +14,16 @@
         :selectable="false"
         :loading="tableLoading"
       >
+        <template slot="couponTypeSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="couponTypeStr(rowData.couponType)"></span>
+          </div>
+        </template>
+        <template slot="activitySlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="activityStr(rowData.activity)"></span>
+          </div>
+        </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="momentStrHms(rowData.createTime)"></span>
@@ -22,8 +32,8 @@
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="goCopy(rowData.couTypeCode)">复制</a>
-            <a @click="goEdit(rowData.couTypeCode)">编辑</a>
+            <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
+            <a @click="goEdit(rowData.id)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -151,14 +161,14 @@ export default {
         },
         {
           title: '卡券类型',
-          dataIndex: 'couponType',
           key: 'couponType',
+          scopedSlots: { customRender: 'couponTypeSlot' },
           width: 150
         },
         {
           title: '卡券业务类型',
-          dataIndex: 'activity',
           key: 'activity',
+          scopedSlots: { customRender: 'activitySlot' },
           width: 150
         },
         {
@@ -276,17 +286,28 @@ export default {
         }
       };
     },
-    showChangeType() {
+    couponTypeStr() {
       return param => {
-        let str = '';
-        if (param === 1) {
-          str = '增加';
-        } else if (param === 2) {
-          str = '减少';
+        if (param === 10) {
+          return '代金券';
+        } else if (param === 20) {
+          return '满减券';
+        } else if (param === 40) {
+          return '折扣券';
         } else {
-          str = '';
+          return '';
         }
-        return str;
+      };
+    },
+    activityStr() {
+      return param => {
+        if (param === '4014') {
+          return '物业费';
+        } else if (param === '4005') {
+          return '购物券';
+        } else {
+          return '';
+        }
       };
     }
   },

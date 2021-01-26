@@ -119,7 +119,7 @@ export default {
         {
           title: '会员唯一标识',
           dataIndex: 'memberCode',
-          key: 'memberCode',
+          key: 'memberCode'
           // dataIndex: 'memberId',
           // key: 'memberId'
         },
