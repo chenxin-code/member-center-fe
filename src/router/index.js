@@ -323,9 +323,7 @@ const routes = [
         meta: {
           menu: '/couponsRelease',
           authKeys: [''],
-          bread: [
-            { path: '/couponsRelease', name: '卡券派发' },
-          ]
+          bread: [{ path: '/couponsRelease', name: '卡券派发' }]
         },
         component: CouponsRelease
       },
@@ -338,7 +336,7 @@ const routes = [
           authKeys: [''],
           bread: [
             { path: '/couponsRelease', name: '卡券派发' },
-            { path: '/couponsRelease/detail', name: '派发详情' },
+            { path: '/couponsRelease/detail', name: '派发详情' }
           ]
         },
         component: CouponsReleaseDetail
@@ -352,7 +350,7 @@ const routes = [
           authKeys: [''],
           bread: [
             { path: '/couponsRelease', name: '卡券派发' },
-            { path: '/couponsRelease/create', name: '新建派发' },
+            { path: '/couponsRelease/create', name: '新建派发' }
           ]
         },
         component: CouponsReleaseCreate
@@ -366,11 +364,11 @@ const routes = [
           authKeys: [''],
           bread: [
             { path: '/couponsRelease', name: '卡券派发' },
-            { path: '/couponsRelease/status', name: '卡券发放完成' },
+            { path: '/couponsRelease/status', name: '卡券发放完成' }
           ]
         },
         component: CouponsReleaseStatus
-      },
+      }
     ]
   },
   {

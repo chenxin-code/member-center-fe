@@ -16,12 +16,12 @@
       >
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.receiveTime)"></span>
+            <span v-html="momentStrHms(rowData.createTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData.couponId)">查看卡券</a>
+            <a @click="goDetail(rowData.couponCode)">查看卡券</a>
           </div>
         </template>
       </a-table>
@@ -190,12 +190,12 @@ export default {
       this.getClaimCancel(true);
     },
     //查看卡券详情
-    goDetail(id) {
-      console.log('id :>> ', id);
+    goDetail(code) {
+      console.log('goDetail code :>> ', code);
       this.$router.push({
         name: 'couponsManageDetail',
         query: {
-          id: id
+          code: code
         }
       });
     },
