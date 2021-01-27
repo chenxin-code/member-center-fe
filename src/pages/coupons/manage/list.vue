@@ -380,20 +380,19 @@ export default {
       console.log('rowData :>> ', rowData);
       console.log('state :>> ', state);
       const para = {
-        creator: rowData.operator,
         id: rowData.id,
-        operatePhone: '',
         state: state
       };
       console.log('couponOnOrOff para :>> ', para);
       // return;
+      this.tableLoading = true;
       api
         .couponOnOrOff(para)
         .finally(() => {})
         .then(res => {
           console.log('couponOnOrOff res :>> ', res);
           if (res.code === 200) {
-            //
+            this.getCouponsList();
           }
         });
     },
