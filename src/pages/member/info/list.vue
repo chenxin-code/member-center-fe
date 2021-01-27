@@ -94,7 +94,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'inputNumber',
+          type: 'inputPhone',
           name: 'phoneNo',
           placeholder: '请输入'
         },
