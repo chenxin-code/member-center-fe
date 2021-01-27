@@ -2,7 +2,6 @@
   <div class="detail">
     <div class="detail-header">
       <div class="detail-header-title">派发详情</div>
-      <a-button @click="downloadInfo"><a-icon type="download" />下载会员信息</a-button>
       <span class="detail-header-fallback" @click="$store.dispatch('FALLBACK')">
         返回
       </span>
@@ -169,13 +168,16 @@ export default {
         }
         axios({
             method: "get",
-            // params: args,
-            url: '/times/quality-service/qualityManager/api/v1/standard/export',
+            params: args,
+            url: '/times/member-center/coupon/api/v1/download',
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem("SD_ACCESS_TOKEN")
+                "Authorization": "Bearer " + localStorage.getItem("SD_ACCESS_TOKEN"),
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             responseType:'blob'
-        }).then( res => this.download(res))
+        }).then( res => {
+            this.download(res.data)
+        })
         
     },
     download (content) {
@@ -185,14 +187,14 @@ export default {
         eleLink.download = filename;
         eleLink.style.display = 'none';
         // 字符内容转变成blob地址
-        var blob = new Blob([content]);
+        var blob = new Blob([content], { type: "application/vnd.ms-excel;charset=utf-8" });
         eleLink.href = URL.createObjectURL(blob);
         // 触发点击
         document.body.appendChild(eleLink);
         eleLink.click();
-        // URL.revokeObjectURL(eleLink.href);
+        URL.revokeObjectURL(eleLink.href);
         // 然后移除
-        // document.body.removeChild(eleLink);
+        document.body.removeChild(eleLink);
     }
   }
 };
