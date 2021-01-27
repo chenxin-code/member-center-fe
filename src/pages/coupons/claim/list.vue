@@ -76,7 +76,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'inputNumber',
+          type: 'inputPhone',
           name: 'memberPhone',
           placeholder: '请输入'
         },
