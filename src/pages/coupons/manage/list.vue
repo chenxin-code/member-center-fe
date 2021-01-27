@@ -189,8 +189,8 @@ export default {
         },
         {
           title: '卡券面值金额',
-          dataIndex: 'amount',
-          key: 'amount',
+          dataIndex: 'faceAmount',
+          key: 'faceAmount',
           width: 150
         },
         {
@@ -298,15 +298,15 @@ export default {
     },
     sourceStr() {
       return param => {
-        if (param === '10') {
+        if (param === '10' || param === 10) {
           return '地产';
-        } else if (param === '20') {
+        } else if (param === '20' || param === 20) {
           return '邻里邦';
-        } else if (param === '30') {
+        } else if (param === '30' || param === 30) {
           return '邻里商城';
-        } else if (param === '40') {
+        } else if (param === '40' || param === 40) {
           return '会员中心';
-        } else if (param === '50') {
+        } else if (param === '50' || param === 50) {
           return '收费中心';
         } else {
           return '';
