@@ -49,6 +49,10 @@ const FormList = {
       type: Object,
       default: () => ({})
     },
+    maxLength: {
+      type: [Number, String],
+      default: 11
+    },
     onSubmit: {
       type: Function,
       default: defaultFn
@@ -56,8 +60,7 @@ const FormList = {
   },
   data() {
     return {
-      form: null,
-      minVal: 0
+      form: null
     };
   },
   created: function() {
@@ -86,10 +89,10 @@ const FormList = {
       switch (type) {
         case 'input':
           return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
-        case 'inputNumber':
+        case 'inputPhone':
           return (
-            <a-input-number
-              min={this.minVal}
+            <a-input
+              maxLength={this.maxLength}
               v-decorator={[name, { rules: rules }]}
               {...others}
               placeholder={attrs.placeholder}
