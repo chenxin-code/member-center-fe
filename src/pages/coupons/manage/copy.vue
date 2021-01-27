@@ -34,7 +34,7 @@
                         ]
                       }
                     ]"
-                    maxLength="20"
+                    :maxLength="20"
                     placeholder="请输入卡券标题"
                     allow-clear
                   />
@@ -50,7 +50,7 @@
                         initialValue: couponSubhead
                       }
                     ]"
-                    maxLength="20"
+                    :maxLength="20"
                     placeholder="请输入卡券副标题"
                     allow-clear
                   />
@@ -85,7 +85,8 @@
                           initialValue: voucherAmount,
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
-                            { whitespace: true, message: '代金券金额不能为空' }
+                            { whitespace: true, message: '代金券金额不能为空' },
+                            {validator: this.checkAmountFormat, trigger: ['blur']}
                           ]
                         }
                       ]"
@@ -404,7 +405,8 @@
                     v-decorator="[
                       'cost',
                       {
-                        initialValue: cost
+                        initialValue: cost,
+                        rules: [{validator: this.checkAmountFormat, trigger: ['blur']}]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
@@ -427,7 +429,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
-                    maxLength="200"
+                    :maxLength="200"
                     placeholder="请输入使用说明"
                   />
                   <div>memo:{{ memo }}</div>
@@ -558,6 +560,13 @@ export default {
     }
   },
   methods: {
+    checkAmountFormat (rule,value,callback) {
+      if(value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)){
+        callback(new Error('金额格式不正确'))
+      }else{
+        callback()
+      }
+    },
     ...mapActions(['FALLBACK']),
     //////////上传图片///////////
     //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
