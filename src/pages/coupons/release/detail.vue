@@ -2,6 +2,7 @@
   <div class="detail">
     <div class="detail-header">
       <div class="detail-header-title">派发详情</div>
+      <a-button @click="downloadInfo"><a-icon type="download" />下载会员信息</a-button>
       <span class="detail-header-fallback" @click="$store.dispatch('FALLBACK')">
         返回
       </span>
@@ -67,13 +68,13 @@
                 <a-button @click="downloadInfo"><a-icon type="download" />下载会员信息</a-button>
             </span>
         </div>
-        <div class="detail-main-items" v-show="dataObj.issuedRange == 3">
+        <div class="detail-main-items" v-show="dataObj.issuedRang == 3">
             <span class="detail-main-items-label">接入系统：</span>
             <span class="detail-main-items-value">{{ dataObj.clientName }}</span>
         </div>
-        <div class="detail-main-items" v-show="dataObj.issuedRange == 4">
+        <div class="detail-main-items" v-show="dataObj.issuedRang == 4">
             <span class="detail-main-items-label">会员卡：</span>
-            <span class="detail-main-items-value">{{ `${dataObj.memberCardName}，${dataObj.startLevelId}-${dataObj.endLevelId}` }}</span>
+            <span class="detail-main-items-value">{{ `${dataObj.memberCardName}，V${dataObj.startLevelId}-V${dataObj.endLevelId}` }}</span>
         </div>
       </div>
     </div>
@@ -95,7 +96,7 @@
       <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
         <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
-        <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.href)">{{item.buttonTxt}}</a-button>
+        <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.url)">{{item.buttonTxt}}</a-button>
       </div>
     </div>
   </div>
@@ -104,6 +105,8 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
+import { message } from 'ant-design-vue';
+import axios from 'axios'
 export default {
   name: 'release_detail',
   data() {
@@ -164,17 +167,16 @@ export default {
         const args = {
             couponCode: this.dataObj.couTypeCode
         }
-        api.downReleseMember(Object.keys(args).reduce((pre, key) => {
-            pre.append([key], args[key]);
-            return pre;
-        }, new FormData()))
-        .then(
-            res => console.log('------')
-        )
-        .catch(
-            // 这块等有时间看下为啥走的err
-            err => this.download(err.text)
-        )
+        axios({
+            method: "get",
+            // params: args,
+            url: '/times/quality-service/qualityManager/api/v1/standard/export',
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("SD_ACCESS_TOKEN")
+            },
+            responseType:'blob'
+        }).then( res => this.download(res))
+        
     },
     download (content) {
         const filename = '会员信息.xlsx'
@@ -183,13 +185,14 @@ export default {
         eleLink.download = filename;
         eleLink.style.display = 'none';
         // 字符内容转变成blob地址
-        var blob = new Blob([content], {type: 'application/vnd.ms-excel'});
+        var blob = new Blob([content]);
         eleLink.href = URL.createObjectURL(blob);
         // 触发点击
         document.body.appendChild(eleLink);
         eleLink.click();
+        // URL.revokeObjectURL(eleLink.href);
         // 然后移除
-        document.body.removeChild(eleLink);
+        // document.body.removeChild(eleLink);
     }
   }
 };
