@@ -34,6 +34,7 @@
                         ]
                       }
                     ]"
+                    maxLength="20"
                     placeholder="请输入卡券标题"
                     allow-clear
                   />
@@ -49,6 +50,7 @@
                         initialValue: couponSubhead
                       }
                     ]"
+                    maxLength="20"
                     placeholder="请输入卡券副标题"
                     allow-clear
                   />
@@ -425,6 +427,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
+                    maxLength="200"
                     placeholder="请输入使用说明"
                   />
                   <div>memo:{{ memo }}</div>

@@ -63,10 +63,11 @@
                     <div class="column-right">有效期类型:</div>
                     <div class="column-left">{{ validityTypeStr(couponDetails.validityType) }}</div>
                   </div>
+
                   <div class="column-item" v-show="couponDetails.validityType === 1">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityStartTime || '' }} ~ {{ couponDetails.validityEndTime || '' }}
+                      {{ momentStr(couponDetails.validityStartTime) }} ~ {{ momentStr(couponDetails.validityEndTime) }}
                     </div>
                   </div>
                   <div class="column-item" v-show="couponDetails.validityType === 3">

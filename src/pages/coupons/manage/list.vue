@@ -24,6 +24,16 @@
             <span v-html="activityStr(rowData.activity)"></span>
           </div>
         </template>
+        <template slot="sourceSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="sourceStr(rowData.source)"></span>
+          </div>
+        </template>
+        <template slot="couponStatusSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="couponStatusStr(rowData.couponStatus)"></span>
+          </div>
+        </template>
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="momentStrHms(rowData.createTime)"></span>
@@ -33,7 +43,13 @@
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
             <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
-            <a @click="goEdit(rowData.id)">编辑</a>
+            <a @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
+            <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
+              启用
+            </a>
+            <a @click="couponOnOrOff(rowData, 0)" v-else-if="rowData.couponStatus === 1">
+              禁用
+            </a>
           </div>
         </template>
       </a-table>
@@ -161,13 +177,13 @@ export default {
         },
         {
           title: '卡券类型',
-          key: 'couponType',
+          key: 'couponTypeSlot',
           scopedSlots: { customRender: 'couponTypeSlot' },
           width: 150
         },
         {
           title: '卡券业务类型',
-          key: 'activity',
+          key: 'activitySlot',
           scopedSlots: { customRender: 'activitySlot' },
           width: 150
         },
@@ -183,46 +199,16 @@ export default {
           key: 'validity',
           width: 150
         },
-        // {
-        //   title: '卡券来源',
-        //   dataIndex: 'validity',
-        //   key: 'validity',
-        //   width: 150
-        // },
         {
-          title: '发放方式',
-          dataIndex: 'releaseForm',
-          key: 'releaseForm',
+          title: '卡券平台',
+          key: 'sourceSlot',
+          scopedSlots: { customRender: 'sourceSlot' },
           width: 150
         },
-        {
-          title: '发放数量',
-          dataIndex: 'releaseCount',
-          key: 'releaseCount',
-          width: 150
-        },
-        {
-          title: '领取数量',
-          dataIndex: 'receiveCount',
-          key: 'receiveCount',
-          width: 150
-        },
-        {
-          title: '核销数量',
-          dataIndex: 'offCount',
-          key: 'offCount',
-          width: 150
-        },
-        // {
-        //   title: '过期数量',
-        //   dataIndex: 'offCount',
-        //   key: 'offCount',
-        //   width: 150
-        // },
         {
           title: '状态',
-          dataIndex: 'couponStatus',
-          key: 'couponStatus',
+          key: 'couponStatusSlot',
+          scopedSlots: { customRender: 'couponStatusSlot' },
           width: 150
         },
         {
@@ -309,6 +295,38 @@ export default {
           return '';
         }
       };
+    },
+    sourceStr() {
+      return param => {
+        if (param === '10') {
+          return '地产';
+        } else if (param === '20') {
+          return '邻里邦';
+        } else if (param === '30') {
+          return '邻里商城';
+        } else if (param === '40') {
+          return '会员中心';
+        } else if (param === '50') {
+          return '收费中心';
+        } else {
+          return '';
+        }
+      };
+    },
+    couponStatusStr() {
+      return param => {
+        if (param === 0) {
+          return '禁用';
+        } else if (param === 1) {
+          return '启用';
+        } else if (param === 2) {
+          return '删除';
+        } else if (param === 3) {
+          return '保存';
+        } else {
+          return '';
+        }
+      };
     }
   },
   created() {},
@@ -356,6 +374,27 @@ export default {
           id: id
         }
       });
+    },
+
+    couponOnOrOff(rowData, state) {
+      console.log('rowData :>> ', rowData);
+      console.log('state :>> ', state);
+      const para = {
+        id: rowData.id,
+        state: state
+      };
+      console.log('couponOnOrOff para :>> ', para);
+      // return;
+      this.tableLoading = true;
+      api
+        .couponOnOrOff(para)
+        .finally(() => {})
+        .then(res => {
+          console.log('couponOnOrOff res :>> ', res);
+          if (res.code === 200) {
+            this.getCouponsList();
+          }
+        });
     },
 
     // 分页
@@ -445,9 +484,20 @@ export default {
       //初始化加载数据
       this.getCouponsList();
     }
-
     //重置
     this.$route.meta.isUseCache = false;
+
+    this.$nextTick(() => {
+      this.$refs.memberForm.setFieldsValue({
+        couponType: this.formList[0].selectOptions[0].id
+      });
+      this.$refs.memberForm.setFieldsValue({
+        couponBusinessType: this.formList[2].selectOptions[0].id
+      });
+      this.$refs.memberForm.setFieldsValue({
+        couponStatus: this.formList[4].selectOptions[0].id
+      });
+    });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'integralManageDetail') {
@@ -465,26 +515,7 @@ export default {
     }
     next();
   },
-  watch: {
-    formList: {
-      handler: function(newVal) {
-        console.log('formList newVal :>> ', newVal);
-        this.$nextTick(() => {
-          this.$refs.memberForm.setFieldsValue({
-            couponType: this.formList[0].selectOptions[0].id
-          });
-          this.$refs.memberForm.setFieldsValue({
-            couponBusinessType: this.formList[2].selectOptions[0].id
-          });
-          this.$refs.memberForm.setFieldsValue({
-            couponStatus: this.formList[4].selectOptions[0].id
-          });
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    }
-  }
+  watch: {}
 };
 </script>
 
@@ -502,15 +533,19 @@ export default {
       width: 100%;
     }
 
-    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(6) {
-      width: 50% !important;
+    ::v-deep .ant-form > .ant-row > .ant-col {
+      width: 30% !important;
+    }
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(4) {
+      width: 10% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
 
-      .ant-form-item-label {
-        width: calc(12.5% - 3px) !important;
-      }
-      .ant-form-item-control-wrapper {
-        width: calc(87.5% + 3px) !important;
-      }
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(7) {
+      width: 40% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
     }
   }
 }

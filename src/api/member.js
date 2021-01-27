@@ -27,3 +27,4 @@ export const getClaimCancel = data => fetchApi(URL.CLAIM_CANCEL, data, 'GET');
 export const getCouponDetail = data => fetchApi(URL.COUPON_DETAIL, data, 'GET');
 export const getCouponCreate = data => fetchApi(URL.COUPON_CREATE, data, 'POST');
 export const getCouponUpdate = data => fetchApi(URL.COUPON_UPDATE, data, 'POST');
+export const couponOnOrOff = data => fetchApi(URL.COUPON_ONOROFF, data, 'POST');

@@ -21,7 +21,7 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData)">查看卡券</a>
+            <a @click="goDetail(rowData.couponId)">查看卡券</a>
           </div>
         </template>
       </a-table>
@@ -45,8 +45,6 @@
 import FormList from '@/components/FormList/index.jsx';
 import api from '@/api';
 import moment from 'moment';
-// import mock from './mock';
-// console.log('mock :>> ', mock);
 
 export default {
   name: 'couponsClaim',
@@ -56,13 +54,13 @@ export default {
         {
           label: '卡券id',
           type: 'input',
-          name: 'couponId',
+          name: 'couponCode',
           placeholder: '请输入'
         },
         {
           label: '卡券标题',
           type: 'input',
-          name: 'couponTitle',
+          name: 'couponName',
           placeholder: '请输入'
         },
         {
@@ -73,14 +71,13 @@ export default {
         {
           label: '会员唯一标识',
           type: 'input',
-          // name: 'memberId',
           name: 'memberCode',
           placeholder: '请输入'
         },
         {
           label: '手机号',
           type: 'inputNumber',
-          name: 'phoneNo',
+          name: 'memberPhone',
           placeholder: '请输入'
         },
         {
@@ -98,14 +95,14 @@ export default {
       tableColumns: [
         {
           title: '卡券id',
-          dataIndex: 'id',
-          key: 'id',
+          dataIndex: 'couponCode',
+          key: 'couponCode',
           width: 150
         },
         {
           title: '卡券标题',
-          dataIndex: 'couponTitle',
-          key: 'couponTitle',
+          dataIndex: 'couponName',
+          key: 'couponName',
           width: 150
         },
         {
@@ -124,14 +121,12 @@ export default {
           title: '会员唯一标识',
           dataIndex: 'memberCode',
           key: 'memberCode',
-          // dataIndex: 'memberId',
-          // key: 'memberId',
           width: 150
         },
         {
           title: '会员手机号',
-          dataIndex: 'phone',
-          key: 'phone',
+          dataIndex: 'memberPhone',
+          key: 'memberPhone',
           width: 150
         },
         {
@@ -238,12 +233,12 @@ export default {
       this.getClaimCancel(true);
     },
     //查看卡券详情
-    goDetail(param) {
-      console.log('param :>> ', param);
+    goDetail(id) {
+      console.log('id :>> ', id);
       this.$router.push({
         name: 'couponsManageDetail',
         query: {
-          id: param.memberId
+          id: id
         }
       });
     },
@@ -261,13 +256,13 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let couponId = '';
-        let couponTitle = '';
-        if (this.$refs.memberForm.getFieldsValue().couponId) {
-          couponId = this.$refs.memberForm.getFieldsValue().couponId;
+        let couponCode = '';
+        let couponName = '';
+        if (this.$refs.memberForm.getFieldsValue().couponCode) {
+          couponCode = this.$refs.memberForm.getFieldsValue().couponCode;
         }
-        if (this.$refs.memberForm.getFieldsValue().couponTitle) {
-          couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
+        if (this.$refs.memberForm.getFieldsValue().couponName) {
+          couponName = this.$refs.memberForm.getFieldsValue().couponName;
         }
 
         let memberCode = '';
@@ -275,14 +270,9 @@ export default {
           memberCode = this.$refs.memberForm.getFieldsValue().memberCode;
         }
 
-        // let memberId = '';
-        // if (this.$refs.memberForm.getFieldsValue().memberId) {
-        //   memberId = this.$refs.memberForm.getFieldsValue().memberId;
-        // }
-
-        let phoneNo = '';
-        if (this.$refs.memberForm.getFieldsValue().phoneNo) {
-          phoneNo = this.$refs.memberForm.getFieldsValue().phoneNo;
+        let memberPhone = '';
+        if (this.$refs.memberForm.getFieldsValue().memberPhone) {
+          memberPhone = this.$refs.memberForm.getFieldsValue().memberPhone;
         }
 
         let jointimeStart = '';
@@ -296,15 +286,15 @@ export default {
         }
 
         const para = {
-          status: 2,
           pageIndex: this.current,
           pageSize: this.pageSize,
-          couponId: couponId, //卡券id
-          title: couponTitle, //卡券标题
+          status: 2,
+          couponCode: couponCode, //卡券id
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
-          memberId: memberCode, //会员唯一标识
-          phone: phoneNo //手机号
+          memberCode: memberCode, //会员唯一标识
+          phone: memberPhone, //手机号
+          title: couponName //卡券标题
         };
 
         console.log('getClaimCancel para :>> ', para);
@@ -317,8 +307,7 @@ export default {
           .then(res => {
             console.log('getClaimCancel res :>> ', res);
             if (res.code === 200) {
-              // this.total = res.data.total;
-              this.total = res.data.records.length;
+              this.total = res.data.total;
               this.tableData.splice(0, this.tableData.length);
               res.data.records.forEach((element, index) => {
                 this.tableData.push(element);
@@ -348,7 +337,7 @@ export default {
     this.$route.meta.isUseCache = false;
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'integralManageDetail') {
+    if (from.name === 'couponsManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -356,7 +345,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'integralManageDetail') {
+    if (to.name === 'couponsManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;

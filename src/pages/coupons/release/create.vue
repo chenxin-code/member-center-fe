@@ -23,26 +23,26 @@
                     卡券发放信息
                 </p>
                 <a-form-item label="领取条件设置：">
-                    <a-select 
+                    <a-select
                         @change="(val) => condition = val"
-                        placeholder="请选择" 
+                        placeholder="请选择"
                         v-decorator="[
                             'condition',
                             {
                                 initialValue: 1,
-                                rules: [{ required: true, message: '请设置领取条件!' }] 
+                                rules: [{ required: true, message: '请设置领取条件!' }]
                             }
                         ]"
                     >
-                        <a-select-option 
-                            v-for="item in receiveList" 
-                            :key="item.value" 
+                        <a-select-option
+                            v-for="item in receiveList"
+                            :key="item.value"
                             :value="item.value">{{item.label}}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <div v-if="condition !== 2">
-                    <a-form-item 
-                        
+                    <a-form-item
+
                         v-for="item in issueForm"
                         :key="item.label"
                         :label="item.label">
@@ -56,12 +56,12 @@
                 </div>
                 <div v-if="condition == 2">
                     <a-form-item label="发放范围">
-                        <a-select 
+                        <a-select
                             v-decorator="[
                                 'issuedRang',
                                 {
                                     initialValue: 1,
-                                    rules: [{ required: true, message: '请设置发放范围!' }] 
+                                    rules: [{ required: true, message: '请设置发放范围!' }]
                                 }
                             ]"
                             @change="val => issuedRang = val"
@@ -81,7 +81,7 @@
                             :showUploadList="false"
                             :before-upload="uploadBefor"
                         >
-                            <a-button> <a-icon type="upload" /> 上传文件 </a-button> 
+                            <a-button> <a-icon type="upload" /> 上传文件 </a-button>
                             <p class="create-main-uploadTip">支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次</p>
                             <a href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/2557067651161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF%E6%A8%A1%E6%9D%BF.xlsx">下载模板文件</a>
                         </a-upload>
@@ -145,7 +145,7 @@
             @ok="handleOk"
             @cancel="handleCancel"
             width="1300px">
-            <FilterForm  
+            <FilterForm
                 ref="form"
                 rowCol="3"
                 :formList="this.formList"
@@ -239,7 +239,9 @@ export default {
                     type: 'select',
                     placeholder: "全部",
                     name: 'activity',
-                    selectOptions: activityList
+                    selectOptions: activityList,
+                    labelCol: { span: 9 },
+                    wrapperCol: { span: 15 }
                 },
             ],
             columns: [
@@ -268,7 +270,7 @@ export default {
                     title: '卡券业务类',
                     key: 'activity',
                     dataIndex: 'activity',
-                    customRender: text => activityList.filter(item => item.id == text)[0].name || '' 
+                    customRender: text => activityList.filter(item => item.id == text)[0].name || ''
                 },
                 {
                     title: '卡券面值金额',
