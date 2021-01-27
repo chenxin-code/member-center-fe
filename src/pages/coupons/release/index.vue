@@ -95,7 +95,9 @@ export default {
                     type: 'select',
                     placeholder: "全部",
                     name: 'activity',
-                    selectOptions: activityList
+                    selectOptions: activityList,
+                    labelCol: { span: 9 },
+                    wrapperCol: { span: 15 }
                 },
                 {
                     label: "派发类型",
@@ -132,7 +134,7 @@ export default {
                     title: '卡券业务类',
                     key: 'businessType',
                     dataIndex: 'businessType',
-                    customRender: text => activityList.filter(item => item.id == text)[0].name || '' 
+                    customRender: text => activityList.filter(item => item.id == text)[0].name || ''
                 },
                 {
                     title: '卡券面值金额',
