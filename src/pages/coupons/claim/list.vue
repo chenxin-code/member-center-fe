@@ -215,6 +215,10 @@ export default {
       this.$nextTick(() => {
         let couponCode = '';
         let couponName = '';
+        if (this.$route.query.type){
+          couponCode = this.$route.query.type
+        }
+
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
           couponCode = this.$refs.memberForm.getFieldsValue().couponCode;
         }
@@ -292,6 +296,14 @@ export default {
 
     //重置
     this.$route.meta.isUseCache = false;
+
+    this.$nextTick(() => {
+      if (this.$route.query.type) {
+        this.$refs.memberForm.setFieldsValue({
+          couponCode: this.$route.query.type
+        });
+      }
+    });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'couponsManageDetail') {
