@@ -22,7 +22,7 @@
       <div class="detail-main-items">
             <span class="detail-main-items-label">卡券有效期：</span>
             <span v-show="dataObj.expirationType == 1" class="detail-main-items-value">{{`${moment(dataObj.startTime).format('YYYY-MM-DD HH:mm:ss')} ~ ${moment(dataObj.expirationTime).format('YYYY-MM-DD HH:mm:ss')}`}}</span>
-            <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">相对有效期，{{dataObj.offsetDays}}天</span>
+            <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">相对有效期，{{dataObj.offsetDays}}天, 领取后{{dataObj.valiDays}}天生效</span>
       </div>
     </div>
     <div class="detail-main">
