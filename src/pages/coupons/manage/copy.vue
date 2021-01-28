@@ -30,12 +30,12 @@
                         initialValue: couponTitle,
                         rules: [
                           { required: true, message: '卡券标题不能为空' },
-                          { whitespace: true, message: '卡券标题不能为空' }
+                          { whitespace: true, message: '卡券标题不能为空' },
+                          { max: 20, message: '最多输入20个字符' }
                         ]
                       }
                     ]"
-                    :maxLength="20"
-                    placeholder="请输入卡券标题"
+                    placeholder="请输入卡券标题，最多20个字符"
                     allow-clear
                   />
                   <div>couponTitle: {{ couponTitle }}</div>
@@ -47,11 +47,13 @@
                     v-decorator="[
                       'couponSubhead',
                       {
-                        initialValue: couponSubhead
+                        initialValue: couponSubhead,
+                        rules: [
+                          { max: 20, message: '最多输入20个字符' }
+                        ]
                       }
                     ]"
-                    :maxLength="20"
-                    placeholder="请输入卡券副标题"
+                    placeholder="请输入卡券副标题，最多20个字符"
                     allow-clear
                   />
                   <div>couponSubhead: {{ couponSubhead }}</div>

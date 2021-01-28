@@ -30,12 +30,12 @@
                         initialValue: couponTitle,
                         rules: [
                           { required: true, message: '卡券标题不能为空' },
-                          { whitespace: true, message: '卡券标题不能为空' }
+                          { whitespace: true, message: '卡券标题不能为空' },
+                          { max: 20, message: '最多输入20个字符' }
                         ]
                       }
                     ]"
-                    :maxLength="20"
-                    placeholder="请输入卡券标题"
+                    placeholder="请输入卡券标题，最多20个字符"
                     allow-clear
                   />
                   <div>couponTitle: {{ couponTitle }}</div>
@@ -47,11 +47,13 @@
                     v-decorator="[
                       'couponSubhead',
                       {
-                        initialValue: couponSubhead
+                        initialValue: couponSubhead,
+                        rules: [
+                          { max: 20, message: '最多输入20个字符' }
+                        ]
                       }
                     ]"
-                    :maxLength="20"
-                    placeholder="请输入卡券副标题"
+                    placeholder="请输入卡券副标题，最多20个字符"
                     allow-clear
                   />
                   <div>couponSubhead: {{ couponSubhead }}</div>
@@ -567,13 +569,13 @@ export default {
   },
   methods: {
     disabledDate(current) {
-      return current && current < Date.now() - 86400000
+      return current && current < Date.now() - 86400000;
     },
     checkAmountFormat(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if(value === '0'){
+        if (value === '0') {
           callback(new Error('金额不能为0'));
         }
         callback();
@@ -583,9 +585,9 @@ export default {
       if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
         callback(new Error('折扣格式不正确'));
       } else {
-        if(value == 0){
+        if (value == 0) {
           callback(new Error('折扣不能为0'));
-        }else if(value == 1){
+        } else if (value == 1) {
           callback(new Error('折扣不能为1'));
         }
         callback();
