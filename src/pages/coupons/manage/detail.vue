@@ -109,7 +109,7 @@
                       <div class="column-right">优惠券封面:</div>
                       <div class="column-left">
                         <div class="column-left-image">
-                          <img :src="couponDetails.couponImage" width="85" height="85" alt="" />
+                          <img :src="couponDetails.couponImage.replace(/\s+/g,'')" width="85" height="85" alt="" />
                         </div>
                       </div>
                     </div>
@@ -154,7 +154,7 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.createTime && couponDetails.createOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
@@ -165,7 +165,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.onTime && couponDetails.onOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
@@ -176,7 +176,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.offTime && couponDetails.offOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
@@ -313,13 +313,13 @@ export default {
         param = {
           couponId: this.$route.query.id
         };
-        apiString = 'getCouponDetail'
+        apiString = 'getCouponDetail';
       }
       if (Object.keys(this.$route.query)[0] === 'code') {
         param = {
-          couTypeCode	: this.$route.query.code
+          couTypeCode: this.$route.query.code
         };
-        apiString = 'getCouponDetailByCode'
+        apiString = 'getCouponDetailByCode';
       }
 
       console.log('getCouponDetail param :>> ', param);

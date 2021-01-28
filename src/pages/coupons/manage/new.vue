@@ -86,12 +86,13 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            {validator: this.checkAmountFormat, trigger: ['blur']}
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入代金券金额"
                       allow-clear
+                      prefix="￥"
                     />
                     <div>voucherAmount:{{ voucherAmount }}</div>
                   </a-form-item>
@@ -107,7 +108,8 @@
                           initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' }
+                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -125,7 +127,8 @@
                           initialValue: fullReductionDiscountAmount,
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
-                            { whitespace: true, message: '抵扣金额不能为空' }
+                            { whitespace: true, message: '抵扣金额不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -146,7 +149,8 @@
                           initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' }
+                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -164,7 +168,8 @@
                           initialValue: discountMaxDeduction,
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
-                            { whitespace: true, message: '最高抵扣金额不能为空' }
+                            { whitespace: true, message: '最高抵扣金额不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -174,17 +179,16 @@
                     <div>discountMaxDeduction:{{ discountMaxDeduction }}</div>
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">
-                    <a-input-number
-                      :min="0"
-                      :max="1"
-                      :step="0.1"
-                      :precision="2"
+                    <a-input
                       @change="discountRatioChange"
                       v-decorator="[
                         'discountRatio',
                         {
                           initialValue: discountRatio,
-                          rules: [{ required: true, message: '折扣比例不能为空' }]
+                          rules: [
+                            { required: true, message: '折扣比例不能为空' },
+                            { validator: this.checkDiscountFormat, trigger: ['blur'] }
+                          ]
                         }
                       ]"
                       placeholder="请输入折扣比例，支持小数点后2位"
@@ -377,7 +381,7 @@
                           { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
                         ]"
                         :before-upload="() => false"
-                        :remove="handleRemove"
+                        :remove="deleteOssImage"
                         @preview="handlePreview"
                         @change="addPic"
                       >
@@ -406,11 +410,12 @@
                       'cost',
                       {
                         initialValue: cost,
-                        rules: [{validator: this.checkAmountFormat, trigger: ['blur']}]
+                        rules: [{ validator: this.checkAmountFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
                     allow-clear
+                    prefix="￥"
                   />
                   <div>cost:{{ cost }}</div>
                 </a-form-item>
@@ -466,9 +471,9 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
-import {debounce} from '@/utils/util';
-import {mapActions} from 'vuex';
-import {CARD_TYPE_MAP} from '@/constance';
+import { debounce } from '@/utils/util';
+import { mapActions } from 'vuex';
+import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
   name: 'couponsManageNew',
@@ -560,11 +565,26 @@ export default {
     }
   },
   methods: {
-    checkAmountFormat (rule,value,callback) {
-      if(value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)){
-        callback(new Error('金额格式不正确'))
-      }else{
-        callback()
+    checkAmountFormat(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if(value == 0){
+          callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkDiscountFormat(rule, value, callback) {
+      if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
+        callback(new Error('折扣格式不正确'));
+      } else {
+        if(value == 0){
+          callback(new Error('折扣不能为0'));
+        }else if(value == 1){
+          callback(new Error('折扣不能为1'));
+        }
+        callback();
       }
     },
     ...mapActions(['FALLBACK']),
@@ -924,9 +944,11 @@ export default {
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
+
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
+        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }
