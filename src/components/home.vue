@@ -29,7 +29,7 @@
             </a-dropdown>
           </div>
         </a-layout-header>
-        <a-layout-content class="content" :style="{minHeight: '700px'}">
+        <a-layout-content class="content" :style="{ minHeight: minHeight }">
           <template v-if="promise">
             <keep-alive>
               <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -58,6 +58,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      minHeight: '',
       collapsed: false,
       // promise: '',
       promise: true,
@@ -107,6 +108,21 @@ export default {
     // } else {
     //   this.$router.push({ path: '/portal' });
     // }
+
+    if (window.screen.height === 800) {
+      this.minHeight = '688' + 'px';
+    } else if (window.screen.height === 900) {
+      this.minHeight = '740' + 'px';
+    }
+
+    window.addEventListener('resize', function handler() {
+      window.removeEventListener('resize', handler);
+      if (window.screen.height === 800) {
+        this.minHeight = '688' + 'px';
+      } else if (window.screen.height === 900) {
+        this.minHeight = '740' + 'px';
+      }
+    });
   },
   methods: {
     loadError() {
