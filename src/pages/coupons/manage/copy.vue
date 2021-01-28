@@ -38,7 +38,7 @@
                     placeholder="请输入卡券标题，最多20个字符"
                     allow-clear
                   />
-                  <div>couponTitle: {{ couponTitle }}</div>
+                  <!-- <div>couponTitle: {{ couponTitle }}</div> -->
                 </a-form-item>
                 <!-- 卡券副标题 -->
                 <a-form-item label="卡券副标题">
@@ -54,7 +54,7 @@
                     placeholder="请输入卡券副标题，最多20个字符"
                     allow-clear
                   />
-                  <div>couponSubhead: {{ couponSubhead }}</div>
+                  <!-- <div>couponSubhead: {{ couponSubhead }}</div> -->
                 </a-form-item>
                 <!-- 卡券类型 -->
                 <a-form-item label="卡券类型">
@@ -72,7 +72,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>couponType: {{ couponType }}</div>
+                  <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
                 <!-- 代金券:10 -->
                 <template v-if="couponType === 10">
@@ -94,7 +94,7 @@
                       allow-clear
                       prefix="￥"
                     />
-                    <div>voucherAmount:{{ voucherAmount }}</div>
+                    <!-- <div>voucherAmount:{{ voucherAmount }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 满减券:20 -->
@@ -116,7 +116,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>satisfyAmount:{{ satisfyAmount }}</div>
+                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="抵扣金额">
                     <a-input
@@ -135,7 +135,7 @@
                       placeholder="请输入满减券抵扣金额"
                       allow-clear
                     />
-                    <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div>
+                    <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 折扣券:40 -->
@@ -157,7 +157,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>satisfyAmount:{{ satisfyAmount }}</div>
+                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="最高抵扣金额">
                     <a-input
@@ -176,7 +176,7 @@
                       placeholder="请输入折扣券最高抵扣金额"
                       allow-clear
                     />
-                    <div>discountMaxDeduction:{{ discountMaxDeduction }}</div>
+                    <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">
                     <a-input
@@ -194,7 +194,7 @@
                       placeholder="请输入折扣比例，支持小数点后2位"
                       allow-clear
                     />
-                    <div>discountRatio:{{ discountRatio }}</div>
+                    <!-- <div>discountRatio:{{ discountRatio }}</div> -->
                   </a-form-item>
                 </template>
 
@@ -214,7 +214,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>validityType:{{ validityType }}</div>
+                  <!-- <div>validityType:{{ validityType }}</div> -->
                 </a-form-item>
                 <!-- 固定有效期:1 -->
                 <template v-if="validityType === 1">
@@ -235,8 +235,8 @@
                       }"
                       :disabled-date="disabledDate"
                     />
-                    <div>validityStartTime:{{ validityStartTime }}</div>
-                    <div>validityEndTime:{{ validityEndTime }}</div>
+                    <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
+                    <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 相对有效期:2 -->
@@ -256,7 +256,7 @@
                       placeholder="请输入有效天数，1-999"
                       allow-clear
                     />
-                    <div>validityDayNums:{{ validityDayNums }}</div>
+                    <!-- <div>validityDayNums:{{ validityDayNums }}</div> -->
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
                     <a-input-number
@@ -273,7 +273,7 @@
                       placeholder="输入天数，1-999"
                       allow-clear
                     />
-                    <div>takeEffectDayNums:{{ takeEffectDayNums }}</div>
+                    <!-- <div>takeEffectDayNums:{{ takeEffectDayNums }}</div> -->
                   </a-form-item>
                 </template>
 
@@ -293,7 +293,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>source:{{ source }}</div>
+                  <!-- <div>source:{{ source }}</div> -->
                 </a-form-item>
 
                 <!-- 卡券业务类型 -->
@@ -312,7 +312,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>couponBusinessType:{{ couponBusinessType }}</div>
+                  <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
 
                 <!-- 购物券 -->
@@ -335,7 +335,7 @@
                         零售
                       </a-radio>
                     </a-radio-group>
-                    <div>classification:{{ classification }}</div>
+                    <!-- <div>classification:{{ classification }}</div> -->
                   </a-form-item>
                   <a-form-item label="商户id">
                     <a-input
@@ -353,7 +353,7 @@
                       placeholder="请输入商户id，多个以,间隔"
                       allow-clear
                     />
-                    <div>commercialTenants:{{ commercialTenants }}</div>
+                    <!-- <div>commercialTenants:{{ commercialTenants }}</div> -->
                   </a-form-item>
                   <a-form-item label="商品id">
                     <a-input
@@ -371,7 +371,7 @@
                       placeholder="请输入商品id，多个以,间隔"
                       allow-clear
                     />
-                    <div>merchandises:{{ merchandises }}</div>
+                    <!-- <div>merchandises:{{ merchandises }}</div> -->
                   </a-form-item>
                   <a-form-item label="上传优惠券封面图">
                     <a-spin :spinning="picUploading">
@@ -421,7 +421,7 @@
                     allow-clear
                     prefix="￥"
                   />
-                  <div>cost:{{ cost }}</div>
+                  <!-- <div>cost:{{ cost }}</div> -->
                 </a-form-item>
                 <!-- 使用说明 -->
                 <a-form-item label="使用说明">
@@ -441,7 +441,7 @@
                     :maxLength="200"
                     placeholder="请输入使用说明"
                   />
-                  <div>memo:{{ memo }}</div>
+                  <!-- <div>memo:{{ memo }}</div> -->
                 </a-form-item>
               </a-form>
               <!-- 提交和取消 -->
