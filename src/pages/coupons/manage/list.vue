@@ -325,7 +325,7 @@ export default {
           return param.validityStartTime + ' ~ ' + param.validityEndTime
         } else if (param.validityType === 3) {
           //相对有效期
-          return '相对有效期，' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
+          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
         } else {
           return ''
         }
