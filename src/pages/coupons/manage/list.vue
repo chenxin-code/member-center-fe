@@ -24,6 +24,11 @@
             <span v-html="activityStr(rowData.activity)"></span>
           </div>
         </template>
+        <template slot="faceAmountSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="faceAmountStr(rowData)"></span>
+          </div>
+        </template>
         <template slot="sourceSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="sourceStr(rowData.source)"></span>
@@ -174,12 +179,12 @@ export default {
           key: 'couponTitle',
           width: 150
         },
-        {
-          title: '卡券副标题',
-          dataIndex: 'couponSubhead',
-          key: 'couponSubhead',
-          width: 150
-        },
+        // {
+        //   title: '卡券副标题',
+        //   dataIndex: 'couponSubhead',
+        //   key: 'couponSubhead',
+        //   width: 150
+        // },
         {
           title: '卡券类型',
           key: 'couponTypeSlot',
@@ -194,8 +199,9 @@ export default {
         },
         {
           title: '卡券面值金额',
-          dataIndex: 'faceAmount',
-          key: 'faceAmount',
+          // dataIndex: 'faceAmount',
+          key: 'faceAmountSlot',
+          scopedSlots: { customRender: 'faceAmountSlot' },
           width: 150
         },
         {
@@ -301,6 +307,19 @@ export default {
         }
       };
     },
+    faceAmountStr() {
+      return param => {
+        if (param.couponType === 10) {
+          return param.faceAmount;
+        } else if (param.couponType === 20) {
+          return param.faceAmount;
+        } else if (param.couponType === 40) {
+          return param.discountMaxDeduction;
+        } else {
+          return '';
+        }
+      };
+    },
     sourceStr() {
       return param => {
         if (param === '10' || param === 10) {
@@ -325,7 +344,7 @@ export default {
           return param.validityStartTime + ' ~ ' + param.validityEndTime;
         } else if (param.validityType === 3) {
           //相对有效期
-          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
+          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效';
         } else {
           return '';
         }
