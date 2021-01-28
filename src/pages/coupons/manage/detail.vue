@@ -159,7 +159,7 @@
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
+                      <div v-show="couponDetails.createTime && couponDetails.createOperator" style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
                       <div>{{ couponDetails.createOperator || '' }}</div>
                     </div>
                   </div>
@@ -170,7 +170,7 @@
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
+                      <div v-show="couponDetails.onTime && couponDetails.onOperator" style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
                       <div>{{ couponDetails.onOperator || '' }}</div>
                     </div>
                   </div>
@@ -181,7 +181,7 @@
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
+                      <div v-show="couponDetails.offTime && couponDetails.offOperator" style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
                       <div>{{ couponDetails.offOperator || '' }}</div>
                     </div>
                   </div>
