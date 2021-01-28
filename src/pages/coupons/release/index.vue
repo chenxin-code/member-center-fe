@@ -19,7 +19,7 @@
                         :data-source="dataList"
                         :pagination="false"
                         :loading="tableLoading"
-                        :scroll="{y: scrollY}"
+                        :scroll="{ y: scrollY}"
                     >
                         <span slot="action" slot-scope="record">
                             <a @click="onCheck(record)">查看</a>
@@ -146,7 +146,7 @@ export default {
                     key: 'expirationType',
                     dataIndex: 'expirationType',
                     customRender: (text, record) => text == 1 ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss')+'-'+moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
-                        : `相对有效期, ${record.offsetDays}天`
+                        : `相对有效期, ${record.offsetDays}天, 领取后${record.valiDays}天生效`
                 },
                 {
                     title: '派发类型',
