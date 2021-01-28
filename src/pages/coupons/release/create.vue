@@ -303,6 +303,7 @@ export default {
                 file: '', //会员文件
             },
             fileList: [],
+            id: null,
         }
     },
     created() {
@@ -334,6 +335,7 @@ export default {
                 this.couponName = this.selectedRows[0].couponTitle;
                 this.couTypeCode = this.selectedRows[0].couTypeCode;
                 this.showRedBorder = false;
+                this.id = this.selectedRows[0].id;
                 console.log('=======', this.selectedRows)
                 if (this.selectedRows[0].validityType == 1) {
                     this.couponValid = `${this.selectedRows[0].validityStartTime} - ${this.selectedRows[0].validityEndTime}`
@@ -369,7 +371,8 @@ export default {
                 pageSize: this.pageSize,
                 activity: this.activity,
                 type: this.type,
-                title: this.title
+                title: this.title,
+                status: -99
             }
             api.getCouponList(args)
             .then( res => {
@@ -410,6 +413,7 @@ export default {
             }
             let args = {
                 couTypeCode: this.couTypeCode,
+                id: this.id
             }
             this.formBasic.validateFields((err, values) => {
                 console.log(values)
