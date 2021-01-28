@@ -154,34 +154,34 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.createTime && couponDetails.createOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
                     <div class="column-left">
-                      <div v-show="couponDetails.createTime && couponDetails.createOperator" style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
                       <div>{{ couponDetails.createOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.onTime && couponDetails.onOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
                     <div class="column-left">
-                      <div v-show="couponDetails.onTime && couponDetails.onOperator" style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
                       <div>{{ couponDetails.onOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.offTime && couponDetails.offOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
                     <div class="column-left">
-                      <div v-show="couponDetails.offTime && couponDetails.offOperator" style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
+                      <div style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
                       <div>{{ couponDetails.offOperator || '' }}</div>
                     </div>
                   </div>
@@ -313,13 +313,13 @@ export default {
         param = {
           couponId: this.$route.query.id
         };
-        apiString = 'getCouponDetail'
+        apiString = 'getCouponDetail';
       }
       if (Object.keys(this.$route.query)[0] === 'code') {
         param = {
-          couTypeCode	: this.$route.query.code
+          couTypeCode: this.$route.query.code
         };
-        apiString = 'getCouponDetailByCode'
+        apiString = 'getCouponDetailByCode';
       }
 
       console.log('getCouponDetail param :>> ', param);
