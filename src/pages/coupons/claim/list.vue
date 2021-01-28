@@ -215,8 +215,8 @@ export default {
       this.$nextTick(() => {
         let couponCode = '';
         let couponName = '';
-        if (this.$route.query.type){
-          couponCode = this.$route.query.type
+        if (this.$route.query.type) {
+          couponCode = this.$route.query.type;
         }
 
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
