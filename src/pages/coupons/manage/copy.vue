@@ -865,7 +865,7 @@ export default {
           this.validityEndTime = this.isDateString(this.momentStrHms(res.data.validityEndTime))
             ? this.momentStrHms(res.data.validityEndTime)
             : ''; //	固定有效期-卡券有效期结束时间
-          if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
+          if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime) && res.data.validityStartTime > Date.now() && res.data.validityEndTime > Date.now()) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
           } else {
             this.rangePickerValue = [];
