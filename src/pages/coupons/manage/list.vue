@@ -318,16 +318,16 @@ export default {
         }
       };
     },
-    parseValidity(){
+    parseValidity() {
       return param => {
         if (param.validityType === 1) {
           //固定有效期
-          return param.validityStartTime + ' ~ ' + param.validityEndTime
+          return param.validityStartTime + ' ~ ' + param.validityEndTime;
         } else if (param.validityType === 3) {
           //相对有效期
-          return '相对有效期，' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
+          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
         } else {
-          return ''
+          return '';
         }
       };
     },
@@ -395,24 +395,38 @@ export default {
     },
 
     couponOnOrOff(rowData, state) {
+      let stateStr = '';
+      if (state === 0) {
+        stateStr = '禁用';
+      } else if (state === 1) {
+        stateStr = '启用';
+      } else {
+        return;
+      }
+
       console.log('rowData :>> ', rowData);
       console.log('state :>> ', state);
-      const para = {
-        id: rowData.id,
-        state: state
-      };
-      console.log('couponOnOrOff para :>> ', para);
-      // return;
-      this.tableLoading = true;
-      api
-        .couponOnOrOff(para)
-        .finally(() => {})
-        .then(res => {
-          console.log('couponOnOrOff res :>> ', res);
-          if (res.code === 200) {
-            this.getCouponsList();
-          }
-        });
+      this.$confirm({
+        title: `${stateStr}卡券`,
+        content: `您确定要${stateStr}该卡券吗？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          const para = {
+            id: rowData.id,
+            state: state
+          };
+          console.log('couponOnOrOff para :>> ', para);
+          this.tableLoading = true;
+          api.couponOnOrOff(para).then(res => {
+            console.log('couponOnOrOff res :>> ', res);
+            if (res.code === 200) {
+              this.getCouponsList();
+            }
+          });
+        }
+      });
     },
 
     // 分页

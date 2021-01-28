@@ -29,7 +29,7 @@
             </a-dropdown>
           </div>
         </a-layout-header>
-        <a-layout-content class="content" :style="{minHeight: '700px'}">
+        <a-layout-content class="content">
           <template v-if="promise">
             <keep-alive>
               <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -108,6 +108,7 @@ export default {
     //   this.$router.push({ path: '/portal' });
     // }
   },
+  mounted() {},
   methods: {
     loadError() {
       this.$store.commit('setUseravatar', this.userImage);
@@ -144,7 +145,7 @@ export default {
 
 <style lang="less" scoped>
 #home {
-  //height: 100%;
+  height: 100%;
 
   .container {
     height: 100%;
