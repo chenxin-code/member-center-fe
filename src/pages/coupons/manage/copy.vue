@@ -857,11 +857,11 @@ export default {
           this.voucherAmount = res.data.voucherAmount || this.voucherAmount;
           this.validityType = res.data.validityType || this.validityType;
           ///////////日期//////////
-          this.validityStartTime = this.isDateString(this.momentStr(res.data.validityStartTime))
-            ? this.momentStr(res.data.validityStartTime)
+          this.validityStartTime = this.isDateString(this.momentStrHms(res.data.validityStartTime))
+            ? this.momentStrHms(res.data.validityStartTime)
             : ''; //固定有效期-卡券有效期开始时间
-          this.validityEndTime = this.isDateString(this.momentStr(res.data.validityEndTime))
-            ? this.momentStr(res.data.validityEndTime)
+          this.validityEndTime = this.isDateString(this.momentStrHms(res.data.validityEndTime))
+            ? this.momentStrHms(res.data.validityEndTime)
             : ''; //	固定有效期-卡券有效期结束时间
           if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
