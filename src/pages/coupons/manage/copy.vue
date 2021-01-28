@@ -935,6 +935,7 @@ export default {
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
+                this.couponImage = this.couponImage.replace(/\s+/g,'');//去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }
