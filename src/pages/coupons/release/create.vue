@@ -85,7 +85,7 @@
                         >
                             <a-button> <a-icon type="upload" /> 上传文件 </a-button>
                             <p class="create-main-uploadTip">支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次</p>
-                            <a href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/2557067651161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF%E6%A8%A1%E6%9D%BF.xlsx">下载模板文件</a>
+                            <a href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/0821501581161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls">下载模板文件</a>
                         </a-upload>
                     </a-form-item>
                     <a-form-item label="接入系统"  v-if="issuedRang == 3">
