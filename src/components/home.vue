@@ -29,7 +29,7 @@
             </a-dropdown>
           </div>
         </a-layout-header>
-        <a-layout-content class="content">
+        <a-layout-content class="content" :style="{minHeight: '600px'}">
           <template v-if="promise">
             <keep-alive>
               <router-view v-if="$route.meta.keepAlive"></router-view>
