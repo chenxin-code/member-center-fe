@@ -160,7 +160,7 @@ export default {
         return type && list.filter(item => item.value == type)[0].label
     },
     goCheck(url) {
-        this.$router.push({name: url})
+        this.$router.push({name: url, query: {type: this.dataObj.couTypeCode}})
     },
     downloadInfo () {
         const args = {
