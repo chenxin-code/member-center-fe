@@ -372,7 +372,7 @@ export default {
                 activity: this.activity,
                 type: this.type,
                 title: this.title,
-                status: 99
+                // status: 99
             }
             api.getCouponList(args)
             .then( res => {
