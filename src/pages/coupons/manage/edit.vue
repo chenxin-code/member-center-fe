@@ -573,7 +573,7 @@ export default {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if(value == 0){
+        if(value === '0'){
           callback(new Error('金额不能为0'));
         }
         callback();
