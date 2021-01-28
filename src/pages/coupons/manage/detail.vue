@@ -109,7 +109,7 @@
                       <div class="column-right">优惠券封面:</div>
                       <div class="column-left">
                         <div class="column-left-image">
-                          <img :src="couponDetails.couponImage" width="85" height="85" alt="" />
+                          <img :src="couponDetails.couponImage.replace(/\s+/g,'')" width="85" height="85" alt="" />
                         </div>
                       </div>
                     </div>

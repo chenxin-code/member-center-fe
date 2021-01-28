@@ -381,7 +381,7 @@
                           { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
                         ]"
                         :before-upload="() => false"
-                        :remove="handleRemove"
+                        :remove="deleteOssImage"
                         @preview="handlePreview"
                         @change="addPic"
                       >
@@ -944,9 +944,11 @@ export default {
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
+
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
+        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }
