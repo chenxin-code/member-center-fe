@@ -121,20 +121,20 @@ export default {
                 },
                 {
                     title: '卡券标题',
-                    key: 'couponTitle',
-                    dataIndex: 'couponTitle'
+                    key: 'couponName',
+                    dataIndex: 'couponName'
                 },
                 {
                     title: '卡券类型',
                     key: 'couponType',
                     dataIndex: 'couponType',
-                    customRender: text => typeList.filter(item => item.id == text)[0].name || ''
+                    customRender: text => text ? typeList.filter(item => item.id == text)[0].name : ''
                 },
                 {
                     title: '卡券业务类',
                     key: 'businessType',
                     dataIndex: 'businessType',
-                    customRender: text => activityList.filter(item => item.id == text)[0].name || ''
+                    customRender: text => text ? activityList.filter(item => item.id == text)[0].name : ''
                 },
                 {
                     title: '卡券面值金额',
@@ -150,7 +150,7 @@ export default {
                     title: '派发类型',
                     key: 'condition',
                     dataIndex: 'condition',
-                    customRender: text => conditionList.filter(item => item.id == text)[0].name || ''
+                    customRender: text => text ? conditionList.filter(item => item.id == text)[0].name : ''
                 },
                 {
                     title: '操作人员',
