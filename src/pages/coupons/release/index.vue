@@ -146,7 +146,7 @@ export default {
                     key: 'expirationType',
                     dataIndex: 'expirationType',
                     customRender: (text, record) => text == 1 ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss')+'-'+moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
-                        :   `相对有效期, ${record.offsetDays}天`
+                        : `相对有效期, ${record.offsetDays}天`
                 },
                 {
                     title: '派发类型',

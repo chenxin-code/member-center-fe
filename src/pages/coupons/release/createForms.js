@@ -1,3 +1,10 @@
+const validator = (rule, value, callback, message) => {
+    if (parseInt(value, 10) < 1 || parseInt(value, 10) > 999999999) {
+        callback(message)
+    } else {
+        callback()
+    }
+}
 export const couponsCenterList = [
     {
         label: '发放数量',
@@ -9,19 +16,34 @@ export const couponsCenterList = [
         label: '每人领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonLimit',
-        rules: [{ required: true, message: '请输入每人领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每日领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perDayLimit',
-        rules: [{ required: true, message: '请输入每日领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每日领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每日领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每人每日领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonDayLimit',
-        rules: [{ required: true, message: '请输入每人每日领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人每日领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+            }
+        ]
     },
 ]
 export const bangdouList = [
@@ -41,19 +63,32 @@ export const bangdouList = [
         label: '每人兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonLimit',
-        rules: [{ required: true, message: '请输入每人兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人兑换数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人兑换数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每日兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perDayLimit',
-        rules: [{ required: true, message: '请输入每日兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每日兑换数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每人每日兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonDayLimit',
-        rules: [{ required: true, message: '请输入每人每日兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人每日兑换数量限制!' },
+            {validator: (rule, value, callback) => validator(rule, value, callback, '每人每日兑换数量限制, 1-999999999')}
+        ]
     },
 ]
 export const cardList = [
