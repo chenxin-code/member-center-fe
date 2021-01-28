@@ -747,9 +747,9 @@ export default {
     discountMaxDeductionChange(e) {
       this.discountMaxDeduction = e.target.value;
     },
-    discountRatioChange(newVal) {
-      console.log('discountRatioChange newVal :>> ', newVal);
-      this.discountRatio = newVal.toString();
+    discountRatioChange(e) {
+      // console.log('discountRatioChange e.target.value :>> ', e.target.value);
+      this.discountRatio = e.target.value.toString();
     },
     fullReductionDiscountAmountChange(e) {
       this.fullReductionDiscountAmount = e.target.value;
@@ -898,7 +898,7 @@ export default {
         //没有错误的情况下
         if (!err) {
           console.log('handleSubmit values :>> ', values);
-          this.getCouponCreate(state, loadingType);
+          // this.getCouponCreate(state, loadingType);
         }
       });
     },
