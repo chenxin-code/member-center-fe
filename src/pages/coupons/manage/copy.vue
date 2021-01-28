@@ -48,9 +48,7 @@
                       'couponSubhead',
                       {
                         initialValue: couponSubhead,
-                        rules: [
-                          { max: 20, message: '最多输入20个字符' }
-                        ]
+                        rules: [{ max: 20, message: '最多输入20个字符' }]
                       }
                     ]"
                     placeholder="请输入卡券副标题，最多20个字符"
@@ -88,7 +86,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            {validator: this.checkAmountFormat, trigger: ['blur']}
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -233,6 +231,7 @@
                       format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
                       show-time
+                      :disabled-date="disabledDate"
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
                     <div>validityEndTime:{{ validityEndTime }}</div>
@@ -413,7 +412,7 @@
                       'cost',
                       {
                         initialValue: cost,
-                        rules: [{validator: this.checkAmountFormat, trigger: ['blur']}]
+                        rules: [{ validator: this.checkAmountFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
@@ -568,12 +567,15 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
     checkAmountFormat(rule, value, callback) {
       console.log('checkAmountFormat value :>> ', value);
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if(value === '0'){
+        if (value === '0') {
           callback(new Error('金额不能为0'));
         }
         callback();
@@ -583,9 +585,9 @@ export default {
       if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
         callback(new Error('折扣格式不正确'));
       } else {
-        if(value == 0){
+        if (value == 0) {
           callback(new Error('折扣不能为0'));
-        }else if(value == 1){
+        } else if (value == 1) {
           callback(new Error('折扣不能为1'));
         }
         callback();
@@ -715,7 +717,7 @@ export default {
      **判断日期格式为yyyy-mm-dd和正确的日期
      */
     isDateString(str) {
-      const reg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
       if (str === '' || str === undefined || str === null) return false;
       if (reg.test(str)) {
         return true;
@@ -957,7 +959,7 @@ export default {
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
-                this.couponImage = this.couponImage.replace(/\s+/g,'');//去除image url空格
+        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }

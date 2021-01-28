@@ -48,9 +48,7 @@
                       'couponSubhead',
                       {
                         initialValue: couponSubhead,
-                        rules: [
-                          { max: 20, message: '最多输入20个字符' }
-                        ]
+                        rules: [{ max: 20, message: '最多输入20个字符' }]
                       }
                     ]"
                     placeholder="请输入卡券副标题，最多20个字符"
@@ -233,6 +231,7 @@
                       format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
                       show-time
+                      :disabled-date="disabledDate"
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
                     <div>validityEndTime:{{ validityEndTime }}</div>
@@ -568,6 +567,9 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
     checkAmountFormat(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
@@ -714,7 +716,7 @@ export default {
      **判断日期格式为yyyy-mm-dd和正确的日期
      */
     isDateString(str) {
-      const reg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
       if (str === '' || str === undefined || str === null) return false;
       if (reg.test(str)) {
         return true;
