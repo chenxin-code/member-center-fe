@@ -10,7 +10,18 @@ export const couponsCenterList = [
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量！' }]
+        rules: [
+            { required: true, message: '请输入发放数量！' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     },
     {
         label: '每人领取数量限制',
@@ -51,7 +62,18 @@ export const bangdouList = [
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量!' }]
+        rules: [
+            { required: true, message: '请输入发放数量!' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     },
     {
         label: '邦豆兑换值',
@@ -96,7 +118,18 @@ export const cardList = [
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量!' }]
+        rules: [
+            { required: true, message: '请输入发放数量!' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     }
 ]
 
