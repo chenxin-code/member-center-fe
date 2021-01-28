@@ -957,9 +957,7 @@ export default {
     console.log('this.$route :>> ', this.$route);
     this.getCouponDetail();
   },
-  mounted() {
-    // console.log(moment().format('HH:mm:ss'));
-  },
+  mounted() {},
   watch: {
     fileList: {
       handler(newVal) {

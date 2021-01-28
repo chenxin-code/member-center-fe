@@ -569,6 +569,7 @@ export default {
     }
   },
   methods: {
+    moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
@@ -933,8 +934,10 @@ export default {
 
       this[loadingType] = true;
 
+      // api
+      //   .getCouponUpdate(param)
       api
-        .getCouponUpdate(param)
+        .getCouponCreate(param)
         .finally(() => {
           this[loadingType] = false;
         })
@@ -950,7 +953,6 @@ export default {
   created() {
     console.log('this.$route :>> ', this.$route);
     this.getCouponDetail();
-    console.log([moment(''), moment('')]);
   },
   mounted() {},
   watch: {

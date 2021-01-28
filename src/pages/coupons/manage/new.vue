@@ -569,6 +569,7 @@ export default {
     }
   },
   methods: {
+    moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
