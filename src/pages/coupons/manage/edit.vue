@@ -934,10 +934,8 @@ export default {
 
       this[loadingType] = true;
 
-      // api
-      //   .getCouponUpdate(param)
       api
-        .getCouponCreate(param)
+        .getCouponUpdate(param)
         .finally(() => {
           this[loadingType] = false;
         })
