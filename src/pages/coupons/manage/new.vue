@@ -86,7 +86,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            {validator: this.checkAmountFormat, trigger: ['blur']}
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -406,7 +406,7 @@
                       'cost',
                       {
                         initialValue: cost,
-                        rules: [{validator: this.checkAmountFormat, trigger: ['blur']}]
+                        rules: [{ validator: this.checkAmountFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
@@ -466,9 +466,9 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
-import {debounce} from '@/utils/util';
-import {mapActions} from 'vuex';
-import {CARD_TYPE_MAP} from '@/constance';
+import { debounce } from '@/utils/util';
+import { mapActions } from 'vuex';
+import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
   name: 'couponsManageNew',
@@ -560,11 +560,11 @@ export default {
     }
   },
   methods: {
-    checkAmountFormat (rule,value,callback) {
-      if(value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)){
-        callback(new Error('金额格式不正确'))
-      }else{
-        callback()
+    checkAmountFormat(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        callback();
       }
     },
     ...mapActions(['FALLBACK']),
