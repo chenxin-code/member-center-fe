@@ -29,6 +29,11 @@
             <span v-html="sourceStr(rowData.source)"></span>
           </div>
         </template>
+        <template slot="validitySlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="parseValidity(rowData)"></span>
+          </div>
+        </template>
         <template slot="couponStatusSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="couponStatusStr(rowData.couponStatus)"></span>
@@ -195,9 +200,9 @@ export default {
         },
         {
           title: '卡券有效期',
-          dataIndex: 'validity',
-          key: 'validity',
-          width: 150
+          scopedSlots: { customRender: 'validitySlot' },
+          key: 'validitySlot',
+          width: 450
         },
         {
           title: '卡券平台',
@@ -310,6 +315,19 @@ export default {
           return '收费中心';
         } else {
           return '';
+        }
+      };
+    },
+    parseValidity(){
+      return param => {
+        if (param.validityType === 1) {
+          //固定有效期
+          return param.validityStartTime + ' ~ ' + param.validityEndTime
+        } else if (param.validityType === 3) {
+          //相对有效期
+          return '相对有效期，' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效'
+        } else {
+          return ''
         }
       };
     },
