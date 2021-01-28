@@ -230,7 +230,9 @@
                       :placeholder="['开始时间', '结束时间']"
                       format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
-                      show-time
+                      :show-time="{
+                        defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
+                      }"
                       :disabled-date="disabledDate"
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
@@ -477,6 +479,8 @@ import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
+// moment(Date.now(), 'YYYY-MM-DD HH:mm:ss').split(' ')[1]
+
 export default {
   name: 'couponsManageNew',
   components: {},
@@ -567,6 +571,7 @@ export default {
     }
   },
   methods: {
+    moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
@@ -865,7 +870,12 @@ export default {
           this.validityEndTime = this.isDateString(this.momentStrHms(res.data.validityEndTime))
             ? this.momentStrHms(res.data.validityEndTime)
             : ''; //	固定有效期-卡券有效期结束时间
-          if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime) && res.data.validityStartTime > Date.now() && res.data.validityEndTime > Date.now()) {
+          if (
+            this.isDateString(this.validityStartTime) &&
+            this.isDateString(this.validityEndTime) &&
+            res.data.validityStartTime > Date.now() &&
+            res.data.validityEndTime > Date.now()
+          ) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
           } else {
             this.rangePickerValue = [];
@@ -947,7 +957,9 @@ export default {
     console.log('this.$route :>> ', this.$route);
     this.getCouponDetail();
   },
-  mounted() {},
+  mounted() {
+    // console.log(moment().format('HH:mm:ss'));
+  },
   watch: {
     fileList: {
       handler(newVal) {
