@@ -115,13 +115,13 @@ export default {
       this.minHeight = '740' + 'px';
     }
 
-    window.onresize = ()=>{
+    window.onresize = () => {
       if (window.screen.height === 800) {
         this.minHeight = '688' + 'px';
       } else if (window.screen.height === 900) {
         this.minHeight = '740' + 'px';
       }
-    }
+    };
   },
   methods: {
     loadError() {
