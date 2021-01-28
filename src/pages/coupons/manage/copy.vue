@@ -230,9 +230,9 @@
                         }
                       ]"
                       :placeholder="['开始时间', '结束时间']"
-                      format="YYYY-MM-DD"
+                      format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
-                      :disabled-date="disabledDate"
+                      show-time
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
                     <div>validityEndTime:{{ validityEndTime }}</div>
@@ -568,9 +568,6 @@ export default {
     }
   },
   methods: {
-    disabledDate(current) {
-      return current && current < Date.now() - 86400000
-    },
     checkAmountFormat(rule, value, callback) {
       console.log('checkAmountFormat value :>> ', value);
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
