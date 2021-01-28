@@ -67,7 +67,7 @@
                   <div class="column-item" v-show="couponDetails.validityType === 1">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ momentStr(couponDetails.validityStartTime) }} ~ {{ momentStr(couponDetails.validityEndTime) }}
+                      {{ momentStrHms(couponDetails.validityStartTime) }} ~ {{ momentStrHms(couponDetails.validityEndTime) }}
                     </div>
                   </div>
                   <div class="column-item" v-show="couponDetails.validityType === 3">
