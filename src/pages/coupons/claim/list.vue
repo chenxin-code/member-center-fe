@@ -217,7 +217,7 @@ export default {
         let couponCode = '';
         if (!isQuery) {
           this.$refs.memberForm.setFieldsValue({
-            couponCode: this.$route.query.type ? this.$route.query.type : ''
+            couponCode: this.$route.query.id ? this.$route.query.id : ''
           });
         }
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
