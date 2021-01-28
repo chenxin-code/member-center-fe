@@ -29,7 +29,7 @@
             </a-dropdown>
           </div>
         </a-layout-header>
-        <a-layout-content class="content" :style="{minHeight: '600px'}">
+        <a-layout-content class="content" :style="{minHeight: '700px'}">
           <template v-if="promise">
             <keep-alive>
               <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -144,7 +144,7 @@ export default {
 
 <style lang="less" scoped>
 #home {
-  height: 100%;
+  //height: 100%;
 
   .container {
     height: 100%;
