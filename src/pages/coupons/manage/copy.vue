@@ -898,7 +898,7 @@ export default {
         //没有错误的情况下
         if (!err) {
           console.log('handleSubmit values :>> ', values);
-          // this.getCouponCreate(state, loadingType);
+          this.getCouponCreate(state, loadingType);
         }
       });
     },
