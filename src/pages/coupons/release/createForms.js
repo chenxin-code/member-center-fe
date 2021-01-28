@@ -1,27 +1,60 @@
+const validator = (rule, value, callback, message) => {
+    if (parseInt(value, 10) < 1 || parseInt(value, 10) > 999999999) {
+        callback(message)
+    } else {
+        callback()
+    }
+}
 export const couponsCenterList = [
     {
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量！' }]
+        rules: [
+            { required: true, message: '请输入发放数量！' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     },
     {
         label: '每人领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonLimit',
-        rules: [{ required: true, message: '请输入每人领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每日领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perDayLimit',
-        rules: [{ required: true, message: '请输入每日领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每日领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每日领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每人每日领取数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonDayLimit',
-        rules: [{ required: true, message: '请输入每人每日领取数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人每日领取数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+            }
+        ]
     },
 ]
 export const bangdouList = [
@@ -29,7 +62,18 @@ export const bangdouList = [
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量!' }]
+        rules: [
+            { required: true, message: '请输入发放数量!' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     },
     {
         label: '邦豆兑换值',
@@ -41,19 +85,32 @@ export const bangdouList = [
         label: '每人兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonLimit',
-        rules: [{ required: true, message: '请输入每人兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人兑换数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人兑换数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每日兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perDayLimit',
-        rules: [{ required: true, message: '请输入每日兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每日兑换数量限制!' },
+            {
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+            }
+        ]
     },
     {
         label: '每人每日兑换数量限制',
         placehold: '不填写则无限制，1-999999999',
         name: 'perPersonDayLimit',
-        rules: [{ required: true, message: '请输入每人每日兑换数量限制!' }]
+        rules: [
+            { required: true, message: '请输入每人每日兑换数量限制!' },
+            {validator: (rule, value, callback) => validator(rule, value, callback, '每人每日兑换数量限制, 1-999999999')}
+        ]
     },
 ]
 export const cardList = [
@@ -61,7 +118,18 @@ export const cardList = [
         label: '发放数量',
         placehold: '请输入发放数量',
         name: 'issuedCount',
-        rules: [{ required: true, message: '请输入发放数量!' }]
+        rules: [
+            { required: true, message: '请输入发放数量!' },
+            {
+                validator: (rule, value, callback) => {
+                    if (value < 1) {
+                        callback('请输入发放数量')
+                    } else{
+                        callback()
+                    }
+                }
+            }
+        ]
     }
 ]
 

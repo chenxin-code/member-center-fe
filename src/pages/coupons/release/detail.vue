@@ -160,7 +160,7 @@ export default {
         return type && list.filter(item => item.value == type)[0].label
     },
     goCheck(url) {
-        this.$router.push({name: url})
+        this.$router.push({name: url, query: {id: this.dataObj.couTypeCode}})
     },
     downloadInfo () {
         const args = {
@@ -178,7 +178,7 @@ export default {
         }).then( res => {
             this.download(res.data)
         })
-        
+
     },
     download (content) {
         const filename = '会员信息.xlsx'
