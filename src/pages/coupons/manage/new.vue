@@ -230,7 +230,7 @@
                       :placeholder="['开始时间', '结束时间']"
                       format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
-                                            :show-time="{
+                      :show-time="{
                         defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
                       }"
                       :disabled-date="disabledDate"
