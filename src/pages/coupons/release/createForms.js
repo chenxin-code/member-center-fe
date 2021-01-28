@@ -11,16 +11,8 @@ export const couponsCenterList = [
         placehold: '请输入发放数量',
         name: 'issuedCount',
         rules: [
-            { required: true, message: '请输入发放数量！' },
-            {
-                validator: (rule, value, callback) => {
-                    if (value < 1) {
-                        callback('请输入发放数量')
-                    } else{
-                        callback()
-                    }
-                }
-            }
+            {required: true, message: '请输入发放数量'},
+            {pattern: /^[1-9]\d*$/, message: '请输入发放数量'},
         ]
     },
     {
@@ -29,6 +21,7 @@ export const couponsCenterList = [
         name: 'perPersonLimit',
         rules: [
             { required: true, message: '请输入每人领取数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每人领取数量限制!'},
             {
                 validator: (rule, value, callback) => validator(rule, value, callback, '每人领取数量限制, 1-999999999')
             }
@@ -40,6 +33,7 @@ export const couponsCenterList = [
         name: 'perDayLimit',
         rules: [
             { required: true, message: '请输入每日领取数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每日领取数量限制!'},
             {
                 validator: (rule, value, callback) => validator(rule, value, callback, '每日领取数量限制, 1-999999999')
             }
@@ -51,6 +45,7 @@ export const couponsCenterList = [
         name: 'perPersonDayLimit',
         rules: [
             { required: true, message: '请输入每人每日领取数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每人每日领取数量限制!'},
             {
                 validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
             }
@@ -64,22 +59,17 @@ export const bangdouList = [
         name: 'issuedCount',
         rules: [
             { required: true, message: '请输入发放数量!' },
-            {
-                validator: (rule, value, callback) => {
-                    if (value < 1) {
-                        callback('请输入发放数量')
-                    } else{
-                        callback()
-                    }
-                }
-            }
+            {pattern: /^[1-9]\d*$/, message: '请输入发放数量!'},
         ]
     },
     {
         label: '邦豆兑换值',
         placehold: '请输入邦豆兑换值',
         name: 'integrealCount',
-        rules: [{ required: true, message: '请输入邦豆兑换值!' }]
+        rules: [
+            { required: true, message: '请输入邦豆兑换值!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!'},
+        ]
     },
     {
         label: '每人兑换数量限制',
@@ -87,8 +77,9 @@ export const bangdouList = [
         name: 'perPersonLimit',
         rules: [
             { required: true, message: '请输入每人兑换数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每人兑换数量限制!'},
             {
-                validator: (rule, value, callback) => validator(rule, value, callback, '每人兑换数量限制, 1-999999999')
+                validator: (rule, value, callback) => validator(rule, value, callback, '每人兑换数量限制, 1-999999999!')
             }
         ]
     },
@@ -98,6 +89,7 @@ export const bangdouList = [
         name: 'perDayLimit',
         rules: [
             { required: true, message: '请输入每日兑换数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每日兑换数量限制!'},
             {
                 validator: (rule, value, callback) => validator(rule, value, callback, '每人每日领取数量限制, 1-999999999')
             }
@@ -109,6 +101,7 @@ export const bangdouList = [
         name: 'perPersonDayLimit',
         rules: [
             { required: true, message: '请输入每人每日兑换数量限制!' },
+            {pattern: /^[1-9]\d*$/, message: '请输入每人每日兑换数量限制!'},
             {validator: (rule, value, callback) => validator(rule, value, callback, '每人每日兑换数量限制, 1-999999999')}
         ]
     },
@@ -120,15 +113,7 @@ export const cardList = [
         name: 'issuedCount',
         rules: [
             { required: true, message: '请输入发放数量!' },
-            {
-                validator: (rule, value, callback) => {
-                    if (value < 1) {
-                        callback('请输入发放数量')
-                    } else{
-                        callback()
-                    }
-                }
-            }
+            {pattern: /^[1-9]\d*$/, message: '请输入发放数量'},
         ]
     }
 ]

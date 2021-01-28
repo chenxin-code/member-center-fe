@@ -13,7 +13,8 @@
                     卡券信息
                 </p>
                 <a-form-item label="选择卡券：">
-                    <div class="create-main-couponSelect" @click="handleSelectCoupon">{{couponName}}</div>
+                    <div :class="`create-main-couponSelect ${showRedBorder && 'border-red'}`" @click="handleSelectCoupon">{{couponName}}</div>
+                    <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择卡券！</p>
                 </a-form-item>
                 <a-form-item label="卡券有效期：">
                     <a-input :placeholder="couponValid" disabled />
@@ -137,7 +138,7 @@
                 </div>
                 <a-form-item class="create-main-button">
                     <a-button type="primary" class="create-main-button-items" @click="couponDistribute">发放</a-button>
-                    <a-button class="create-main-button-items">取消</a-button>
+                    <a-button class="create-main-button-items" @click="$router.push({name: 'release'})">取消</a-button>
                 </a-form-item>
             </a-form>
         </div>
@@ -194,6 +195,7 @@ export default {
     },
     data () {
         return {
+            showRedBorder: false,
             cardList: [],
             couponName: '请选择',
             couponValid: '',
@@ -331,6 +333,7 @@ export default {
                 this.visible = false;
                 this.couponName = this.selectedRows[0].couponTitle;
                 this.couTypeCode = this.selectedRows[0].couTypeCode;
+                this.showRedBorder = false;
                 console.log('=======', this.selectedRows)
                 if (this.selectedRows[0].validityType == 1) {
                     this.couponValid = `${this.selectedRows[0].validityStartTime} - ${this.selectedRows[0].validityEndTime}`
@@ -402,6 +405,9 @@ export default {
         },
         // 开始派发
         couponDistribute() {
+            if (!this.couTypeCode) {
+                this.showRedBorder = true
+            }
             let args = {
                 couTypeCode: this.couTypeCode,
             }
@@ -520,6 +526,15 @@ export default {
                 padding-left: 10px;
                 border-radius: 3px;
             }
+            &-couponSelectTip{
+                color: #f5222d;
+                margin: 0;
+                line-height: 1.5;
+                padding-top: 3px;
+            }
         }
+    }
+    .border-red{
+        border-color: #f5222d;
     }
 </style>
