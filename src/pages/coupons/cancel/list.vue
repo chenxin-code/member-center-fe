@@ -257,10 +257,16 @@ export default {
       this.tableLoading = true;
       this.$nextTick(() => {
         let couponCode = '';
-        let couponName = '';
+        if (!isQuery) {
+          this.$refs.memberForm.setFieldsValue({
+            couponCode: this.$route.query.type ? this.$route.query.type : ''
+          });
+        }
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
           couponCode = this.$refs.memberForm.getFieldsValue().couponCode;
         }
+
+        let couponName = '';
         if (this.$refs.memberForm.getFieldsValue().couponName) {
           couponName = this.$refs.memberForm.getFieldsValue().couponName;
         }

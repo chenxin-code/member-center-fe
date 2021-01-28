@@ -88,7 +88,9 @@ const FormList = {
       } = attrs;
       switch (type) {
         case 'input':
-          return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} allow-clear />;
+          return (
+            <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} allow-clear />
+          );
         case 'inputPhone':
           return (
             <a-input
