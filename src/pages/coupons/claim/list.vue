@@ -52,7 +52,7 @@ export default {
     return {
       formList: [
         {
-          label: '卡券id',
+          label: '卡券编号',
           type: 'input',
           name: 'couponCode',
           placeholder: '请输入'
@@ -94,7 +94,7 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '卡券id',
+          title: '卡券编号',
           dataIndex: 'couponCode',
           key: 'couponCode'
         },
@@ -253,7 +253,7 @@ export default {
           pageIndex: this.current,
           pageSize: this.pageSize,
           status: 1,
-          couponCode: couponCode, //卡券id
+          couponCode: couponCode, //卡券编号
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
           memberCode: memberCode, //会员唯一标识

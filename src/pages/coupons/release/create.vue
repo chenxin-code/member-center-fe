@@ -258,11 +258,11 @@ export default {
                     key: 'couponTitle',
                     dataIndex: 'couponTitle'
                 },
-                {
-                    title: '卡券副标题',
-                    key: 'couponSubhead',
-                    dataIndex: 'couponSubhead'
-                },
+                // {
+                //     title: '卡券副标题',
+                //     key: 'couponSubhead',
+                //     dataIndex: 'couponSubhead'
+                // },
                 {
                     title: '卡券类型',
                     key: 'couponType',
