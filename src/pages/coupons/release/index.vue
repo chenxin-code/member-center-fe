@@ -131,7 +131,7 @@ export default {
                     customRender: text => text ? typeList.filter(item => item.id == text)[0].name : ''
                 },
                 {
-                    title: '卡券业务类',
+                    title: '卡券业务类型',
                     key: 'businessType',
                     dataIndex: 'businessType',
                     customRender: text => text ? activityList.filter(item => item.id == text)[0].name : ''
@@ -143,8 +143,10 @@ export default {
                 },
                 {
                     title: '卡券有效期',
-                    key: 'valiDays',
-                    dataIndex: 'valiDays'
+                    key: 'expirationType',
+                    dataIndex: 'expirationType',
+                    customRender: (text, record) => text == 1 ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss')+'-'+moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
+                        :   `相对有效期, ${record.offsetDays}天`
                 },
                 {
                     title: '派发类型',
