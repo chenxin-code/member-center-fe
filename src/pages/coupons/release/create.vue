@@ -46,7 +46,8 @@
                         v-for="item in issueForm"
                         :key="item.label"
                         :label="item.label">
-                        <a-input
+                        <a-input-number
+                            style="width: 100%"
                             :placeholder="item.placehold"
                             v-decorator="[
                                 `${item.name}`,

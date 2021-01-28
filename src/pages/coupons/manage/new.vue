@@ -230,6 +230,7 @@
                       :placeholder="['开始时间', '结束时间']"
                       format="YYYY-MM-DD"
                       @change="handleRangePicker"
+                      :disabled-date="disabledDate"
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
                     <div>validityEndTime:{{ validityEndTime }}</div>
@@ -565,6 +566,9 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000
+    },
     checkAmountFormat(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
