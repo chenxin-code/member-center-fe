@@ -144,7 +144,7 @@ export default {
 
 <style lang="less" scoped>
 #home {
-  height: 100%;
+  //height: 100%;
 
   .container {
     height: 100%;
