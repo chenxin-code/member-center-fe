@@ -134,7 +134,7 @@ export default {
                     title: '卡券业务类型',
                     key: 'businessType',
                     dataIndex: 'businessType',
-                    customRender: text => text ? activityList.filter(item => item.id == text)[0].name : ''
+                    customRender: text => activityList.filter(item => item.id == text)[0].name ? activityList.filter(item => item.id == text)[0].name : ''
                 },
                 {
                     title: '卡券面值金额',

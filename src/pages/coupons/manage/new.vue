@@ -48,9 +48,7 @@
                       'couponSubhead',
                       {
                         initialValue: couponSubhead,
-                        rules: [
-                          { max: 20, message: '最多输入20个字符' }
-                        ]
+                        rules: [{ max: 20, message: '最多输入20个字符' }]
                       }
                     ]"
                     placeholder="请输入卡券副标题，最多20个字符"
@@ -230,8 +228,9 @@
                         }
                       ]"
                       :placeholder="['开始时间', '结束时间']"
-                      format="YYYY-MM-DD"
+                      format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
+                      show-time
                       :disabled-date="disabledDate"
                     />
                     <div>validityStartTime:{{ validityStartTime }}</div>
@@ -717,7 +716,7 @@ export default {
      **判断日期格式为yyyy-mm-dd和正确的日期
      */
     isDateString(str) {
-      const reg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
       if (str === '' || str === undefined || str === null) return false;
       if (reg.test(str)) {
         return true;
@@ -853,11 +852,11 @@ export default {
           this.voucherAmount = res.data.voucherAmount || this.voucherAmount;
           this.validityType = res.data.validityType || this.validityType;
           ///////////日期//////////
-          this.validityStartTime = this.isDateString(this.momentStr(res.data.validityStartTime))
-            ? this.momentStr(res.data.validityStartTime)
+          this.validityStartTime = this.isDateString(this.momentStrHms(res.data.validityStartTime))
+            ? this.momentStrHms(res.data.validityStartTime)
             : ''; //固定有效期-卡券有效期开始时间
-          this.validityEndTime = this.isDateString(this.momentStr(res.data.validityEndTime))
-            ? this.momentStr(res.data.validityEndTime)
+          this.validityEndTime = this.isDateString(this.momentStrHms(res.data.validityEndTime))
+            ? this.momentStrHms(res.data.validityEndTime)
             : ''; //	固定有效期-卡券有效期结束时间
           if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
