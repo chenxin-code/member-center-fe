@@ -187,6 +187,7 @@ import {couponsCenterList, bangdouList, cardList, level, typeList, activityList}
 import FilterForm from '@/components/FilterGroup/index.jsx';
 import moment from 'moment';
 import api from "@/api";
+import { debounce } from '@/utils/util';
 
 export default {
     name: 'release_create',
@@ -408,6 +409,7 @@ export default {
         },
         // 开始派发
         couponDistribute() {
+            console.log('111111111')
             if (!this.couTypeCode) {
                 this.showRedBorder = true
             }
@@ -427,17 +429,18 @@ export default {
                     } else {
                         Object.assign(args, values)
                     }
-                    api.couponDistribute(Object.keys(args).reduce((pre, key) => {
-                        pre.append([key], args[key]);
-                        return pre;
-                    }, new FormData()))
-                    .then(
-                        res => res.code == 200 && this.$router.push({name: 'release_status'})
-                    )
+                    debounce(
+                        () => api.couponDistribute(Object.keys(args).reduce((pre, key) => {
+                            pre.append([key], args[key]);
+                            return pre;
+                        }, new FormData()))
+                        .then(
+                            res => res.code == 200 && this.$router.push({name: 'release_status'})
+                        ),
+                    1000)
                 }
-            });
-        }
-
+            }); 
+        },
     },
     watch: {
         condition: function (newVal, oldVal) {
