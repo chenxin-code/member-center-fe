@@ -57,10 +57,16 @@ export default {
           name: 'couponCode',
           placeholder: '请输入'
         },
+        // {
+        //   label: '卡券标题',
+        //   type: 'input',
+        //   name: 'couponName',
+        //   placeholder: '请输入'
+        // },
         {
-          label: '卡券标题',
+          label: '会员唯一标识',
           type: 'input',
-          name: 'couponName',
+          name: 'memberCode',
           placeholder: '请输入'
         },
         {
@@ -69,16 +75,14 @@ export default {
           name: 'jointime'
         },
         {
-          label: '会员唯一标识',
-          type: 'input',
-          name: 'memberCode',
-          placeholder: '请输入'
-        },
-        {
           label: '手机号',
           type: 'inputPhone',
           name: 'memberPhone',
           placeholder: '请输入'
+        },
+        {
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
         },
         {
           type: 'button',
