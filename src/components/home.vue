@@ -145,11 +145,12 @@ export default {
 
 <style lang="less" scoped>
 #home {
-  height: 100%;
+  // height: 100%;
 
   .container {
-    height: 100%;
-    margin-bottom: 24px;
+    // height: 100%;
+    // margin-bottom: 24px;
+    min-height: 100vh;
 
     aside.ant-layout-sider {
       z-index: 2;
