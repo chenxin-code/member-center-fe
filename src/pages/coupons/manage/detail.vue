@@ -45,7 +45,7 @@
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 20">
                       满{{ couponDetails.satisfyAmount || '' }}元抵扣{{
-                        couponDetails.fullReductionDiscountAmount || ''
+                        couponDetails.voucherAmount || ''
                       }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 40">
