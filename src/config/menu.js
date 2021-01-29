@@ -65,8 +65,8 @@ export default [
   {
     title: '卡券管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/jifen_show.png'),
-    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    icon: require('@/assets/img/menu/conpon_manage_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
     menuKey: 'couponsManage',
     group: 'hyzx',
     path: '/couponsManage'
@@ -74,8 +74,8 @@ export default [
   {
     title: '卡券派发',
     authKeys: [''],
-    icon: require('@/assets/img/menu/jifen_show.png'),
-    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    icon: require('@/assets/img/menu/conpon_paifa_show.png'),
+    iconHide: require('@/assets/img/conpon_paifa_hide.png'),
     menuKey: 'couponsRelease',
     group: 'hyzx',
     path: '/couponsRelease'
@@ -83,8 +83,8 @@ export default [
   {
     title: '卡券领取记录',
     authKeys: [''],
-    icon: require('@/assets/img/menu/jifen_show.png'),
-    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    icon: require('@/assets/img/menu/conpon_claim_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_claim_hide.png'),
     menuKey: 'couponsClaim',
     group: 'hyzx',
     path: '/couponsClaim'
@@ -92,8 +92,8 @@ export default [
   {
     title: '卡券核销记录',
     authKeys: [''],
-    icon: require('@/assets/img/menu/jifen_show.png'),
-    iconHide: require('@/assets/img/menu/jifen_hide.png'),
+    icon: require('@/assets/img/menu/conpon_cancel_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_cancel_hide.png'),
     menuKey: 'couponsCancel',
     group: 'hyzx',
     path: '/couponsCancel'
