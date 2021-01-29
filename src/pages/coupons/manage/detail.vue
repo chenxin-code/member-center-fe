@@ -23,7 +23,7 @@
                 </div>
               </div>
               <!-- 卡券副标题 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券副标题:</div>
