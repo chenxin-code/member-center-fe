@@ -23,7 +23,7 @@
                 </div>
               </div>
               <!-- 卡券副标题 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券副标题:</div>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 20">
                       满{{ couponDetails.satisfyAmount || '' }}元抵扣{{
-                        couponDetails.fullReductionDiscountAmount || ''
+                        couponDetails.voucherAmount || ''
                       }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 40">
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <!-- 成本价 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.cost">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">成本价:</div>
