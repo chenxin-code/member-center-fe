@@ -842,7 +842,7 @@ export default {
           this.couponImage = res.data.couponImage || this.couponImage;
           this.discountMaxDeduction = res.data.discountMaxDeduction || this.discountMaxDeduction;
           this.discountRatio = res.data.discountRatio || this.discountRatio;
-          this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount || this.fullReductionDiscountAmount;
+          this.fullReductionDiscountAmount = res.data.voucherAmount || this.fullReductionDiscountAmount;
           this.merchandises = res.data.merchandises || this.merchandises;
           this.satisfyAmount = res.data.satisfyAmount || this.satisfyAmount;
           this.state = res.data.state || this.state;
