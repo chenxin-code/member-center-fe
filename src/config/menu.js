@@ -75,7 +75,7 @@ export default [
     title: '卡券派发',
     authKeys: [''],
     icon: require('@/assets/img/menu/conpon_paifa_show.png'),
-    iconHide: require('@/assets/img/conpon_paifa_hide.png'),
+    iconHide: require('@/assets/img/menu/conpon_paifa_hide.png'),
     menuKey: 'couponsRelease',
     group: 'hyzx',
     path: '/couponsRelease'
