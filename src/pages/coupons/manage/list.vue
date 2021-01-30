@@ -85,7 +85,7 @@ import api from '@/api';
 import moment from 'moment';
 
 export default {
-  name: 'couponsClaim',
+  name: 'couponsManage',
   data() {
     return {
       formList: [

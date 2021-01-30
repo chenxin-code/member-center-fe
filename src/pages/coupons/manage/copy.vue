@@ -482,7 +482,7 @@ import { CARD_TYPE_MAP } from '@/constance';
 // moment(Date.now(), 'YYYY-MM-DD HH:mm:ss').split(' ')[1]
 
 export default {
-  name: 'couponsManageNew',
+  name: 'couponsManageCopy',
   components: {},
   data() {
     return {
