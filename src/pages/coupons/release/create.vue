@@ -135,7 +135,15 @@
           </a-form-item>
         </div>
         <a-form-item class="create-main-button">
-          <a-button type="primary" class="create-main-button-items" @click="couponDistribute">发放</a-button>
+          <a-button
+            :disabled="submitLoading"
+            :loading="submitLoading"
+            type="primary"
+            class="create-main-button-items"
+            @click="couponDistribute"
+          >
+            发放
+          </a-button>
           <a-button class="create-main-button-items" @click="$router.push({ name: 'release' })">取消</a-button>
         </a-form-item>
       </a-form>
@@ -190,6 +198,7 @@ export default {
   },
   data() {
     return {
+      submitLoading: false,
       showRedBorder: false,
       cardList: [],
       couponName: '请选择',
@@ -421,18 +430,20 @@ export default {
           } else {
             Object.assign(args, values);
           }
-          debounce(
-            () =>
-              api
-                .couponDistribute(
-                  Object.keys(args).reduce((pre, key) => {
-                    pre.append([key], args[key]);
-                    return pre;
-                  }, new FormData())
-                )
-                .then(res => res.code == 200 && this.$router.push({ name: 'release_status' })),
-            1000
-          );
+          // debounce(() => {
+          this.submitLoading = true;
+          api
+            .couponDistribute(
+              Object.keys(args).reduce((pre, key) => {
+                pre.append([key], args[key]);
+                return pre;
+              }, new FormData())
+            )
+            .finally(() => {
+              this.submitLoading = false;
+            })
+            .then(res => res.code == 200 && this.$router.push({ name: 'release_status' }));
+          // }, 1000);
         }
       });
     }

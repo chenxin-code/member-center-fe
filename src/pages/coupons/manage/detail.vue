@@ -44,14 +44,12 @@
                       {{ couponDetails.voucherAmount || '' }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 20">
-                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{
-                        couponDetails.voucherAmount || ''
-                      }}元
+                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{ couponDetails.voucherAmount || '' }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 40">
-                      满{{ couponDetails.satisfyAmount || '' }}元{{ couponDetails.discountRatio || '' }}折最高抵扣{{
-                        couponDetails.discountMaxDeduction || ''
-                      }}元
+                      满{{ couponDetails.satisfyAmount || '' }}元{{
+                        couponDetails.discountRatio * 10 || ''
+                      }}折最高抵扣{{ couponDetails.discountMaxDeduction || '' }}元
                     </div>
                   </div>
                 </div>
@@ -67,7 +65,8 @@
                   <div class="column-item" v-show="couponDetails.validityType === 1">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ momentStrHms(couponDetails.validityStartTime) }} ~ {{ momentStrHms(couponDetails.validityEndTime) }}
+                      {{ momentStrHms(couponDetails.validityStartTime) }} ~
+                      {{ momentStrHms(couponDetails.validityEndTime) }}
                     </div>
                   </div>
                   <div class="column-item" v-show="couponDetails.validityType === 3">
@@ -109,7 +108,7 @@
                       <div class="column-right">优惠券封面:</div>
                       <div class="column-left">
                         <div class="column-left-image">
-                          <img :src="couponDetails.couponImage.replace(/\s+/g,'')" width="85" height="85" alt="" />
+                          <img :src="couponDetails.couponImage.replace(/\s+/g, '')" width="85" height="85" alt="" />
                         </div>
                       </div>
                     </div>
@@ -154,7 +153,10 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.createTime) && couponDetails.createOperator">
+              <div
+                class="common-column-wrapp"
+                v-show="momentStrHms(couponDetails.createTime) && couponDetails.createOperator"
+              >
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
@@ -176,7 +178,10 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator">
+              <div
+                class="common-column-wrapp"
+                v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator"
+              >
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
