@@ -154,34 +154,34 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-column-wrapp" v-show="couponDetails.createTime && couponDetails.createOperator">
+              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.createTime) && couponDetails.createOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
                       <div>{{ couponDetails.createOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-show="couponDetails.onTime && couponDetails.onOperator">
+              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.onTime) && couponDetails.onOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.onTime) || '' }}</div>
                       <div>{{ couponDetails.onOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-show="couponDetails.offTime && couponDetails.offOperator">
+              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.offTime) || '' }}</div>
                       <div>{{ couponDetails.offOperator || '' }}</div>
                     </div>
                   </div>
@@ -202,7 +202,7 @@ import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'memberInfoDetail',
+  name: 'couponsManageDetail',
   components: {},
   data() {
     return {

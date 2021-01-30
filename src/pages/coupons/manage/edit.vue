@@ -480,7 +480,7 @@ import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'couponsManageNew',
+  name: 'couponsManageEdit',
   components: {},
   data() {
     return {
