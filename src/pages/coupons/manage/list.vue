@@ -85,7 +85,7 @@ import api from '@/api';
 import moment from 'moment';
 
 export default {
-  name: 'couponsClaim',
+  name: 'couponsManage',
   data() {
     return {
       formList: [
@@ -314,7 +314,7 @@ export default {
         } else if (param.couponType === 20) {
           return param.faceAmount;
         } else if (param.couponType === 40) {
-          return param.discountMaxDeduction;
+          return param.discountRatio * 10 + '折';
         } else {
           return '';
         }

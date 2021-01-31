@@ -414,7 +414,7 @@
                       'cost',
                       {
                         initialValue: cost,
-                        rules: [{ validator: this.checkAmountFormat, trigger: ['blur'] }]
+                        rules: [{ validator: this.checkCostFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
@@ -482,7 +482,7 @@ import { CARD_TYPE_MAP } from '@/constance';
 // moment(Date.now(), 'YYYY-MM-DD HH:mm:ss').split(' ')[1]
 
 export default {
-  name: 'couponsManageNew',
+  name: 'couponsManageCopy',
   components: {},
   data() {
     return {
@@ -575,12 +575,19 @@ export default {
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
+    checkCostFormat(rule, value, callback) {
+      if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
+        callback(new Error('成本价格式不正确'));
+      } else {
+        callback();
+      }
+    },
     checkAmountFormat(rule, value, callback) {
       console.log('checkAmountFormat value :>> ', value);
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if (value === '0') {
+        if (value == 0) {
           callback(new Error('金额不能为0'));
         }
         callback();
