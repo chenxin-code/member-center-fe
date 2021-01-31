@@ -17,7 +17,7 @@ export const couponsCenterList = [
     },
     {
         label: '每人领取数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perPersonLimit',
         rules: [
             { required: true, message: '请输入每人领取数量限制!' },
@@ -29,7 +29,7 @@ export const couponsCenterList = [
     },
     {
         label: '每日领取数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perDayLimit',
         rules: [
             { required: true, message: '请输入每日领取数量限制!' },
@@ -41,7 +41,7 @@ export const couponsCenterList = [
     },
     {
         label: '每人每日领取数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perPersonDayLimit',
         rules: [
             { required: true, message: '请输入每人每日领取数量限制!' },
@@ -73,7 +73,7 @@ export const bangdouList = [
     },
     {
         label: '每人兑换数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perPersonLimit',
         rules: [
             { required: true, message: '请输入每人兑换数量限制!' },
@@ -85,7 +85,7 @@ export const bangdouList = [
     },
     {
         label: '每日兑换数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perDayLimit',
         rules: [
             { required: true, message: '请输入每日兑换数量限制!' },
@@ -97,7 +97,7 @@ export const bangdouList = [
     },
     {
         label: '每人每日兑换数量限制',
-        placehold: '不填写则无限制，1-999999999',
+        placehold: '1-999999999',
         name: 'perPersonDayLimit',
         rules: [
             { required: true, message: '请输入每人每日兑换数量限制!' },
