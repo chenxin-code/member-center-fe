@@ -149,7 +149,7 @@
         <!-- 卡券记录信息 -->
         <div class="coupons-common coupons-record">
           <div class="common-title">
-            <div class="common-title-content">卡券记录信息</div>
+            <div class="common-title-content">卡券创建信息</div>
           </div>
           <a-row class="common-row">
             <a-col :span="24">
@@ -167,7 +167,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.onTime) && couponDetails.onOperator">
+              <!-- <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.onTime) && couponDetails.onOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
@@ -177,8 +177,8 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
+              </div> -->
+              <!-- <div
                 class="common-column-wrapp"
                 v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator"
               >
@@ -191,7 +191,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </a-col>
           </a-row>
         </div>
