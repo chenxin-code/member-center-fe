@@ -414,10 +414,7 @@
                       'cost',
                       {
                         initialValue: cost,
-                        rules: [
-                          { required: true, message: '成本价不能为空' },
-                          { validator: this.checkAmountFormat, trigger: ['blur'] }
-                        ]
+                        rules: []
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
