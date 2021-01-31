@@ -130,7 +130,7 @@ export const typeList = [
     {id: '', name: '全部'},
     {id: 10, name: '代金券'},
     {id: 20, name: '满减券'},
-    {id: 40, name: '抵扣券'}
+    {id: 40, name: '折扣券'}
 ]
 
 export const activityList = [

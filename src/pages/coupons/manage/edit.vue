@@ -412,12 +412,9 @@
                     @change="costChange"
                     v-decorator="[
                       'cost',
-                      {
+                       {
                         initialValue: cost,
-                        rules: [
-                          { required: true, message: '成本价不能为空' },
-                          { validator: this.checkAmountFormat, trigger: ['blur'] }
-                        ]
+                        rules: [{ validator: this.checkCostFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
@@ -575,6 +572,13 @@ export default {
     moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
+    },
+    checkCostFormat(rule, value, callback) {
+      if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
+        callback(new Error('成本价格式不正确'));
+      } else {
+        callback();
+      }
     },
     checkAmountFormat(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
