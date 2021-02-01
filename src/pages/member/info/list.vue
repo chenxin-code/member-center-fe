@@ -94,7 +94,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'inputNumber',
+          type: 'inputPhone',
           name: 'phoneNo',
           placeholder: '请输入'
         },
@@ -392,9 +392,14 @@ export default {
       this.getClientList();
       this.getMemberList();
     }
-
     //重置
     this.$route.meta.isUseCache = false;
+
+    this.$nextTick(() => {
+      this.$refs.memberForm.setFieldsValue({
+        memberSourceCode: this.formList[0].selectOptions[0].id
+      });
+    });
   },
 
   beforeRouteEnter(to, from, next) {
@@ -415,16 +420,7 @@ export default {
 
     next();
   },
-  watch: {
-    formList: {
-      handler: function(newVal) {
-        this.$refs.memberForm.setFieldsValue({
-          memberSourceCode: this.formList[0].selectOptions[0].id
-        });
-      },
-      deep: true
-    }
-  }
+  watch: {}
 };
 </script>
 

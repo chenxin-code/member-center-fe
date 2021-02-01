@@ -5,13 +5,13 @@
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
         <chart-card
           class="today-new"
-          :loading="loading"
+          :loading="loading1"
           title="今日新增数量 (人)"
-          :total="`${numFormat(tongJiData.todayNewNum)}人`"
+          :total="`${numFormat(todayNewNum.todayNewNum)}人`"
         >
           <template slot="footer">
             会员总数量:
-            <span style="padding-left:10px;">{{ tongJiData.sum | NumberFormat }}</span>
+            <span style="padding-left:10px;">{{ todayNewNum.sum | NumberFormat }}</span>
           </template>
         </chart-card>
       </a-col>
@@ -20,9 +20,9 @@
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
         <chart-card
           class="quarter-new"
-          :loading="loading"
+          :loading="loading2"
           title="季度新增数量 (人)"
-          :total="tongJiData.quarterNewNum | NumberFormat"
+          :total="quarterNewNum | NumberFormat"
         >
           <div>
             <div class="antv-chart-mini">
@@ -36,7 +36,7 @@
           </div>
           <template slot="footer">
             <div class="quarter-footer">
-              <div class="quarter-footer-item" v-for="(item, index) in quarterStr(tongJiData.quarter)" :key="index">
+              <div class="quarter-footer-item" v-for="(item, index) in quarterStr(quarter)" :key="index">
                 {{ item }}
               </div>
             </div>
@@ -46,7 +46,7 @@
 
       <!-- 会员来源 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }">
-        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
+        <a-card :loading="loading3" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员来源</span>
             <v-chart
@@ -67,7 +67,7 @@
       </a-col>
       <!-- 会员等级 -->
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '0px' }" class="pie">
-        <a-card :loading="loading" class="pie-card" :style="{ padding: '20px 24px 8px' }">
+        <a-card :loading="loading4" class="pie-card" :style="{ padding: '20px 24px 8px' }">
           <div class="pie-source">
             <span class="pie-title">会员等级</span>
             <v-chart
@@ -104,7 +104,13 @@
                 本年
               </span>
             </div>
-            <a-range-picker @change="handleRangePicker" :style="{ width: '256px' }" />
+            <a-range-picker
+              :placeholder="['开始时间', '结束时间']"
+              format="YYYY-MM-DD"
+              :value="rangePickerValue"
+              @change="handleRangePicker"
+              :style="{ width: '256px' }"
+            />
           </div>
 
           <a-tab-pane tab="会员数量" key="1">
@@ -148,9 +154,6 @@ import { ChartCard } from '@/antd/components';
 import { baseMixin } from '@/store/app-mixin';
 const defaultAvatar = require('@/assets/img/user/avatar.png');
 
-// import mock from './mock'
-// console.log('mock :>> ', mock);
-
 //饼图：会员来源+会员等级 + 折线图：会员数量
 const DataSet = require('@antv/data-set');
 
@@ -162,9 +165,13 @@ export default {
   },
   data() {
     return {
+      rangePickerValue: [],
       pieItem1: ['item', ['#84ACFF', '#8BF5CA', '#9EB2D6']],
       pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
-      loading: true,
+      loading1: true,
+      loading2: true,
+      loading3: true,
+      loading4: true,
       loadingDate: true,
       labelConfig1: [
         'count',
@@ -184,8 +191,10 @@ export default {
           }
         }
       ],
-      tongJiData: {},
+      todayNewNum: {}, //今日新增
       //面积图:季度新增
+      quarterNewNum: '',
+      quarter: '',
       quarterData: [],
       quarterAreaData: [],
       //饼图：会员来源+会员等级
@@ -262,7 +271,10 @@ export default {
     async checkLoginUser() {
       await this.getLoginUrl();
       await this.getUserInfo();
-      this.getMemberTongJi();
+      this.getQuarterNewNum();
+      this.getTodayNewNum();
+      this.getMemberSource();
+      this.getMemberLevel();
       this.getMemberTongJiDate(this.dateType);
     },
 
@@ -293,34 +305,63 @@ export default {
         }
       });
     },
-    //获取会员统计
-    getMemberTongJi() {
-      this.loading = true;
+    //获取会员统计:今日新增
+    getTodayNewNum() {
+      this.loading1 = true;
       return api
-        .getMemberTongJi()
+        .getTodayNewNum()
         .finally(() => {
-          this.loading = false;
+          this.loading1 = false;
         })
         .then(res => {
-          console.log('getMemberTongJi res :>> ', res);
-          // res = mock;//mock数据
+          console.log('getTodayNewNum res :>> ', res);
 
           if (res.code === 200) {
             for (const key in res.data) {
               if (Object.hasOwnProperty.call(res.data, key)) {
                 const element = res.data[key];
-                this.$set(this.tongJiData, key, element);
+                this.$set(this.todayNewNum, key, element);
               }
             }
-            console.log('this.tongJiData :>> ', this.tongJiData); //测试
-            // --------------------------------------
+            console.log('this.todayNewNum :>> ', this.todayNewNum); //测试
+          }
+        });
+    },
+    //获取会员统计:季度新增
+    getQuarterNewNum() {
+      this.loading2 = true;
+      return api
+        .getQuarterNewNum()
+        .finally(() => {
+          this.loading2 = false;
+        })
+        .then(res => {
+          console.log('getQuarterNewNum res :>> ', res);
+
+          if (res.code === 200) {
             //季度新增
+            this.quarter = res.data.quarter;
+            this.quarterNewNum = res.data.quarterNewNum;
             this.quarterData.splice(0, this.quarterData.length);
             res.data.quarterStatisticsVo.forEach(element => {
               this.quarterData.push(element);
             });
             console.log('this.quarterData :>> ', this.quarterData);
-            // --------------------------------------
+          }
+        });
+    },
+    //获取会员统计:会员来源
+    getMemberSource() {
+      this.loading3 = true;
+      return api
+        .getMemberSource()
+        .finally(() => {
+          this.loading3 = false;
+        })
+        .then(res => {
+          console.log('getMemberSource res :>> ', res);
+
+          if (res.code === 200) {
             //会员来源
             const pieSourceData1 = [];
             res.data.memberSourceStatisticsVos.forEach(element => {
@@ -343,7 +384,21 @@ export default {
               }
             });
             console.log('pieData1 :>> ', this.pieData1);
-            // --------------------------------------
+          }
+        });
+    },
+    //获取会员统计:会员等级
+    getMemberLevel() {
+      this.loading4 = true;
+      return api
+        .getMemberLevel()
+        .finally(() => {
+          this.loading4 = false;
+        })
+        .then(res => {
+          console.log('getMemberLevel res :>> ', res);
+
+          if (res.code === 200) {
             //会员等级
             const pieSourceData2 = [];
             res.data.memberLevelStatisticsVos.forEach(element => {
@@ -366,16 +421,18 @@ export default {
               }
             });
             console.log('pieData2 :>> ', this.pieData2);
-            // --------------------------------------
           }
         });
     },
-    handleRangePicker(dateVal) {
+    handleRangePicker(dates, dateStrings) {
+      console.log('handleRangePicker dates :>> ', dates);
+      console.log('handleRangePicker dateStrings :>> ', dateStrings);
       this.dateType = 4;
-      console.log('handleRangePicker dateVal :>> ', dateVal);
-      this.jointimeStart = moment(dateVal[0]).format('YYYY-MM-DD');
-      this.jointimeEnd = moment(dateVal[1]).format('YYYY-MM-DD');
-      this.dayRange = moment(dateVal[1]).diff(moment(dateVal[0]), 'day'); //相差天数
+      this.rangePickerValue = dates;
+
+      this.jointimeStart = dateStrings[0];
+      this.jointimeEnd = dateStrings[1];
+      this.dayRange = moment(dateStrings[1]).diff(moment(dateStrings[0]), 'day'); //相差天数
       console.log('相差天数 handleRangePicker dayRange :>> ', this.dayRange);
       if (this.dayRange > 90) {
         this.$warning({
@@ -389,6 +446,9 @@ export default {
     getMemberTongJiDate(dateTypeParam) {
       this.loadingDate = true;
       this.dateType = dateTypeParam; //存dateType
+      if (this.dateType === 1 || this.dateType === 2 || this.dateType === 3) {
+        this.rangePickerValue = [];
+      }
       console.log('getMemberTongJiDate this.dateType :>> ', this.dateType);
       const param = {
         type: this.dateType,
@@ -562,6 +622,7 @@ export default {
 
 <style lang="less" scoped>
 .member-dashboard {
+  height: 100%;
   background: #f0f2f5 !important;
   background-color: #f0f2f5 !important;
 
@@ -625,75 +686,75 @@ export default {
       border: none !important;
     }
   }
-}
 
-.quarter-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  .quarter-footer-item {
-    flex: 1;
+  .quarter-footer {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-  }
-}
 
-.pie-source {
-  height: 250px !important;
-  background-color: #fff;
-  position: relative;
-  top: 0;
-  left: 0;
-
-  .pie-title {
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #666666;
-    position: absolute;
-    top: 20px;
-    left: 24px;
+    .quarter-footer-item {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
+  .pie-source {
+    height: 250px !important;
+    background-color: #fff;
+    position: relative;
+    top: 0;
+    left: 0;
+
+    .pie-title {
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      position: absolute;
+      top: 20px;
+      left: 24px;
+    }
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: center;
+      align-content: center;
+    }
   }
-}
 
-.isClicked {
-  color: #4b7afb;
-}
+  .isClicked {
+    color: #4b7afb;
+  }
 
-.antv-chart-mini {
-  position: relative;
-  width: 100%;
-
-  .chart-wrapper {
-    position: absolute;
-    bottom: -28px;
+  .antv-chart-mini {
+    position: relative;
     width: 100%;
+
+    .chart-wrapper {
+      position: absolute;
+      bottom: -28px;
+      width: 100%;
+    }
   }
-}
 
-.extra-wrapper {
-  line-height: 55px;
-  padding-right: 24px;
+  .extra-wrapper {
+    line-height: 55px;
+    padding-right: 24px;
 
-  .extra-item {
-    display: inline-block;
-    margin-right: 24px;
-
-    span {
+    .extra-item {
       display: inline-block;
-      margin-left: 24px;
+      margin-right: 24px;
+
+      span {
+        display: inline-block;
+        margin-left: 24px;
+      }
     }
   }
 }

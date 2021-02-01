@@ -192,6 +192,7 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
           link.click();
         });
       } else {
+        console.log('api ----', {...defaultHeader, ...headers})
         HTTP({
           baseURL: url,
           withCredentials: true,

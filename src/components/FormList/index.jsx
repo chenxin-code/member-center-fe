@@ -29,6 +29,18 @@ const FormList = {
       type: Array,
       default: []
     },
+    routePath: {
+      type: String,
+      default: ''
+    },
+    labelCol: {
+      type: Object,
+      default: () => ({ span: 6 })
+    },
+    wrapperCol: {
+      type: Object,
+      default: () => ({ span: 18 })
+    },
     rowCol: {
       type: [Number, String],
       default: 3
@@ -37,6 +49,10 @@ const FormList = {
       type: Object,
       default: () => ({})
     },
+    maxLength: {
+      type: [Number, String],
+      default: 11
+    },
     onSubmit: {
       type: Function,
       default: defaultFn
@@ -44,8 +60,7 @@ const FormList = {
   },
   data() {
     return {
-      form: null,
-      minVal: 0
+      form: null
     };
   },
   created: function() {
@@ -68,15 +83,18 @@ const FormList = {
         buttonName,
         buttonType = 'primary',
         htmlType = 'submit',
+        htmlTypeBtnDefault = 'button',
         ...others
       } = attrs;
       switch (type) {
         case 'input':
-          return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
-        case 'inputNumber':
           return (
-            <a-input-number
-              min={this.minVal}
+            <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} allow-clear />
+          );
+        case 'inputPhone':
+          return (
+            <a-input
+              maxLength={this.maxLength}
               v-decorator={[name, { rules: rules }]}
               {...others}
               placeholder={attrs.placeholder}
@@ -108,8 +126,20 @@ const FormList = {
               {buttonName}
             </a-button>
           );
+        case 'btn-default':
+          return (
+            <a-button onClick={this.handleBtnClick} type={buttonType} html-type={htmlTypeBtnDefault} {...others}>
+              {buttonName}
+            </a-button>
+          );
         default:
           return null;
+      }
+    },
+    handleBtnClick(e) {
+      e.preventDefault();
+      if (this.routePath) {
+        this.$router.push(this.routePath);
       }
     },
     handleSubmit(e) {
@@ -119,7 +149,6 @@ const FormList = {
           this.onSubmit(values);
         }
       });
-      // this.onSubmit();
     }
   },
   render() {
@@ -127,8 +156,8 @@ const FormList = {
       <a-form
         form={this.form}
         autoComplete='off'
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        labelCol={this.labelCol}
+        wrapperCol={this.wrapperCol}
         {...this.formSetting}
         onSubmit={this.handleSubmit}>
         <a-row gutter={24}>
