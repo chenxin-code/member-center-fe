@@ -69,7 +69,8 @@ const conditionList = [
   { id: '', name: '全部' },
   { id: 1, name: '领券中心' },
   { id: 2, name: '直接发放' },
-  { id: 3, name: '邦豆兑换' }
+  { id: 3, name: '邦豆兑换' },
+  { id: 4, name: '' }
 ];
 export default {
   name: 'release',
