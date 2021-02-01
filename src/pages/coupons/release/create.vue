@@ -73,8 +73,8 @@
               v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
               :file-list="fileList"
               name="file"
-              accept=".xlsx"
-              :showUploadList="false"
+              accept="xls,.xlsx"
+              :showUploadList="setUploadList"
               :before-upload="uploadBefor"
             >
               <a-button>
@@ -198,6 +198,10 @@ export default {
   },
   data() {
     return {
+      setUploadList: {
+        showPreviewIcon: true,
+        showRemoveIcon: false
+      },
       submitLoading: false,
       showRedBorder: false,
       cardList: [],
@@ -317,6 +321,7 @@ export default {
   methods: {
     uploadBefor(file) {
       this.dataSourse.file = file;
+      this.fileList[0] = file;
       console.log('file', file);
       return false;
     },
