@@ -73,7 +73,7 @@
               v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
               :file-list="fileList"
               name="file"
-              accept=".xlsx"
+              accept=".xls,.xlsx"
               :showUploadList="false"
               :before-upload="uploadBefor"
             >
@@ -216,7 +216,7 @@ export default {
       receiveList: [
         { label: '领券中心', value: 1 },
         { label: '直接发放', value: 2 },
-        { label: '邦豆兑换', value: 3 },
+        { label: '邦豆兑换', value: 3 }
       ],
       systemList: [],
       issueRange: [
