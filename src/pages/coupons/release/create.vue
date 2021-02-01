@@ -217,7 +217,6 @@ export default {
         { label: '领券中心', value: 1 },
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
-        { label: '卡密兑换', value: 4 }
       ],
       systemList: [],
       issueRange: [
