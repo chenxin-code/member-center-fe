@@ -72,9 +72,9 @@
             <a-upload
               v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
               :file-list="fileList"
+              :remove="handleRemove"
               name="file"
-              accept="xls,.xlsx"
-              :showUploadList="setUploadList"
+              accept=".xls,.xlsx"
               :before-upload="uploadBefor"
             >
               <a-button>
@@ -85,7 +85,7 @@
             </a-upload>
             <p>
               <a
-                href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/0821501581161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls"
+                href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/6504963612161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls"
               >
                 下载模板文件
               </a>
@@ -198,10 +198,6 @@ export default {
   },
   data() {
     return {
-      setUploadList: {
-        showPreviewIcon: true,
-        showRemoveIcon: false
-      },
       submitLoading: false,
       showRedBorder: false,
       cardList: [],
@@ -319,10 +315,16 @@ export default {
     this.getSystemList();
   },
   methods: {
+    handleRemove(file) {
+      const index = this.fileList.indexOf(file);
+      const newFileList = this.fileList.slice();
+      newFileList.splice(index, 1);
+      this.fileList = newFileList;
+    },
     uploadBefor(file) {
       this.dataSourse.file = file;
       this.fileList[0] = file;
-      console.log('file', file);
+      console.log('uploadBefor this.fileList :>> ', this.fileList);
       return false;
     },
     changeMemberCard(val, option) {
@@ -473,6 +475,13 @@ export default {
       if (newVal) {
         this.getCouponList();
       }
+    },
+    fileList: {
+      handler(newVal) {
+        console.log('watch fileList newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
   },
   computed: {
