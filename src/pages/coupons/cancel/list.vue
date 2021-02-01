@@ -261,9 +261,10 @@ export default {
       this.tableLoading = true;
       this.$nextTick(() => {
         let couponCode = '';
+        let couponActivitiesId = this.$route.query.id ? this.$route.query.id : '';
         if (!isQuery) {
           this.$refs.memberForm.setFieldsValue({
-            couponCode: this.$route.query.id ? this.$route.query.id : ''
+            couponCode: this.$route.query.code ? this.$route.query.code : ''
           });
         }
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
@@ -299,6 +300,7 @@ export default {
           pageIndex: this.current,
           pageSize: this.pageSize,
           status: 2,
+          couponActivitiesId:couponActivitiesId,
           couponCode: couponCode, //卡券编号
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
