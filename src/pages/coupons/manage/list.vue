@@ -454,14 +454,14 @@ export default {
     //   this.pageSize = pageSize;
     //   this.getCouponsList();
     // },
-    change(page){
+    change(page) {
       this.current = page;
-      this.getCouponsList()
+      this.getCouponsList();
     },
-    showSizeChange(current, size){
+    showSizeChange(current, size) {
       this.current = 1;
       this.pageSize = size;
-      this.getCouponsList()
+      this.getCouponsList();
     },
 
     //获取积分列表
@@ -515,6 +515,18 @@ export default {
           .getCouponsList(para)
           .finally(() => {
             this.tableLoading = false;
+            //清楚定时器
+            const timer1 = setTimeout(() => {
+              const inputDom = document.querySelectorAll('.ant-pagination-options-quick-jumper input');
+              inputDom.forEach(element => {
+                element._value = '';
+                element.value = '';
+              });
+            }, 0);
+            this.$once('hook:beforeDestroy', () => {
+              clearTimeout(timer1);
+            });
+            //清楚定时器
           })
           .then(res => {
             console.log('getCouponsList res :>> ', res);
