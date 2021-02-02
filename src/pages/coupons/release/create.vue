@@ -57,7 +57,7 @@
               v-decorator="[
                 'issuedRang',
                 {
-                  initialValue: 1,
+                  initialValue: 2,
                   rules: [{ required: true, message: '请设置发放范围!' }]
                 }
               ]"
@@ -220,10 +220,10 @@ export default {
       ],
       systemList: [],
       issueRange: [
-        { label: '全部会员', value: 1 },
+        // { label: '全部会员', value: 1 },
         { label: '指定会员', value: 2 },
-        { label: '指定接入系统', value: 3 },
-        { label: '指定会员卡', value: 4 }
+        // { label: '指定接入系统', value: 3 },
+        // { label: '指定会员卡', value: 4 }
       ],
       issueForm: couponsCenterList,
       formList: [
@@ -433,7 +433,7 @@ export default {
             Object.assign(args, values, { file: this.dataSourse.file });
           } else if (values.clientId) {
             Object.assign(args, values, { clientId: values.clientId.join(',') });
-          } else if (values.condition == 2 && values.issueRange == 4) {
+          } else if (values.condition === 2) {
             Object.assign(args, values, { memberCardName: this.dataSourse.memberCardName });
           } else {
             Object.assign(args, values);
