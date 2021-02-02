@@ -51,11 +51,11 @@
         :show-total="total => `共 ${total} 条`"
         show-quick-jumper
         show-size-changer
-        :default-current="current"
-        :page-size.sync="pageSize"
+        :current="current"
+        :pageSize="pageSize"
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="onShowSizeChange"
-        @showSizeChange="onShowSizeChange"
+        @change="change"
+        @showSizeChange="showSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
       />
     </div>
@@ -289,9 +289,18 @@ export default {
       });
     },
     // 分页
-    onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getMemberList();
+    // },
+    change(page) {
+      this.current = page;
+      this.getMemberList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getMemberList();
     },
 
