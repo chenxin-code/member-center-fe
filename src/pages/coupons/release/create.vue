@@ -437,7 +437,7 @@ export default {
       };
       this.formBasic.validateFields((err, values) => {
         console.log(values);
-        if (!err) {
+        if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });
           } else if (values.clientId) {
