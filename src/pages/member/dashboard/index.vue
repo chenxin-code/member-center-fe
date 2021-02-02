@@ -284,6 +284,7 @@ export default {
         console.log('getLoginUrl res :>> ', res);
         if (res.code === 200) {
           window.localStorage.setItem('SD_LOGIN_URL', res.data);
+          this.$store.commit('menu/changeMenuStatus', false); //解禁menu
         }
       });
     },

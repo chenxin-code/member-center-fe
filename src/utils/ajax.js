@@ -1,7 +1,9 @@
 import axios from 'axios';
+import store from '@/store';
 import NProgress from 'nprogress';
 import JSONbig from 'json-bigint';
 import message from 'ant-design-vue/es/message';
+import Modal from 'ant-design-vue/es/modal';
 // import * as api from '@/api/login';
 // import QS from 'qs';
 
@@ -125,6 +127,17 @@ let isRefresh = false;
 async function refreshToken() {
   isRefresh = true;
   window.location.href = localStorage.getItem('SD_LOGIN_URL');
+
+  Modal.confirm({
+    title: 'Token过期提示',
+    content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
+    cancelText: '',
+    okText: '确认',
+    onOk() {
+      console.log('confirm OK');
+      window.location.href = localStorage.getItem('SD_LOGIN_URL');
+    }
+  });
 
   // const para = QS.stringify({
   //   grant_type: 'refresh_token',
