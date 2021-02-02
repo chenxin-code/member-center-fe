@@ -371,6 +371,18 @@ export default {
           })
           .finally(() => {
             this.tableLoading = false;
+            //清楚定时器
+            const timer1 = setTimeout(() => {
+              const inputDom = document.querySelectorAll('.ant-pagination-options-quick-jumper input');
+              inputDom.forEach(element => {
+                element._value = '';
+                element.value = '';
+              });
+            }, 0);
+            this.$once('hook:beforeDestroy', () => {
+              clearTimeout(timer1);
+            });
+            //清楚定时器
           });
       });
     }

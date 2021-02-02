@@ -300,7 +300,7 @@ export default {
           pageIndex: this.current,
           pageSize: this.pageSize,
           status: 2,
-          couponActivitiesId:couponActivitiesId,
+          couponActivitiesId: couponActivitiesId,
           couponCode: couponCode, //卡券编号
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
@@ -315,6 +315,18 @@ export default {
           .getClaimCancel(para)
           .finally(() => {
             this.tableLoading = false;
+            //清楚定时器
+            const timer1 = setTimeout(() => {
+              const inputDom = document.querySelectorAll('.ant-pagination-options-quick-jumper input');
+              inputDom.forEach(element => {
+                element._value = '';
+                element.value = '';
+              });
+            }, 0);
+            this.$once('hook:beforeDestroy', () => {
+              clearTimeout(timer1);
+            });
+            //清楚定时器
           })
           .then(res => {
             console.log('getClaimCancel res :>> ', res);

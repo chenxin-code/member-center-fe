@@ -133,7 +133,8 @@ export default {
           title: '卡券类型',
           key: 'couponType',
           dataIndex: 'couponType',
-          customRender: text => (typeList.filter(item => item.id == text)[0].name ? typeList.filter(item => item.id == text)[0].name : '')
+          customRender: text =>
+            typeList.filter(item => item.id == text)[0].name ? typeList.filter(item => item.id == text)[0].name : ''
         },
         {
           title: '卡券业务类型',
@@ -164,7 +165,10 @@ export default {
           title: '派发类型',
           key: 'condition',
           dataIndex: 'condition',
-          customRender: text => (conditionList.filter(item => item.id == text)[0].name ? conditionList.filter(item => item.id == text)[0].name : '')
+          customRender: text =>
+            conditionList.filter(item => item.id == text)[0].name
+              ? conditionList.filter(item => item.id == text)[0].name
+              : ''
         },
         {
           title: '操作人员',
@@ -263,7 +267,21 @@ export default {
           });
           this.total = res.data.total;
         })
-        .finally(() => (this.tableLoading = false));
+        .finally(() => {
+          this.tableLoading = false;
+          //清楚定时器
+          const timer1 = setTimeout(() => {
+            const inputDom = document.querySelectorAll('.ant-pagination-options-quick-jumper input');
+            inputDom.forEach(element => {
+              element._value = '';
+              element.value = '';
+            });
+          }, 0);
+          this.$once('hook:beforeDestroy', () => {
+            clearTimeout(timer1);
+          });
+          //清楚定时器
+        });
     }
   },
   activated() {
