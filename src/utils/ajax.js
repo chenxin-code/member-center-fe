@@ -125,8 +125,8 @@ let defaultHeader = {
 
 let isRefresh = false;
 async function refreshToken() {
+  store.commit('menu/changeMenuStatus', true); //禁用menu
   isRefresh = true;
-  window.location.href = localStorage.getItem('SD_LOGIN_URL');
 
   Modal.confirm({
     title: 'Token过期提示',
