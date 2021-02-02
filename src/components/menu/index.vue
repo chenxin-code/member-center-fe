@@ -2,7 +2,7 @@
   <a-menu theme="dark" mode="inline" :openKeys="openKeys" :selected-keys="[$route.meta.menu]" @openChange="checkKeys">
     <template v-for="menu in menus">
       <template v-if="menu.children && hasRangeAuthorityWithoutProject(menu.authKeys)">
-        <a-sub-menu :key="menu.name">
+        <a-sub-menu :key="menu.name" :disabled="$store.state.menu.menuStatus">
           <span slot="title">
             <img :src="menu.icon" class="menu-icon" />
             <span class="menu-title">{{ menu.title }}</span>
@@ -19,7 +19,7 @@
       </template>
       <template v-else>
         <template v-if="hasRangeAuthorityWithoutProject(menu.authKeys)">
-          <a-menu-item :key="menu.path" @click="onClickMenu(menu.path)">
+          <a-menu-item :key="menu.path" @click="onClickMenu(menu.path)" :disabled="$store.state.menu.menuStatus">
             <span>
               <img :src="$route.meta.menu === menu.path ? menu.icon : menu.iconHide" class="menu-icon" />
               <span class="menu-title">{{ menu.title }}</span>

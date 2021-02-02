@@ -57,7 +57,7 @@
               v-decorator="[
                 'issuedRang',
                 {
-                  initialValue: 1,
+                  initialValue: 2,
                   rules: [{ required: true, message: '请设置发放范围!' }]
                 }
               ]"
@@ -174,11 +174,11 @@
         show-quick-jumper
         show-size-changer
         v-model="current"
-        :default-current="current"
-        :page-size.sync="pageSize"
+        :current="current"
+        :pageSize="pageSize"
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="onShowSizeChange"
-        @showSizeChange="onShowSizeChange"
+        @change="change"
+        @showSizeChange="showSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
       />
     </a-modal>
@@ -220,10 +220,10 @@ export default {
       ],
       systemList: [],
       issueRange: [
-        { label: '全部会员', value: 1 },
+        // { label: '全部会员', value: 1 },
         { label: '指定会员', value: 2 },
-        { label: '指定接入系统', value: 3 },
-        { label: '指定会员卡', value: 4 }
+        // { label: '指定接入系统', value: 3 },
+        // { label: '指定会员卡', value: 4 }
       ],
       issueForm: couponsCenterList,
       formList: [
@@ -367,9 +367,18 @@ export default {
       this.getCouponList();
     },
     // 切换卡券列表分页
-    onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getCouponList();
+    // },
+    change(page) {
+      this.current = page;
+      this.getCouponList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getCouponList();
     },
     // 获取卡券列表
@@ -396,7 +405,9 @@ export default {
           });
           this.total = res.data.total;
         })
-        .finally(() => (this.tableLoading = false));
+        .finally(() => {
+          this.tableLoading = false;
+        });
     },
     // 打开弹窗
     handleSelectCoupon() {
@@ -431,7 +442,7 @@ export default {
             Object.assign(args, values, { file: this.dataSourse.file });
           } else if (values.clientId) {
             Object.assign(args, values, { clientId: values.clientId.join(',') });
-          } else if (values.condition == 2 && values.issueRange == 4) {
+          } else if (values.condition === 2) {
             Object.assign(args, values, { memberCardName: this.dataSourse.memberCardName });
           } else {
             Object.assign(args, values);

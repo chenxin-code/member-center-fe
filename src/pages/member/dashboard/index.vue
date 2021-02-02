@@ -166,6 +166,7 @@ export default {
   data() {
     return {
       rangePickerValue: [],
+      lastRangePickerValue: [],
       pieItem1: ['item', ['#84ACFF', '#8BF5CA', '#9EB2D6']],
       pieItem2: ['item', ['#84ACFF', '#8BF5CA', '#EAEEF4', '#FFD36F', '#FF9081']],
       loading1: true,
@@ -283,6 +284,7 @@ export default {
         console.log('getLoginUrl res :>> ', res);
         if (res.code === 200) {
           window.localStorage.setItem('SD_LOGIN_URL', res.data);
+          this.$store.commit('menu/changeMenuStatus', false); //解禁menu
         }
       });
     },
@@ -439,7 +441,9 @@ export default {
           title: '提示',
           content: '日期选择范围不能超过90天'
         });
+        this.rangePickerValue = this.lastRangePickerValue;
       } else {
+        this.lastRangePickerValue = dates;
         this.getMemberTongJiDate(this.dateType);
       }
     },

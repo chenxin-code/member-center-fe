@@ -36,11 +36,11 @@
             show-quick-jumper
             show-size-changer
             v-model="current"
-            :default-current="current"
-            :page-size.sync="pageSize"
+            :current="current"
+            :pageSize="pageSize"
             :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-            @change="onShowSizeChange"
-            @showSizeChange="onShowSizeChange"
+            @change="change"
+            @showSizeChange="showSizeChange"
             style="margin-top:30px;width:100%;text-align: right;"
           />
         </a-col>
@@ -133,7 +133,8 @@ export default {
           title: '卡券类型',
           key: 'couponType',
           dataIndex: 'couponType',
-          customRender: text => (typeList.filter(item => item.id == text)[0].name ? typeList.filter(item => item.id == text)[0].name : '')
+          customRender: text =>
+            typeList.filter(item => item.id == text)[0].name ? typeList.filter(item => item.id == text)[0].name : ''
         },
         {
           title: '卡券业务类型',
@@ -164,7 +165,10 @@ export default {
           title: '派发类型',
           key: 'condition',
           dataIndex: 'condition',
-          customRender: text => (conditionList.filter(item => item.id == text)[0].name ? conditionList.filter(item => item.id == text)[0].name : '')
+          customRender: text =>
+            conditionList.filter(item => item.id == text)[0].name
+              ? conditionList.filter(item => item.id == text)[0].name
+              : ''
         },
         {
           title: '操作人员',
@@ -232,9 +236,18 @@ export default {
       this.$router.push({ name: 'release_detail', query: { id: record.id } });
     },
 
-    onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getReleaseList();
+    // },
+    change(page) {
+      this.current = page;
+      this.getReleaseList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getReleaseList();
     },
 
@@ -263,7 +276,9 @@ export default {
           });
           this.total = res.data.total;
         })
-        .finally(() => (this.tableLoading = false));
+        .finally(() => {
+          this.tableLoading = false;
+        });
     }
   },
   activated() {

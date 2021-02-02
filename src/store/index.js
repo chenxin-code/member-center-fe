@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import router from '../router';
 import user from './module/user';
 import app from './module/app';
+import menu from './module/menu';
 
 Vue.use(Vuex);
 
@@ -28,7 +29,8 @@ const store = new Vuex.Store({
   },
   modules: {
     user,
-    app
+    app,
+    menu
   }
 });
 
