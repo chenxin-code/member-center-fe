@@ -299,7 +299,7 @@ export default {
       title: '',
       type: null,
       condition: 1, // 领取类型
-      issuedRang: 1, // 发放范围
+      issuedRang: 2, // 发放范围
       couTypeCode: '', // 卡券类型编号
       dataSourse: {
         memberCardName: '', // 会员卡名称
