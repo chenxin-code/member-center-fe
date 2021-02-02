@@ -128,13 +128,12 @@ async function refreshToken() {
   store.commit('menu/changeMenuStatus', true); //禁用menu
   isRefresh = true;
 
-  Modal.confirm({
+  Modal.warning({
     title: 'Token过期提示',
     content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
-    cancelText: '',
     okText: '确认',
     onOk() {
-      console.log('confirm OK');
+      console.log('Modal warning OK');
       window.location.href = localStorage.getItem('SD_LOGIN_URL');
     }
   });
@@ -205,7 +204,7 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
           link.click();
         });
       } else {
-        console.log('api ----', {...defaultHeader, ...headers})
+        console.log('api ----', { ...defaultHeader, ...headers });
         HTTP({
           baseURL: url,
           withCredentials: true,
