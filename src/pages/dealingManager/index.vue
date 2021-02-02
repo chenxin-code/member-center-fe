@@ -31,8 +31,8 @@
                         :current="current"
                         :pageSize="pageSize"
                         :pageSizeOptions="['10','20','50','100']"
-                        @change="onShowSizeChange"
-                        @showSizeChange="onShowSizeChange"
+                        @change="change"
+                        @showSizeChange="showSizeChange"
                         style="margin-top:30px;width:100%;text-align: right;"
                     />
                 </a-col>
@@ -136,10 +136,19 @@ export default {
             this.$router.push({name: 'dealing_detail', query: {id: record.id}});
         },
 
-        onShowSizeChange(current, pageSize) {
-            this.current = current;
-            this.pageSize = pageSize;
-            this.getTaskList()
+        // onShowSizeChange(current, pageSize) {
+        //     this.current = current;
+        //     this.pageSize = pageSize;
+        //     this.getTaskList()
+        // },
+        change(page) {
+          this.current = page;
+          this.getTaskList();
+        },
+        showSizeChange(current, size) {
+          this.current = 1;
+          this.pageSize = size;
+          this.getTaskList();
         },
 
         getTaskList() {
