@@ -299,7 +299,7 @@ export default {
       title: '',
       type: null,
       condition: 1, // 领取类型
-      issuedRang: 1, // 发放范围
+      issuedRang: 2, // 发放范围
       couTypeCode: '', // 卡券类型编号
       dataSourse: {
         memberCardName: '', // 会员卡名称
@@ -437,7 +437,7 @@ export default {
       };
       this.formBasic.validateFields((err, values) => {
         console.log(values);
-        if (!err) {
+        if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });
           } else if (values.clientId) {
