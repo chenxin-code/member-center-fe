@@ -28,8 +28,8 @@
                         show-quick-jumper
                         show-size-changer
                         v-model="current"
-                        :default-current="current"
-                        :page-size.sync="pageSize"
+                        :current="current"
+                        :pageSize="pageSize"
                         :pageSizeOptions="['10','20','50','100']"
                         @change="onShowSizeChange"
                         @showSizeChange="onShowSizeChange"
@@ -107,9 +107,9 @@ export default {
                 }
             ],
             dataList: [],
-            rangeTime: [], 
-            name: '', 
-            type: '', 
+            rangeTime: [],
+            name: '',
+            type: '',
             scrollY: 100,
         }
     },
@@ -175,8 +175,8 @@ export default {
             this.current = 1;
             this.pageSize = 10;
             this.rangeTime = [];
-            this.name = ''; 
-            this.type = ''; 
+            this.name = '';
+            this.type = '';
             //初始化加载数据
             this.$refs.form.form.resetFields();
             this.getTaskList();

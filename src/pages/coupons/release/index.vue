@@ -36,11 +36,11 @@
             show-quick-jumper
             show-size-changer
             v-model="current"
-            :default-current="current"
-            :page-size.sync="pageSize"
+            :current="current"
+            :pageSize="pageSize"
             :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-            @change="onShowSizeChange"
-            @showSizeChange="onShowSizeChange"
+            @change="change"
+            @showSizeChange="showSizeChange"
             style="margin-top:30px;width:100%;text-align: right;"
           />
         </a-col>
@@ -236,9 +236,18 @@ export default {
       this.$router.push({ name: 'release_detail', query: { id: record.id } });
     },
 
-    onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getReleaseList();
+    // },
+    change(page) {
+      this.current = page;
+      this.getReleaseList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getReleaseList();
     },
 

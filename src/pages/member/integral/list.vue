@@ -41,8 +41,8 @@
         :show-total="total => `共 ${total} 条`"
         show-quick-jumper
         show-size-changer
-        :default-current="current"
-        :page-size.sync="pageSize"
+        :current="current"
+        :pageSize="pageSize"
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="onShowSizeChange"
         @showSizeChange="onShowSizeChange"
