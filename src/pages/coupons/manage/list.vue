@@ -538,7 +538,7 @@ export default {
       //重置data
       this.total = 0;
       this.current = 1;
-      //this.pageSize = 10;
+      this.pageSize = 10;
       this.$refs.memberForm.form.resetFields();
 
       //初始化加载数据
