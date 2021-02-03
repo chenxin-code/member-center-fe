@@ -1,5 +1,4 @@
 import axios from 'axios';
-import store from '@/store';
 import NProgress from 'nprogress';
 import JSONbig from 'json-bigint';
 import message from 'ant-design-vue/es/message';
@@ -125,7 +124,6 @@ let defaultHeader = {
 
 let isRefresh = false;
 async function refreshToken() {
-  store.commit('menu/changeMenuStatus', true); //禁用menu
   isRefresh = true;
 
   Modal.warning({

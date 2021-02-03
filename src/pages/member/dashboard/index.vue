@@ -280,6 +280,7 @@ export default {
     },
 
     getLoginUrl() {
+      this.$store.commit('menu/changeMenuStatus', true); //禁用menu
       return api.getLoginUrl().then(res => {
         console.log('getLoginUrl res :>> ', res);
         if (res.code === 200) {
