@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import paramsStorage from './ParamsStorage.js';
 import store from '@/store';
+import api from '@/api';
 
 Vue.use(VueRouter);
 
@@ -396,7 +397,22 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  console.log('beforeEach to :>> ', to);
+  if (to.name !== 'dashboard') {
+    await api
+      .getLoginUrl()
+      .finally(() => {
+        store.commit('menu/changeMenuStatus', false); //解禁menu
+      })
+      .then(res => {
+        console.log('beforeEach getLoginUrl res :>> ', res);
+        if (res.code === 200) {
+          window.localStorage.setItem('SD_LOGIN_URL', res.data);
+        }
+      });
+  }
+
   paramsStorage.clearPropsStorage(to, from);
 
   if (to.matched.length === 0) {
