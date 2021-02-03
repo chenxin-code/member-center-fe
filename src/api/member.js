@@ -29,3 +29,4 @@ export const getCouponDetailByCode = data => fetchApi(URL.COUPON_DETAIL_BYCODE, 
 export const getCouponCreate = data => fetchApi(URL.COUPON_CREATE, data, 'POST');
 export const getCouponUpdate = data => fetchApi(URL.COUPON_UPDATE, data, 'POST');
 export const couponOnOrOff = data => fetchApi(URL.COUPON_ONOROFF, data, 'POST');
+export const getTplDownload = data => fetchApi(URL.TPL_DOWNLOAD, data, 'GET');

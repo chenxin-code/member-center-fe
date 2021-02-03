@@ -85,7 +85,7 @@
             </a-upload>
             <p>
               <a
-                href="https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/6504963612161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls"
+                :href="downLoadTplUrl"
               >
                 下载模板文件
               </a>
@@ -198,6 +198,7 @@ export default {
   },
   data() {
     return {
+      downLoadTplUrl:'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/2968297132161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls',
       submitLoading: false,
       showRedBorder: false,
       cardList: [],
@@ -313,6 +314,7 @@ export default {
     this.getCouponList();
     this.getCardList();
     this.getSystemList();
+    this.getTplDownload();
   },
   methods: {
     handleRemove(file) {
@@ -412,6 +414,13 @@ export default {
     // 打开弹窗
     handleSelectCoupon() {
       this.visible = true;
+    },
+    // 获取会员卡列表
+    getTplDownload() {
+      api.getTplDownload().then(res => {
+        console.log('getTplDownload res :>> ', res);
+        this.downLoadTplUrl = res.data;
+      });
     },
     // 获取会员卡列表
     getCardList() {
