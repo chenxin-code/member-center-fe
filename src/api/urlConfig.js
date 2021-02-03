@@ -40,6 +40,8 @@ export default {
   GET_COUPONLIST: '/times/member-center/coupon/api/v1/coupon/list', // 获取卡券列表
   COUPONDISTRIBUTE: '/times/member-center/coupon/api/v1/assgin-member/distribute', // 卡券派发
   GET_MEMBERLEVELLIST: '/times/member-center/member-card/api/v1/level/list', // 会员卡等级
+  TPL_DOWNLOAD:'/times/member-center/coupon/api/v1/memberTemplate/download', // 下载卡券模板
+
   //会员中心:张
   MEMBER_LIST: option.member + '/api/v1/member/list',
   CLIENT_LIST: option.client + '/api/v1/list',

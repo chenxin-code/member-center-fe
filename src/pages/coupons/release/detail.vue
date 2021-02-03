@@ -171,6 +171,7 @@ export default {
       api.getReleaseDetail({ id: id }).then(res => {
         if (res.code === 200) {
           this.dataObj = res.data;
+          console.log('this.dataObj :>> ', this.dataObj);
         }
       });
     },
@@ -190,8 +191,11 @@ export default {
     },
     downloadInfo() {
       const args = {
-        couponCode: this.dataObj.couTypeCode
+        couponCode: this.dataObj.couTypeCode,
+        couponActivitiesId: this.dataObj.id
       };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
       axios({
         method: 'get',
         params: args,
