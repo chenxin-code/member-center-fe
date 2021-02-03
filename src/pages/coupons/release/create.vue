@@ -27,7 +27,7 @@
         </p>
         <a-form-item label="领取条件设置：">
           <a-select
-            @change="val => (condition = val)"
+            @change="conditionChange"
             placeholder="请选择"
             v-decorator="[
               'condition',
@@ -84,11 +84,8 @@
               <p class="create-main-uploadTip">支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次</p>
             </a-upload>
             <p>
-              <a
-                :href="downLoadTplUrl"
-              >
-                下载模板文件
-              </a>
+              <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
+              <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
             </p>
           </a-form-item>
           <a-form-item label="接入系统" v-if="issuedRang == 3">
@@ -198,7 +195,8 @@ export default {
   },
   data() {
     return {
-      downLoadTplUrl:'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/2968297132161_%E6%8C%87%E5%AE%9A%E4%BC%9A%E5%91%98%E4%BF%A1%E6%81%AF.xls',
+      downLoadTplExist: false,
+      downLoadTplUrl: '',
       submitLoading: false,
       showRedBorder: false,
       cardList: [],
@@ -222,7 +220,7 @@ export default {
       systemList: [],
       issueRange: [
         // { label: '全部会员', value: 1 },
-        { label: '指定会员', value: 2 },
+        { label: '指定会员', value: 2 }
         // { label: '指定接入系统', value: 3 },
         // { label: '指定会员卡', value: 4 }
       ],
@@ -314,9 +312,21 @@ export default {
     this.getCouponList();
     this.getCardList();
     this.getSystemList();
-    this.getTplDownload();
   },
   methods: {
+    handleNullTpl() {
+      this.$warning({
+        title: '提示',
+        content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
+      });
+    },
+    conditionChange(val) {
+      console.log('conditionChange val :>> ', val);
+      this.condition = val;
+      if (this.condition === 2) {
+        this.getTplDownload();
+      }
+    },
     handleRemove(file) {
       const index = this.fileList.indexOf(file);
       const newFileList = this.fileList.slice();
@@ -415,10 +425,12 @@ export default {
     handleSelectCoupon() {
       this.visible = true;
     },
-    // 获取会员卡列表
+    // 获取下载模版
     getTplDownload() {
+      this.downLoadTplExist = false;
       api.getTplDownload().then(res => {
         console.log('getTplDownload res :>> ', res);
+        this.downLoadTplExist = true;
         this.downLoadTplUrl = res.data;
       });
     },
@@ -476,6 +488,7 @@ export default {
   },
   watch: {
     condition: function(newVal, oldVal) {
+      console.log('condition newVal :>> ', newVal);
       switch (newVal) {
         case 1:
           this.issueForm = couponsCenterList;
