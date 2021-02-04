@@ -54,9 +54,9 @@
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
             <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
             <a @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
-            <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
+            <!-- <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
               启用
-            </a>
+            </a> -->
             <a @click="couponOnOrOff(rowData, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
