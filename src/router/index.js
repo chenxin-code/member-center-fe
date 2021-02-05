@@ -324,7 +324,9 @@ const routes = [
         meta: {
           menu: '/couponsRelease',
           authKeys: [''],
-          bread: [{ path: '/couponsRelease', name: '卡券派发' }]
+          bread: [{ path: '/couponsRelease', name: '卡券派发' }],
+          isUseCache: false,
+          keepAlive: true
         },
         component: CouponsRelease
       },
