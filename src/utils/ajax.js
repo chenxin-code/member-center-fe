@@ -17,7 +17,8 @@ const JSONBigString = JSONbig({ storeAsString: true });
 export const HTTP = axios.create({
   baseURL: BASEURL,
   withCredentials: true,
-  timeout: 20000,
+  // timeout: 20000,
+  timeout: 100000,
   headers: {
     // post: {
     //   'Content-Type': 'application/json'
