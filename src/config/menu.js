@@ -97,5 +97,23 @@ export default [
     menuKey: 'couponsCancel',
     group: 'hyzx',
     path: '/couponsCancel'
-  }
+  },
+  {
+    title: '活动主题管理',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/conpon_manage_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    menuKey: 'activityTheme',
+    group: 'hyzx',
+    path: '/activityTheme'
+  },
+  {
+    title: '活动参与数据',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/conpon_manage_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    menuKey: 'activityJoin',
+    group: 'hyzx',
+    path: '/activityJoin'
+  },
 ];
