@@ -103,17 +103,17 @@ export default [
     authKeys: [''],
     icon: require('@/assets/img/menu/conpon_manage_show.png'),
     iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
-    menuKey: 'activityTheme',
+    menuKey: 'actTheme',
     group: 'hyzx',
-    path: '/activityTheme'
+    path: '/actTheme'
   },
   {
     title: '活动参与数据',
     authKeys: [''],
     icon: require('@/assets/img/menu/conpon_manage_show.png'),
     iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
-    menuKey: 'activityJoin',
+    menuKey: 'actJoin',
     group: 'hyzx',
-    path: '/activityJoin'
+    path: '/actJoin'
   },
 ];

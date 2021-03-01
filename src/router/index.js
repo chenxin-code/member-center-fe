@@ -373,30 +373,44 @@ const routes = [
         component: CouponsReleaseStatus
       },
       {
-        path: '/activityTheme',
-        name: 'activityTheme',
-        menuKey: 'activityTheme',
+        path: '/actTheme',
+        name: 'actTheme',
+        menuKey: 'actTheme',
         meta: {
-          menu: '/activityTheme',
+          menu: '/actTheme',
           authKeys: [''],
-          bread: [{ path: '/activityTheme', name: '活动主题管理' }],
+          bread: [{ path: '/actTheme', name: '活动主题管理' }],
           isUseCache: false,
           keepAlive: true
         },
-        component: () => import('@/pages/activityTheme/list')
+        component: () => import('@/pages/actTheme/list')
       },
       {
-        path: '/activityJoin',
-        name: 'activityJoin',
-        menuKey: 'activityJoin',
+        path: '/actTheme/new',
+        name: 'actThemeNew',
+        menuKey: 'actTheme',
         meta: {
-          menu: '/activityJoin',
+          menu: '/actTheme',
           authKeys: [''],
-          bread: [{ path: '/activityJoin', name: '活动参与数据' }],
+          bread: [
+            { path: '/actTheme', name: '活动主题管理' },
+            { path: '/actTheme/new', name: '新建活动主题' }
+          ]
+        },
+        component: () => import('@/pages/actTheme/new')
+      },
+      {
+        path: '/actJoin',
+        name: 'actJoin',
+        menuKey: 'actJoin',
+        meta: {
+          menu: '/actJoin',
+          authKeys: [''],
+          bread: [{ path: '/actJoin', name: '活动参与数据' }],
           isUseCache: false,
           keepAlive: true
         },
-        component: () => import('@/pages/activityJoin/list')
+        component: () => import('@/pages/actJoin/list')
       },
     ]
   },
