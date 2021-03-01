@@ -51,7 +51,7 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="$router.push({path: '', query: {id: rowData.id}})" style="padding-right: 10px;">编辑</a>
+            <a @click="$router.push({path: '/actTheme/edit', query: {id: rowData.id}})" style="padding-right: 10px;">编辑</a>
             <a @click="goDel(rowData.id)" style="padding-right: 10px;">删除</a>
             <a @click="">启用</a>
             <a @click="">禁用</a>
@@ -140,18 +140,21 @@ export default {
         },
         {
           title: '创建用户',
+          dataIndex: 'c',
           key: 'c',
           scopedSlots: { customRender: 'c' },
           width: 150
         },
         {
           title: '备注',
+          dataIndex: 'd',
           key: 'd',
           scopedSlots: { customRender: 'd' },
           width: 150
         },
         {
           title: '创建时间',
+          dataIndex: 'e',
           key: 'e',
           scopedSlots: { customRender: 'e' },
           width: 150
@@ -204,8 +207,6 @@ export default {
       this.pageSize = size;
       this.getList();
     },
-
-    //获取积分列表
     getList(isQuery = false) {
       if (isQuery) {
         this.current = 1;
@@ -217,7 +218,7 @@ export default {
             a: '双十一活动',
             b: '启用',
             c: '王川 13900000001',
-            d: '',
+            d: '...............',
             e: '2020-12-10 22:00:00'
           }
         ]

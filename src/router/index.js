@@ -400,6 +400,20 @@ const routes = [
         component: () => import('@/pages/actTheme/new')
       },
       {
+        path: '/actTheme/edit',
+        name: 'actThemeEdit',
+        menuKey: 'actTheme',
+        meta: {
+          menu: '/actTheme',
+          authKeys: [''],
+          bread: [
+            { path: '/actTheme', name: '活动主题管理' },
+            { path: '/actTheme/edit', name: '编辑活动主题' }
+          ]
+        },
+        component: () => import('@/pages/actTheme/new')
+      },
+      {
         path: '/actJoin',
         name: 'actJoin',
         menuKey: 'actJoin',

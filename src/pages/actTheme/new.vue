@@ -49,7 +49,6 @@
                     placeholder="请输入备注信息"
                     allow-clear
                   />
-                  <!-- <div>couponSubhead: {{ couponSubhead }}</div> -->
                 </a-form-item>
                 <a-form-item label="活动主题状态">
                   <a-switch checked-children="启用" un-checked-children="禁用" default-checked />
