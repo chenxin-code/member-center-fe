@@ -12,7 +12,7 @@
       <div class="detail-main-items" v-for="item in dataList" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
         <span class="detail-main-items-value" v-if="item.name === 'result'">
-          奖励成长值&nbsp;<a-button size="small" @click="bangdouHandle()">{{awardGrow}}</a-button>&nbsp;, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整）
+          奖励成长值&nbsp;<a-button type="primary" size="small" @click="bangdouHandle()">{{awardGrow}}</a-button>&nbsp;, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整）
         </span>
         <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '' }}</span>
       </div>
