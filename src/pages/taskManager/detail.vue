@@ -11,9 +11,44 @@
       </p>
       <div class="detail-main-items" v-for="item in dataList" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
-        <span class="detail-main-items-value">{{ dataObj[item.name] || '' }}</span>
+        <span class="detail-main-items-value" v-if="item.name === 'result'">
+          奖励成长值&nbsp;<a-button size="small" @click="bangdouHandle()">{{awardGrow}}</a-button>&nbsp;, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整）
+        </span>
+        <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '' }}</span>
       </div>
     </div>
+    <!-- modal对话框 -->
+    <a-modal
+      :centered="true"
+      v-model="visibleBangdou"
+      title="标题"
+      :maskClosable="false"
+      on-ok="handleOk">
+      <template slot="footer">
+        <a-button :disabled="modalLoading" key="back" @click="visibleBangdou = false">取消</a-button>
+        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handleOk">
+          确定
+        </a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item>
+          <div style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center">
+            <div style="width: 67px;margin-right: 10px;display: flex;flex-direction: row;justify-content: flex-end;align-items: center">
+              <span style="color: red;">*</span>
+              <span>邦豆数量</span>
+            </div>
+            <a-input-number
+              v-model="bangdouAddVal"
+              :min="1"
+              defaultValue="1"
+              style="width: 267px"
+              :style="bangdouAddValNull ? bangdouAddNullStyle1 : ''"
+              placeholder="请输入邦豆数量"
+            />
+          </div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -66,7 +101,17 @@ export default {
           name: 'createTime'
         }
       ],
-      dataObj: {}
+      dataObj: {},
+      awardGrow: null,
+      awardIntegral: null,
+      visibleBangdou: false,
+      modalLoading: false,
+      bangdouAddNullStyle1: {
+        color: 'red',
+        borderColor: 'red'
+      },
+      bangdouAddValNull: false,
+      bangdouAddVal: 1,
     };
   },
   mounted() {
@@ -80,17 +125,52 @@ export default {
           { createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss') },
           { isPeriodic: res.data.isPeriodic === 0 ? '否' : '是' },
           { status: res.data.status === 0 ? '禁用' : '启用' },
-          {
-            result: `奖励成长值${res.data.awardGrow}, 奖励邦豆: ${Math.floor(res.data.awardIntegral / 100)}邦豆/${
-              res.data.awardIntegral
-            }元（向下取整）`
-          }
+          // {
+          //   result: `奖励成长值${res.data.awardGrow}, 奖励邦豆: ${Math.floor(res.data.awardIntegral / 100)}邦豆/${
+          //     res.data.awardIntegral
+          //   }元（向下取整）`
+          // }
         );
+        this.awardGrow = res.data.awardGrow;
+        this.awardIntegral = res.data.awardIntegral;
       });
     },
     goBack() {
       this.$router.push({ name: 'task-manager' });
-    }
+    },
+    handleOk() {
+      if (!this.bangdouAddVal) {
+        this.bangdouAddValNull = true;
+        return;
+      }
+      this.modalLoading = true;
+      setTimeout(() => {
+        this.visibleBangdou = false;
+        this.modalLoading = false;
+      },1000)
+    },
+    bangdouHandle() {
+      this.bangdouAddVal = 1; //充值帮豆
+      this.visibleBangdou = true; //显示对话框
+    },
+  },
+  watch: {
+    visibleBangdou: {
+      handler(newVal) {
+        if (!newVal) {
+          this.bangdouAddValNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    bangdouAddVal: {
+      handler(newVal) {
+        if (newVal) {
+          this.bangdouAddValNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
   }
 };
 </script>
