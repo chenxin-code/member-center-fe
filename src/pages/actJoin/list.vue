@@ -116,7 +116,7 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '已推送', id: '0' },
-            { name: '定时推送', id: 1 }
+            { name: '定时推送', id: '1' }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -129,7 +129,7 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '已推送', id: '0' },
-            { name: '定时推送', id: 1 }
+            { name: '定时推送', id: '1' }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }

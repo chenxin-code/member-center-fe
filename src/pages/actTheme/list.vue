@@ -54,7 +54,7 @@
             <a @click="$router.push({path: '/actTheme/edit', query: {id: rowData.id}})" style="padding-right: 10px;">编辑</a>
             <a @click="goDel(rowData.id)" style="padding-right: 10px;">删除</a>
             <a @click="">启用</a>
-            <a @click="">禁用</a>
+            <!--<a @click="">禁用</a>-->
           </div>
         </template>
       </a-table>
@@ -99,8 +99,8 @@ export default {
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '已推送', id: '4014' },
-            { name: '定时推送', id: '4005' }
+            { name: '已推送', id: '' },
+            { name: '定时推送', id: '' }
           ],
           labelCol: { span: 9 },
           wrapperCol: { span: 15 }
@@ -164,7 +164,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
           fixed: 'right',
-          width: 150
+          width: 200
         }
       ],
       tableData: [],
