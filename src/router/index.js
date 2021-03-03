@@ -511,20 +511,19 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  console.log('router beforeEach 全局守卫执行了: ', to.path);
   console.log('beforeEach to :>> ', to);
-  if (to.name !== 'dashboard') {
-    await api
-      .getLoginUrl()
-      .finally(() => {
-        store.commit('menu/changeMenuStatus', false); //解禁menu
-      })
-      .then(res => {
-        console.log('beforeEach getLoginUrl res :>> ', res);
-        if (res.code === 200) {
-          window.localStorage.setItem('SD_LOGIN_URL', res.data);
-        }
-      });
-  }
+  await api
+    .getLoginUrl()
+    .finally(() => {
+      store.commit('menu/changeMenuStatus', false); //解禁menu
+    })
+    .then(res => {
+      console.log('beforeEach getLoginUrl res :>> ', res);
+      if (res.code === 200) {
+        window.localStorage.setItem('SD_LOGIN_URL', res.data);
+      }
+    });
 
   paramsStorage.clearPropsStorage(to, from);
 

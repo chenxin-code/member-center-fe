@@ -270,7 +270,7 @@ export default {
   },
   methods: {
     async checkLoginUser() {
-      await this.getLoginUrl();
+      // await this.getLoginUrl();
       await this.getUserInfo();
       this.getQuarterNewNum();
       this.getTodayNewNum();
@@ -279,15 +279,14 @@ export default {
       this.getMemberTongJiDate(this.dateType);
     },
 
-    getLoginUrl() {
-      return api.getLoginUrl().then(res => {
-        console.log('getLoginUrl res :>> ', res);
-        if (res.code === 200) {
-          window.localStorage.setItem('SD_LOGIN_URL', res.data);
-          this.$store.commit('menu/changeMenuStatus', false); //解禁menu
-        }
-      });
-    },
+    // getLoginUrl() {
+    //   return api.getLoginUrl().then(res => {
+    //     if (res.code === 200) {
+    //       window.localStorage.setItem('SD_LOGIN_URL', res.data);
+    //       this.$store.commit('menu/changeMenuStatus', false); //解禁menu
+    //     }
+    //   });
+    // },
     getUserInfo() {
       const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
 
