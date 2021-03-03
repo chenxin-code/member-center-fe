@@ -412,7 +412,7 @@
                     @change="costChange"
                     v-decorator="[
                       'cost',
-                       {
+                      {
                         initialValue: cost,
                         rules: [{ validator: this.checkCostFormat, trigger: ['blur'] }]
                       }
@@ -1025,6 +1025,10 @@ export default {
 
         ::v-deep .ant-form .ant-input-number {
           width: 100%;
+        }
+
+        ::v-deep .ant-calendar-picker {
+          width: 380px !important;
         }
 
         .common-submit-cancle {
