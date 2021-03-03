@@ -108,6 +108,15 @@ export default [
     path: '/actTheme'
   },
   {
+    title: '活动管理',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/conpon_manage_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    menuKey: 'actManage',
+    group: 'hyzx',
+    path: '/actManage'
+  },
+  {
     title: '活动参与数据',
     authKeys: [''],
     icon: require('@/assets/img/menu/conpon_manage_show.png'),

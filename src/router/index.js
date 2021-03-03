@@ -117,6 +117,20 @@ const routes = [
         component: CouponsManage
       },
       {
+        path: '/couponsManage/new',
+        name: 'couponsManageNew',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/new', name: '卡券创建' }
+          ]
+        },
+        component: CouponsManageNew
+      },
+      {
         path: '/couponsManage/edit',
         name: 'couponsManageEdit',
         menuKey: 'couponsManage',
@@ -145,20 +159,6 @@ const routes = [
         component: CouponsManageCopy
       },
       {
-        path: '/couponsManage/new',
-        name: 'couponsManageNew',
-        menuKey: 'couponsManage',
-        meta: {
-          menu: '/couponsManage',
-          authKeys: [''],
-          bread: [
-            { path: '/couponsManage', name: '卡券管理' },
-            { path: '/couponsManage/new', name: '卡券创建' }
-          ]
-        },
-        component: CouponsManageNew
-      },
-      {
         path: '/couponsManage/detail',
         name: 'couponsManageDetail',
         menuKey: 'couponsManage',
@@ -172,6 +172,63 @@ const routes = [
         },
         component: CouponsManageDetail
       },
+      //// 活动管理 start
+      {
+        path: '/actManage',
+        name: 'actManage',
+        menuKey: 'actManage',
+        meta: {
+          menu: '/actManage',
+          authKeys: [''],
+          bread: [{ path: '/actManage', name: '活动管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/actManage/list')
+      },
+      {
+        path: '/actManage/new',
+        name: 'actManageNew',
+        menuKey: 'actManage',
+        meta: {
+          menu: '/actManage',
+          authKeys: [''],
+          bread: [
+            { path: '/actManage', name: '活动管理' },
+            { path: '/actManage/new', name: '新建活动' }
+          ]
+        },
+        component: () => import('@/pages/actManage/new')
+      },
+      {
+        path: '/actManage/edit',
+        name: 'actManageEdit',
+        menuKey: 'actManage',
+        meta: {
+          menu: '/actManage',
+          authKeys: [''],
+          bread: [
+            { path: '/actManage', name: '活动管理' },
+            { path: '/actManage/edit', name: '编辑活动' }
+          ]
+        },
+        component: () => import('@/pages/actManage/edit')
+      },
+      {
+        path: '/actManage/detail',
+        name: 'actManageDetail',
+        menuKey: 'actManage',
+        meta: {
+          menu: '/actManage',
+          authKeys: [''],
+          bread: [
+            { path: '/actManage', name: '活动管理' },
+            { path: '/actManage/detail', name: '查看活动' }
+          ]
+        },
+        component: () => import('@/pages/actManage/detail')
+      },
+      //// 活动管理 end
       {
         path: '/couponsClaim',
         name: 'couponsClaim',
@@ -425,7 +482,7 @@ const routes = [
           keepAlive: true
         },
         component: () => import('@/pages/actJoin/list')
-      },
+      }
     ]
   },
   {
