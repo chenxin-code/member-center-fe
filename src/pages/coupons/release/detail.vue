@@ -29,7 +29,7 @@
           }}
         </span>
         <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">
-          相对有效期，{{ dataObj.offsetDays }}天, 领取后{{ dataObj.valiDays }}天生效
+          相对有效期，{{ dataObj.valiDays }}天, 领取后{{ dataObj.offsetDays }}天生效
         </span>
       </div>
     </div>
