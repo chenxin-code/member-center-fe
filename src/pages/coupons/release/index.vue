@@ -159,7 +159,7 @@ export default {
               ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss') +
                 '-' +
                 moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
-              : `相对有效期, ${record.offsetDays}天, 领取后${record.valiDays}天生效`
+              : `相对有效期, ${record.valiDays}天, 领取后${record.offsetDays}天生效`
         },
         {
           title: '派发类型',
