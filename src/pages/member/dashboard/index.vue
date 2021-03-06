@@ -280,13 +280,24 @@ export default {
     },
 
     getLoginUrl() {
-      return api.getLoginUrl().then(res => {
-        console.log('getLoginUrl res :>> ', res);
-        if (res.code === 200) {
-          window.localStorage.setItem('SD_LOGIN_URL', res.data);
-          this.$store.commit('menu/changeMenuStatus', false); //解禁menu
-        }
-      });
+      // this.$store.commit('menu/changeMenuStatus', true); //禁止menu
+      return api
+        .getLoginUrl()
+        .finally(() => {
+          //测试异步用
+          // setTimeout(() => {
+          //   console.log('beforeEach store :>> ', this.$store);
+          //   console.log('beforeEach setTimeout...');
+          //   this.$store.commit('menu/changeMenuStatus', false); //解禁menu
+          // }, 3000);
+          // this.$store.commit('menu/changeMenuStatus', false); //解禁menu
+        })
+        .then(res => {
+          console.log('beforeEach getLoginUrl res :>> ', res);
+          if (res.code === 200) {
+            window.localStorage.setItem('SD_LOGIN_URL', res.data);
+          }
+        });
     },
     getUserInfo() {
       const tokenStr = 'Bearer ' + window.localStorage.getItem('SD_ACCESS_TOKEN');
