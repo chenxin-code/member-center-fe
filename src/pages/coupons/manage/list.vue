@@ -560,7 +560,7 @@ export default {
     });
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'integralManageDetail') {
+    if (from.name === 'couponsManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -568,7 +568,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'integralManageDetail') {
+    if (to.name === 'couponsManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
