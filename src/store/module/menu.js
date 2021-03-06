@@ -2,7 +2,7 @@ const menu = {
   namespaced: true,
   state: {
     //存储定义的变量
-    menuStatus: true //禁用menu为真
+    menuStatus: false //是否禁用menu
   },
   mutations: {
     //改变menu状态

@@ -513,7 +513,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   console.log('router beforeEach 全局守卫执行了: ', to.path);
   console.log('beforeEach to :>> ', to);
-  store.commit('menu/changeMenuStatus', true); //禁止menu
+  // store.commit('menu/changeMenuStatus', true); //禁止menu
   await api
     .getLoginUrl()
     .finally(() => {
@@ -523,7 +523,8 @@ router.beforeEach(async (to, from, next) => {
       //   console.log('beforeEach setTimeout...');
       //   store.commit('menu/changeMenuStatus', false); //解禁menu
       // }, 3000);
-      store.commit('menu/changeMenuStatus', false); //解禁menu
+      console.log('beforeEach setTimeout...');
+      // store.commit('menu/changeMenuStatus', false); //解禁menu
     })
     .then(res => {
       console.log('beforeEach getLoginUrl res :>> ', res);

@@ -280,7 +280,7 @@ export default {
     },
 
     getLoginUrl() {
-      this.$store.commit('menu/changeMenuStatus', true); //禁止menu
+      // this.$store.commit('menu/changeMenuStatus', true); //禁止menu
       return api
         .getLoginUrl()
         .finally(() => {
@@ -290,7 +290,7 @@ export default {
           //   console.log('beforeEach setTimeout...');
           //   this.$store.commit('menu/changeMenuStatus', false); //解禁menu
           // }, 3000);
-          this.$store.commit('menu/changeMenuStatus', false); //解禁menu
+          // this.$store.commit('menu/changeMenuStatus', false); //解禁menu
         })
         .then(res => {
           console.log('beforeEach getLoginUrl res :>> ', res);
