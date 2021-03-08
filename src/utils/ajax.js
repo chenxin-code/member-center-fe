@@ -216,22 +216,22 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
             NProgress.done();
             const res = resp.data;
             if (res.code === 0) {
-              resolve(res);
+              return resolve(res);
             } else {
               if (res.code === 401) {
                 if (isRefresh) {
-                  message.error(res.message);
-                  resolve(res);
+                  // message.error(res.message);
+                  return resolve(res);
                 } else {
                   message.error(res.message);
                   refreshToken(); //刷新token
-                  resolve(res);
+                  return resolve(res);
                 }
               } else if (res.code !== 200) {
                 message.error(res.message);
-                resolve(res);
+                return resolve(res);
               } else {
-                resolve(res);
+                return resolve(res);
               }
             }
           },
