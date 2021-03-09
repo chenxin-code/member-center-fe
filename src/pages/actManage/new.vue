@@ -6,20 +6,21 @@
     </div>
     <div class="coupons-main">
       <a-row style="height: 100%">
-        <!-- 活动基础信息 -->
-        <div class="coupons-common coupons-base">
-          <div class="common-title">
-            <div class="common-title-content">活动基础信息</div>
-          </div>
+        <div class="coupons-common">
           <a-row class="common-row">
             <a-col :span="24">
               <a-form
+                class="common-form"
                 :form="conponForm"
                 :label-col="{ span: 3 }"
                 :wrapper-col="{ span: 12 }"
                 style="height: 100%; overflow: auto"
                 autoComplete="off"
               >
+                <!-- ###### 活动基础信息 ###### -->
+                <div class="common-title">
+                  <div class="common-title-content">活动基础信息</div>
+                </div>
                 <!-- 卡券平台 -->
                 <a-form-item label="活动主题名称">
                   <a-select
@@ -146,24 +147,11 @@
                   </a-select>
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
-              </a-form>
-            </a-col>
-          </a-row>
-        </div>
-        <!-- 用户参数 -->
-        <div class="coupons-common coupons-award">
-          <div class="common-title">
-            <div class="common-title-content">用户参数</div>
-          </div>
-          <a-row class="common-row">
-            <a-col :span="24">
-              <a-form
-                :form="conponForm"
-                :label-col="{ span: 3 }"
-                :wrapper-col="{ span: 12 }"
-                style="height: 100%; overflow: auto"
-                autoComplete="off"
-              >
+
+                <!-- ###### 用户参数 ###### -->
+                <div class="common-title">
+                  <div class="common-title-content">用户参数</div>
+                </div>
                 <!-- 会员权益类型 -->
                 <a-form-item label="会员权益类型">
                   <a-select
@@ -180,6 +168,58 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
+                  <!-- <div>couponType: {{ couponType }}</div> -->
+                </a-form-item>
+
+                <!-- 会员来源 -->
+                <a-form-item>
+                  <a-radio-group v-model="radioValue">
+                    <a-radio :style="radioStyle" :value="1">
+                      会员来源{{ radioValue }}
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        style="padding-left:40px;"
+                        v-model="checkboxValue"
+                        name="checkboxgroup"
+                        :options="plainOptions"
+                      />
+                    </a-radio>
+                    <div v-if="radioValue === 1">
+                      会员等级
+                      <a-select
+                        v-decorator="[
+                          'couponBusinessType',
+                          {
+                            initialValue: couponBusinessType,
+                            rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect"
+                      >
+                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                          {{ item.name }}
+                        </a-select-option>
+                      </a-select>
+                      <!-- <a-select
+                        v-decorator="[
+                          'couponBusinessType',
+                          {
+                            initialValue: couponBusinessType,
+                            rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect"
+                      >
+                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                          {{ item.name }}
+                        </a-select-option>
+                      </a-select> -->
+                    </div>
+                    <a-radio :style="radioStyle" :value="2">上传指定会员{{ radioValue }}</a-radio>
+                    <div v-if="radioValue === 2">
+                      上传指定会员
+                    </div>
+                  </a-radio-group>
                   <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
               </a-form>
@@ -222,6 +262,16 @@ export default {
   components: {},
   data() {
     return {
+      //////////新建活动///////////
+      plainOptions: ['时代+', '邻里PRO'],
+      checkboxValue: [],
+      radioValue: 1,
+      radioStyle: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px'
+      },
+      //////////新建活动///////////
       submitLoading: false,
       saveLoading: false,
       //////////上传图片///////////
@@ -236,9 +286,7 @@ export default {
       couponTitle: '',
       couponSubhead: '',
       couponType: '1',
-      couponTypes: [
-        { name: '会员卡券', code: '1' }
-      ],
+      couponTypes: [{ name: '会员卡券', code: '1' }],
 
       voucherAmount: '', //代金券抵扣金额
       satisfyAmount: '', //	折扣券/满减券 满多少金额可用
@@ -733,17 +781,8 @@ export default {
     overflow-y: auto;
     .coupons-common {
       background-color: #fff;
-      .common-title {
-        color: #666;
-        padding: 20px 0 0 30px;
-        .common-title-content {
-          font-size: 16px;
-          height: 16px;
-          line-height: 16px;
-          padding-left: 8px;
-          border-left: 3px solid rgba(33, 33, 206, 0.5);
-        }
-      }
+      padding-bottom: 50px;
+
       .common-row {
         padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
@@ -758,6 +797,24 @@ export default {
 
         ::v-deep .ant-calendar-picker {
           width: 380px !important;
+        }
+
+        .common-form {
+          .common-title {
+            color: #666;
+            padding: 30px 0 20px 0;
+            .common-title-content {
+              font-size: 16px;
+              height: 16px;
+              line-height: 16px;
+              padding-left: 8px;
+              border-left: 3px solid rgba(33, 33, 206, 0.5);
+            }
+          }
+
+          .common-title:first-child {
+            padding: 10px 0 20px 0;
+          }
         }
 
         .common-submit-cancle {
@@ -792,10 +849,6 @@ export default {
       .common-row:last-child {
         border: none;
       }
-    }
-
-    .coupons-award {
-      padding-bottom: 50px;
     }
   }
 }
