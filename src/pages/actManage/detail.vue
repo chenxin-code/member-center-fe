@@ -46,7 +46,7 @@
               <!-- 备注 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
-                  <div class="column-item">
+                  <div class="column-item column-memo">
                     <div class="column-right">备注:</div>
                     <div class="column-left">
                       <a-textarea
@@ -505,6 +505,10 @@ export default {
             }
             .column-item:last-child {
               padding-bottom: 0;
+            }
+
+            .column-memo {
+              align-items: flex-start;
             }
           }
         }
