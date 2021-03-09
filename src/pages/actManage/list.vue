@@ -52,11 +52,8 @@
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a style="padding-right: 5px;" @click="goDetail(rowData.id)">查看</a>
-            <a style="padding-right: 5px;" @click="couponOnOrOff(rowData, 1)" v-show="rowData.couponStatus === 0">
-              启用
-            </a>
-            <a style="padding-right: 5px;" @click="couponOnOrOff(rowData, 0)" v-show="rowData.couponStatus === 1">
-              停用
+            <a style="padding-right: 5px;" @click="couponOnOrOff(rowData, 1)">
+              {{ Math.random() > 0.5 ? '启用' : '停用' }}
             </a>
             <a @click="goEdit(rowData.id)">编辑</a>
             <a style="padding-right: 5px;" @click="couponDel(rowData, 0)">
@@ -92,17 +89,17 @@ export default {
     return {
       formList: [
         {
-          label: '活动id',
+          label: '活动ID',
           type: 'input',
-          name: 'couponType',
+          name: 'actId',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
         {
-          label: '活动标题',
+          label: '活动主题',
           type: 'input',
-          name: 'couponTitle',
+          name: 'actTheme',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -110,7 +107,7 @@ export default {
         {
           label: '活动名称',
           type: 'input',
-          name: 'couponTitle',
+          name: 'actName',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -124,19 +121,19 @@ export default {
           wrapperCol: { span: 24 }
         },
         {
-          label: '卡券业务类型',
+          label: '活动类型',
           type: 'select',
-          name: 'couponBusinessType',
+          name: 'actType',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '物业费', id: '4014' },
-            { name: '购物券', id: '4005' }
+            { name: '已推送', id: '1' },
+            { name: '定时推送', id: '2' }
           ],
-          labelCol: { span: 9 },
-          wrapperCol: { span: 15 }
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
-        // 卡券状态 0：禁用; 1：启用; 2：逻辑删除; 3 临时保存；
+        // 活动状态 '0'：禁用; '1'：启用;
         {
           label: '卡券状态',
           type: 'select',
@@ -145,8 +142,7 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '禁用', id: '0' },
-            { name: '启用', id: 1 },
-            { name: '保存', id: 3 }
+            { name: '启用', id: '1' }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -172,13 +168,13 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '卡券id',
+          title: '活动ID',
           dataIndex: 'id',
           key: 'id',
           width: 150
         },
         {
-          title: '卡券标题',
+          title: '活动标题',
           dataIndex: 'couponTitle',
           key: 'couponTitle',
           width: 150
@@ -190,32 +186,32 @@ export default {
         //   width: 150
         // },
         {
-          title: '卡券类型',
+          title: '活动类型',
           key: 'couponTypeSlot',
           scopedSlots: { customRender: 'couponTypeSlot' },
           width: 150
         },
         {
-          title: '卡券业务类型',
+          title: '活动业务类型',
           key: 'activitySlot',
           scopedSlots: { customRender: 'activitySlot' },
           width: 150
         },
         {
-          title: '卡券面值金额',
+          title: '活动面值金额',
           // dataIndex: 'faceAmount',
           key: 'faceAmountSlot',
           scopedSlots: { customRender: 'faceAmountSlot' },
           width: 150
         },
         {
-          title: '卡券有效期',
+          title: '活动有效期',
           scopedSlots: { customRender: 'validitySlot' },
           key: 'validitySlot',
           width: 450
         },
         {
-          title: '卡券平台',
+          title: '活动平台',
           key: 'sourceSlot',
           scopedSlots: { customRender: 'sourceSlot' },
           width: 150
@@ -511,18 +507,18 @@ export default {
         let couponTitle = ''; //卡券标题
         let couponBusinessType = ''; //卡券业务类型
         let couponStatus = ''; //卡券状态
-        if (this.$refs.memberForm.getFieldsValue().couponType) {
-          couponType = this.$refs.memberForm.getFieldsValue().couponType;
-        }
-        if (this.$refs.memberForm.getFieldsValue().couponTitle) {
-          couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
-        }
-        if (this.$refs.memberForm.getFieldsValue().couponBusinessType) {
-          couponBusinessType = this.$refs.memberForm.getFieldsValue().couponBusinessType;
-        }
-        if (this.$refs.memberForm.getFieldsValue().couponStatus) {
-          couponStatus = this.$refs.memberForm.getFieldsValue().couponStatus;
-        }
+        // if (this.$refs.memberForm.getFieldsValue().couponType) {
+        //   couponType = this.$refs.memberForm.getFieldsValue().couponType;
+        // }
+        // if (this.$refs.memberForm.getFieldsValue().couponTitle) {
+        //   couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
+        // }
+        // if (this.$refs.memberForm.getFieldsValue().couponBusinessType) {
+        //   couponBusinessType = this.$refs.memberForm.getFieldsValue().couponBusinessType;
+        // }
+        // if (this.$refs.memberForm.getFieldsValue().couponStatus) {
+        //   couponStatus = this.$refs.memberForm.getFieldsValue().couponStatus;
+        // }
 
         let jointimeStart = '';
         let jointimeEnd = '';
@@ -584,12 +580,12 @@ export default {
     this.$route.meta.isUseCache = false;
 
     this.$nextTick(() => {
-      // this.$refs.memberForm.setFieldsValue({
-      //   couponType: this.formList[0].selectOptions[0].id
-      // });
       this.$refs.memberForm.setFieldsValue({
-        couponBusinessType: this.formList[4].selectOptions[0].id
+        actType: this.formList[4].selectOptions[0].id
       });
+      // this.$refs.memberForm.setFieldsValue({
+      //   couponBusinessType: this.formList[4].selectOptions[0].id
+      // });
       this.$refs.memberForm.setFieldsValue({
         couponStatus: this.formList[5].selectOptions[0].id
       });
@@ -630,7 +626,7 @@ export default {
     }
 
     ::v-deep .ant-form > .ant-row > .ant-col {
-      width: 25% !important;
+      width: 27.5% !important;
     }
     ::v-deep .ant-form > .ant-row > .ant-col:nth-child(4) {
       width: 10% !important;
@@ -645,13 +641,13 @@ export default {
     }
 
     ::v-deep .ant-form > .ant-row > .ant-col:nth-child(3) {
-      width: 40% !important;
+      width: 35% !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
 
     ::v-deep .ant-form > .ant-row > .ant-col:nth-child(7) {
-      width: 40% !important;
+      width: 35% !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
