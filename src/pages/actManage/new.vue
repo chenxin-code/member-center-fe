@@ -1,7 +1,7 @@
 <template>
   <div id="coupons-detail">
     <div class="content-header">
-      卡券创建
+      新建活动
       <span class="fallback" @click="FALLBACK" style="cursor: pointer">返回</span>
     </div>
     <div class="coupons-main">

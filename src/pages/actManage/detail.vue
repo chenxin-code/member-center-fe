@@ -168,7 +168,10 @@
                   <div class="column-item">
                     <div class="column-right">指定会员:</div>
                     <div class="column-left">
-                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息</a>
+                      <a-button @click="downloadFile">
+                        <a-icon type="download" />
+                        <a ref="downloadFileDom" v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息</a>
+                      </a-button>
                     </div>
                   </div>
                 </div>
@@ -329,6 +332,10 @@ export default {
   },
   methods: {
     ...mapActions(['FALLBACK']),
+
+    downloadFile(event) {
+      this.$refs.downloadFileDom.click();
+    },
     // 获取下载模版
     getTplDownload() {
       this.downLoadTplExist = false;
