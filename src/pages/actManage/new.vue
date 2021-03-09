@@ -455,10 +455,9 @@
                   >
                     保存
                   </a-button>
-
-                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit(1, 'submitLoading')">
+                  <!-- <a-button :loading="submitLoading" type="primary" @click="handleSubmit(1, 'submitLoading')">
                     提交
-                  </a-button>
+                  </a-button> -->
                 </div>
                 <div class="common-btn common-cancle">
                   <a-button type="primary" @click="handleCancle">取消</a-button>
