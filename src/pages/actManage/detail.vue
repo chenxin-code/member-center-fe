@@ -13,122 +13,41 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <!-- 活动标题 -->
+              <!-- 活动主题名称 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动标题:</div>
+                    <div class="column-right">活动主题名称:</div>
                     <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 活动副标题 -->
+              <!-- 活动名称 -->
               <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动副标题:</div>
+                    <div class="column-right">活动名称:</div>
                     <div class="column-left">{{ couponDetails.couponSubhead || '' }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 活动类型/代金券金额  -->
+              <!-- 活动有效期 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动类型:</div>
-                    <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left" v-show="couponDetails.couponType === 10">
-                      {{ couponDetails.voucherAmount || '' }}元
-                    </div>
-                    <div class="column-left" v-show="couponDetails.couponType === 20">
-                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{ couponDetails.voucherAmount || '' }}元
-                    </div>
-                    <div class="column-left" v-show="couponDetails.couponType === 40">
-                      满{{ couponDetails.satisfyAmount || '' }}元{{
-                        couponDetails.discountRatio * 10 || ''
-                      }}折最高抵扣{{ couponDetails.discountMaxDeduction || '' }}元
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 有效期类型 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ validityTypeStr(couponDetails.validityType) }}</div>
-                  </div>
-
-                  <div class="column-item" v-show="couponDetails.validityType === 1">
-                    <div class="column-right">选择日期:</div>
+                    <div class="column-right">活动有效期:</div>
                     <div class="column-left">
-                      {{ momentStrHms(couponDetails.validityStartTime) }} ~
-                      {{ momentStrHms(couponDetails.validityEndTime) }}
-                    </div>
-                  </div>
-                  <div class="column-item" v-show="couponDetails.validityType === 3">
-                    <div class="column-right">有效期:</div>
-                    <div class="column-left">
-                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{
-                        couponDetails.takeEffectDayNums || ''
-                      }}天生效
+                      {{ momentStrHms(Date.now() - 1000) }} ~
+                      {{ momentStrHms(Date.now()) }}
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- 活动来源 -->
+              <!-- 备注 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动来源:</div>
-                    <div class="column-left">{{ sourceStr(couponDetails.source) }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动业务类型 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动业务类型:</div>
-                    <div class="column-left">{{ couponBusinessTypeStr(couponDetails.couponBusinessType) }}</div>
-                  </div>
-                  <div v-if="couponDetails.couponBusinessType === '4005'">
-                    <div class="column-item">
-                      <div class="column-right">分类:</div>
-                      <div class="column-left">{{ classificationStr(couponDetails.classification) }}</div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">平台抵扣券类型:</div>
-                      <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">优惠券封面:</div>
-                      <div class="column-left">
-                        <div class="column-left-image">
-                          <img :src="couponDetails.couponImage.replace(/\s+/g, '')" width="85" height="85" alt="" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 成本价 -->
-              <div class="common-column-wrapp" v-show="couponDetails.cost">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">成本价:</div>
-                    <div class="column-left">{{ couponDetails.cost || '' }}元</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 使用说明 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">使用说明:</div>
+                    <div class="column-right">备注:</div>
                     <div class="column-left">
                       <a-textarea
                         v-model="couponDetailsMemo"
@@ -139,6 +58,15 @@
                         placeholder="请输入备注"
                       />
                     </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 活动类型 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">活动类型:</div>
+                    <div class="column-left">{{ couponBusinessTypeStr(couponDetails.couponBusinessType) }}</div>
                   </div>
                 </div>
               </div>
@@ -149,135 +77,98 @@
         <!-- 活动配置信息 -->
         <div class="act-common act-config">
           <div class="common-title">
-            <div class="common-title-content">活动基础信息</div>
+            <div class="common-title-content">活动配置信息</div>
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <!-- 活动标题 -->
+              <!-- 活动可参加次数 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动标题:</div>
+                    <div class="column-right">活动可参加次数:</div>
                     <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 活动副标题 -->
-              <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动副标题:</div>
-                    <div class="column-left">{{ couponDetails.couponSubhead || '' }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动类型/代金券金额  -->
+              <!-- 活动每天可参加次数 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动类型:</div>
-                    <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
-                  </div>
-                  <div class="column-item">
-                    <div class="column-right">代金券金额:</div>
-                    <div class="column-left" v-show="couponDetails.couponType === 10">
-                      {{ couponDetails.voucherAmount || '' }}元
-                    </div>
-                    <div class="column-left" v-show="couponDetails.couponType === 20">
-                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{ couponDetails.voucherAmount || '' }}元
-                    </div>
-                    <div class="column-left" v-show="couponDetails.couponType === 40">
-                      满{{ couponDetails.satisfyAmount || '' }}元{{
-                        couponDetails.discountRatio * 10 || ''
-                      }}折最高抵扣{{ couponDetails.discountMaxDeduction || '' }}元
-                    </div>
+                    <div class="column-right">活动每天可参加次数:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 有效期类型 -->
+              <!-- 活动每人可参加次数 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">有效期类型:</div>
-                    <div class="column-left">{{ validityTypeStr(couponDetails.validityType) }}</div>
-                  </div>
-
-                  <div class="column-item" v-show="couponDetails.validityType === 1">
-                    <div class="column-right">选择日期:</div>
-                    <div class="column-left">
-                      {{ momentStrHms(couponDetails.validityStartTime) }} ~
-                      {{ momentStrHms(couponDetails.validityEndTime) }}
-                    </div>
-                  </div>
-                  <div class="column-item" v-show="couponDetails.validityType === 3">
-                    <div class="column-right">有效期:</div>
-                    <div class="column-left">
-                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{
-                        couponDetails.takeEffectDayNums || ''
-                      }}天生效
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动来源 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动来源:</div>
+                    <div class="column-right">活动每人可参加次数:</div>
                     <div class="column-left">{{ sourceStr(couponDetails.source) }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 活动业务类型 -->
+              <!-- 活动每人每天可参加次数 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动业务类型:</div>
-                    <div class="column-left">{{ couponBusinessTypeStr(couponDetails.couponBusinessType) }}</div>
-                  </div>
-                  <div v-if="couponDetails.couponBusinessType === '4005'">
-                    <div class="column-item">
-                      <div class="column-right">分类:</div>
-                      <div class="column-left">{{ classificationStr(couponDetails.classification) }}</div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">平台抵扣券类型:</div>
-                      <div class="column-left">{{ couponTypeStr(couponDetails.couponType) }}</div>
-                    </div>
-                    <div class="column-item">
-                      <div class="column-right">优惠券封面:</div>
-                      <div class="column-left">
-                        <div class="column-left-image">
-                          <img :src="couponDetails.couponImage.replace(/\s+/g, '')" width="85" height="85" alt="" />
-                        </div>
-                      </div>
-                    </div>
+                    <div class="column-right">活动每人每天可参加次数:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
-              <!-- 成本价 -->
-              <div class="common-column-wrapp" v-show="couponDetails.cost">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">成本价:</div>
-                    <div class="column-left">{{ couponDetails.cost || '' }}元</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 使用说明 -->
+              <!-- 时间段包含 -->
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">使用说明:</div>
+                    <div class="column-right">时间段包含:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 每月活动日包含 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每月活动日包含:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 每周活动日包含 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每周活动日包含:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 会员权益类型 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">会员权益类型:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 会员卡及等级包含 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">会员卡及等级包含:</div>
+                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 指定会员 -->
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">指定会员:</div>
                     <div class="column-left">
-                      <a-textarea
-                        v-model="couponDetailsMemo"
-                        :disabled="true"
-                        :maxLength="50"
-                        :auto-size="{ minRows: 3, maxRows: 5 }"
-                        style="width: 267px;"
-                        placeholder="请输入备注"
-                      />
+                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息</a>
                     </div>
                   </div>
                 </div>
@@ -287,51 +178,36 @@
         </div>
 
         <!-- 活动奖品信息 -->
-        <div class="act-common act-record">
+        <div class="act-common act-award">
           <div class="common-title">
-            <div class="common-title-content">活动创建信息</div>
+            <div class="common-title-content">活动奖品信息</div>
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div
-                class="common-column-wrapp"
-                v-show="momentStrHms(couponDetails.createTime) && couponDetails.createOperator"
-              >
+              <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动创建:</div>
                     <div class="column-left">
                       <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
-                      <div>{{ couponDetails.createOperator || '' }}</div>
+                    </div>
+                  </div>
+                  <div v-if="Math.random() > 0.5">
+                    <div class="column-item">
+                      <div class="column-right">活动创建:</div>
+                      <div class="column-left">
+                        <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
+                      </div>
+                    </div>
+                    <div class="column-item">
+                      <div class="column-right">活动创建:</div>
+                      <div class="column-left">
+                        <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.onTime) && couponDetails.onOperator">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动启用:</div>
-                    <div class="column-left">
-                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.onTime) || '' }}</div>
-                      <div>{{ couponDetails.onOperator || '' }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- <div
-                class="common-column-wrapp"
-                v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator"
-              >
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动禁用:</div>
-                    <div class="column-left">
-                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.offTime) || '' }}</div>
-                      <div>{{ couponDetails.offOperator || '' }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
             </a-col>
           </a-row>
         </div>
@@ -351,6 +227,8 @@ export default {
   components: {},
   data() {
     return {
+      downLoadTplExist: false,
+      downLoadTplUrl: '',
       couponDetails: {}
     };
   },
@@ -451,6 +329,15 @@ export default {
   },
   methods: {
     ...mapActions(['FALLBACK']),
+    // 获取下载模版
+    getTplDownload() {
+      this.downLoadTplExist = false;
+      api.getTplDownload().then(res => {
+        console.log('getTplDownload res :>> ', res);
+        this.downLoadTplExist = true;
+        this.downLoadTplUrl = res.data;
+      });
+    },
     getCouponDetail() {
       let param = {};
       let apiString = '';
@@ -527,6 +414,7 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getTplDownload();
     this.getCouponDetail();
   },
   mounted() {},
@@ -560,7 +448,7 @@ export default {
         }
       }
       .common-row {
-        padding: 20px 16px 0;
+        padding: 30px 16px 0;
         border-bottom: 1px dashed #ccc;
         display: flex;
         flex-direction: row;
@@ -568,8 +456,7 @@ export default {
         align-items: center;
 
         .common-column-wrapp {
-          // padding-left: 80px;
-          margin-bottom: 30px;
+          margin-bottom: 20px;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -577,14 +464,14 @@ export default {
           .common-column {
             padding-right: 50px;
             .column-item {
-              padding-bottom: 10px;
+              padding-bottom: 20px;
               display: flex;
               flex-direction: row;
               justify-content: flex-start;
-              align-items: flex-start;
+              align-items: center;
 
               .column-right {
-                width: 132.25px;
+                width: 200px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;
@@ -634,7 +521,7 @@ export default {
 
     // .act-base {
     // }
-    .act-record {
+    .act-award {
       padding-bottom: 100px;
     }
   }
