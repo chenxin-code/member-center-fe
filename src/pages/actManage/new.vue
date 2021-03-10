@@ -170,7 +170,6 @@
                   </a-select>
                   <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
-
                 <!-- 会员来源+上传指定会员 -->
                 <a-radio-group v-model="radioValue" style="padding-left: 50px;">
                   <a-radio :style="radioStyle" :value="1">
@@ -255,9 +254,41 @@
                       <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
                     </p>
                   </div>
-                  <div>radioValue: {{ radioValue }}</div>
-                  <div>checkboxValue: {{ checkboxValue }}</div>
+                  <!-- <div>radioValue: {{ radioValue }}</div>
+                  <div>checkboxValue: {{ checkboxValue }}</div> -->
                 </a-radio-group>
+
+                <!-- ###### 时间参数 ###### -->
+                <div class="common-title">
+                  <div class="common-title-content">时间参数</div>
+                </div>
+                <a-form-item label="是否为周期性活动">
+                  <a-radio-group
+                    style="padding-left:26px;"
+                    @change="classificationChange"
+                    v-decorator="[
+                      'classification',
+                      {
+                        initialValue: classification,
+                        rules: [{ required: true, message: '是否为周期性活动不能为空' }]
+                      }
+                    ]"
+                  >
+                    <a-radio :value="1">
+                      不是
+                    </a-radio>
+                    <a-radio :value="2">
+                      是
+                    </a-radio>
+                  </a-radio-group>
+                  <!-- <div>classification:{{ classification }}</div> -->
+                </a-form-item>
+
+                <!-- ###### 奖品参数 ###### -->
+                <div class="common-title">
+                  <div class="common-title-content">奖品参数</div>
+                </div>
+
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -891,7 +922,7 @@ export default {
         .common-form {
           .common-title {
             color: #666;
-            padding: 30px 0 20px 0;
+            padding: 30px 0 20px 14px;
             .common-title-content {
               font-size: 16px;
               height: 16px;
@@ -902,7 +933,7 @@ export default {
           }
 
           .common-title:first-child {
-            padding: 10px 0 20px 0;
+            padding: 10px 0 20px 14px;
           }
         }
 
