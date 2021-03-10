@@ -136,7 +136,7 @@
                       'couponBusinessType',
                       {
                         initialValue: couponBusinessType,
-                        rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                        rules: [{ required: true, message: '活动类型不能为空' }]
                       }
                     ]"
                     @change="couponBusinessTypeSelect"
@@ -159,7 +159,7 @@
                       'couponType',
                       {
                         initialValue: couponType,
-                        rules: [{ required: true, message: '卡券类型不能为空' }]
+                        rules: [{ required: true, message: '会员权益类型不能为空' }]
                       }
                     ]"
                     @change="couponTypeSelect"
@@ -171,22 +171,26 @@
                   <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
 
-                <!-- 会员来源 -->
-                <a-form-item>
-                  <a-radio-group v-model="radioValue">
-                    <a-radio :style="radioStyle" :value="1">
-                      会员来源{{ radioValue }}
+                <!-- 会员来源+上传指定会员 -->
+                <a-radio-group v-model="radioValue">
+                  <a-radio :style="radioStyle" :value="1">
+                    <span>会员来源</span>
+                    <!-- 会员来源 -->
+                    <a-form-item style="display:inline-block;">
                       <a-checkbox-group
                         v-if="radioValue === 1"
                         style="padding-left:40px;"
-                        v-model="checkboxValue"
-                        name="checkboxgroup"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
                         :options="plainOptions"
+                        @change="checkboxChange"
                       />
-                    </a-radio>
-                    <div v-if="radioValue === 1">
-                      会员等级
+                    </a-form-item>
+                  </a-radio>
+                  <div v-if="radioValue === 1" :style="radioStyle">
+                    <span style="padding: 0 40px 0 24px;">会员等级</span>
+                    <a-form-item style="display:inline-block;">
                       <a-select
+                        style="width:200px;"
                         v-decorator="[
                           'couponBusinessType',
                           {
@@ -200,28 +204,33 @@
                           {{ item.name }}
                         </a-select-option>
                       </a-select>
-                      <!-- <a-select
+                    </a-form-item>
+                    <span style="padding: 0 20px;color:#ccc;">------</span>
+                    <a-form-item style="display:inline-block;">
+                      <a-select
+                        style="width:200px;"
                         v-decorator="[
-                          'couponBusinessType',
+                          'couponType',
                           {
-                            initialValue: couponBusinessType,
-                            rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                            initialValue: couponType,
+                            rules: [{ required: true, message: '会员权益类型不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect"
+                        @change="couponTypeSelect"
                       >
-                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                        <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
                           {{ item.name }}
                         </a-select-option>
-                      </a-select> -->
-                    </div>
-                    <a-radio :style="radioStyle" :value="2">上传指定会员{{ radioValue }}</a-radio>
-                    <div v-if="radioValue === 2">
-                      上传指定会员
-                    </div>
-                  </a-radio-group>
-                  <!-- <div>couponType: {{ couponType }}</div> -->
-                </a-form-item>
+                      </a-select>
+                    </a-form-item>
+                  </div>
+                  <a-radio :style="radioStyle" :value="2">上传指定会员</a-radio>
+                  <div v-if="radioValue === 222">
+                    上传指定会员
+                  </div>
+                </a-radio-group>
+                <div>radioValue: {{ radioValue }}</div>
+                <div>checkboxValue: {{ checkboxValue }}</div>
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -268,8 +277,8 @@ export default {
       radioValue: 1,
       radioStyle: {
         display: 'block',
-        height: '30px',
-        lineHeight: '30px'
+        height: '40px',
+        lineHeight: '40px'
       },
       //////////新建活动///////////
       submitLoading: false,
@@ -286,7 +295,10 @@ export default {
       couponTitle: '',
       couponSubhead: '',
       couponType: '1',
-      couponTypes: [{ name: '会员卡券', code: '1' }],
+      couponTypes: [
+        { name: '会员卡券', code: '1' },
+        { name: '会员卡券1', code: '2' }
+      ],
 
       voucherAmount: '', //代金券抵扣金额
       satisfyAmount: '', //	折扣券/满减券 满多少金额可用
@@ -565,6 +577,14 @@ export default {
     //单选
     classificationChange(e) {
       this.classification = e.target.value;
+    },
+    //多选
+    checkboxChange(checkedValues) {
+      console.log('checkboxChange checkedValues :>> ', checkedValues);
+      this.checkboxValue.splice(0, this.checkboxValue.length);
+      checkedValues.forEach(element => {
+        this.checkboxValue.push(element);
+      });
     },
 
     //下拉
