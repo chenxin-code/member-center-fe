@@ -283,12 +283,63 @@
                   </a-radio-group>
                   <!-- <div>classification:{{ classification }}</div> -->
                 </a-form-item>
-
+                <!-- ///////////////////////////奖品参数//////////////////////// -->
                 <!-- ###### 奖品参数 ###### -->
                 <div class="common-title">
                   <div class="common-title-content">奖品参数</div>
                 </div>
-
+                <div></div>
+                <div
+                  v-for="(item, index) in awardList"
+                  :key="index"
+                  class="common-award"
+                  @click="awardFormindex = index"
+                >
+                  <a-form-item label="活动名称">
+                    <a-input
+                      @change="couponTitleChange"
+                      v-decorator="[
+                        'couponTitle',
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入活动名称"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+                  <a-form-item label="活动类型">
+                    <a-select
+                      v-decorator="[
+                        `couponBusinessType${index}`,
+                        {
+                          initialValue: item.couponBusinessType,
+                          rules: [{ required: true, message: '活动类型不能为空' }]
+                        }
+                      ]"
+                      @change="couponBusinessTypeSelect1"
+                    >
+                      <a-select-option
+                        :value="itemSelect.code"
+                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :key="indexSelect"
+                      >
+                        {{ itemSelect.name }}
+                      </a-select-option>
+                    </a-select>
+                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                  </a-form-item>
+                  <button>删除</button>
+                </div>
+                <div style="display:flex;justify-content:center;padding-top:20px;">
+                  <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
+                </div>
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -330,6 +381,8 @@ export default {
   data() {
     return {
       //////////新建活动///////////
+      awardFormindex: undefined,
+      awardList: [{ couponTitle: '', couponBusinessType: '1' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
@@ -430,6 +483,7 @@ export default {
   methods: {
     moment,
     //////////新建活动///////////
+    addAward() {},
     uploadBefor(file) {
       this.file = file;
       this.$set(this.fileList1, 0, file);
@@ -693,8 +747,13 @@ export default {
       this.source = value;
     },
     couponBusinessTypeSelect(value) {
-      console.log('couponBusinessTypeSelect');
+      console.log('couponBusinessTypeSelect value :>> ', value);
       this.couponBusinessType = value;
+    },
+    couponBusinessTypeSelect1(value) {
+      console.log('this.awardFormindex :>> ', this.awardFormindex);
+      console.log('couponBusinessTypeSelect1 value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'couponBusinessType', value);
     },
 
     //获取详情
@@ -865,6 +924,14 @@ export default {
       deep: true
     },
 
+    awardList: {
+      handler(newVal) {
+        console.log('watch awardList newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
@@ -931,9 +998,13 @@ export default {
               border-left: 3px solid rgba(33, 33, 206, 0.5);
             }
           }
-
           .common-title:first-child {
             padding: 10px 0 20px 14px;
+          }
+
+          .common-award {
+            border: 1px solid #000;
+            padding: 10px;
           }
         }
 
