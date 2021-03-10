@@ -172,21 +172,20 @@
                 </a-form-item>
 
                 <!-- 会员来源+上传指定会员 -->
-                <a-radio-group v-model="radioValue">
+                <a-radio-group v-model="radioValue" style="padding-left: 50px;">
                   <a-radio :style="radioStyle" :value="1">
-                    <span>会员来源</span>
+                    <span style="padding-right:40px;">会员来源</span>
                     <!-- 会员来源 -->
                     <a-form-item style="display:inline-block;">
                       <a-checkbox-group
                         v-if="radioValue === 1"
-                        style="padding-left:40px;"
                         v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
                         :options="plainOptions"
                         @change="checkboxChange"
                       />
                     </a-form-item>
                   </a-radio>
-                  <div v-if="radioValue === 1" :style="radioStyle">
+                  <div v-if="radioValue === 1" :style="radioStyle" style="margin:10px 0;">
                     <span style="padding: 0 40px 0 24px;">会员等级</span>
                     <a-form-item style="display:inline-block;">
                       <a-select
@@ -224,13 +223,41 @@
                       </a-select>
                     </a-form-item>
                   </div>
-                  <a-radio :style="radioStyle" :value="2">上传指定会员</a-radio>
-                  <div v-if="radioValue === 222">
-                    上传指定会员
+                  <a-radio :style="radioStyle" :value="2">
+                    <span style="padding-right:40px;">上传指定会员</span>
+                    <a-form-item style="display:inline-block;width:100%;">
+                      <a-upload
+                        v-if="radioValue === 2"
+                        v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
+                        :file-list="fileList1"
+                        :remove="handleRemove1"
+                        name="file"
+                        accept=".xls,.xlsx"
+                        :before-upload="uploadBefor"
+                      >
+                        <a-button>
+                          <a-icon type="upload" />
+                          上传文件
+                        </a-button>
+                      </a-upload>
+                    </a-form-item>
+                  </a-radio>
+                  <div
+                    v-if="radioValue === 2"
+                    style="padding-left: 148px;"
+                    :style="{ paddingTop: fileList1.length > 0 ? '40px' : '' }"
+                  >
+                    <p style="font-size: 12px;color: #c1c1c1;">
+                      支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
+                    </p>
+                    <p>
+                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
+                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                    </p>
                   </div>
+                  <div>radioValue: {{ radioValue }}</div>
+                  <div>checkboxValue: {{ checkboxValue }}</div>
                 </a-radio-group>
-                <div>radioValue: {{ radioValue }}</div>
-                <div>checkboxValue: {{ checkboxValue }}</div>
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -272,6 +299,10 @@ export default {
   data() {
     return {
       //////////新建活动///////////
+      downLoadTplExist: false,
+      downLoadTplUrl: '',
+      file: '', //会员文件
+      fileList1: [],
       plainOptions: ['时代+', '邻里PRO'],
       checkboxValue: [],
       radioValue: 1,
@@ -367,6 +398,36 @@ export default {
   },
   methods: {
     moment,
+    //////////新建活动///////////
+    uploadBefor(file) {
+      this.file = file;
+      this.$set(this.fileList1, 0, file);
+      // this.fileList1[0] = file;
+      console.log('uploadBefor this.fileList1 :>> ', this.fileList1);
+      return false;
+    },
+    handleRemove1(file) {
+      const index = this.fileList1.indexOf(file);
+      const newFileList = this.fileList1.slice();
+      newFileList.splice(index, 1);
+      this.fileList1 = newFileList;
+    },
+    // 获取下载模版
+    getTplDownload() {
+      this.downLoadTplExist = false;
+      api.getTplDownload().then(res => {
+        console.log('getTplDownload res :>> ', res);
+        this.downLoadTplExist = true;
+        this.downLoadTplUrl = res.data;
+      });
+    },
+    handleNullTpl() {
+      this.$warning({
+        title: '提示',
+        content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
+      });
+    },
+    //////////新建活动///////////
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
@@ -753,6 +814,7 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getTplDownload();
     // this.getCouponDetail();
   },
   mounted() {},
@@ -760,6 +822,13 @@ export default {
     fileList: {
       handler(newVal) {
         console.log('watch fileList newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    fileList1: {
+      handler(newVal) {
+        console.log('watch fileList1 newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
