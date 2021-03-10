@@ -283,12 +283,11 @@
                   </a-radio-group>
                   <!-- <div>classification:{{ classification }}</div> -->
                 </a-form-item>
-                <!-- ///////////////////////////奖品参数//////////////////////// -->
+
                 <!-- ###### 奖品参数 ###### -->
                 <div class="common-title">
                   <div class="common-title-content">奖品参数</div>
                 </div>
-                <div></div>
                 <div
                   v-for="(item, index) in awardList"
                   :key="index"
@@ -382,7 +381,7 @@ export default {
     return {
       //////////新建活动///////////
       awardFormindex: undefined,
-      awardList: [{ couponTitle: '', couponBusinessType: '1' }],
+      awardList: [{ couponTitle: '啦啦啦', couponBusinessType: '3' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
