@@ -1032,6 +1032,10 @@ export default {
           width: 100%;
         }
 
+        ::v-deep .ant-calendar-picker {
+          width: 380px !important;
+        }
+
         .common-submit-cancle {
           padding: 30px 0 0 150px;
           display: flex;
