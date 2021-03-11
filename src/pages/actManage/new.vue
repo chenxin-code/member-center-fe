@@ -294,25 +294,6 @@
                   class="common-award"
                   @click="awardFormindex = index"
                 >
-                  <a-form-item label="活动名称">
-                    <a-input
-                      @change="couponTitleChange"
-                      v-decorator="[
-                        'couponTitle',
-                        {
-                          initialValue: item.couponTitle,
-                          rules: [
-                            { required: true, message: '卡券标题不能为空' },
-                            { whitespace: true, message: '卡券标题不能为空' },
-                            { max: 20, message: '最多输入20个字符' }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入活动名称"
-                      allow-clear
-                    />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
-                  </a-form-item>
                   <a-form-item label="活动类型">
                     <a-select
                       v-decorator="[
@@ -334,6 +315,26 @@
                     </a-select>
                     <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
                   </a-form-item>
+                  <a-form-item label="活动名称">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入活动名称"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+
                   <button>删除</button>
                 </div>
                 <div style="display:flex;justify-content:center;padding-top:20px;">
@@ -381,7 +382,7 @@ export default {
     return {
       //////////新建活动///////////
       awardFormindex: undefined,
-      awardList: [{ couponTitle: '啦啦啦', couponBusinessType: '3' }],
+      awardList: [{ couponTitle: '', couponBusinessType: '1' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
@@ -681,6 +682,11 @@ export default {
     couponTitleChange(e) {
       this.couponTitle = e.target.value;
     },
+    couponTitleChange1(e) {
+      console.log('couponTitleChange1 this.awardFormindex :>> ', this.awardFormindex);
+      console.log('couponTitleChange1 e.target.value :>> ', e.target.value);
+      this.$set(this.awardList[this.awardFormindex], 'couponTitle', e.target.value);
+    },
     couponSubheadChange(e) {
       this.couponSubhead = e.target.value;
     },
@@ -750,7 +756,7 @@ export default {
       this.couponBusinessType = value;
     },
     couponBusinessTypeSelect1(value) {
-      console.log('this.awardFormindex :>> ', this.awardFormindex);
+      console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
       console.log('couponBusinessTypeSelect1 value :>> ', value);
       this.$set(this.awardList[this.awardFormindex], 'couponBusinessType', value);
     },

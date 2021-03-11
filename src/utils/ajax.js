@@ -56,9 +56,9 @@ HTTP.interceptors.request.use(async config => {
 function handleParams(url, rawData, rawMethod, responseType) {
   const method = rawMethod.toUpperCase();
   let data = {};
-  if (method === 'GET') {
-    data = { params: rawData };
-  }
+  // if (method === 'GET') {
+  //   data = { params: rawData };
+  // }
   switch (method) {
     case 'GET':
       data = { params: rawData };
