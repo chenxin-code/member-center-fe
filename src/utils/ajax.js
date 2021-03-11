@@ -74,6 +74,9 @@ function handleParams(url, rawData, rawMethod, responseType) {
       break;
   }
 
+  console.log('handleParams method :>> ', method);
+  console.log('handleParams data :>> ', data);
+
   return Promise.resolve({
     url,
     method,
@@ -160,6 +163,7 @@ async function refreshToken() {
 
 export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, responseType = 'json', url = BASEURL) => {
   return handleParams(api, rawData, method, headers, responseType).then(options => {
+    console.log('fetchApi options :>> ', options);
     return new Promise((resolve, reject) => {
       if (responseType == 'blob') {
         let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
