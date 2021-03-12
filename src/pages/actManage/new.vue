@@ -17,7 +17,9 @@
                 style="height: 100%; overflow: auto"
                 autoComplete="off"
               >
-                <!-- ###### 活动基础信息 ###### -->
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 活动基础信息 ############ -->
                 <div class="common-title">
                   <div class="common-title-content">活动基础信息</div>
                 </div>
@@ -54,7 +56,7 @@
                         ]
                       }
                     ]"
-                    placeholder="请输入活动名称"
+                    placeholder="请输入"
                     allow-clear
                   />
                   <!-- <div>couponTitle: {{ couponTitle }}</div> -->
@@ -148,7 +150,9 @@
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
 
-                <!-- ###### 用户参数 ###### -->
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 用户参数 ############ -->
                 <div class="common-title">
                   <div class="common-title-content">用户参数</div>
                 </div>
@@ -258,7 +262,9 @@
                   <div>checkboxValue: {{ checkboxValue }}</div> -->
                 </a-radio-group>
 
-                <!-- ###### 时间参数 ###### -->
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 时间参数 ############ -->
                 <div class="common-title">
                   <div class="common-title-content">时间参数</div>
                 </div>
@@ -284,17 +290,22 @@
                   <!-- <div>classification:{{ classification }}</div> -->
                 </a-form-item>
 
-                <!-- ###### 奖品参数 ###### -->
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 奖品参数 ############ -->
+                <!-- 标题 -->
                 <div class="common-title">
                   <div class="common-title-content">奖品参数</div>
                 </div>
+                <!-- 奖品集合 -->
                 <div
+                  class="common-award"
+                  :class="`award-class${index}`"
                   v-for="(item, index) in awardList"
                   :key="index"
-                  class="common-award"
                   @click="awardFormindex = index"
                 >
-                  <a-form-item label="活动类型">
+                  <a-form-item label="领取条件设置">
                     <a-select
                       v-decorator="[
                         `couponBusinessType${index}`,
@@ -315,7 +326,7 @@
                     </a-select>
                     <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
                   </a-form-item>
-                  <a-form-item label="活动名称">
+                  <a-form-item label="发放数量">
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
@@ -329,17 +340,136 @@
                           ]
                         }
                       ]"
-                      placeholder="请输入活动名称"
+                      placeholder="请输入"
                       allow-clear
                     />
                     <div>item.couponTitle: {{ item.couponTitle }}</div>
                   </a-form-item>
-
-                  <button>删除</button>
+                  <a-form-item label="邦豆兑换值">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+                  <a-form-item label="每人兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+                  <a-form-item label="每日兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+                  <a-form-item label="每人每日兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                  </a-form-item>
+                  <a-form-item label="可领取时间">
+                    <a-select
+                      v-decorator="[
+                        `couponBusinessType${index}`,
+                        {
+                          initialValue: item.couponBusinessType,
+                          rules: [{ required: true, message: '活动类型不能为空' }]
+                        }
+                      ]"
+                      @change="couponBusinessTypeSelect1"
+                    >
+                      <a-select-option
+                        :value="itemSelect.code"
+                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :key="indexSelect"
+                      >
+                        {{ itemSelect.name }}
+                      </a-select-option>
+                    </a-select>
+                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                  </a-form-item>
+                  <a-form-item label="可领取时间">
+                    <a-select
+                      v-decorator="[
+                        `couponBusinessType${index}`,
+                        {
+                          initialValue: item.couponBusinessType,
+                          rules: [{ required: true, message: '活动类型不能为空' }]
+                        }
+                      ]"
+                      @change="couponBusinessTypeSelect1"
+                    >
+                      <a-select-option
+                        :value="itemSelect.code"
+                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :key="indexSelect"
+                      >
+                        {{ itemSelect.name }}
+                      </a-select-option>
+                    </a-select>
+                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                  </a-form-item>
+                  <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
                 </div>
                 <div style="display:flex;justify-content:center;padding-top:20px;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
+
+                <!-- ********************************************************************* -->
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -375,6 +505,7 @@ import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
+
 export default {
   name: 'couponsManageNew',
   components: {},
@@ -382,7 +513,7 @@ export default {
     return {
       //////////新建活动///////////
       awardFormindex: undefined,
-      awardList: [{ couponTitle: '', couponBusinessType: '1' }],
+      awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
@@ -483,7 +614,16 @@ export default {
   methods: {
     moment,
     //////////新建活动///////////
-    addAward() {},
+    handleDelete(index) {
+      this.$delete(this.awardList, index);
+    },
+    addAward() {
+      const tempObj = {
+        couponTitle: this.momentStrHms(Date.now()),
+        couponBusinessType: '1'
+      };
+      this.awardList.unshift(tempObj);
+    },
     uploadBefor(file) {
       this.file = file;
       this.$set(this.fileList1, 0, file);
@@ -1010,6 +1150,10 @@ export default {
           .common-award {
             border: 1px solid #000;
             padding: 10px;
+
+            ::v-deep .ant-col-3 {
+              width: 15%;
+            }
           }
         }
 
