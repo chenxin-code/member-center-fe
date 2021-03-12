@@ -324,7 +324,7 @@
                         {{ itemSelect.name }}
                       </a-select-option>
                     </a-select>
-                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
                   </a-form-item>
                   <a-form-item label="发放数量">
                     <a-input
@@ -343,7 +343,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <a-form-item label="邦豆兑换值">
                     <a-input
@@ -362,7 +362,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <a-form-item label="每人兑换数量限制">
                     <a-input
@@ -381,7 +381,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <a-form-item label="每日兑换数量限制">
                     <a-input
@@ -400,7 +400,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <a-form-item label="每人每日兑换数量限制">
                     <a-input
@@ -419,7 +419,7 @@
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>item.couponTitle: {{ item.couponTitle }}</div>
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <a-form-item label="可领取时间">
                     <a-select
@@ -440,7 +440,7 @@
                         {{ itemSelect.name }}
                       </a-select-option>
                     </a-select>
-                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
                   </a-form-item>
                   <a-form-item label="可领取时间">
                     <a-select
@@ -461,7 +461,7 @@
                         {{ itemSelect.name }}
                       </a-select-option>
                     </a-select>
-                    <div>item.couponBusinessType:{{ item.couponBusinessType }}</div>
+                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
                   </a-form-item>
                   <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
                 </div>
