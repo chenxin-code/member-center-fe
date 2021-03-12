@@ -6,22 +6,43 @@
     </div>
     <div class="coupons-main">
       <a-row style="height: 100%">
-        <!-- 卡券基础信息 -->
-        <div class="coupons-common coupons-base">
-          <div class="common-title">
-            <div class="common-title-content">卡券基础信息</div>
-          </div>
+        <div class="coupons-common">
           <a-row class="common-row">
             <a-col :span="24">
               <a-form
+                class="common-form"
                 :form="conponForm"
                 :label-col="{ span: 3 }"
                 :wrapper-col="{ span: 12 }"
                 style="height: 100%; overflow: auto"
                 autoComplete="off"
               >
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 活动基础信息 ############ -->
+                <div class="common-title">
+                  <div class="common-title-content">活动基础信息</div>
+                </div>
+                <!-- 卡券平台 -->
+                <a-form-item label="活动主题名称">
+                  <a-select
+                    v-decorator="[
+                      'source',
+                      {
+                        initialValue: source,
+                        rules: [{ required: true, message: '活动主题名称不能为空' }]
+                      }
+                    ]"
+                    @change="sourceSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in sources" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                  <!-- <div>source:{{ source }}</div> -->
+                </a-form-item>
                 <!-- 卡券标题 -->
-                <a-form-item label="卡券标题">
+                <a-form-item label="活动名称">
                   <a-input
                     @change="couponTitleChange"
                     v-decorator="[
@@ -35,275 +56,89 @@
                         ]
                       }
                     ]"
-                    placeholder="请输入卡券标题，最多20个字符"
+                    placeholder="请输入"
                     allow-clear
                   />
                   <!-- <div>couponTitle: {{ couponTitle }}</div> -->
                 </a-form-item>
-                <!-- 卡券副标题 -->
-                <a-form-item label="卡券副标题">
-                  <a-input
-                    @change="couponSubheadChange"
+                <!-- 活动有效期 -->
+                <a-form-item label="活动有效期">
+                  <a-range-picker
                     v-decorator="[
-                      'couponSubhead',
+                      'rangePickerValue',
                       {
-                        initialValue: couponSubhead,
-                        rules: [{ max: 20, message: '最多输入20个字符' }]
+                        initialValue: rangePickerValue,
+                        rules: [{ type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }]
                       }
                     ]"
-                    placeholder="请输入卡券副标题，最多20个字符"
-                    allow-clear
+                    :placeholder="['开始时间', '结束时间']"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    @change="handleRangePicker"
+                    :show-time="{
+                      defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
+                    }"
+                    :disabled-date="disabledDate"
                   />
-                  <!-- <div>couponSubhead: {{ couponSubhead }}</div> -->
+                  <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
+                  <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
                 </a-form-item>
-                <!-- 卡券类型 -->
-                <a-form-item label="卡券类型">
-                  <a-select
+                <!-- 活动描述 -->
+                <a-form-item label="活动描述">
+                  <a-textarea
+                    @change="memoChange"
                     v-decorator="[
-                      'couponType',
+                      'memo',
                       {
-                        initialValue: couponType,
-                        rules: [{ required: true, message: '卡券类型不能为空' }]
+                        initialValue: memo,
+                        rules: []
                       }
                     ]"
-                    @change="couponTypeSelect"
-                  >
-                    <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                  <!-- <div>couponType: {{ couponType }}</div> -->
+                    :auto-size="{ minRows: 3, maxRows: 5 }"
+                    :maxLength="200"
+                    placeholder="请输入使用说明"
+                  />
+                  <!-- <div>memo:{{ memo }}</div> -->
                 </a-form-item>
-                <!-- 代金券:10 -->
-                <template v-if="couponType === 10">
-                  <a-form-item label="代金券金额">
-                    <a-input
-                      @change="voucherAmountChange"
+                <!-- 请上传活动封面 -->
+                <a-form-item label="请上传活动封面">
+                  <a-spin :spinning="picUploading">
+                    <a-upload
+                      name="avatar"
+                      accept="image/jpeg,image/jpg,image/png"
+                      list-type="picture-card"
+                      :file-list="fileList"
                       v-decorator="[
-                        'voucherAmount',
-                        {
-                          initialValue: voucherAmount,
-                          rules: [
-                            { required: true, message: '代金券金额不能为空' },
-                            { whitespace: true, message: '代金券金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
-                          ]
-                        }
+                        'couponImage',
+                        { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
                       ]"
-                      placeholder="请输入代金券金额"
-                      allow-clear
-                      prefix="￥"
-                    />
-                    <!-- <div>voucherAmount:{{ voucherAmount }}</div> -->
-                  </a-form-item>
-                </template>
-                <!-- 满减券:20 -->
-                <template v-else-if="couponType === 20">
-                  <a-form-item label="满">
-                    <a-input
-                      @change="satisfyAmountChange"
-                      v-decorator="[
-                        'satisfyAmount',
-                        {
-                          initialValue: satisfyAmount,
-                          rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入"
-                      allow-clear
-                    />
-                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="抵扣金额">
-                    <a-input
-                      @change="fullReductionDiscountAmountChange"
-                      v-decorator="[
-                        'fullReductionDiscountAmount',
-                        {
-                          initialValue: fullReductionDiscountAmount,
-                          rules: [
-                            { required: true, message: '抵扣金额不能为空' },
-                            { whitespace: true, message: '抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入满减券抵扣金额"
-                      allow-clear
-                    />
-                    <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
-                  </a-form-item>
-                </template>
-                <!-- 折扣券:40 -->
-                <template v-else-if="couponType === 40">
-                  <a-form-item label="满">
-                    <a-input
-                      @change="satisfyAmountChange"
-                      v-decorator="[
-                        'satisfyAmount',
-                        {
-                          initialValue: satisfyAmount,
-                          rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入"
-                      allow-clear
-                    />
-                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="最高抵扣金额">
-                    <a-input
-                      @change="discountMaxDeductionChange"
-                      v-decorator="[
-                        'discountMaxDeduction',
-                        {
-                          initialValue: discountMaxDeduction,
-                          rules: [
-                            { required: true, message: '最高抵扣金额不能为空' },
-                            { whitespace: true, message: '最高抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入折扣券最高抵扣金额"
-                      allow-clear
-                    />
-                    <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="折扣（0-1）">
-                    <a-input
-                      @change="discountRatioChange"
-                      v-decorator="[
-                        'discountRatio',
-                        {
-                          initialValue: discountRatio,
-                          rules: [
-                            { required: true, message: '折扣比例不能为空' },
-                            { validator: this.checkDiscountFormat, trigger: ['blur'] }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入折扣比例，支持小数点后2位"
-                      allow-clear
-                    />
-                    <!-- <div>discountRatio:{{ discountRatio }}</div> -->
-                  </a-form-item>
-                </template>
-
-                <!-- 有效期类型 -->
-                <a-form-item label="有效期类型">
-                  <a-select
-                    v-decorator="[
-                      'validityType',
-                      {
-                        initialValue: validityType,
-                        rules: [{ required: true, message: '有效期类型不能为空' }]
-                      }
-                    ]"
-                    @change="validityTypeSelect"
-                  >
-                    <a-select-option :value="item.code" v-for="(item, index) in validityTypes" :key="index">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                  <!-- <div>validityType:{{ validityType }}</div> -->
+                      :before-upload="() => false"
+                      :remove="deleteOssImage"
+                      @preview="handlePreview"
+                      @change="addPic"
+                    >
+                      <template v-if="fileList.length < 1">
+                        <a-icon type="plus" />
+                        <div class="ant-upload-text">
+                          上传图片
+                        </div>
+                      </template>
+                    </a-upload>
+                    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                      <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                    </a-modal>
+                  </a-spin>
+                  <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                    建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
+                  </span>
                 </a-form-item>
-                <!-- 固定有效期:1 -->
-                <template v-if="validityType === 1">
-                  <a-form-item label="选择日期">
-                    <a-range-picker
-                      v-decorator="[
-                        'rangePickerValue',
-                        {
-                          initialValue: rangePickerValue,
-                          rules: [{ type: 'array', required: true, message: '日期不能为空,请选择日期!' }]
-                        }
-                      ]"
-                      :placeholder="['开始时间', '结束时间']"
-                      format="YYYY-MM-DD HH:mm:ss"
-                      @change="handleRangePicker"
-                      :show-time="{
-                        defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
-                      }"
-                      :disabled-date="disabledDate"
-                    />
-                    <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
-                    <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
-                  </a-form-item>
-                </template>
-                <!-- 相对有效期:2 -->
-                <template v-else-if="validityType === 3">
-                  <a-form-item label="有效天数">
-                    <a-input-number
-                      :min="1"
-                      :max="999"
-                      @change="validityDayNumsChange"
-                      v-decorator="[
-                        'validityDayNums',
-                        {
-                          initialValue: validityDayNums,
-                          rules: [{ required: true, message: '有效天数不能为空' }]
-                        }
-                      ]"
-                      placeholder="请输入有效天数，1-999"
-                      allow-clear
-                    />
-                    <!-- <div>validityDayNums:{{ validityDayNums }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="领取后几天后生效">
-                    <a-input-number
-                      :min="1"
-                      :max="999"
-                      @change="takeEffectDayNumsChange"
-                      v-decorator="[
-                        'takeEffectDayNums',
-                        {
-                          initialValue: takeEffectDayNums,
-                          rules: [{ required: true, message: '领取后几天后生效不能为空' }]
-                        }
-                      ]"
-                      placeholder="输入天数，1-999"
-                      allow-clear
-                    />
-                    <!-- <div>takeEffectDayNums:{{ takeEffectDayNums }}</div> -->
-                  </a-form-item>
-                </template>
-
-                <!-- 卡券平台 -->
-                <a-form-item label="卡券平台">
-                  <a-select
-                    v-decorator="[
-                      'source',
-                      {
-                        initialValue: source,
-                        rules: [{ required: true, message: '卡券平台不能为空' }]
-                      }
-                    ]"
-                    @change="sourceSelect"
-                  >
-                    <a-select-option :value="item.code" v-for="(item, index) in sources" :key="index">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                  <!-- <div>source:{{ source }}</div> -->
-                </a-form-item>
-
-                <!-- 卡券业务类型 -->
-                <a-form-item label="卡券业务类型">
+                <!-- 活动类型 -->
+                <a-form-item label="活动类型">
                   <a-select
                     v-decorator="[
                       'couponBusinessType',
                       {
                         initialValue: couponBusinessType,
-                        rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                        rules: [{ required: true, message: '活动类型不能为空' }]
                       }
                     ]"
                     @change="couponBusinessTypeSelect"
@@ -315,134 +150,428 @@
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
 
-                <!-- 购物券 -->
-                <template v-if="couponBusinessType === '4005'">
-                  <a-form-item label="商城订单类型">
-                    <a-radio-group
-                      @change="classificationChange"
-                      v-decorator="[
-                        'classification',
-                        {
-                          initialValue: classification,
-                          rules: [{ required: true, message: '商城订单类型不能为空' }]
-                        }
-                      ]"
-                    >
-                      <a-radio :value="1">
-                        全部
-                      </a-radio>
-                      <a-radio :value="2">
-                        零售
-                      </a-radio>
-                    </a-radio-group>
-                    <!-- <div>classification:{{ classification }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="商户id">
-                    <a-input
-                      @change="commercialTenantsChange"
-                      v-decorator="[
-                        'commercialTenants',
-                        {
-                          initialValue: commercialTenants,
-                          rules: [
-                            { required: true, message: '商户id不能为空' },
-                            { whitespace: true, message: '商户id不能为空' }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入商户id，多个以,间隔"
-                      allow-clear
-                    />
-                    <!-- <div>commercialTenants:{{ commercialTenants }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="商品id">
-                    <a-input
-                      @change="merchandisesChange"
-                      v-decorator="[
-                        'merchandises',
-                        {
-                          initialValue: merchandises,
-                          rules: [
-                            { required: true, message: '商品id不能为空' },
-                            { whitespace: true, message: '商品id不能为空' }
-                          ]
-                        }
-                      ]"
-                      placeholder="请输入商品id，多个以,间隔"
-                      allow-clear
-                    />
-                    <!-- <div>merchandises:{{ merchandises }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="上传优惠券封面图">
-                    <a-spin :spinning="picUploading">
-                      <a-upload
-                        name="avatar"
-                        accept="image/jpeg,image/jpg,image/png"
-                        list-type="picture-card"
-                        :file-list="fileList"
-                        v-decorator="[
-                          'couponImage',
-                          { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
-                        ]"
-                        :before-upload="() => false"
-                        :remove="deleteOssImage"
-                        @preview="handlePreview"
-                        @change="addPic"
-                      >
-                        <template v-if="fileList.length < 1">
-                          <a-icon type="plus" />
-                          <div class="ant-upload-text">
-                            上传图片
-                          </div>
-                        </template>
-                      </a-upload>
-                      <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                        <img class="img" alt="example" style="width: 100%" :src="previewImage" />
-                      </a-modal>
-                    </a-spin>
-                    <span style="margin-top:-20px;color:#999999;font-size:12px;">
-                      建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
-                    </span>
-                  </a-form-item>
-                </template>
+                <!-- ********************************************************************* -->
 
-                <!-- 成本价 -->
-                <a-form-item label="成本价（可选）">
-                  <a-input
-                    @change="costChange"
+                <!-- ############ 用户参数 ############ -->
+                <div class="common-title">
+                  <div class="common-title-content">用户参数</div>
+                </div>
+                <!-- 会员权益类型 -->
+                <a-form-item label="会员权益类型">
+                  <a-select
                     v-decorator="[
-                      'cost',
+                      'couponType',
                       {
-                        initialValue: cost,
-                        rules: [{ validator: this.checkCostFormat, trigger: ['blur'] }]
+                        initialValue: couponType,
+                        rules: [{ required: true, message: '会员权益类型不能为空' }]
                       }
                     ]"
-                    placeholder="请输入卡券的成本价，小数点后两位"
-                    allow-clear
-                    prefix="￥"
-                  />
-                  <!-- <div>cost:{{ cost }}</div> -->
+                    @change="couponTypeSelect"
+                  >
+                    <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                  <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
-                <!-- 使用说明 -->
-                <a-form-item label="使用说明">
-                  <a-textarea
-                    @change="memoChange"
+                <!-- 会员来源+上传指定会员 -->
+                <a-radio-group v-model="radioValue" style="padding-left: 50px;">
+                  <a-radio :style="radioStyle" :value="1">
+                    <span style="padding-right:40px;">会员来源</span>
+                    <!-- 会员来源 -->
+                    <a-form-item style="display:inline-block;">
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
+                        :options="plainOptions"
+                        @change="checkboxChange"
+                      />
+                    </a-form-item>
+                  </a-radio>
+                  <div v-if="radioValue === 1" :style="radioStyle" style="margin:10px 0;">
+                    <span style="padding: 0 40px 0 24px;">会员等级</span>
+                    <a-form-item style="display:inline-block;">
+                      <a-select
+                        style="width:200px;"
+                        v-decorator="[
+                          'couponBusinessType',
+                          {
+                            initialValue: couponBusinessType,
+                            rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect"
+                      >
+                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                          {{ item.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <span style="padding: 0 20px;color:#ccc;">------</span>
+                    <a-form-item style="display:inline-block;">
+                      <a-select
+                        style="width:200px;"
+                        v-decorator="[
+                          'couponType',
+                          {
+                            initialValue: couponType,
+                            rules: [{ required: true, message: '会员权益类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponTypeSelect"
+                      >
+                        <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
+                          {{ item.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </div>
+                  <a-radio :style="radioStyle" :value="2">
+                    <span style="padding-right:40px;">上传指定会员</span>
+                    <a-form-item style="display:inline-block;width:100%;">
+                      <a-upload
+                        v-if="radioValue === 2"
+                        v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
+                        :file-list="fileList1"
+                        :remove="handleRemove1"
+                        name="file"
+                        accept=".xls,.xlsx"
+                        :before-upload="uploadBefor"
+                      >
+                        <a-button>
+                          <a-icon type="upload" />
+                          上传文件
+                        </a-button>
+                      </a-upload>
+                    </a-form-item>
+                  </a-radio>
+                  <div
+                    v-if="radioValue === 2"
+                    style="padding-left: 148px;"
+                    :style="{ paddingTop: fileList1.length > 0 ? '40px' : '' }"
+                  >
+                    <p style="font-size: 12px;color: #c1c1c1;">
+                      支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
+                    </p>
+                    <p>
+                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
+                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                    </p>
+                  </div>
+                  <div>radioValue: {{ radioValue }}</div>
+                  <div>checkboxValue: {{ checkboxValue }}</div>
+                </a-radio-group>
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 时间参数 ############ -->
+                <div class="common-title">
+                  <div class="common-title-content">时间参数</div>
+                </div>
+                <a-form-item label="是否为周期性活动">
+                  <a-radio-group
+                    style="padding-left:26px;"
+                    @change="classificationChange"
                     v-decorator="[
-                      'memo',
+                      'classification',
                       {
-                        initialValue: memo,
-                        rules: [
-                          { required: true, message: '使用说明不能为空' },
-                          { whitespace: true, message: '使用说明不能为空' }
-                        ]
+                        initialValue: classification,
+                        rules: [{ required: true, message: '是否为周期性活动不能为空' }]
                       }
                     ]"
-                    :auto-size="{ minRows: 3, maxRows: 5 }"
-                    :maxLength="200"
-                    placeholder="请输入使用说明"
-                  />
-                  <!-- <div>memo:{{ memo }}</div> -->
+                  >
+                    <a-radio :value="1">
+                      不是
+                    </a-radio>
+                    <a-radio :value="2">
+                      是
+                    </a-radio>
+                  </a-radio-group>
+                  <div>classification:{{ classification }}</div>
                 </a-form-item>
+
+                <div v-if="classification === 2">
+                  <!-- 每月活动日+每周活动日 -->
+                  <a-radio-group v-model="radioValue1" style="padding-left: 50px;">
+                    <a-radio :style="radioStyle" :value="1">
+                      <span style="padding-right:40px;">每月活动日</span>
+                      <template v-if="radioValue1 === 1">
+                        <a-form-item style="display:inline-block;">
+                          <a-select
+                            style="width:100px;"
+                            v-decorator="[
+                              'couponBusinessType',
+                              {
+                                initialValue: couponBusinessType,
+                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                              }
+                            ]"
+                            @change="couponBusinessTypeSelect"
+                          >
+                            <a-select-option
+                              :value="item.code"
+                              v-for="(item, index) in couponBusinessTypes"
+                              :key="index"
+                            >
+                              {{ item.name }}
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>1,2,5,10</a-button>
+                      </template>
+                    </a-radio>
+                    <a-radio :style="radioStyle" :value="2">
+                      <span style="padding-right:40px;">每周活动日</span>
+                      <template v-if="radioValue1 === 2">
+                        <a-form-item style="display:inline-block;">
+                          <a-select
+                            style="width:100px;"
+                            v-decorator="[
+                              'couponBusinessType',
+                              {
+                                initialValue: couponBusinessType,
+                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                              }
+                            ]"
+                            @change="couponBusinessTypeSelect"
+                          >
+                            <a-select-option
+                              :value="item.code"
+                              v-for="(item, index) in couponBusinessTypes"
+                              :key="index"
+                            >
+                              {{ item.name }}
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>
+                          周一,周二,周三,周五
+                        </a-button>
+                      </template>
+                    </a-radio>
+                    <div>radioValue1: {{ radioValue1 }}</div>
+                  </a-radio-group>
+                  <!-- 对话框 -->
+                  <a-modal
+                    v-if="radioValue1 === 1"
+                    v-model="actModalVisible"
+                    title="每月活动日"
+                    @ok="actModalVisible = false"
+                    :centered="true"
+                    :maskClosable="false"
+                  >
+                    <a-form-item>
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
+                        :options="plainOptions"
+                        @change="checkboxChange"
+                      />
+                    </a-form-item>
+                    <div>checkboxValue: {{ checkboxValue }}</div>
+                  </a-modal>
+                  <a-modal
+                    v-if="radioValue1 === 2"
+                    v-model="actModalVisible"
+                    title="每周活动日"
+                    @ok="actModalVisible = false"
+                    :centered="true"
+                    :maskClosable="false"
+                  >
+                    <a-form-item>
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
+                        :options="plainOptions"
+                        @change="checkboxChange"
+                      />
+                    </a-form-item>
+                    <div>checkboxValue: {{ checkboxValue }}</div>
+                  </a-modal>
+                </div>
+
+                <!-- ********************************************************************* -->
+
+                <!-- ############ 奖品参数 ############ -->
+                <!-- 标题 -->
+                <div class="common-title">
+                  <div class="common-title-content">奖品参数</div>
+                </div>
+                <!-- 奖品集合 -->
+                <div
+                  class="common-award"
+                  :class="`award-class${index}`"
+                  v-for="(item, index) in awardList"
+                  :key="index"
+                  @click="awardFormindex = index"
+                >
+                  <a-form-item label="领取条件设置">
+                    <a-select
+                      v-decorator="[
+                        `couponBusinessType${index}`,
+                        {
+                          initialValue: item.couponBusinessType,
+                          rules: [{ required: true, message: '活动类型不能为空' }]
+                        }
+                      ]"
+                      @change="couponBusinessTypeSelect1"
+                    >
+                      <a-select-option
+                        :value="itemSelect.code"
+                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :key="indexSelect"
+                      >
+                        {{ itemSelect.name }}
+                      </a-select-option>
+                    </a-select>
+                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="发放数量">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="邦豆兑换值">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每人兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每日兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每人每日兑换数量限制">
+                    <a-input
+                      @change="couponTitleChange1"
+                      v-decorator="[
+                        `couponTitle${index}`,
+                        {
+                          initialValue: item.couponTitle,
+                          rules: [
+                            { required: true, message: '卡券标题不能为空' },
+                            { whitespace: true, message: '卡券标题不能为空' },
+                            { max: 20, message: '最多输入20个字符' }
+                          ]
+                        }
+                      ]"
+                      placeholder="请输入"
+                      allow-clear
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <template v-if="classification === 2">
+                    <a-form-item label="可领取时间">
+                      <a-select
+                        v-decorator="[
+                          `couponBusinessType${index}`,
+                          {
+                            initialValue: item.couponBusinessType,
+                            rules: [{ required: true, message: '活动类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect1"
+                      >
+                        <a-select-option
+                          :value="itemSelect.code"
+                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :key="indexSelect"
+                        >
+                          {{ itemSelect.name }}
+                        </a-select-option>
+                      </a-select>
+                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                    </a-form-item>
+                    <a-form-item label="可领取时间">
+                      <a-select
+                        v-decorator="[
+                          `couponBusinessType${index}`,
+                          {
+                            initialValue: item.couponBusinessType,
+                            rules: [{ required: true, message: '活动类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect1"
+                      >
+                        <a-select-option
+                          :value="itemSelect.code"
+                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :key="indexSelect"
+                        >
+                          {{ itemSelect.name }}
+                        </a-select-option>
+                      </a-select>
+                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                    </a-form-item>
+                  </template>
+
+                  <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
+                </div>
+                <div style="display:flex;justify-content:center;padding-top:20px;">
+                  <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
+                </div>
+
+                <!-- ********************************************************************* -->
               </a-form>
               <!-- 提交和取消 -->
               <div class="common-submit-cancle">
@@ -455,10 +584,9 @@
                   >
                     保存
                   </a-button>
-
-                  <a-button :loading="submitLoading" type="primary" @click="handleSubmit(1, 'submitLoading')">
+                  <!-- <a-button :loading="submitLoading" type="primary" @click="handleSubmit(1, 'submitLoading')">
                     提交
-                  </a-button>
+                  </a-button> -->
                 </div>
                 <div class="common-btn common-cancle">
                   <a-button type="primary" @click="handleCancle">取消</a-button>
@@ -484,6 +612,24 @@ export default {
   components: {},
   data() {
     return {
+      //////////新建活动///////////
+      actModalVisible: false,
+      awardFormindex: undefined,
+      awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
+      downLoadTplExist: false,
+      downLoadTplUrl: '',
+      file: '', //会员文件
+      fileList1: [],
+      plainOptions: ['时代+', '邻里PRO'],
+      checkboxValue: [],
+      radioValue: 1,
+      radioValue1: 1,
+      radioStyle: {
+        display: 'block',
+        height: '40px',
+        lineHeight: '40px'
+      },
+      //////////新建活动///////////
       submitLoading: false,
       saveLoading: false,
       //////////上传图片///////////
@@ -497,11 +643,10 @@ export default {
       // pcRuleId: '',//没用
       couponTitle: '',
       couponSubhead: '',
-      couponType: 10,
+      couponType: '1',
       couponTypes: [
-        { name: '代金券', code: 10 },
-        { name: '满减券', code: 20 },
-        { name: '折扣券', code: 40 }
+        { name: '会员卡券', code: '1' },
+        { name: '会员卡券1', code: '2' }
       ],
 
       voucherAmount: '', //代金券抵扣金额
@@ -519,18 +664,19 @@ export default {
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 1, //相对有效期-领取后几天后生效
-      source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
+      source: '1', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
-        { name: '地产', code: '10' },
-        { name: '邻里邦', code: '20' },
-        { name: '邻里商城', code: '30' },
-        { name: '会员中心', code: '40' },
-        { name: '收费中心', code: '50' }
+        { name: '主题1', code: '1' },
+        { name: '主题2', code: '2' },
+        { name: '主题3', code: '3' },
+        { name: '主题4', code: '4' },
+        { name: '主题5', code: '5' }
       ],
-      couponBusinessType: '4014', //卡券业务类型
+      couponBusinessType: '1', //卡券业务类型
       couponBusinessTypes: [
-        { name: '物业费', code: '4014' },
-        { name: '购物券', code: '4005' }
+        { name: '领券中心', code: '1' },
+        { name: '邦豆兑换', code: '2' },
+        { name: '会员权益', code: '3' }
       ],
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
@@ -570,6 +716,46 @@ export default {
   },
   methods: {
     moment,
+    //////////新建活动///////////
+    handleDelete(index) {
+      this.$delete(this.awardList, index);
+    },
+    addAward() {
+      const tempObj = {
+        couponTitle: this.momentStrHms(Date.now()),
+        couponBusinessType: '1'
+      };
+      this.awardList.unshift(tempObj);
+    },
+    uploadBefor(file) {
+      this.file = file;
+      this.$set(this.fileList1, 0, file);
+      // this.fileList1[0] = file;
+      console.log('uploadBefor this.fileList1 :>> ', this.fileList1);
+      return false;
+    },
+    handleRemove1(file) {
+      const index = this.fileList1.indexOf(file);
+      const newFileList = this.fileList1.slice();
+      newFileList.splice(index, 1);
+      this.fileList1 = newFileList;
+    },
+    // 获取下载模版
+    getTplDownload() {
+      this.downLoadTplExist = false;
+      api.getTplDownload().then(res => {
+        console.log('getTplDownload res :>> ', res);
+        this.downLoadTplExist = true;
+        this.downLoadTplUrl = res.data;
+      });
+    },
+    handleNullTpl() {
+      this.$warning({
+        title: '提示',
+        content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
+      });
+    },
+    //////////新建活动///////////
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
     },
@@ -712,7 +898,7 @@ export default {
     },
     //////////上传图片///////////
     handleCancle() {
-      this.$router.replace({ path: '/couponsManage' });
+      this.$router.replace({ path: '/actManage' });
     },
     handleRangePicker(dates, dateStrings) {
       console.log('handleRangePicker dates :>> ', dates);
@@ -738,6 +924,11 @@ export default {
     //输入框
     couponTitleChange(e) {
       this.couponTitle = e.target.value;
+    },
+    couponTitleChange1(e) {
+      console.log('couponTitleChange1 this.awardFormindex :>> ', this.awardFormindex);
+      console.log('couponTitleChange1 e.target.value :>> ', e.target.value);
+      this.$set(this.awardList[this.awardFormindex], 'couponTitle', e.target.value);
     },
     couponSubheadChange(e) {
       this.couponSubhead = e.target.value;
@@ -781,6 +972,14 @@ export default {
     classificationChange(e) {
       this.classification = e.target.value;
     },
+    //多选
+    checkboxChange(checkedValues) {
+      console.log('checkboxChange checkedValues :>> ', checkedValues);
+      this.checkboxValue.splice(0, this.checkboxValue.length);
+      checkedValues.forEach(element => {
+        this.checkboxValue.push(element);
+      });
+    },
 
     //下拉
     couponTypeSelect(value) {
@@ -796,8 +995,13 @@ export default {
       this.source = value;
     },
     couponBusinessTypeSelect(value) {
-      console.log('couponBusinessTypeSelect');
+      console.log('couponBusinessTypeSelect value :>> ', value);
       this.couponBusinessType = value;
+    },
+    couponBusinessTypeSelect1(value) {
+      console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
+      console.log('couponBusinessTypeSelect1 value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'couponBusinessType', value);
     },
 
     //获取详情
@@ -941,13 +1145,14 @@ export default {
           console.log('getCouponCreate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            this.$router.replace({ path: '/couponsManage' });
+            this.$router.replace({ path: '/actManage' });
           }
         });
     }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getTplDownload();
     // this.getCouponDetail();
   },
   mounted() {},
@@ -955,6 +1160,21 @@ export default {
     fileList: {
       handler(newVal) {
         console.log('watch fileList newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    fileList1: {
+      handler(newVal) {
+        console.log('watch fileList1 newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+
+    awardList: {
+      handler(newVal) {
+        console.log('watch awardList newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
@@ -996,17 +1216,8 @@ export default {
     overflow-y: auto;
     .coupons-common {
       background-color: #fff;
-      .common-title {
-        color: #666;
-        padding: 20px 0 0 30px;
-        .common-title-content {
-          font-size: 16px;
-          height: 16px;
-          line-height: 16px;
-          padding-left: 8px;
-          border-left: 3px solid rgba(33, 33, 206, 0.5);
-        }
-      }
+      padding-bottom: 50px;
+
       .common-row {
         padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
@@ -1021,6 +1232,32 @@ export default {
 
         ::v-deep .ant-calendar-picker {
           width: 380px !important;
+        }
+
+        .common-form {
+          .common-title {
+            color: #666;
+            padding: 30px 0 20px 14px;
+            .common-title-content {
+              font-size: 16px;
+              height: 16px;
+              line-height: 16px;
+              padding-left: 8px;
+              border-left: 3px solid rgba(33, 33, 206, 0.5);
+            }
+          }
+          .common-title:first-child {
+            padding: 10px 0 20px 14px;
+          }
+
+          .common-award {
+            border: 1px solid #000;
+            padding: 10px;
+
+            ::v-deep .ant-col-3 {
+              width: 15%;
+            }
+          }
         }
 
         .common-submit-cancle {
@@ -1055,10 +1292,6 @@ export default {
       .common-row:last-child {
         border: none;
       }
-    }
-
-    .coupons-base {
-      padding-bottom: 50px;
     }
   }
 }

@@ -56,9 +56,9 @@ HTTP.interceptors.request.use(async config => {
 function handleParams(url, rawData, rawMethod, responseType) {
   const method = rawMethod.toUpperCase();
   let data = {};
-  if (method === 'GET') {
-    data = { params: rawData };
-  }
+  // if (method === 'GET') {
+  //   data = { params: rawData };
+  // }
   switch (method) {
     case 'GET':
       data = { params: rawData };
@@ -73,6 +73,9 @@ function handleParams(url, rawData, rawMethod, responseType) {
       data = { params: rawData };
       break;
   }
+
+  console.log('handleParams method :>> ', method);
+  console.log('handleParams data :>> ', data);
 
   return Promise.resolve({
     url,
@@ -160,6 +163,7 @@ async function refreshToken() {
 
 export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, responseType = 'json', url = BASEURL) => {
   return handleParams(api, rawData, method, headers, responseType).then(options => {
+    console.log('fetchApi options :>> ', options);
     return new Promise((resolve, reject) => {
       if (responseType == 'blob') {
         let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
