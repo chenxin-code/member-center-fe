@@ -1,5 +1,5 @@
 <template>
-  <div id="coupons-list">
+  <div id="act-list">
     <div class="content-header">活动管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/actManage/new" ref="memberForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
@@ -14,39 +14,24 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="couponTypeSlot" slot-scope="rowData">
+        <template slot="statusSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="couponTypeStr(rowData.couponType)"></span>
-          </div>
-        </template>
-        <template slot="activitySlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="activityStr(rowData.activity)"></span>
-          </div>
-        </template>
-        <template slot="faceAmountSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="faceAmountStr(rowData)"></span>
-          </div>
-        </template>
-        <template slot="sourceSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="sourceStr(rowData.source)"></span>
+            <span v-html="actStatusStr(rowData.status)"></span>
           </div>
         </template>
         <template slot="validitySlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="parseValidity(rowData)"></span>
+            <span v-html="parseValidityStr(rowData)"></span>
           </div>
         </template>
-        <template slot="couponStatusSlot" slot-scope="rowData">
+        <template slot="createUserSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="couponStatusStr(rowData.couponStatus)"></span>
+            <span v-html="createUserStr(rowData.activityAwardList)"></span>
           </div>
         </template>
-        <template slot="jointimeSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="createTimeStr(rowData.activityAwardList)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
@@ -91,7 +76,7 @@ export default {
         {
           label: '活动ID',
           type: 'input',
-          name: 'actId',
+          name: 'activityId',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -99,7 +84,7 @@ export default {
         {
           label: '活动主题',
           type: 'input',
-          name: 'actTheme',
+          name: 'themeName',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -107,7 +92,7 @@ export default {
         {
           label: '活动名称',
           type: 'input',
-          name: 'actName',
+          name: 'activityName',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -123,26 +108,30 @@ export default {
         {
           label: '活动类型',
           type: 'select',
-          name: 'actType',
+          name: 'typeId',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '已推送', id: '1' },
-            { name: '定时推送', id: '2' }
+            { name: '领券中心', id: 1 },
+            { name: '随便输入2', id: 2 },
+            { name: '随便输入3', id: 3 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
-        // 活动状态 '0'：禁用; '1'：启用;
         {
-          label: '卡券状态',
+          label: '活动状态',
           type: 'select',
-          name: 'couponStatus',
+          name: 'status',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '禁用', id: '0' },
-            { name: '启用', id: '1' }
+            { name: '已创建', id: 0 },
+            { name: '未开始', id: 1 },
+            { name: '进行中', id: 2 },
+            { name: '已结束', id: 3 },
+            { name: '已停用', id: 4 },
+            { name: '已删除', id: 5 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -171,67 +160,48 @@ export default {
           title: '活动ID',
           dataIndex: 'id',
           key: 'id',
+          width: 200
+        },
+        {
+          title: '活动主题',
+          dataIndex: 'themeName',
+          key: 'themeName',
           width: 150
         },
         {
-          title: '活动标题',
-          dataIndex: 'couponTitle',
-          key: 'couponTitle',
+          title: '活动名称',
+          dataIndex: 'activityName',
+          key: 'activityName',
           width: 150
         },
-        // {
-        //   title: '卡券副标题',
-        //   dataIndex: 'couponSubhead',
-        //   key: 'couponSubhead',
-        //   width: 150
-        // },
         {
           title: '活动类型',
-          key: 'couponTypeSlot',
-          scopedSlots: { customRender: 'couponTypeSlot' },
+          dataIndex: 'typeName',
+          key: 'typeName',
           width: 150
         },
         {
-          title: '活动业务类型',
-          key: 'activitySlot',
-          scopedSlots: { customRender: 'activitySlot' },
-          width: 150
-        },
-        {
-          title: '活动面值金额',
-          // dataIndex: 'faceAmount',
-          key: 'faceAmountSlot',
-          scopedSlots: { customRender: 'faceAmountSlot' },
+          title: '活动状态',
+          key: 'statusSlot',
+          scopedSlots: { customRender: 'statusSlot' },
           width: 150
         },
         {
           title: '活动有效期',
-          scopedSlots: { customRender: 'validitySlot' },
           key: 'validitySlot',
-          width: 450
+          scopedSlots: { customRender: 'validitySlot' },
+          width: 250
         },
         {
-          title: '活动平台',
-          key: 'sourceSlot',
-          scopedSlots: { customRender: 'sourceSlot' },
-          width: 150
-        },
-        {
-          title: '状态',
-          key: 'couponStatusSlot',
-          scopedSlots: { customRender: 'couponStatusSlot' },
-          width: 150
-        },
-        {
-          title: '操作人员',
-          dataIndex: 'operator',
-          key: 'operator',
+          title: '创建用户',
+          key: 'createUserSlot',
+          scopedSlots: { customRender: 'createUserSlot' },
           width: 150
         },
         {
           title: '创建时间',
-          key: 'jointimeSlot',
-          scopedSlots: { customRender: 'jointimeSlot' },
+          key: 'createTimeSlot',
+          scopedSlots: { customRender: 'createTimeSlot' },
           width: 150
         },
         {
@@ -254,17 +224,6 @@ export default {
     FormList
   },
   computed: {
-    showIntegralChange() {
-      return param => {
-        if (param.changeType === 1) {
-          return '+' + param.integralChange;
-        } else if (param.changeType === 2) {
-          return '-' + param.integralChange;
-        } else {
-          return '';
-        }
-      };
-    },
     momentStr() {
       return param => {
         if (!param) {
@@ -283,83 +242,53 @@ export default {
         }
       };
     },
-    couponTypeStr() {
+    createUserStr() {
       return param => {
-        if (param === 10) {
-          return '代金券';
-        } else if (param === 20) {
-          return '满减券';
-        } else if (param === 40) {
-          return '折扣券';
+        console.log('createUserStr param :>> ', param);
+        if (param.length > 0) {
+          if (param.createUser) {
+            return param.createUser;
+          } else {
+            return 'createUser空2';
+          }
         } else {
-          return '';
+          return 'createUser空1';
         }
       };
     },
-    activityStr() {
+    createTimeStr() {
       return param => {
-        if (param === '4014') {
-          return '物业费';
-        } else if (param === '4005') {
-          return '购物券';
+        console.log('createTimeStr param :>> ', param);
+        if (param.length > 0) {
+          if (param.createUser) {
+            return this.momentStrHms(param.createTime);
+          } else {
+            return 'createTime空2';
+          }
         } else {
-          return '';
+          return 'createTime空1';
         }
       };
     },
-    faceAmountStr() {
+    parseValidityStr() {
       return param => {
-        if (param.couponType === 10) {
-          return param.faceAmount;
-        } else if (param.couponType === 20) {
-          return param.faceAmount;
-        } else if (param.couponType === 40) {
-          return param.discountRatio * 10 + '折';
-        } else {
-          return '';
-        }
+        return `${this.momentStr(param.startTime)} - ${this.momentStr(param.endTime)}`;
       };
     },
-    sourceStr() {
-      return param => {
-        if (param === '10' || param === 10) {
-          return '地产';
-        } else if (param === '20' || param === 20) {
-          return '邻里邦';
-        } else if (param === '30' || param === 30) {
-          return '邻里商城';
-        } else if (param === '40' || param === 40) {
-          return '会员中心';
-        } else if (param === '50' || param === 50) {
-          return '收费中心';
-        } else {
-          return '';
-        }
-      };
-    },
-    parseValidity() {
-      return param => {
-        if (param.validityType === 1) {
-          //固定有效期
-          return param.validityStartTime + ' ~ ' + param.validityEndTime;
-        } else if (param.validityType === 3) {
-          //相对有效期
-          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效';
-        } else {
-          return '';
-        }
-      };
-    },
-    couponStatusStr() {
+    actStatusStr() {
       return param => {
         if (param === 0) {
-          return '禁用';
+          return '已创建';
         } else if (param === 1) {
-          return '启用';
+          return '未开始';
         } else if (param === 2) {
-          return '删除';
+          return '进行中';
         } else if (param === 3) {
-          return '保存';
+          return '已结束';
+        } else if (param === 4) {
+          return '已停用';
+        } else if (param === 5) {
+          return '已删除';
         } else {
           return '';
         }
@@ -380,7 +309,7 @@ export default {
     onQuery(params) {
       // console.log('params :>> ', params);
       this.current = 1;
-      this.getCouponsList(true);
+      this.getActList(true);
     },
     //查看卡券详情
     goDetail(id) {
@@ -403,16 +332,15 @@ export default {
       });
     },
     //复制卡券
-    goCopy(id) {
-      console.log('id :>> ', id);
-      this.$router.push({
-        name: 'couponsManageCopy',
-        query: {
-          id: id
-        }
-      });
-    },
-
+    // goCopy(id) {
+    //   console.log('id :>> ', id);
+    //   this.$router.push({
+    //     name: 'couponsManageCopy',
+    //     query: {
+    //       id: id
+    //     }
+    //   });
+    // },
     couponDel(rowData, state) {
       let stateStr = '';
       if (state === 0) {
@@ -438,7 +366,7 @@ export default {
           api.couponOnOrOff(para).then(res => {
             console.log('couponOnOrOff res :>> ', res);
             if (res.code === 200) {
-              this.getCouponsList();
+              this.getActList();
             }
           });
         }
@@ -473,7 +401,7 @@ export default {
           api.couponOnOrOff(para).then(res => {
             console.log('couponOnOrOff res :>> ', res);
             if (res.code === 200) {
-              this.getCouponsList();
+              this.getActList();
             }
           });
         }
@@ -484,41 +412,47 @@ export default {
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
     //   this.pageSize = pageSize;
-    //   this.getCouponsList();
+    //   this.getActList();
     // },
+
     change(page) {
       this.current = page;
-      this.getCouponsList();
+      this.getActList();
     },
     showSizeChange(current, size) {
       this.current = 1;
       this.pageSize = size;
-      this.getCouponsList();
+      this.getActList();
     },
 
-    //获取积分列表
-    getCouponsList(isQuery = false) {
+    //获取活动列表
+    getActList(isQuery = false) {
       if (isQuery) {
         this.current = 1;
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let couponType = ''; //卡券类型
-        let couponTitle = ''; //卡券标题
-        let couponBusinessType = ''; //卡券业务类型
-        let couponStatus = ''; //卡券状态
-        // if (this.$refs.memberForm.getFieldsValue().couponType) {
-        //   couponType = this.$refs.memberForm.getFieldsValue().couponType;
-        // }
-        // if (this.$refs.memberForm.getFieldsValue().couponTitle) {
-        //   couponTitle = this.$refs.memberForm.getFieldsValue().couponTitle;
-        // }
-        // if (this.$refs.memberForm.getFieldsValue().couponBusinessType) {
-        //   couponBusinessType = this.$refs.memberForm.getFieldsValue().couponBusinessType;
-        // }
-        // if (this.$refs.memberForm.getFieldsValue().couponStatus) {
-        //   couponStatus = this.$refs.memberForm.getFieldsValue().couponStatus;
-        // }
+        let activityId = ''; //活动id
+        let activityName = ''; //活动名称
+        let status = ''; //活动状态
+        let themeName = ''; //主题名称
+        let typeId = ''; //活动类型
+
+        if (this.$refs.memberForm.getFieldsValue().activityId) {
+          activityId = this.$refs.memberForm.getFieldsValue().activityId;
+        }
+        if (this.$refs.memberForm.getFieldsValue().activityName) {
+          activityName = this.$refs.memberForm.getFieldsValue().activityName;
+        }
+        if (this.$refs.memberForm.getFieldsValue().status) {
+          status = this.$refs.memberForm.getFieldsValue().status;
+        }
+        if (this.$refs.memberForm.getFieldsValue().themeName) {
+          themeName = this.$refs.memberForm.getFieldsValue().themeName;
+        }
+        if (this.$refs.memberForm.getFieldsValue().typeId) {
+          typeId = this.$refs.memberForm.getFieldsValue().typeId;
+        }
 
         let jointimeStart = '';
         let jointimeEnd = '';
@@ -531,25 +465,26 @@ export default {
         }
 
         const para = {
+          activityId: activityId, //活动id
+          activityName: activityName, //活动名称
+          status: status, //活动状态
+          themeName: themeName, //主题名称
+          typeId: typeId, //活动类型
           pageIndex: this.current, //起始页
           pageSize: this.pageSize, //每页展示条数
-          activity: couponBusinessType, //卡券业务类型
-          createTimeStart: jointimeStart, //开始时间
-          createTimeEnd: jointimeEnd, //结束时间
-          status: couponStatus, //卡券状态
-          title: couponTitle, //卡券标题
-          type: couponType //卡券类型
+          startTime: jointimeStart, //开始时间
+          endTime: jointimeEnd //结束时间
         };
 
-        console.log('getCouponsList para :>> ', para);
+        console.log('getActList para :>> ', para);
 
         return api
-          .getCouponsList(para)
+          .getActList(para)
           .finally(() => {
             this.tableLoading = false;
           })
           .then(res => {
-            console.log('getCouponsList res :>> ', res);
+            console.log('getActList res :>> ', res);
             if (res.code === 200) {
               this.total = res.data.total;
               this.tableData.splice(0, this.tableData.length);
@@ -574,25 +509,22 @@ export default {
       this.$refs.memberForm.form.resetFields();
 
       //初始化加载数据
-      this.getCouponsList();
+      this.getActList();
     }
-    //重置
+    //重置data
     this.$route.meta.isUseCache = false;
 
     this.$nextTick(() => {
       this.$refs.memberForm.setFieldsValue({
-        actType: this.formList[4].selectOptions[0].id
+        typeId: this.formList[4].selectOptions[0].id
       });
-      // this.$refs.memberForm.setFieldsValue({
-      //   couponBusinessType: this.formList[4].selectOptions[0].id
-      // });
       this.$refs.memberForm.setFieldsValue({
-        couponStatus: this.formList[5].selectOptions[0].id
+        status: this.formList[5].selectOptions[0].id
       });
     });
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'integralManageDetail') {
+    if (from.name === 'actManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -600,7 +532,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'integralManageDetail') {
+    if (to.name === 'actManageDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -612,7 +544,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#coupons-list {
+#act-list {
   height: 100%;
   overflow: hidden;
 

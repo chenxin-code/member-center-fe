@@ -76,4 +76,8 @@ export default {
   EDIT_THEME_SHOW_DETAIL: '/times/member-center/themeActivity/api/v1/selectId',
   //任务奖励数量编辑
   EDIT_TASK_REWARD: '/times/member-center/task/api/v1/editTask',
+  //活动管理
+  ACT_LIST: '/times/member-center/activity/api/v1/list', //获取活动列表
+  DELETE_ACT: '/times/member-center/activity/api/v1/delete', //删除活动
+  UPDATE_ACT_STATUS: '/times/member-center/activity/api/v1/update-status', //更新活动状态
 };

@@ -39,3 +39,8 @@ export const editTheme = data => fetchApi(URL.EDIT_THEME, data, 'POST');
 export const editThemeShowDetail = data => fetchApi(URL.EDIT_THEME_SHOW_DETAIL, data, 'GET');
 //任务奖励数量编辑
 export const editTaskReward = data => fetchApi(URL.EDIT_TASK_REWARD, data, 'POST');
+
+  //活动管理
+  export const getActList = data => fetchApi(URL.ACT_LIST, data, 'GET');//获取活动列表
+  export const deleteAct = data => fetchApi(URL.DELETE_ACT, data, 'POST');//删除活动
+  export const updateActStatus = data => fetchApi(URL.UPDATE_ACT_STATUS, data, 'POST');//更新活动状态
