@@ -41,7 +41,6 @@
             <a-input-number
               v-model="bangdouAddVal"
               :min="1"
-              defaultValue="1"
               style="width: 267px"
               :style="bangdouAddValNull ? bangdouAddNullStyle1 : ''"
               placeholder="请输入邦豆数量"
