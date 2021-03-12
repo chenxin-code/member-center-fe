@@ -361,7 +361,7 @@
                   >
                     <a-form-item>
                       <a-checkbox-group
-                        v-if="radioValue === 1"
+                        v-if="radioValue1 === 1"
                         v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
                         :options="plainOptions"
                         @change="checkboxChange"
@@ -379,7 +379,7 @@
                   >
                     <a-form-item>
                       <a-checkbox-group
-                        v-if="radioValue === 1"
+                        v-if="radioValue1 === 2"
                         v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
                         :options="plainOptions"
                         @change="checkboxChange"
