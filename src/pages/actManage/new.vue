@@ -258,10 +258,9 @@
                       <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
                     </p>
                   </div>
-                  <!-- <div>radioValue: {{ radioValue }}</div>
-                  <div>checkboxValue: {{ checkboxValue }}</div> -->
+                  <div>radioValue: {{ radioValue }}</div>
+                  <div>checkboxValue: {{ checkboxValue }}</div>
                 </a-radio-group>
-
                 <!-- ********************************************************************* -->
 
                 <!-- ############ 时间参数 ############ -->
@@ -287,8 +286,108 @@
                       是
                     </a-radio>
                   </a-radio-group>
-                  <!-- <div>classification:{{ classification }}</div> -->
+                  <div>classification:{{ classification }}</div>
                 </a-form-item>
+
+                <div v-if="classification === 2">
+                  <!-- 每月活动日+每周活动日 -->
+                  <a-radio-group v-model="radioValue1" style="padding-left: 50px;">
+                    <a-radio :style="radioStyle" :value="1">
+                      <span style="padding-right:40px;">每月活动日</span>
+                      <template v-if="radioValue1 === 1">
+                        <a-form-item style="display:inline-block;">
+                          <a-select
+                            style="width:100px;"
+                            v-decorator="[
+                              'couponBusinessType',
+                              {
+                                initialValue: couponBusinessType,
+                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                              }
+                            ]"
+                            @change="couponBusinessTypeSelect"
+                          >
+                            <a-select-option
+                              :value="item.code"
+                              v-for="(item, index) in couponBusinessTypes"
+                              :key="index"
+                            >
+                              {{ item.name }}
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>1,2,5,10</a-button>
+                      </template>
+                    </a-radio>
+                    <a-radio :style="radioStyle" :value="2">
+                      <span style="padding-right:40px;">每周活动日</span>
+                      <template v-if="radioValue1 === 2">
+                        <a-form-item style="display:inline-block;">
+                          <a-select
+                            style="width:100px;"
+                            v-decorator="[
+                              'couponBusinessType',
+                              {
+                                initialValue: couponBusinessType,
+                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                              }
+                            ]"
+                            @change="couponBusinessTypeSelect"
+                          >
+                            <a-select-option
+                              :value="item.code"
+                              v-for="(item, index) in couponBusinessTypes"
+                              :key="index"
+                            >
+                              {{ item.name }}
+                            </a-select-option>
+                          </a-select>
+                        </a-form-item>
+                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>
+                          周一,周二,周三,周五
+                        </a-button>
+                      </template>
+                    </a-radio>
+                    <div>radioValue1: {{ radioValue1 }}</div>
+                  </a-radio-group>
+                  <!-- 对话框 -->
+                  <a-modal
+                    v-if="radioValue1 === 1"
+                    v-model="actModalVisible"
+                    title="每月活动日"
+                    @ok="actModalVisible = false"
+                    :centered="true"
+                    :maskClosable="false"
+                  >
+                    <a-form-item>
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
+                        :options="plainOptions"
+                        @change="checkboxChange"
+                      />
+                    </a-form-item>
+                    <div>checkboxValue: {{ checkboxValue }}</div>
+                  </a-modal>
+                  <a-modal
+                    v-if="radioValue1 === 2"
+                    v-model="actModalVisible"
+                    title="每周活动日"
+                    @ok="actModalVisible = false"
+                    :centered="true"
+                    :maskClosable="false"
+                  >
+                    <a-form-item>
+                      <a-checkbox-group
+                        v-if="radioValue === 1"
+                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
+                        :options="plainOptions"
+                        @change="checkboxChange"
+                      />
+                    </a-form-item>
+                    <div>checkboxValue: {{ checkboxValue }}</div>
+                  </a-modal>
+                </div>
 
                 <!-- ********************************************************************* -->
 
@@ -421,48 +520,51 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="可领取时间">
-                    <a-select
-                      v-decorator="[
-                        `couponBusinessType${index}`,
-                        {
-                          initialValue: item.couponBusinessType,
-                          rules: [{ required: true, message: '活动类型不能为空' }]
-                        }
-                      ]"
-                      @change="couponBusinessTypeSelect1"
-                    >
-                      <a-select-option
-                        :value="itemSelect.code"
-                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
-                        :key="indexSelect"
+                  <template v-if="classification === 2">
+                    <a-form-item label="可领取时间">
+                      <a-select
+                        v-decorator="[
+                          `couponBusinessType${index}`,
+                          {
+                            initialValue: item.couponBusinessType,
+                            rules: [{ required: true, message: '活动类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect1"
                       >
-                        {{ itemSelect.name }}
-                      </a-select-option>
-                    </a-select>
-                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
-                  </a-form-item>
-                  <a-form-item label="可领取时间">
-                    <a-select
-                      v-decorator="[
-                        `couponBusinessType${index}`,
-                        {
-                          initialValue: item.couponBusinessType,
-                          rules: [{ required: true, message: '活动类型不能为空' }]
-                        }
-                      ]"
-                      @change="couponBusinessTypeSelect1"
-                    >
-                      <a-select-option
-                        :value="itemSelect.code"
-                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
-                        :key="indexSelect"
+                        <a-select-option
+                          :value="itemSelect.code"
+                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :key="indexSelect"
+                        >
+                          {{ itemSelect.name }}
+                        </a-select-option>
+                      </a-select>
+                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                    </a-form-item>
+                    <a-form-item label="可领取时间">
+                      <a-select
+                        v-decorator="[
+                          `couponBusinessType${index}`,
+                          {
+                            initialValue: item.couponBusinessType,
+                            rules: [{ required: true, message: '活动类型不能为空' }]
+                          }
+                        ]"
+                        @change="couponBusinessTypeSelect1"
                       >
-                        {{ itemSelect.name }}
-                      </a-select-option>
-                    </a-select>
-                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
-                  </a-form-item>
+                        <a-select-option
+                          :value="itemSelect.code"
+                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :key="indexSelect"
+                        >
+                          {{ itemSelect.name }}
+                        </a-select-option>
+                      </a-select>
+                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                    </a-form-item>
+                  </template>
+
                   <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
                 </div>
                 <div style="display:flex;justify-content:center;padding-top:20px;">
@@ -505,13 +607,13 @@ import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
-
 export default {
   name: 'couponsManageNew',
   components: {},
   data() {
     return {
       //////////新建活动///////////
+      actModalVisible: false,
       awardFormindex: undefined,
       awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
       downLoadTplExist: false,
@@ -521,6 +623,7 @@ export default {
       plainOptions: ['时代+', '邻里PRO'],
       checkboxValue: [],
       radioValue: 1,
+      radioValue1: 1,
       radioStyle: {
         display: 'block',
         height: '40px',
