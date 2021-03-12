@@ -712,7 +712,7 @@ export default {
     },
     //////////上传图片///////////
     handleCancle() {
-      this.$router.replace({ path: '/couponsManage' });
+      this.$router.replace({ path: '/actManage' });
     },
     handleRangePicker(dates, dateStrings) {
       console.log('handleRangePicker dates :>> ', dates);
@@ -950,7 +950,7 @@ export default {
           console.log('getCouponUpdate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
-            this.$router.replace({ path: '/couponsManage' });
+            this.$router.replace({ path: '/actManage' });
           }
         });
     }
