@@ -30,3 +30,12 @@ export const getCouponCreate = data => fetchApi(URL.COUPON_CREATE, data, 'POST')
 export const getCouponUpdate = data => fetchApi(URL.COUPON_UPDATE, data, 'POST');
 export const couponOnOrOff = data => fetchApi(URL.COUPON_ONOROFF, data, 'POST');
 export const getTplDownload = data => fetchApi(URL.TPL_DOWNLOAD, data, 'GET');
+//活动主题
+export const getActThemeList = data => fetchApi(URL.ACT_THEME_LIST, data, 'GET');
+export const stopTheme = data => fetchApi(URL.STOP_THEME, data, 'POST');
+export const delTheme = data => fetchApi(URL.DEL_THEME, data, 'POST');
+export const addTheme = data => fetchApi(URL.ADD_THEME, data, 'POST');
+export const editTheme = data => fetchApi(URL.EDIT_THEME, data, 'POST');
+export const editThemeShowDetail = data => fetchApi(URL.EDIT_THEME_SHOW_DETAIL, data, 'GET');
+//任务奖励数量编辑
+export const editTaskReward = data => fetchApi(URL.EDIT_TASK_REWARD, data, 'POST');

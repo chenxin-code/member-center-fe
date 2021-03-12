@@ -13,7 +13,7 @@
         <span class="detail-main-items-label">{{ item.label }}</span>
         <span class="detail-main-items-value" v-if="item.name === 'result'">
           奖励成长值{{awardGrow}}, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整）
-          <a-button type="primary" @click="bangdouHandle()">修改数值</a-button>
+          <a-button type="primary" @click="bangdouHandle()">修改邦豆</a-button>
         </span>
         <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '' }}</span>
       </div>
@@ -45,6 +45,7 @@
               style="width: 267px"
               :style="bangdouAddValNull ? bangdouAddNullStyle1 : ''"
               placeholder="请输入邦豆数量"
+              @change="changeBangdouAddVal"
             />
           </div>
         </a-form-item>
@@ -112,13 +113,16 @@ export default {
         borderColor: 'red'
       },
       bangdouAddValNull: false,
-      bangdouAddVal: 1,
+      bangdouAddVal: null,
     };
   },
   mounted() {
     this.initData(this.$route.query.id);
   },
   methods: {
+    changeBangdouAddVal(value){
+      this.bangdouAddVal = value;
+    },
     initData(id) {
       api.getTaskDetail({ taskId: id }).then(res => {
         this.dataObj = Object.assign(
@@ -145,13 +149,19 @@ export default {
         return;
       }
       this.modalLoading = true;
-      setTimeout(() => {
+      api.editTaskReward({
+        id: this.$route.query.id,
+        awardIntegral: this.bangdouAddVal
+      }).then(res => {
         this.visibleBangdou = false;
         this.modalLoading = false;
-      },1000)
+        if(res.code === 200){
+          this.initData(this.$route.query.id);
+        }
+      });
     },
     bangdouHandle() {
-      this.bangdouAddVal = 1; //充值帮豆
+      this.bangdouAddVal = this.awardIntegral; //充值帮豆
       this.visibleBangdou = true; //显示对话框
     },
   },
