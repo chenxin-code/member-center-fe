@@ -1,16 +1,12 @@
 <template>
   <div id="coupons-detail">
     <div class="content-header">
-      新建活动主题
+      {{$route.path === '/actTheme/add'?'新建':'编辑'}}活动主题
       <span class="fallback" @click="$router.go(-1)" style="cursor: pointer">返回</span>
     </div>
     <div class="coupons-main">
       <a-row style="height: 100%">
-        <!-- 卡券基础信息 -->
         <div class="coupons-common coupons-base">
-          <div class="common-title">
-            <div class="common-title-content">卡券基础信息</div>
-          </div>
           <a-row class="common-row">
             <a-col :span="24">
               <a-form
@@ -20,53 +16,52 @@
                 style="height: 100%;overflow: auto"
                 autoComplete="off">
                 <a-form-item label="活动主题名称">
+                  <div v-if="$route.path === '/actTheme/edit'">{{themeName}}</div>
                   <a-input
-                    @change="actThemeTitleChange"
+                    @change="themeNameChange"
                     v-decorator="[
-                      'actThemeTitle',
+                      'themeName',
                       {
-                        initialValue: actThemeTitle,
+                        initialValue: themeName,
                         rules: [
                           { required: true, message: '活动主题名称不能为空' },
                           { whitespace: true, message: '活动主题名称不能为空' },
-                          //{ max: 20, message: '最多输入20个字符' }
+                          { max: 20, message: '最多输入20个字符' }
                         ]
                       }
                     ]"
                     placeholder="请输入活动主题名称"
-                    allow-clear/>
+                    allow-clear v-else />
                 </a-form-item>
                 <a-form-item label="备注">
                   <a-input
-                    @change="actThemeRemarkChange"
+                    @change="memoChange"
                     v-decorator="[
-                      'actThemeRemark',
+                      'memo',
                       {
-                        initialValue: actThemeRemark,
-                        //rules: [{ max: 20, message: '最多输入20个字符' }]
+                        initialValue: memo,
+                        rules: [{ max: 50, message: '最多输入50个字符' }]
                       }
                     ]"
                     placeholder="请输入备注信息"
-                    allow-clear
-                  />
+                    allow-clear />
                 </a-form-item>
                 <a-form-item label="活动主题状态">
-                  <a-switch checked-children="启用" un-checked-children="禁用" default-checked />
+                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="isEnable" @change="isEnableChange" />
                 </a-form-item>
               </a-form>
-              <!-- 提交和取消 -->
               <div class="common-submit-cancle">
                 <div class="common-btn common-submit">
                   <a-button
-                    style="margin-right: 20px;"
+                    style="margin-right: 20px"
                     :loading="saveLoading"
                     type="primary"
-                    @click="handleSubmit(3, 'saveLoading')">
+                    @click="addTheme()">
                     保存
                   </a-button>
                 </div>
                 <div class="common-btn common-cancle">
-                  <a-button type="primary" @click="handleCancle">取消</a-button>
+                  <a-button type="primary" @click="$router.replace({ path: '/actTheme' })">取消</a-button>
                 </div>
               </div>
             </a-col>
@@ -78,32 +73,86 @@
 </template>
 
 <script>
-import api from '@/api'
-
+import api from './../../api';
 export default {
-  name: 'actThemeNew',
+  name: 'actThemeAddEdit',
   components: {},
   data() {
     return {
-      submitLoading: false,
+      saveLoading: false,
       actThemeForm: this.$form.createForm(this, { name: 'actThemeForm' }),
-      actThemeTitle: null,
-      actThemeRemark: null,
+      id: null,//编辑用到id
+      themeName: null,
+      memo: null,
+      isEnable: true
     };
   },
   computed: {
 
   },
   methods: {
-    actThemeTitleChange(e) {
-      this.actThemeTitle = e.target.value;
+    themeNameChange(e) {
+      this.themeName = e.target.value;
     },
-    actThemeRemarkChange(e) {
-      this.actThemeRemark = e.target.value;
+    memoChange(e) {
+      this.memo = e.target.value;
     },
+    isEnableChange(checked){
+      this.isEnable = checked;
+    },
+    addTheme() {
+      if(this.$route.path === '/actTheme/edit'){
+        this.actThemeForm.validateFields((err) => {
+          if (!err) {
+            this.saveLoading = true;
+            api.editTheme({
+              id: this.id,
+              memo: this.memo,
+              isEnable: this.isEnable?0:1
+            }).finally(() => {
+              this.saveLoading = false;
+            }).then(res => {
+              this.saveLoading = false;
+              if (res.code === 200) {
+                this.$router.replace({ path: '/actTheme' });
+              }
+            });
+          }
+        });
+      }else if(this.$route.path === '/actTheme/add'){
+        this.actThemeForm.validateFields((err) => {
+          if (!err) {
+            this.saveLoading = true;
+            api.addTheme({
+              themeName: this.themeName,
+              memo: this.memo,
+              isEnable: this.isEnable?0:1
+            }).finally(() => {
+              this.saveLoading = false;
+            }).then(res => {
+              this.saveLoading = false;
+              if (res.code === 200) {
+                this.$router.replace({ path: '/actTheme' });
+              }
+            });
+          }
+        });
+      }
+    }
   },
   created() {
-
+    if(this.$route.path === '/actTheme/edit'){
+      api.editThemeShowDetail({
+        id: this.$route.query.id
+      }).then(res => {
+        if (res.code === 200) {
+          this.id = res.data.id;
+          this.themeName = res.data.themeName;
+          this.memo = res.data.memo;
+          this.isEnable = !Number(res.data.isEnable);
+        }
+      });
+    }
   },
   mounted() {
 

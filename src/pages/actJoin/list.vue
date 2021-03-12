@@ -2,7 +2,7 @@
   <div id="list">
     <div class="content-header">活动参与数据</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList routePath="/actTheme/new" ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
+      <FormList routePath="/actTheme/add" ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -60,7 +60,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
+        style="margin-top: 30px;width: 100%;text-align: right;"
       />
     </div>
   </div>
@@ -68,11 +68,10 @@
 
 <script>
 import FormList from './../../components/FormList/index.jsx';
-import api from '@/api';
+import api from './../../api';
 import moment from 'moment';
-
 export default {
-  name: 'Manage',
+  name: 'actJoin',
   data() {
     return {
       formList: [
@@ -265,32 +264,12 @@ export default {
     //重置
     this.$route.meta.isUseCache = false;
 
-    // this.$nextTick(() => {
-    //   this.$refs.actForm.setFieldsValue({
-    //     couponType: this.formList[0].selectOptions[0].id
-    //   });
-    //   this.$refs.actForm.setFieldsValue({
-    //     couponBusinessType: this.formList[2].selectOptions[0].id
-    //   });
-    //   this.$refs.actForm.setFieldsValue({
-    //     couponStatus: this.formList[4].selectOptions[0].id
-    //   });
-    // });
+
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'integralManageDetail') {
-      to.meta.isUseCache = true;
-    } else {
-      to.meta.isUseCache = false;
-    }
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'integralManageDetail') {
-      to.meta.isUseCache = true;
-    } else {
-      to.meta.isUseCache = false;
-    }
     next();
   },
   watch: {}

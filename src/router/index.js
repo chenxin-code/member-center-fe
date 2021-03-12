@@ -443,22 +443,22 @@ const routes = [
         component: () => import('@/pages/actTheme/list')
       },
       {
-        path: '/actTheme/new',
-        name: 'actThemeNew',
+        path: '/actTheme/add',
+        name: 'actThemeAddEdit',
         menuKey: 'actTheme',
         meta: {
           menu: '/actTheme',
           authKeys: [''],
           bread: [
             { path: '/actTheme', name: '活动主题管理' },
-            { path: '/actTheme/new', name: '新建活动主题' }
+            { path: '/actTheme/add', name: '新建活动主题' }
           ]
         },
-        component: () => import('@/pages/actTheme/new')
+        component: () => import('@/pages/actTheme/add-edit')
       },
       {
         path: '/actTheme/edit',
-        name: 'actThemeEdit',
+        name: 'actThemeAddEdit',
         menuKey: 'actTheme',
         meta: {
           menu: '/actTheme',
@@ -468,7 +468,7 @@ const routes = [
             { path: '/actTheme/edit', name: '编辑活动主题' }
           ]
         },
-        component: () => import('@/pages/actTheme/new')
+        component: () => import('@/pages/actTheme/add-edit')
       },
       {
         path: '/actJoin',
