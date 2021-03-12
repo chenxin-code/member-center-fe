@@ -390,7 +390,12 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
-      console.log('this.formList[0].selectOptions :>> ', this.formList[0].selectOptions);
+      this.$nextTick(() => {
+        this.$refs.memberForm.setFieldsValue({
+          memberSourceCode: this.formList[0].selectOptions[0].id
+        });
+      });
+      // console.log('this.formList[0].selectOptions :>> ', this.formList[0].selectOptions);
       //重置data
       this.total = 0;
       this.current = 1;
@@ -404,11 +409,11 @@ export default {
     //重置
     this.$route.meta.isUseCache = false;
 
-    this.$nextTick(() => {
-      this.$refs.memberForm.setFieldsValue({
-        memberSourceCode: this.formList[0].selectOptions[0].id
-      });
-    });
+    // this.$nextTick(() => {
+    //   this.$refs.memberForm.setFieldsValue({
+    //     memberSourceCode: this.formList[0].selectOptions[0].id
+    //   });
+    // });
   },
 
   beforeRouteEnter(to, from, next) {

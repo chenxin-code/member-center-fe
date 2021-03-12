@@ -244,7 +244,7 @@ export default {
     },
     createUserStr() {
       return param => {
-        console.log('createUserStr param :>> ', param);
+        // console.log('createUserStr param :>> ', param);
         if (param.length > 0) {
           if (param.createUser) {
             return param.createUser;
@@ -258,7 +258,7 @@ export default {
     },
     createTimeStr() {
       return param => {
-        console.log('createTimeStr param :>> ', param);
+        // console.log('createTimeStr param :>> ', param);
         if (param.length > 0) {
           if (param.createUser) {
             return this.momentStrHms(param.createTime);
@@ -502,6 +502,14 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.memberForm.setFieldsValue({
+          typeId: this.formList[4].selectOptions[0].id
+        });
+        this.$refs.memberForm.setFieldsValue({
+          status: this.formList[5].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
@@ -514,14 +522,14 @@ export default {
     //重置data
     this.$route.meta.isUseCache = false;
 
-    this.$nextTick(() => {
-      this.$refs.memberForm.setFieldsValue({
-        typeId: this.formList[4].selectOptions[0].id
-      });
-      this.$refs.memberForm.setFieldsValue({
-        status: this.formList[5].selectOptions[0].id
-      });
-    });
+    // this.$nextTick(() => {
+    //   this.$refs.memberForm.setFieldsValue({
+    //     typeId: this.formList[4].selectOptions[0].id
+    //   });
+    //   this.$refs.memberForm.setFieldsValue({
+    //     status: this.formList[5].selectOptions[0].id
+    //   });
+    // });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'actManageDetail') {
