@@ -18,16 +18,16 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动主题名称:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
               <!-- 活动名称 -->
-              <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
+              <div class="common-column-wrapp" v-show="actDetails.couponSubhead">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动名称:</div>
-                    <div class="column-left">{{ couponDetails.couponSubhead || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponSubhead || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -66,7 +66,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动类型:</div>
-                    <div class="column-left">{{ couponBusinessTypeStr(couponDetails.couponBusinessType) }}</div>
+                    <div class="column-left">{{ couponBusinessTypeStr(actDetails.couponBusinessType) }}</div>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动可参加次数:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -95,7 +95,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动每天可参加次数:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -104,7 +104,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动每人可参加次数:</div>
-                    <div class="column-left">{{ sourceStr(couponDetails.source) }}</div>
+                    <div class="column-left">{{ sourceStr(actDetails.source) }}</div>
                   </div>
                 </div>
               </div>
@@ -113,7 +113,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动每人每天可参加次数:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -122,7 +122,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">时间段包含:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -131,7 +131,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每月活动日包含:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -140,7 +140,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每周活动日包含:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -149,7 +149,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">会员权益类型:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -158,7 +158,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">会员卡及等级包含:</div>
-                    <div class="column-left">{{ couponDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -192,20 +192,20 @@
                   <div class="column-item">
                     <div class="column-right">活动创建:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
                     </div>
                   </div>
                   <div v-if="Math.random() > 0.5">
                     <div class="column-item">
                       <div class="column-right">活动创建:</div>
                       <div class="column-left">
-                        <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
+                        <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
                       </div>
                     </div>
                     <div class="column-item">
                       <div class="column-right">活动创建:</div>
                       <div class="column-left">
-                        <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
+                        <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
                       </div>
                     </div>
                   </div>
@@ -232,12 +232,12 @@ export default {
     return {
       downLoadTplExist: false,
       downLoadTplUrl: '',
-      couponDetails: {}
+      actDetails: {}
     };
   },
   computed: {
     couponDetailsMemo() {
-      return this.couponDetails.memo ? this.couponDetails.memo : '';
+      return this.actDetails.memo ? this.actDetails.memo : '';
     },
     momentStr() {
       return param => {
@@ -338,83 +338,35 @@ export default {
     },
     // 获取下载模版
     getTplDownload() {
+      const param = {
+        activityId: this.$route.query.id
+      };
       this.downLoadTplExist = false;
-      api.getTplDownload().then(res => {
+      api.getTplDownload(param).then(res => {
         console.log('getTplDownload res :>> ', res);
-        this.downLoadTplExist = true;
-        this.downLoadTplUrl = res.data;
+        if (res.code === 200) {
+          this.downLoadTplExist = true;
+          this.downLoadTplUrl = res.data;
+        }
       });
     },
-    getCouponDetail() {
-      let param = {};
-      let apiString = '';
-      if (Object.keys(this.$route.query)[0] === 'id') {
-        param = {
-          couponId: this.$route.query.id
-        };
-        apiString = 'getCouponDetail';
-      }
-      if (Object.keys(this.$route.query)[0] === 'code') {
-        param = {
-          couTypeCode: this.$route.query.code
-        };
-        apiString = 'getCouponDetailByCode';
-      }
+    getActDetail() {
+      const param = {
+        activityId: this.$route.query.id
+      };
 
-      console.log('getCouponDetail param :>> ', param);
+      console.log('getActDetail param :>> ', param);
 
-      api[apiString](param).then(res => {
-        console.log('getCouponDetail res :>> ', res);
-
-        // //////////////////mock/////////////////
-        // // const res = { data: {}, code: 200 };
-        // res.data = {
-        //   // pcRuleId:136994,//没用
-        //   couponTitle: '活动标题',
-        //   couponSubhead: '卡副券标题',
-        //   // couponType: 10,//开关
-        //   couponType: 40,
-        //   voucherAmount: '100',
-        //   satisfyAmount: '200',
-        //   fullReductionDiscountAmount: '100',
-        //   discountMaxDeduction: '150',
-        //   discountRatio: '0.7',
-        //   // validityType: 1,//开关
-        //   validityType: 3,
-        //   validityStartTime: '2021-01-11',
-        //   validityEndTime: '2020-01-22',
-        //   validityDayNums: 30,
-        //   takeEffectDayNums: 3,
-        //   // source: '10',//开关
-        //   source: '30',
-        //   // couponBusinessType: '4014',//开关
-        //   couponBusinessType: '4005',
-        //   // classification: 1,//开关
-        //   classification: 2,
-        //   commercialTenants: '123456',
-        //   merchandises: '123456',
-        //   couponImage:
-        //     'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
-        //   cost: '666',
-        //   memo: 'memo memo memo 999',
-        //   createTime: '2020-10-10 23:00:00',
-        //   createOperator: '望望 13900000001',
-        //   onTime: '2020-10-10 23:00:00',
-        //   onOperator: '望望 13900000001',
-        //   offTime: '2020-10-10 23:00:00',
-        //   offOperator: '望望 13900000001'
-        // };
-        // //////////////////mock/////////////////
-
+      api.getActDetail(param).then(res => {
+        console.log('getActDetail res :>> ', res);
         if (res.code === 200) {
-          console.log('res.data :>> ', res.data);
           for (const key in res.data) {
             if (Object.hasOwnProperty.call(res.data, key)) {
               const element = res.data[key];
-              this.$set(this.couponDetails, key, element);
+              this.$set(this.actDetails, key, element);
             }
           }
-          console.log('this.couponDetails :>> ', this.couponDetails);
+          console.log('this.actDetails :>> ', this.actDetails);
         }
       });
     }
@@ -422,7 +374,7 @@ export default {
   created() {
     console.log('this.$route :>> ', this.$route);
     this.getTplDownload();
-    this.getCouponDetail();
+    this.getActDetail();
   },
   mounted() {},
   watch: {}

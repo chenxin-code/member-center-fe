@@ -113,8 +113,8 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '领券中心', id: 1 },
-            { name: '随便输入2', id: 2 },
-            { name: '随便输入3', id: 3 }
+            { name: '会员权益', id: 2 },
+            { name: '棒豆兑换', id: 3 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -444,7 +444,7 @@ export default {
         if (this.$refs.memberForm.getFieldsValue().activityName) {
           activityName = this.$refs.memberForm.getFieldsValue().activityName;
         }
-        if (this.$refs.memberForm.getFieldsValue().status) {
+        if (this.$refs.memberForm.getFieldsValue().status || this.$refs.memberForm.getFieldsValue().status === 0) {
           status = this.$refs.memberForm.getFieldsValue().status;
         }
         if (this.$refs.memberForm.getFieldsValue().themeName) {

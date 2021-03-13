@@ -40,7 +40,7 @@ export default {
   GET_COUPONLIST: '/times/member-center/coupon/api/v1/coupon/list', // 获取卡券列表
   COUPONDISTRIBUTE: '/times/member-center/coupon/api/v1/assgin-member/distribute', // 卡券派发
   GET_MEMBERLEVELLIST: '/times/member-center/member-card/api/v1/level/list', // 会员卡等级
-  TPL_DOWNLOAD:'/times/member-center/coupon/api/v1/memberTemplate/download', // 下载卡券模板
+  TPL_DOWNLOAD: '/times/member-center/coupon/api/v1/memberTemplate/download', // 下载卡券模板
 
   //会员中心:张
   MEMBER_LIST: option.member + '/api/v1/member/list',
@@ -80,4 +80,5 @@ export default {
   ACT_LIST: '/times/member-center/activity/api/v1/list', //获取活动列表
   DELETE_ACT: '/times/member-center/activity/api/v1/delete', //删除活动
   UPDATE_ACT_STATUS: '/times/member-center/activity/api/v1/update-status', //更新活动状态
+  ACT_DETAIL: '/times/member-center/activity/api/v1/detail' //活动详情
 };
