@@ -399,7 +399,7 @@
                 <!-- 奖品集合 -->
                 <div
                   class="common-award"
-                  :class="`award-class${index}`"
+                  :class="`common-award-${index}`"
                   v-for="(item, index) in awardList"
                   :key="index"
                   @click="awardFormindex = index"
@@ -533,7 +533,7 @@
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <template v-if="classification === 2">
-                    <a-form-item label="可领取时间">
+                    <a-form-item label="可领取时间1" v-if="radioValue1 === 1">
                       <a-select
                         v-decorator="[
                           `couponBusinessType${index}`,
@@ -554,7 +554,7 @@
                       </a-select>
                       <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
                     </a-form-item>
-                    <a-form-item label="可领取时间">
+                    <a-form-item label="可领取时间2" v-if="radioValue1 === 2">
                       <a-select
                         v-decorator="[
                           `couponBusinessType${index}`,
