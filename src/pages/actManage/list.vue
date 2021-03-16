@@ -36,14 +36,19 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a style="padding-right: 5px;" @click="goDetail(rowData.id)">查看</a>
-            <a style="padding-right: 5px;" @click="couponOnOrOff(rowData, 1)">
-              {{ Math.random() > 0.5 ? '启用' : '停用' }}
+            <a style="padding-right: 5px;" @click="goActDetail(rowData.id)">查看</a>
+            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="updateActStatus(rowData.id, 0)">
+              启用
             </a>
-            <a @click="goEdit(rowData.id)">编辑</a>
-            <a style="padding-right: 5px;" @click="couponDel(rowData, 0)">
-              删除
+            <a
+              v-show="rowData.status === 1 || rowData.status === 2"
+              style="padding-right: 5px;"
+              @click="updateActStatus(rowData.id, 1)"
+            >
+              停用
             </a>
+            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="goActEdit(rowData.id)">编辑</a>
+            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="deleteAct(rowData.id)">删除</a>
           </div>
         </template>
       </a-table>
@@ -312,8 +317,8 @@ export default {
       this.getActList(true);
     },
     //查看卡券详情
-    goDetail(id) {
-      console.log('goDetail id :>> ', id);
+    goActDetail(id) {
+      console.log('goActDetail id :>> ', id);
       this.$router.push({
         name: 'actManageDetail',
         query: {
@@ -322,7 +327,7 @@ export default {
       });
     },
     //编辑卡券
-    goEdit(id) {
+    goActEdit(id) {
       console.log('id :>> ', id);
       this.$router.push({
         name: 'actManageEdit',
@@ -331,40 +336,21 @@ export default {
         }
       });
     },
-    //复制卡券
-    // goCopy(id) {
-    //   console.log('id :>> ', id);
-    //   this.$router.push({
-    //     name: 'couponsManageCopy',
-    //     query: {
-    //       id: id
-    //     }
-    //   });
-    // },
-    couponDel(rowData, state) {
-      let stateStr = '';
-      if (state === 0) {
-        stateStr = '禁用';
-      } else if (state === 1) {
-        stateStr = '启用';
-      } else {
-        return;
-      }
+    //删除卡券
+    deleteAct(paramId) {
       this.$confirm({
-        title: `${stateStr}卡券`,
-        content: `您确定要${stateStr}该卡券吗？`,
+        title: '确认删除当前活动？',
         centered: true,
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
           const para = {
-            id: rowData.id,
-            state: state
+            id: paramId
           };
-          console.log('couponOnOrOff para :>> ', para);
+          console.log('deleteAct para :>> ', para);
           this.tableLoading = true;
-          api.couponOnOrOff(para).then(res => {
-            console.log('couponOnOrOff res :>> ', res);
+          api.deleteAct(para).then(res => {
+            console.log('deleteAct res :>> ', res);
             if (res.code === 200) {
               this.getActList();
             }
@@ -373,33 +359,38 @@ export default {
       });
     },
 
-    couponOnOrOff(rowData, state) {
-      let stateStr = '';
+    updateActStatus(paramId, state) {
+      let title;
+      let content;
       if (state === 0) {
-        stateStr = '禁用';
+        title = '确认启用当前活动？';
+        content = '';
       } else if (state === 1) {
-        stateStr = '启用';
+        title = '确认停用当前活动？';
+        content = '活动停用后用户无法继续参加';
       } else {
-        return;
+        title = '';
+        content = '';
       }
 
-      console.log('rowData :>> ', rowData);
+      console.log('paramId :>> ', paramId);
       console.log('state :>> ', state);
+
       this.$confirm({
-        title: `${stateStr}卡券`,
-        content: `您确定要${stateStr}该卡券吗？`,
+        title: title,
+        content: content,
         centered: true,
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
           const para = {
-            id: rowData.id,
-            state: state
+            id: paramId,
+            isEnable: state
           };
-          console.log('couponOnOrOff para :>> ', para);
+          console.log('updateActStatus para :>> ', para);
           this.tableLoading = true;
-          api.couponOnOrOff(para).then(res => {
-            console.log('couponOnOrOff res :>> ', res);
+          api.updateActStatus(para).then(res => {
+            console.log('updateActStatus res :>> ', res);
             if (res.code === 200) {
               this.getActList();
             }

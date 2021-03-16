@@ -57,7 +57,7 @@
             <!-- <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
               启用
             </a> -->
-            <a @click="couponOnOrOff(rowData, 0)" v-else-if="rowData.couponStatus === 1">
+            <a @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
           </div>
@@ -413,17 +413,17 @@ export default {
       });
     },
 
-    couponOnOrOff(rowData, state) {
-      let stateStr = '';
+    couponOnOrOff(paramId, state) {
+      let stateStr;
       if (state === 0) {
         stateStr = '禁用';
       } else if (state === 1) {
         stateStr = '启用';
       } else {
-        return;
+        stateStr = '';
       }
 
-      console.log('rowData :>> ', rowData);
+      console.log('paramId :>> ', paramId);
       console.log('state :>> ', state);
       this.$confirm({
         title: `${stateStr}卡券`,
@@ -433,7 +433,7 @@ export default {
         cancelText: '取消',
         onOk: () => {
           const para = {
-            id: rowData.id,
+            id: paramId,
             state: state
           };
           console.log('couponOnOrOff para :>> ', para);
