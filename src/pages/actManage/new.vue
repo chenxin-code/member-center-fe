@@ -564,10 +564,11 @@
                       <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
                     </a-form-item>
                   </template>
-
-                  <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
+                  <button class="common-award-btn" v-show="awardList.length > 1" @click="handleDelete(index)">
+                    删除
+                  </button>
                 </div>
-                <div style="display:flex;justify-content:center;padding-top:20px;">
+                <div style="display:flex;justify-content:center;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
 
@@ -1251,8 +1252,16 @@ export default {
           }
 
           .common-award {
-            border: 1px solid #000;
+            position: relative;
+            border: 1px dashed #ccc;
             padding: 10px;
+            margin-bottom: 20px;
+
+            .common-award-btn {
+              position: absolute;
+              bottom: 10px;
+              right: 10px;
+            }
 
             ::v-deep .ant-col-3 {
               width: 15%;
