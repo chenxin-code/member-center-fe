@@ -119,7 +119,7 @@ export default {
             { name: '全部', id: '' },
             { name: '领券中心', id: 1 },
             { name: '会员权益', id: 2 },
-            { name: '棒豆兑换', id: 3 }
+            { name: '邦豆兑换', id: 3 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }

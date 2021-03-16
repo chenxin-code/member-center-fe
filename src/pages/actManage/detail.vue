@@ -556,10 +556,14 @@ export default {
       }
     }
 
-    // .act-base {
-    // }
     .act-award {
-      padding-bottom: 100px;
+      padding-bottom: 20px;
+
+      .common-row {
+        .common-column-wrapp {
+          margin-bottom: 20px !important;
+        }
+      }
     }
   }
 }

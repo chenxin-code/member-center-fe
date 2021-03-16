@@ -215,7 +215,8 @@ export default {
       receiveList: [
         { label: '领券中心', value: 1 },
         { label: '直接发放', value: 2 },
-        { label: '邦豆兑换', value: 3 }
+        { label: '邦豆兑换', value: 3 },
+        { label: '卡密兑换', value: 4 }
       ],
       systemList: [],
       issueRange: [
@@ -457,7 +458,7 @@ export default {
         id: this.id
       };
       this.formBasic.validateFields((err, values) => {
-        console.log(values);
+        console.log('couponDistribute values :>> ', values);
         if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });
@@ -468,7 +469,10 @@ export default {
           } else {
             Object.assign(args, values);
           }
-          // debounce(() => {
+
+          console.log('couponDistribute args :>> ', args);
+          // return;
+
           this.submitLoading = true;
           api
             .couponDistribute(
@@ -481,7 +485,6 @@ export default {
               this.submitLoading = false;
             })
             .then(res => res.code == 200 && this.$router.push({ name: 'release_status' }));
-          // }, 1000);
         }
       });
     }

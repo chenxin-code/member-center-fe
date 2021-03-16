@@ -404,6 +404,18 @@
                   :key="index"
                   @click="awardFormindex = index"
                 >
+                  <a-form-item label="选择卡券：">
+                    <div
+                      :class="`common-award-couponSelect ${showRedBorder && 'border-red'}`"
+                      @click="handleSelectCoupon"
+                    >
+                      {{ couponName }}
+                    </div>
+                    <p v-show="showRedBorder" class="common-award-couponSelectTip">请选择卡券！</p>
+                  </a-form-item>
+                  <a-form-item label="卡券有效期：">
+                    <a-input :placeholder="couponValid" disabled />
+                  </a-form-item>
                   <a-form-item label="领取条件设置">
                     <a-select
                       v-decorator="[
@@ -598,6 +610,48 @@
         </div>
       </a-row>
     </div>
+    <a-modal
+      title="卡券选择"
+      :visible="modalVisible"
+      @ok="handleOk"
+      @cancel="handleModalCancel"
+      width="1300px"
+      :maskClosable="false"
+      :centered="true"
+    >
+      <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+      <a-table
+        :style="{ marginTop: '20px' }"
+        :columns="columns"
+        :data-source="tableDataList"
+        :pagination="false"
+        :loading="tableLoading"
+        :scroll="{ y: scrollY }"
+        :row-selection="rowSelection"
+      >
+        <template slot="faceAmountSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="faceAmountStr(rowData)"></span>
+          </div>
+        </template>
+        <!-- <span slot="action" slot-scope="record">
+          <a @click="onCheck(record)">查看</a>
+        </span> -->
+      </a-table>
+      <a-pagination
+        :total="total"
+        :show-total="total => `共 ${total} 条`"
+        show-quick-jumper
+        show-size-changer
+        v-model="current"
+        :current="current"
+        :pageSize="pageSize"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="change"
+        @showSizeChange="showSizeChange"
+        style="margin-top:30px;width:100%;text-align: right;"
+      />
+    </a-modal>
   </div>
 </template>
 
@@ -607,15 +661,108 @@ import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
+import FilterForm from '@/components/FilterGroup/index.jsx';
+import {
+  couponsCenterList,
+  bangdouList,
+  cardList,
+  level,
+  typeList,
+  activityList
+} from '@/pages/coupons/release/createForms';
 
 export default {
   name: 'couponsManageNew',
-  components: {},
+  components: {
+    FilterForm
+  },
   data() {
     return {
+      //分页
+      total: 0,
+      current: 1,
+      pageSize: 10,
+      //表格
+      tableDataList: [],
+      tableLoading: false,
+      formList: [
+        {
+          label: '卡券类型',
+          name: 'type',
+          type: 'select',
+          placeholder: '全部',
+          selectOptions: typeList
+        },
+        {
+          label: '卡券标题',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'title'
+        },
+        {
+          label: '卡券业务类型',
+          type: 'select',
+          placeholder: '全部',
+          name: 'activity',
+          selectOptions: activityList,
+          labelCol: { span: 9 },
+          wrapperCol: { span: 15 }
+        }
+      ],
+      columns: [
+        {
+          dataIndex: 'id',
+          key: 'id',
+          title: '卡券ID'
+        },
+        {
+          title: '卡券标题',
+          key: 'couponTitle',
+          dataIndex: 'couponTitle'
+        },
+        // {
+        //     title: '卡券副标题',
+        //     key: 'couponSubhead',
+        //     dataIndex: 'couponSubhead'
+        // },
+        {
+          title: '卡券类型',
+          key: 'couponType',
+          dataIndex: 'couponType',
+          customRender: text => typeList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券业务类',
+          key: 'activity',
+          dataIndex: 'activity',
+          customRender: text => activityList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券面值金额',
+          key: 'faceAmountSlot',
+          scopedSlots: { customRender: 'faceAmountSlot' }
+        },
+        {
+          title: '操作人员',
+          key: 'operator',
+          dataIndex: 'operator'
+        },
+        {
+          title: '创建时间',
+          key: 'createTime',
+          dataIndex: 'createTime',
+          customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+        }
+      ],
       //////////新建活动///////////
+      modalVisible: false,
+      showRedBorder: false,
+      couponName: '请选择',
+      couponValid: '',
+      selectedRows: [],
+      scrollY: 300,
       actModalVisible: false,
-      awardFormindex: undefined,
+      awardFormindex: 0,
       awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
@@ -687,6 +834,28 @@ export default {
     };
   },
   computed: {
+    faceAmountStr() {
+      return param => {
+        if (param.couponType === 10) {
+          return param.faceAmount;
+        } else if (param.couponType === 20) {
+          return param.faceAmount;
+        } else if (param.couponType === 40) {
+          return param.discountRatio * 10 + '折';
+        } else {
+          return '';
+        }
+      };
+    },
+    rowSelection() {
+      return {
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.selectedRows = selectedRows;
+        },
+        type: 'radio'
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -718,6 +887,44 @@ export default {
   methods: {
     moment,
     //////////新建活动///////////
+    // 查询卡券列表
+    onSearch(args) {
+      console.log(args);
+      const { activity, title, type } = args;
+      this.activity = activity || null;
+      this.title = title || null;
+      this.type = type || null;
+      this.current = 1;
+      this.getCouponList();
+    },
+    // 点击弹窗确定
+    handleOk(e) {
+      // this.confirmLoading = true;
+      if (this.selectedRows.length > 0) {
+        this.modalVisible = false;
+        this.couponName = this.selectedRows[0].couponTitle;
+        this.couTypeCode = this.selectedRows[0].couTypeCode;
+        this.showRedBorder = false;
+        this.id = this.selectedRows[0].id;
+        console.log('=======', this.selectedRows);
+        if (this.selectedRows[0].validityType == 1) {
+          this.couponValid = `${this.selectedRows[0].validityStartTime} - ${this.selectedRows[0].validityEndTime}`;
+        } else {
+          this.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${this.selectedRows[0].takeEffectDayNums}天后生效`;
+        }
+      } else {
+        this.$message.error('必须选择一个卡券!');
+      }
+      // this.confirmLoading = false;
+    },
+    // 打开弹窗
+    handleSelectCoupon() {
+      this.modalVisible = true;
+    },
+    // 关闭弹窗
+    handleModalCancel(e) {
+      this.modalVisible = false;
+    },
     handleDelete(index) {
       this.$delete(this.awardList, index);
     },
@@ -755,6 +962,43 @@ export default {
         title: '提示',
         content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
       });
+    },
+    change(page) {
+      this.current = page;
+      this.getCouponList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
+      this.getCouponList();
+    },
+    // 获取卡券列表
+    getCouponList() {
+      this.tableLoading = true;
+      let args = {
+        pageIndex: this.current,
+        pageSize: this.pageSize,
+        activity: this.activity,
+        type: this.type,
+        title: this.title,
+        status: 99
+      };
+      api
+        .getCouponList(args)
+        .then(res => {
+          console.log(res);
+          this.tableLoading = false;
+          this.tableDataList = res.data.records.map((item, index) => {
+            return {
+              ...item,
+              key: index
+            };
+          });
+          this.total = res.data.total;
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
     },
     //////////新建活动///////////
     disabledDate(current) {
@@ -1154,10 +1398,16 @@ export default {
   created() {
     console.log('this.$route :>> ', this.$route);
     this.getTplDownload();
+    this.getCouponList();
     // this.getCouponDetail();
   },
   mounted() {},
   watch: {
+    modalVisible: function(newVal, oldVal) {
+      if (newVal) {
+        this.getCouponList();
+      }
+    },
     fileList: {
       handler(newVal) {
         console.log('watch fileList newVal :>> ', newVal);
@@ -1255,7 +1505,29 @@ export default {
             position: relative;
             border: 1px dashed #ccc;
             padding: 10px;
-            margin-bottom: 20px;
+            margin: 10px 11.5% 20px;
+            border-radius: 8px;
+
+            .common-award-couponSelect {
+              width: 100%;
+              line-height: 32px;
+              height: 32px;
+              border: 1px solid #bfbfbf;
+              color: #bfbfbf;
+              padding-left: 10px;
+              border-radius: 3px;
+            }
+
+            .border-red {
+              border-color: #f5222d;
+            }
+
+            .common-award-couponSelectTip {
+              color: #f5222d;
+              margin: 0;
+              line-height: 1.5;
+              padding-top: 3px;
+            }
 
             .common-award-btn {
               position: absolute;
@@ -1264,7 +1536,7 @@ export default {
             }
 
             ::v-deep .ant-col-3 {
-              width: 15%;
+              width: 20%;
             }
           }
         }
