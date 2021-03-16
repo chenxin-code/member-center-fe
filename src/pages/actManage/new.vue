@@ -768,7 +768,10 @@ export default {
       downLoadTplUrl: '',
       file: '', //会员文件
       fileList1: [],
-      plainOptions: ['时代+', '邻里PRO'],
+      plainOptions: [
+        { label: '周一', value: 1 },
+        { label: '周二', value: 2 }
+      ],
       checkboxValue: [],
       radioValue: 1,
       radioValue1: 1,
