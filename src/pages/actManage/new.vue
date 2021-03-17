@@ -424,7 +424,7 @@
                   <a-form-item label="领取条件设置">
                     <a-select
                       v-decorator="[
-                        `condition${index}`,
+                        'condition',
                         {
                           initialValue: item.condition,
                           rules: [{ required: true, message: '活动类型不能为空' }]
@@ -446,7 +446,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -465,7 +465,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -484,7 +484,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -503,7 +503,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -522,7 +522,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -541,7 +541,7 @@
                     <a-form-item label="可领取时间" v-if="actRadioValue === 1">
                       <a-select
                         v-decorator="[
-                          `monthGetDay${index}`,
+                          'monthGetDay',
                           {
                             initialValue: item.monthGetDay,
                             rules: [{ required: true, message: '可领取时间不能为空' }]
@@ -562,7 +562,7 @@
                     <a-form-item label="可领取时间" v-if="actRadioValue === 2">
                       <a-select
                         v-decorator="[
-                          `weekGetDay${index}`,
+                          'weekGetDay',
                           {
                             initialValue: item.weekGetDay,
                             rules: [{ required: true, message: '可领取时间不能为空' }]
