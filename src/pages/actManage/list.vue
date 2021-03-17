@@ -24,14 +24,9 @@
             <span v-html="parseValidityStr(rowData)"></span>
           </div>
         </template>
-        <template slot="createUserSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="createUserStr(rowData.activityAwardList)"></span>
-          </div>
-        </template>
         <template slot="createTimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="createTimeStr(rowData.activityAwardList)"></span>
+            <span v-html="momentStrHms(rowData.createTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
@@ -171,43 +166,43 @@ export default {
           title: '活动主题',
           dataIndex: 'themeName',
           key: 'themeName',
-          width: 150
+          width: 180
         },
         {
           title: '活动名称',
           dataIndex: 'activityName',
           key: 'activityName',
-          width: 150
+          width: 180
         },
         {
           title: '活动类型',
           dataIndex: 'typeName',
           key: 'typeName',
-          width: 150
+          width: 120
         },
         {
           title: '活动状态',
           key: 'statusSlot',
           scopedSlots: { customRender: 'statusSlot' },
-          width: 150
+          width: 100
         },
         {
           title: '活动有效期',
           key: 'validitySlot',
           scopedSlots: { customRender: 'validitySlot' },
-          width: 250
+          width: 350
         },
         {
           title: '创建用户',
-          key: 'createUserSlot',
-          scopedSlots: { customRender: 'createUserSlot' },
-          width: 150
+          dataIndex: 'createUserName',
+          key: 'createUserName',
+          width: 180
         },
         {
           title: '创建时间',
           key: 'createTimeSlot',
           scopedSlots: { customRender: 'createTimeSlot' },
-          width: 150
+          width: 180
         },
         {
           title: '操作',
@@ -247,37 +242,36 @@ export default {
         }
       };
     },
-    createUserStr() {
-      return param => {
-        // console.log('createUserStr param :>> ', param);
-        if (param.length > 0) {
-          if (param.createUser) {
-            return param.createUser;
-          } else {
-            return 'createUser空2';
-          }
-        } else {
-          return 'createUser空1';
-        }
-      };
-    },
-    createTimeStr() {
-      return param => {
-        // console.log('createTimeStr param :>> ', param);
-        if (param.length > 0) {
-          if (param.createUser) {
-            return this.momentStrHms(param.createTime);
-          } else {
-            return 'createTime空2';
-          }
-        } else {
-          return 'createTime空1';
-        }
-      };
-    },
+    // createUserStr() {
+    //   return param => {
+    //     // console.log('createUserStr param :>> ', param);
+    //     if (param.length > 0) {
+    //       if (param.createUser) {
+    //         return param.createUser;
+    //       } else {
+    //         return 'createUser空2';
+    //       }
+    //     } else {
+    //       return 'createUser空1';
+    //     }
+    //   };
+    // },
+    // createTimeStr() {
+    //   return param => {
+    //     if (param.length > 0) {
+    //       if (param.createUser) {
+    //         return this.momentStrHms(param.createTime);
+    //       } else {
+    //         return 'createTime空2';
+    //       }
+    //     } else {
+    //       return 'createTime空1';
+    //     }
+    //   };
+    // },
     parseValidityStr() {
       return param => {
-        return `${this.momentStr(param.startTime)} - ${this.momentStr(param.endTime)}`;
+        return `${this.momentStrHms(param.startTime)} - ${this.momentStrHms(param.endTime)}`;
       };
     },
     actStatusStr() {
