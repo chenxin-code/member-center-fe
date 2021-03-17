@@ -49,7 +49,16 @@
                   <div class="column-item column-memo">
                     <div class="column-right">备注:</div>
                     <div class="column-left">
-                      <div class="column-left">{{ actDetails.memo || '' }}</div>
+                      <div class="column-left">
+                        <a-textarea
+                          v-model="actDetailsMemo"
+                          :disabled="true"
+                          :maxLength="50"
+                          :auto-size="{ minRows: 3, maxRows: 5 }"
+                          style="width: 267px;"
+                          placeholder="请输入备注"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -249,6 +258,9 @@ export default {
     };
   },
   computed: {
+    actDetailsMemo() {
+      return this.actDetails.memo ? this.actDetails.memo : '';
+    },
     momentStr() {
       return param => {
         if (!param) {
