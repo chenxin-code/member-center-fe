@@ -424,17 +424,17 @@
                   <a-form-item label="领取条件设置">
                     <a-select
                       v-decorator="[
-                        `couponBusinessType${index}`,
+                        `condition${index}`,
                         {
-                          initialValue: item.couponBusinessType,
+                          initialValue: item.condition,
                           rules: [{ required: true, message: '活动类型不能为空' }]
                         }
                       ]"
-                      @change="couponBusinessTypeSelect1"
+                      @change="conditionSelect"
                     >
                       <a-select-option
-                        :value="itemSelect.code"
-                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :value="itemSelect.id"
+                        v-for="(itemSelect, indexSelect) in conditions"
                         :key="indexSelect"
                       >
                         {{ itemSelect.name }}
@@ -538,7 +538,7 @@
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
                   <template v-if="isPeriodic === 1">
-                    <a-form-item label="可领取时间">
+                    <a-form-item label="可领取时间" v-if="actRadioValue === 1">
                       <a-select
                         v-decorator="[
                           `monthGetDay${index}`,
@@ -559,7 +559,7 @@
                       </a-select>
                       <div>item.monthGetDay:{{ item.monthGetDay }}</div>
                     </a-form-item>
-                    <a-form-item label="可领取时间2" v-if="actRadioValue === 2">
+                    <a-form-item label="可领取时间" v-if="actRadioValue === 2">
                       <a-select
                         v-decorator="[
                           `weekGetDay${index}`,
@@ -571,11 +571,11 @@
                         @change="weekGetDaySelect"
                       >
                         <a-select-option
-                          :value="itemSelect.code"
+                          :value="itemSelect.value"
                           v-for="(itemSelect, indexSelect) in weeklyDays"
                           :key="indexSelect"
                         >
-                          {{ itemSelect.name }}
+                          {{ itemSelect.label }}
                         </a-select-option>
                       </a-select>
                       <div>item.weekGetDay:{{ item.weekGetDay }}</div>
@@ -769,7 +769,7 @@ export default {
       scrollY: 300,
       actModalVisible: false,
       awardFormindex: 0,
-      awardList: [{ couponTitle: '', monthGetDay: '', weekGetDay: '' }],
+      awardList: [{ couponTitle: '', condition: '', monthGetDay: '', weekGetDay: '' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
@@ -869,6 +869,11 @@ export default {
         { label: '周五', value: '5' },
         { label: '周六', value: '6' },
         { label: '周日', value: '7' }
+      ],
+      conditions: [
+        { name: '请选择', id: '' },
+        { name: '手动领取', id: 1 },
+        { name: '邦豆兑换', id: 2 }
       ],
       ////////// 新建活动 end ///////////
       submitLoading: false,
@@ -1057,8 +1062,10 @@ export default {
     },
     addAward() {
       const tempObj = {
-        couponTitle: this.momentStrHms(Date.now()),
-        couponBusinessType: '1'
+        couponTitle: '',
+        condition: '',
+        monthGetDay: '',
+        weekGetDay: ''
       };
       this.awardList.unshift(tempObj);
     },
@@ -1447,6 +1454,21 @@ export default {
       console.log('couponBusinessTypeSelect value :>> ', value);
       this.couponBusinessType = value;
     },
+    conditionSelect(value) {
+      console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('conditionSelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'condition', value);
+    },
+    monthGetDaySelect(value) {
+      console.log('monthGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('monthGetDaySelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'monthGetDay', value);
+    },
+    weekGetDaySelect(value) {
+      console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('weekGetDaySelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'weekGetDay', value);
+    },
     couponBusinessTypeSelect1(value) {
       console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
       console.log('couponBusinessTypeSelect1 value :>> ', value);
@@ -1683,8 +1705,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep .ant-modal-root {
-  .ant-col-12 {
+.ant-modal-root {
+  ::v-deep .ant-col-12 {
     width: 100% !important;
   }
 }
