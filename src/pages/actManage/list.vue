@@ -137,7 +137,7 @@ export default {
           wrapperCol: { span: 18 }
         },
         {
-          label: '创建时间',
+          label: '活动有效期',
           type: 'rangePicker',
           name: 'jointime',
           labelCol: { span: 6 },

@@ -317,8 +317,8 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;width:500px;" @click="actModalVisible = true" block>
-                            1,2,5,10
+                          <a-button style="margin-left:20px;width:500px;" @click="showMonthlyDayModal" block>
+                            {{ monthlyDayStr(monthlyDay) }}
                           </a-button>
                         </template>
                       </a-radio>
@@ -341,8 +341,8 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;width:500px;" @click="actModalVisible = true" block>
-                            周一,周二,周三,周五
+                          <a-button style="margin-left:20px;width:500px;" @click="showWeeklyDayModal" block>
+                            {{ weeklyDayStr(weeklyDay) }}
                           </a-button>
                         </template>
                       </a-radio>
@@ -357,7 +357,7 @@
                       v-if="actRadioValue === 1"
                       v-model="actModalVisible"
                       title="每月活动日"
-                      @ok="actModalVisible = false"
+                      @ok="monthlyDayModal"
                       :centered="true"
                       :maskClosable="false"
                     >
@@ -376,7 +376,7 @@
                       v-if="actRadioValue === 2"
                       v-model="actModalVisible"
                       title="每周活动日"
-                      @ok="actModalVisible = false"
+                      @ok="weeklyDayModal"
                       :centered="true"
                       :maskClosable="false"
                     >
@@ -537,48 +537,48 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <template v-if="classification === 2">
-                    <a-form-item label="可领取时间1" v-if="actRadioValue === 1">
+                  <template v-if="isPeriodic === 1">
+                    <a-form-item label="可领取时间">
                       <a-select
                         v-decorator="[
-                          `couponBusinessType${index}`,
+                          `monthGetDay${index}`,
                           {
-                            initialValue: item.couponBusinessType,
-                            rules: [{ required: true, message: '活动类型不能为空' }]
+                            initialValue: item.monthGetDay,
+                            rules: [{ required: true, message: '可领取时间不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect1"
+                        @change="monthGetDaySelect"
                       >
                         <a-select-option
-                          :value="itemSelect.code"
-                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :value="itemSelect"
+                          v-for="(itemSelect, indexSelect) in monthlyDays"
                           :key="indexSelect"
                         >
-                          {{ itemSelect.name }}
+                          {{ itemSelect }}
                         </a-select-option>
                       </a-select>
-                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                      <div>item.monthGetDay:{{ item.monthGetDay }}</div>
                     </a-form-item>
                     <a-form-item label="可领取时间2" v-if="actRadioValue === 2">
                       <a-select
                         v-decorator="[
-                          `couponBusinessType${index}`,
+                          `weekGetDay${index}`,
                           {
-                            initialValue: item.couponBusinessType,
-                            rules: [{ required: true, message: '活动类型不能为空' }]
+                            initialValue: item.weekGetDay,
+                            rules: [{ required: true, message: '可领取时间不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect1"
+                        @change="weekGetDaySelect"
                       >
                         <a-select-option
                           :value="itemSelect.code"
-                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          v-for="(itemSelect, indexSelect) in weeklyDays"
                           :key="indexSelect"
                         >
                           {{ itemSelect.name }}
                         </a-select-option>
                       </a-select>
-                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                      <div>item.weekGetDay:{{ item.weekGetDay }}</div>
                     </a-form-item>
                   </template>
                   <button class="common-award-btn" v-show="awardList.length > 1" @click="handleDelete(index)">
@@ -769,7 +769,7 @@ export default {
       scrollY: 300,
       actModalVisible: false,
       awardFormindex: 0,
-      awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
+      awardList: [{ couponTitle: '', monthGetDay: '', weekGetDay: '' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
@@ -802,8 +802,8 @@ export default {
       ], //活动类型列表
       rightsType: 1,
       rightsTypes: [
-        { name: '会员卡劵', id: 1 },
-        { name: '会员卡劵2', id: 2 } //需要注释
+        { name: '会员卡劵', id: 1 }
+        // { name: '会员卡劵2', id: 2 } //需要注释
       ],
       clientId: [],
       clientIds: [
@@ -823,8 +823,8 @@ export default {
       isIncluded1: 1,
       isIncluded2: 1,
       isIncludeds: [
-        { name: '包含', id: 1 },
-        { name: '不包含', id: 2 } //需要注释
+        { name: '包含', id: 1 }
+        // { name: '不包含', id: 2 } //需要注释
       ],
       monthlyDay: [],
       weeklyDay: [],
@@ -923,6 +923,24 @@ export default {
     };
   },
   computed: {
+    monthlyDayStr() {
+      return param => {
+        return param.join();
+      };
+    },
+    weeklyDayStr() {
+      return param => {
+        let tempArr = [];
+        this.weeklyDays.forEach(element => {
+          param.forEach(item => {
+            if (item === element.value) {
+              tempArr.push(element.label);
+            }
+          });
+        });
+        return tempArr.join();
+      };
+    },
     faceAmountStr() {
       return param => {
         if (param.couponType === 10) {
@@ -1005,6 +1023,26 @@ export default {
         this.$message.error('必须选择一个卡券!');
       }
       // this.confirmLoading = false;
+    },
+    monthlyDayModal() {
+      if (this.monthlyDay.length === 0) {
+        this.$message.error('每月活动日不能为空!');
+        return;
+      }
+      this.actModalVisible = false;
+    },
+    weeklyDayModal() {
+      if (this.weeklyDay.length === 0) {
+        this.$message.error('每周活动日不能为空!');
+        return;
+      }
+      this.actModalVisible = false;
+    },
+    showMonthlyDayModal() {
+      this.actModalVisible = true;
+    },
+    showWeeklyDayModal() {
+      this.actModalVisible = true;
     },
     // 打开弹窗
     handleSelectCoupon() {
@@ -1645,8 +1683,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.ant-modal-root {
-  ::v-deep .ant-col-12 {
+::v-deep .ant-modal-root {
+  .ant-col-12 {
     width: 100% !important;
   }
 }
