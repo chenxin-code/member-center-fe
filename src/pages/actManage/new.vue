@@ -1067,7 +1067,7 @@ export default {
         monthGetDay: '',
         weekGetDay: ''
       };
-      this.awardList.unshift(tempObj);
+      this.awardList.push(tempObj);
     },
     uploadBefor(file) {
       this.file = file;
