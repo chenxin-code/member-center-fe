@@ -13,7 +13,13 @@
             :doubleBtnText="'新建派发'"
             :doubleBtnEvent="() => this.$router.push({ name: 'release_create' })"
           />-->
-          <FormList routePath="/couponsRelease/create" ref="form" :rowCol="4" :formList="formList" :onSubmit="onSearch" />
+          <FormList
+            routePath="/couponsRelease/create"
+            ref="form"
+            :rowCol="4"
+            :formList="formList"
+            :onSubmit="onSearch"
+          />
           <a-table
             :style="{ marginTop: '20px' }"
             :columns="columns"
@@ -29,6 +35,7 @@
             </template>
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
+              <a v-if="record.condition==4" @click="getCardCode(record)">  下载卡密</a>
             </span>
           </a-table>
           <a-pagination
@@ -55,7 +62,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
-
+import axios from 'axios';
 const typeList = [
   { id: '', name: '全部' },
   { id: 10, name: '代金券' },
@@ -199,8 +206,8 @@ export default {
           customRender: (text, record) =>
             text == 1
               ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss') +
-                '-' +
-                moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
+              '-' +
+              moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
               : `相对有效期, ${record.valiDays}天, 领取后${record.offsetDays}天生效`
         },
         {
@@ -282,6 +289,9 @@ export default {
     onCheck(record) {
       this.$router.push({ name: 'release_detail', query: { id: record.id } });
     },
+    getCardCode(record) {
+      this.downloadCamilo(record);
+    },
 
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -297,7 +307,60 @@ export default {
       this.pageSize = size;
       this.getReleaseList();
     },
-
+    downloadCamilo(item) {
+      this.tableLoading = true;
+      let args = {
+        couponActivitiesId: item.id
+      };
+      api
+        .downloadCamilo(args)
+        .then(res => {
+          if (res.code == "200") {
+            this.downloadInfo(item.id)
+          } else {
+            alert("生成中请稍后");
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    downloadInfo(cuid) {
+      const args = {
+        couponActivitiesId: cuid
+      };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        debugger;
+        this.download(res.data);
+      });
+    },
+    download(content) {
+      const filename = '卡密信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
+    },
     getReleaseList() {
       this.tableLoading = true;
       let args = {

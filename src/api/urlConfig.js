@@ -67,6 +67,9 @@ export default {
   COUPON_CREATE: '/times/member-center/coupon/api/v1/create',
   COUPON_UPDATE: '/times/member-center/coupon/api/v1/update',
   COUPON_ONOROFF: '/times/member-center/coupon/api/v1/onOrOff',
+  DOWNLOAD_CAMILO: '/times/member-center/coupon/api/v1/downloadCamilo',
+  DOWNLOAD_CAMILO_EXCEL: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+
   //活动主题
   ACT_THEME_LIST: '/times/member-center/themeActivity/api/v1/selectThemeActivity',
   STOP_THEME: '/times/member-center/themeActivity/api/v1/stopThemeActivity',

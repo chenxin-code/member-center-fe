@@ -4,6 +4,8 @@ let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
 console.log('tokenStr 666:>> ', tokenStr);
 
 export const getReleaseList = data => fetchApi(URL.GET_RELEASELIST, data, 'GET');
+export const downloadCamilo = data => fetchApi(URL.DOWNLOAD_CAMILO, data, 'GET');
+export const downloadCamiloExcel = data => fetchApi(URL.DOWNLOAD_CAMILO_EXCEL, data, 'GET');
 export const getReleaseDetail = data => fetchApi(URL.GET_RELEASEDETAIL, data, 'GET');
 export const getCouponList = data => fetchApi(URL.GET_COUPONLIST, data, 'GET');
 // export const couponDistribute = data => fetchApi(URL.COUPONDISTRIBUTE, data, 'POST');//好像默认'Content-Type': 'application/json' 也会自动转成 'Content-Type': 'multipart/form-data
