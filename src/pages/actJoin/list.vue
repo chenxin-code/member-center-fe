@@ -12,41 +12,15 @@
         :rowKey="(r, i) => i"
         style="width:100%;margin-top:8px;"
         :selectable="false"
-        :loading="tableLoading"
-      >
-        <template slot="couponTypeSlot" slot-scope="rowData">
+        :loading="tableLoading">
+        <template slot="typeId" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="parse(rowData.couponType)"></span>
+            <span v-html="parseTypeId(rowData.typeId)"></span>
           </div>
         </template>
-        <template slot="activitySlot" slot-scope="rowData">
+        <template slot="status" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="parse(rowData.activity)"></span>
-          </div>
-        </template>
-        <template slot="faceAmountSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="parse(rowData)"></span>
-          </div>
-        </template>
-        <template slot="sourceSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="parse(rowData.source)"></span>
-          </div>
-        </template>
-        <template slot="validitySlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="parse(rowData)"></span>
-          </div>
-        </template>
-        <template slot="couponStatusSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="parse(rowData.couponStatus)"></span>
-          </div>
-        </template>
-        <template slot="jointimeSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="parse(rowData.createTime)"></span>
+            <span v-html="parseStatus(rowData.status)"></span>
           </div>
         </template>
       </a-table>
@@ -69,7 +43,6 @@
 <script>
 import FormList from './../../components/FormList/index.jsx';
 import api from './../../api';
-import moment from 'moment';
 export default {
   name: 'actJoin',
   data() {
@@ -78,7 +51,7 @@ export default {
         {
           label: '活动id',
           type: 'input',
-          name: 'actId',
+          name: 'id',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -86,7 +59,7 @@ export default {
         {
           label: '活动主题',
           type: 'input',
-          name: 'actTitle',
+          name: 'activityName',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -94,7 +67,7 @@ export default {
         {
           label: '活动名称',
           type: 'input',
-          name: 'actName',
+          name: 'themeName',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -110,12 +83,13 @@ export default {
         {
           label: '活动类型',
           type: 'select',
-          name: 'couponStatus',
+          name: 'typeId',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '已推送', id: '0' },
-            { name: '定时推送', id: '1' }
+            { name: '领券中心', id: '1' },
+            { name: '会员权益', id: '2' },
+            { name: '邦豆兑换', id: '3' }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -123,12 +97,16 @@ export default {
         {
           label: '活动状态',
           type: 'select',
-          name: 'couponStatus',
+          name: 'status',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '已推送', id: '0' },
-            { name: '定时推送', id: '1' }
+            { name: '已创建', id: '0' },
+            { name: '未开始', id: '1' },
+            { name: '进行中', id: '2' },
+            { name: '已结束', id: '3' },
+            { name: '已停用', id: '4' },
+            { name: '已删除', id: '5' }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -140,49 +118,44 @@ export default {
       tableColumns: [
         {
           title: '活动id',
-          dataIndex: 'a',
-          key: 'a',
+          dataIndex: 'id',
+          key: 'id',
           width: 150
         },
         {
           title: '活动主题',
-          dataIndex: 'b',
-          key: 'b',
+          dataIndex: 'activityName',
+          key: 'activityName',
           width: 150
         },
         {
           title: '活动名称',
-          dataIndex: 'c',
-          key: 'c',
-          //scopedSlots: { customRender: 'c' },
+          dataIndex: 'themeName',
+          key: 'themeName',
           width: 150
         },
         {
           title: '活动类型',
-          dataIndex: 'd',
-          key: 'd',
-          scopedSlots: { customRender: 'd' },
+          key: 'typeId',
+          scopedSlots: { customRender: 'typeId' },
           width: 150
         },
         {
           title: '活动状态',
-          dataIndex: 'e',
-          key: 'e',
-          scopedSlots: { customRender: 'e' },
+          key: 'status',
+          scopedSlots: { customRender: 'status' },
           width: 150
         },
         {
           title: '参与人数',
-          dataIndex: 'f',
-          key: 'f',
-          scopedSlots: { customRender: 'f' },
+          dataIndex: 'peopleTime',
+          key: 'peopleTime',
           width: 150
         },
         {
           title: '参与次数',
-          dataIndex: 'g',
-          key: 'g',
-          scopedSlots: { customRender: 'g' },
+          dataIndex: 'time',
+          key: 'time',
           width: 150
         }
       ],
@@ -191,16 +164,48 @@ export default {
       //分页
       total: 0,
       current: 1,
-      pageSize: 10
+      pageSize: 10,
+      searchObj: {}
     };
   },
   components: {
     FormList
   },
   computed: {
-    parse() {
-      return '';
+    //1:领券中心,2:会员权益,3:邦豆兑换
+    parseTypeId() {
+      return param => {
+        if(param === 1){
+          return '领券中心';
+        }else if(param === 2){
+          return '会员权益';
+        }else if(param === 3){
+          return '邦豆兑换';
+        }else{
+          return '';
+        }
+      }
     },
+    //0已创建，1未开始，2进行中，3已结束，4已停用，5已删除
+    parseStatus() {
+      return param => {
+        if(param === 0){
+          return '已创建';
+        }else if(param === 1){
+          return '未开始';
+        }else if(param === 2){
+          return '进行中';
+        }else if(param === 3){
+          return '已结束';
+        }else if(param === 4){
+          return '已停用';
+        }else if(param === 5){
+          return '已删除';
+        }else{
+          return '';
+        }
+      }
+    }
   },
   created() {},
   mounted() {
@@ -213,10 +218,10 @@ export default {
   },
   methods: {
     onQuery(params) {
+      this.searchObj = params;
       this.current = 1;
       this.getList(true);
     },
-    goDel(id){},
     change(page) {
       this.current = page;
       this.getList();
@@ -230,19 +235,23 @@ export default {
       if (isQuery) {
         this.current = 1;
       }
-      //this.tableLoading = true;
+      this.tableLoading = true;
       this.$nextTick(() => {
-        this.tableData = [
-          {
-            a: '3aaf-11eb-b400-0a80',
-            b: '双十一活动',
-            c: '购物优惠',
-            d: '领券中心',
-            e: '进行中',
-            f: '200',
-            g: '2000'
-          }
-        ]
+        api.getActJoinList({
+          pageSize: this.pageSize,
+          pageIndex: this.current,
+          id: this.searchObj.id,
+          themeName: this.searchObj.themeName,
+          activityName: this.searchObj.activityName,
+          typeId: this.searchObj.typeId,
+          status: this.searchObj.status
+        }).then(res => {
+          this.tableLoading = false;
+          this.total = res.data.total;
+          this.tableData = res.data.records;
+        }).finally(() => {
+          this.tableLoading = false;
+        });
       });
     }
   },
@@ -257,6 +266,12 @@ export default {
       this.current = 1;
       this.pageSize = 10;
       this.$refs.actForm.form.resetFields();
+      this.$refs.actForm.setFieldsValue({
+        typeId: this.formList[4].selectOptions[0].id
+      });
+      this.$refs.actForm.setFieldsValue({
+        status: this.formList[5].selectOptions[0].id
+      });
 
       //初始化加载数据
       this.getList();
