@@ -18,16 +18,16 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动主题名称:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.themeName || '' }}</div>
                   </div>
                 </div>
               </div>
               <!-- 活动名称 -->
-              <div class="common-column-wrapp" v-show="actDetails.couponSubhead">
+              <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动名称:</div>
-                    <div class="column-left">{{ actDetails.couponSubhead || '' }}</div>
+                    <div class="column-left">{{ actDetails.activityName || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -37,8 +37,8 @@
                   <div class="column-item">
                     <div class="column-right">活动有效期:</div>
                     <div class="column-left">
-                      {{ momentStrHms(Date.now() - 1000) }} ~
-                      {{ momentStrHms(Date.now()) }}
+                      {{ momentStrHms(actDetails.startTime) }} ~
+                      {{ momentStrHms(actDetails.endTime) }}
                     </div>
                   </div>
                 </div>
@@ -49,14 +49,16 @@
                   <div class="column-item column-memo">
                     <div class="column-right">备注:</div>
                     <div class="column-left">
-                      <a-textarea
-                        v-model="couponDetailsMemo"
-                        :disabled="true"
-                        :maxLength="50"
-                        :auto-size="{ minRows: 3, maxRows: 5 }"
-                        style="width: 267px;"
-                        placeholder="请输入备注"
-                      />
+                      <div class="column-left">
+                        <a-textarea
+                          v-model="actDetailsMemo"
+                          :disabled="true"
+                          :maxLength="50"
+                          :auto-size="{ minRows: 3, maxRows: 5 }"
+                          style="width: 267px;"
+                          placeholder="请输入备注"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -66,7 +68,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">活动类型:</div>
-                    <div class="column-left">{{ couponBusinessTypeStr(actDetails.couponBusinessType) }}</div>
+                    <div class="column-left">{{ actDetails.typeName || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -81,66 +83,21 @@
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <!-- 活动可参加次数 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动可参加次数:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动每天可参加次数 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动每天可参加次数:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动每人可参加次数 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动每人可参加次数:</div>
-                    <div class="column-left">{{ sourceStr(actDetails.source) }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 活动每人每天可参加次数 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">活动每人每天可参加次数:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
-                  </div>
-                </div>
-              </div>
-              <!-- 时间段包含 -->
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">时间段包含:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
-                  </div>
-                </div>
-              </div>
               <!-- 每月活动日包含 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="actDetails.monthlyDay">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每月活动日包含:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.monthlyDay || '' }}</div>
                   </div>
                 </div>
               </div>
               <!-- 每周活动日包含 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="actDetails.weeklyDay">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每周活动日包含:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
+                    <div class="column-left">{{ actDetails.weeklyDay || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -149,28 +106,32 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">会员权益类型:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
+
+                    <div class="column-left">{{ rightsTypeStr(actDetails.rightsType) }}</div>
                   </div>
                 </div>
               </div>
+              <!-- scopeType 是否指定 0 不指定 1 指定 -->
               <!-- 会员卡及等级包含 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="actDetails.scopeType === 0">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">会员卡及等级包含:</div>
-                    <div class="column-left">{{ actDetails.couponTitle || '' }}</div>
+                    <div class="column-left">
+                      {{ cardLevelRangeStr(actDetails.startLevelId, actDetails.endLevelId) }}
+                    </div>
                   </div>
                 </div>
               </div>
               <!-- 指定会员 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="actDetails.scopeType === 1">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">指定会员:</div>
                     <div class="column-left">
-                      <a-button @click="downloadFile">
+                      <a-button @click="getDownloadInfo">
                         <a-icon type="download" />
-                        <a ref="downloadFileDom" v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息</a>
+                        下载会员信息
                       </a-button>
                     </div>
                   </div>
@@ -185,28 +146,90 @@
           <div class="common-title">
             <div class="common-title-content">活动奖品信息</div>
           </div>
-          <a-row class="common-row">
+          <a-row
+            class="common-row"
+            :class="`common-row-${index}`"
+            v-for="(item, index) in actDetails.activityAwardList"
+            :key="index"
+          >
             <a-col :span="24">
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">活动创建:</div>
+                    <div class="column-right">卡券ID:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
+                      {{ item.couponId || '' }}
                     </div>
                   </div>
-                  <div v-if="Math.random() > 0.5">
-                    <div class="column-item">
-                      <div class="column-right">活动创建:</div>
-                      <div class="column-left">
-                        <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
-                      </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">发放数量:</div>
+                    <div class="column-left">
+                      {{ item.issuedCount || '' }}
                     </div>
-                    <div class="column-item">
-                      <div class="column-right">活动创建:</div>
-                      <div class="column-left">
-                        <div style="padding-right:20px">{{ momentStrHms(actDetails.createTime) || '' }}</div>
-                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每日领取限制:</div>
+                    <div class="column-left">
+                      {{ item.perDayLimit || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每人每日领取限制:</div>
+                    <div class="column-left">
+                      {{ item.perPersonDayLimit || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每人领取限制:</div>
+                    <div class="column-left">
+                      {{ item.perPersonLimit || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">周可领取天:</div>
+                    <div class="column-left">
+                      {{ item.weekGetDay || '周可领取天 ～ 空' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">月可领取天:</div>
+                    <div class="column-left">
+                      {{ item.monthGetDay || '月可领取天 ～ 空' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">卡券有效期:</div>
+                    <div class="column-left">
+                      {{ momentStrHms(item.startTime) }} ~
+                      {{ momentStrHms(item.expirationTime) }}
                     </div>
                   </div>
                 </div>
@@ -222,6 +245,7 @@
 <script>
 import moment from 'moment';
 import api from '@/api';
+import axios from 'axios';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
@@ -230,13 +254,11 @@ export default {
   components: {},
   data() {
     return {
-      downLoadTplExist: false,
-      downLoadTplUrl: '',
       actDetails: {}
     };
   },
   computed: {
-    couponDetailsMemo() {
+    actDetailsMemo() {
       return this.actDetails.memo ? this.actDetails.memo : '';
     },
     momentStr() {
@@ -328,6 +350,42 @@ export default {
           return '';
         }
       };
+    },
+    rightsTypeStr() {
+      return param => {
+        if (param === 1) {
+          return '会员卡券';
+        } else {
+          return '';
+        }
+      };
+    },
+    cardLevelStr() {
+      return param => {
+        if (param === 1) {
+          return '邻里会员V1';
+        } else if (param === 2) {
+          return '邻里会员V2';
+        } else if (param === 3) {
+          return '邻里会员V3';
+        } else if (param === 4) {
+          return '邻里会员V4';
+        } else if (param === 5) {
+          return '邻里会员V5';
+        } else {
+          return '';
+        }
+      };
+    },
+    cardLevelRangeStr() {
+      return (startParam, endParam) => {
+        if (startParam === endParam) {
+          return this.cardLevelStr(startParam);
+          // return `${this.cardLevelStr(startParam)} ～ ${this.cardLevelStr(endParam)}`;
+        } else {
+          return `${this.cardLevelStr(startParam)} ～ ${this.cardLevelStr(endParam)}`;
+        }
+      };
     }
   },
   methods: {
@@ -336,19 +394,44 @@ export default {
     downloadFile(event) {
       this.$refs.downloadFileDom.click();
     },
-    // 获取下载模版
-    getTplDownload() {
-      const param = {
+    // 下载会员信息
+    getDownloadInfo() {
+      const args = {
         activityId: this.$route.query.id
       };
-      this.downLoadTplExist = false;
-      api.getTplDownload(param).then(res => {
-        console.log('getTplDownload res :>> ', res);
-        if (res.code === 200) {
-          this.downLoadTplExist = true;
-          this.downLoadTplUrl = res.data;
-        }
+      // console.log('getDownloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/activity/api/v1/activity-member/download',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        console.log('getDownloadInfo res.data :>> ', res.data);
+        // return;
+        this.handleDownload(res.data);
       });
+    },
+    handleDownload(content) {
+      const filename = '会员信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      console.log('blob :>> ', blob);
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
     },
     getActDetail() {
       const param = {
@@ -366,6 +449,9 @@ export default {
               this.$set(this.actDetails, key, element);
             }
           }
+          this.actDetails.activityAwardList = this.actDetails.activityAwardList.concat(
+            this.actDetails.activityAwardList
+          );
           console.log('this.actDetails :>> ', this.actDetails);
         }
       });
@@ -373,7 +459,7 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getTplDownload();
+    // this.getActDownload();
     this.getActDetail();
   },
   mounted() {},
@@ -482,10 +568,14 @@ export default {
       }
     }
 
-    // .act-base {
-    // }
     .act-award {
-      padding-bottom: 100px;
+      padding-bottom: 20px;
+
+      .common-row {
+        .common-column-wrapp {
+          margin-bottom: 20px !important;
+        }
+      }
     }
   }
 }

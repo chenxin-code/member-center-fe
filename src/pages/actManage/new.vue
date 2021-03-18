@@ -23,32 +23,32 @@
                 <div class="common-title">
                   <div class="common-title-content">活动基础信息</div>
                 </div>
-                <!-- 卡券平台 -->
+                <!-- 活动主题名称 -->
                 <a-form-item label="活动主题名称">
                   <a-select
                     v-decorator="[
-                      'source',
+                      'themeId',
                       {
-                        initialValue: source,
+                        initialValue: themeId,
                         rules: [{ required: true, message: '活动主题名称不能为空' }]
                       }
                     ]"
-                    @change="sourceSelect"
+                    @change="themeIdSelect"
                   >
-                    <a-select-option :value="item.code" v-for="(item, index) in sources" :key="index">
+                    <a-select-option :value="item.code" v-for="(item, index) in themeIds" :key="index">
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <!-- <div>source:{{ source }}</div> -->
+                  <div>活动主题名称 themeId: {{ themeId }}</div>
                 </a-form-item>
-                <!-- 卡券标题 -->
+                <!-- 活动名称 -->
                 <a-form-item label="活动名称">
                   <a-input
-                    @change="couponTitleChange"
+                    @change="activityNameChange"
                     v-decorator="[
-                      'couponTitle',
+                      'activityName',
                       {
-                        initialValue: couponTitle,
+                        initialValue: activityName,
                         rules: [
                           { required: true, message: '卡券标题不能为空' },
                           { whitespace: true, message: '卡券标题不能为空' },
@@ -59,7 +59,7 @@
                     placeholder="请输入"
                     allow-clear
                   />
-                  <!-- <div>couponTitle: {{ couponTitle }}</div> -->
+                  <div>活动名称 activityName: {{ activityName }}</div>
                 </a-form-item>
                 <!-- 活动有效期 -->
                 <a-form-item label="活动有效期">
@@ -72,15 +72,12 @@
                       }
                     ]"
                     :placeholder="['开始时间', '结束时间']"
-                    format="YYYY-MM-DD HH:mm:ss"
+                    format="YYYY-MM-DD"
                     @change="handleRangePicker"
-                    :show-time="{
-                      defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
-                    }"
                     :disabled-date="disabledDate"
                   />
-                  <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
-                  <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
+                  <div>活动有效期 validityStartTime: {{ validityStartTime }}</div>
+                  <div>活动有效期 validityEndTime: {{ validityEndTime }}</div>
                 </a-form-item>
                 <!-- 活动描述 -->
                 <a-form-item label="活动描述">
@@ -95,9 +92,9 @@
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
                     :maxLength="200"
-                    placeholder="请输入使用说明"
+                    placeholder="请输入备注信息"
                   />
-                  <!-- <div>memo:{{ memo }}</div> -->
+                  <div>活动描述 memo: {{ memo }}</div>
                 </a-form-item>
                 <!-- 请上传活动封面 -->
                 <a-form-item label="请上传活动封面">
@@ -108,8 +105,8 @@
                       list-type="picture-card"
                       :file-list="fileList"
                       v-decorator="[
-                        'couponImage',
-                        { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
+                        'actImage',
+                        { initialValue: actImage, rules: [{ required: true, message: '图片不能为空' }] }
                       ]"
                       :before-upload="() => false"
                       :remove="deleteOssImage"
@@ -130,24 +127,25 @@
                   <span style="margin-top:-20px;color:#999999;font-size:12px;">
                     建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
                   </span>
+                  <div>活动封面 actImage: {{ actImage }}</div>
                 </a-form-item>
                 <!-- 活动类型 -->
                 <a-form-item label="活动类型">
                   <a-select
                     v-decorator="[
-                      'couponBusinessType',
+                      'typeId',
                       {
-                        initialValue: couponBusinessType,
+                        initialValue: typeId,
                         rules: [{ required: true, message: '活动类型不能为空' }]
                       }
                     ]"
-                    @change="couponBusinessTypeSelect"
+                    @change="typeIdSelect"
                   >
-                    <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                    <a-select-option :value="item.id" v-for="(item, index) in typeIds" :key="index">
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
+                  <div>活动类型 typeId: {{ typeId }}</div>
                 </a-form-item>
 
                 <!-- ********************************************************************* -->
@@ -160,19 +158,19 @@
                 <a-form-item label="会员权益类型">
                   <a-select
                     v-decorator="[
-                      'couponType',
+                      'rightsType',
                       {
-                        initialValue: couponType,
+                        initialValue: rightsType,
                         rules: [{ required: true, message: '会员权益类型不能为空' }]
                       }
                     ]"
-                    @change="couponTypeSelect"
+                    @change="rightsTypeSelect"
                   >
-                    <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
+                    <a-select-option :value="item.id" v-for="(item, index) in rightsTypes" :key="index">
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <!-- <div>couponType: {{ couponType }}</div> -->
+                  <div>会员权益类型 rightsType: {{ rightsType }}</div>
                 </a-form-item>
                 <!-- 会员来源+上传指定会员 -->
                 <a-radio-group v-model="radioValue" style="padding-left: 50px;">
@@ -182,27 +180,31 @@
                     <a-form-item style="display:inline-block;">
                       <a-checkbox-group
                         v-if="radioValue === 1"
-                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
-                        :options="plainOptions"
-                        @change="checkboxChange"
+                        v-decorator="[
+                          'clientId',
+                          { initialValue: clientId, rules: [{ required: true, message: '会员来源不能为空' }] }
+                        ]"
+                        :options="clientIds"
+                        @change="clientIdChange"
                       />
                     </a-form-item>
                   </a-radio>
-                  <div v-if="radioValue === 1" :style="radioStyle" style="margin:10px 0;">
+                  <div v-if="radioValue === 1" :style="radioStyle" style="margin:25px 0">
                     <span style="padding: 0 40px 0 24px;">会员等级</span>
+                    <!-- 会员等级 -->
                     <a-form-item style="display:inline-block;">
                       <a-select
                         style="width:200px;"
                         v-decorator="[
-                          'couponBusinessType',
+                          'startLevelId',
                           {
-                            initialValue: couponBusinessType,
-                            rules: [{ required: true, message: '卡券业务类型不能为空' }]
+                            initialValue: startLevelId,
+                            rules: [{ required: true, message: '会员等级不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect"
+                        @change="startLevelIdSelect"
                       >
-                        <a-select-option :value="item.code" v-for="(item, index) in couponBusinessTypes" :key="index">
+                        <a-select-option :value="item.id" v-for="(item, index) in levelIds" :key="index">
                           {{ item.name }}
                         </a-select-option>
                       </a-select>
@@ -212,15 +214,15 @@
                       <a-select
                         style="width:200px;"
                         v-decorator="[
-                          'couponType',
+                          'endLevelId',
                           {
-                            initialValue: couponType,
-                            rules: [{ required: true, message: '会员权益类型不能为空' }]
+                            initialValue: endLevelId,
+                            rules: [{ required: true, message: '会员等级不能为空' }]
                           }
                         ]"
-                        @change="couponTypeSelect"
+                        @change="endLevelIdSelect"
                       >
-                        <a-select-option :value="item.code" v-for="(item, index) in couponTypes" :key="index">
+                        <a-select-option :value="item.id" v-for="(item, index) in levelIds" :key="index">
                           {{ item.name }}
                         </a-select-option>
                       </a-select>
@@ -228,6 +230,7 @@
                   </div>
                   <a-radio :style="radioStyle" :value="2">
                     <span style="padding-right:40px;">上传指定会员</span>
+                    <!-- 上传指定会员 -->
                     <a-form-item style="display:inline-block;width:100%;">
                       <a-upload
                         v-if="radioValue === 2"
@@ -258,8 +261,10 @@
                       <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
                     </p>
                   </div>
-                  <div>radioValue: {{ radioValue }}</div>
-                  <div>checkboxValue: {{ checkboxValue }}</div>
+                  <div>单选 radioValue: {{ radioValue }}</div>
+                  <div>会员来源 clientId: {{ clientId }}</div>
+                  <div>开始等级 startLevelId: {{ startLevelId }}</div>
+                  <div>结束等级 endLevelId: {{ endLevelId }}</div>
                 </a-radio-group>
                 <!-- ********************************************************************* -->
 
@@ -267,126 +272,126 @@
                 <div class="common-title">
                   <div class="common-title-content">时间参数</div>
                 </div>
-                <a-form-item label="是否为周期性活动">
-                  <a-radio-group
-                    style="padding-left:26px;"
-                    @change="classificationChange"
-                    v-decorator="[
-                      'classification',
-                      {
-                        initialValue: classification,
-                        rules: [{ required: true, message: '是否为周期性活动不能为空' }]
-                      }
-                    ]"
-                  >
-                    <a-radio :value="1">
-                      不是
-                    </a-radio>
-                    <a-radio :value="2">
-                      是
-                    </a-radio>
-                  </a-radio-group>
-                  <div>classification:{{ classification }}</div>
-                </a-form-item>
+                <div class="common-time">
+                  <a-form-item label="是否为周期性活动">
+                    <a-radio-group
+                      style="padding-left:26px;"
+                      @change="isPeriodicChange"
+                      v-decorator="[
+                        'isPeriodic',
+                        {
+                          initialValue: isPeriodic,
+                          rules: [{ required: true, message: '是否为周期性活动不能为空' }]
+                        }
+                      ]"
+                    >
+                      <a-radio :value="0">
+                        不是
+                      </a-radio>
+                      <a-radio :value="1">
+                        是
+                      </a-radio>
+                    </a-radio-group>
+                    <div>是否为周期性活动 isPeriodic:{{ isPeriodic }}</div>
+                  </a-form-item>
 
-                <div v-if="classification === 2">
-                  <!-- 每月活动日+每周活动日 -->
-                  <a-radio-group v-model="radioValue1" style="padding-left: 50px;">
-                    <a-radio :style="radioStyle" :value="1">
-                      <span style="padding-right:40px;">每月活动日</span>
-                      <template v-if="radioValue1 === 1">
-                        <a-form-item style="display:inline-block;">
-                          <a-select
-                            style="width:100px;"
-                            v-decorator="[
-                              'couponBusinessType',
-                              {
-                                initialValue: couponBusinessType,
-                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
-                              }
-                            ]"
-                            @change="couponBusinessTypeSelect"
-                          >
-                            <a-select-option
-                              :value="item.code"
-                              v-for="(item, index) in couponBusinessTypes"
-                              :key="index"
+                  <div v-if="isPeriodic === 1">
+                    <!-- 每月活动日+每周活动日 -->
+                    <a-radio-group v-model="actRadioValue" style="padding-left: 50px;">
+                      <a-radio :style="radioStyle" :value="1">
+                        <span style="padding-right:40px;">每月活动日</span>
+                        <template v-if="actRadioValue === 1">
+                          <a-form-item style="display:inline-block;">
+                            <a-select
+                              style="width:100px;"
+                              v-decorator="[
+                                'isIncluded1',
+                                {
+                                  initialValue: isIncluded1
+                                }
+                              ]"
+                              @change="isIncluded1Select"
                             >
-                              {{ item.name }}
-                            </a-select-option>
-                          </a-select>
-                        </a-form-item>
-                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>1,2,5,10</a-button>
-                      </template>
-                    </a-radio>
-                    <a-radio :style="radioStyle" :value="2">
-                      <span style="padding-right:40px;">每周活动日</span>
-                      <template v-if="radioValue1 === 2">
-                        <a-form-item style="display:inline-block;">
-                          <a-select
-                            style="width:100px;"
-                            v-decorator="[
-                              'couponBusinessType',
-                              {
-                                initialValue: couponBusinessType,
-                                rules: [{ required: true, message: '卡券业务类型不能为空' }]
-                              }
-                            ]"
-                            @change="couponBusinessTypeSelect"
-                          >
-                            <a-select-option
-                              :value="item.code"
-                              v-for="(item, index) in couponBusinessTypes"
-                              :key="index"
+                              <a-select-option :value="item.id" v-for="(item, index) in isIncludeds" :key="index">
+                                {{ item.name }}
+                              </a-select-option>
+                            </a-select>
+                          </a-form-item>
+                          <a-button style="margin-left:20px;width:500px;" @click="showMonthlyDayModal" block>
+                            {{ monthlyDayStr(monthlyDay) }}
+                          </a-button>
+                        </template>
+                      </a-radio>
+                      <a-radio :style="radioStyle" :value="2">
+                        <span style="padding-right:40px;">每周活动日</span>
+                        <template v-if="actRadioValue === 2">
+                          <a-form-item style="display:inline-block;">
+                            <a-select
+                              style="width:100px;"
+                              v-decorator="[
+                                'isIncluded2',
+                                {
+                                  initialValue: isIncluded2
+                                }
+                              ]"
+                              @change="isIncluded2Select"
                             >
-                              {{ item.name }}
-                            </a-select-option>
-                          </a-select>
-                        </a-form-item>
-                        <a-button style="margin-left:20px;" @click="actModalVisible = true" block>
-                          周一,周二,周三,周五
-                        </a-button>
-                      </template>
-                    </a-radio>
-                    <div>radioValue1: {{ radioValue1 }}</div>
-                  </a-radio-group>
-                  <!-- 对话框 -->
-                  <a-modal
-                    v-if="radioValue1 === 1"
-                    v-model="actModalVisible"
-                    title="每月活动日"
-                    @ok="actModalVisible = false"
-                    :centered="true"
-                    :maskClosable="false"
-                  >
-                    <a-form-item>
-                      <a-checkbox-group
-                        v-if="radioValue1 === 1"
-                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
-                        :options="plainOptions"
-                        @change="checkboxChange"
-                      />
-                    </a-form-item>
-                    <div>checkboxValue: {{ checkboxValue }}</div>
-                  </a-modal>
-                  <a-modal
-                    v-if="radioValue1 === 2"
-                    v-model="actModalVisible"
-                    title="每周活动日"
-                    @ok="actModalVisible = false"
-                    :centered="true"
-                    :maskClosable="false"
-                  >
-                    <a-form-item>
-                      <a-checkbox-group
-                        v-if="radioValue1 === 2"
-                        v-decorator="['checkboxValue', { initialValue: checkboxValue }]"
-                        :options="plainOptions"
-                        @change="checkboxChange"
-                      />
-                    </a-form-item>
-                    <div>checkboxValue: {{ checkboxValue }}</div>
-                  </a-modal>
+                              <a-select-option :value="item.id" v-for="(item, index) in isIncludeds" :key="index">
+                                {{ item.name }}
+                              </a-select-option>
+                            </a-select>
+                          </a-form-item>
+                          <a-button style="margin-left:20px;width:500px;" @click="showWeeklyDayModal" block>
+                            {{ weeklyDayStr(weeklyDay) }}
+                          </a-button>
+                        </template>
+                      </a-radio>
+                      <div>actRadioValue: {{ actRadioValue }}</div>
+                      <div>isIncluded1: {{ isIncluded1 }}</div>
+                      <div>isIncluded2: {{ isIncluded2 }}</div>
+                      <div>每月活动日 monthlyDay: {{ monthlyDay }}</div>
+                      <div>每周活动日 weeklyDay: {{ weeklyDay }}</div>
+                    </a-radio-group>
+                    <!-- 对话框 -->
+                    <a-modal
+                      v-if="actRadioValue === 1"
+                      v-model="actModalVisible"
+                      title="每月活动日"
+                      @ok="monthlyDayModal"
+                      :centered="true"
+                      :maskClosable="false"
+                    >
+                      <a-form-item>
+                        <a-checkbox-group
+                          v-decorator="[
+                            'monthlyDay',
+                            { initialValue: monthlyDay, rules: [{ required: true, message: '每月活动日不能为空' }] }
+                          ]"
+                          :options="monthlyDays"
+                          @change="monthlyDayChange"
+                        />
+                      </a-form-item>
+                    </a-modal>
+                    <a-modal
+                      v-if="actRadioValue === 2"
+                      v-model="actModalVisible"
+                      title="每周活动日"
+                      @ok="weeklyDayModal"
+                      :centered="true"
+                      :maskClosable="false"
+                    >
+                      <a-form-item>
+                        <a-checkbox-group
+                          v-decorator="[
+                            'weeklyDay',
+                            { initialValue: weeklyDay, rules: [{ required: true, message: '每周活动日不能为空' }] }
+                          ]"
+                          :options="weeklyDays"
+                          @change="weeklyDayChange"
+                        />
+                      </a-form-item>
+                    </a-modal>
+                  </div>
                 </div>
 
                 <!-- ********************************************************************* -->
@@ -399,25 +404,37 @@
                 <!-- 奖品集合 -->
                 <div
                   class="common-award"
-                  :class="`award-class${index}`"
+                  :class="`common-award-${index}`"
                   v-for="(item, index) in awardList"
                   :key="index"
                   @click="awardFormindex = index"
                 >
+                  <a-form-item label="选择卡券：">
+                    <div
+                      :class="`common-award-couponSelect ${showRedBorder && 'border-red'}`"
+                      @click="handleSelectCoupon"
+                    >
+                      {{ couponName }}
+                    </div>
+                    <p v-show="showRedBorder" class="common-award-couponSelectTip">请选择卡券！</p>
+                  </a-form-item>
+                  <a-form-item label="卡券有效期：">
+                    <a-input :placeholder="couponValid" disabled />
+                  </a-form-item>
                   <a-form-item label="领取条件设置">
                     <a-select
                       v-decorator="[
-                        `couponBusinessType${index}`,
+                        'condition',
                         {
-                          initialValue: item.couponBusinessType,
+                          initialValue: item.condition,
                           rules: [{ required: true, message: '活动类型不能为空' }]
                         }
                       ]"
-                      @change="couponBusinessTypeSelect1"
+                      @change="conditionSelect"
                     >
                       <a-select-option
-                        :value="itemSelect.code"
-                        v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                        :value="itemSelect.id"
+                        v-for="(itemSelect, indexSelect) in conditions"
                         :key="indexSelect"
                       >
                         {{ itemSelect.name }}
@@ -429,7 +446,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -448,7 +465,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -467,7 +484,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -486,7 +503,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -505,7 +522,7 @@
                     <a-input
                       @change="couponTitleChange1"
                       v-decorator="[
-                        `couponTitle${index}`,
+                        'couponTitle',
                         {
                           initialValue: item.couponTitle,
                           rules: [
@@ -520,54 +537,55 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <template v-if="classification === 2">
-                    <a-form-item label="可领取时间">
+                  <template v-if="isPeriodic === 1">
+                    <a-form-item label="可领取时间" v-if="actRadioValue === 1">
                       <a-select
                         v-decorator="[
-                          `couponBusinessType${index}`,
+                          'monthGetDay',
                           {
-                            initialValue: item.couponBusinessType,
-                            rules: [{ required: true, message: '活动类型不能为空' }]
+                            initialValue: item.monthGetDay,
+                            rules: [{ required: true, message: '可领取时间不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect1"
+                        @change="monthGetDaySelect"
                       >
                         <a-select-option
-                          :value="itemSelect.code"
-                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :value="itemSelect"
+                          v-for="(itemSelect, indexSelect) in monthlyDays"
                           :key="indexSelect"
                         >
-                          {{ itemSelect.name }}
+                          {{ itemSelect }}
                         </a-select-option>
                       </a-select>
-                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                      <div>item.monthGetDay:{{ item.monthGetDay }}</div>
                     </a-form-item>
-                    <a-form-item label="可领取时间">
+                    <a-form-item label="可领取时间" v-if="actRadioValue === 2">
                       <a-select
                         v-decorator="[
-                          `couponBusinessType${index}`,
+                          'weekGetDay',
                           {
-                            initialValue: item.couponBusinessType,
-                            rules: [{ required: true, message: '活动类型不能为空' }]
+                            initialValue: item.weekGetDay,
+                            rules: [{ required: true, message: '可领取时间不能为空' }]
                           }
                         ]"
-                        @change="couponBusinessTypeSelect1"
+                        @change="weekGetDaySelect"
                       >
                         <a-select-option
-                          :value="itemSelect.code"
-                          v-for="(itemSelect, indexSelect) in couponBusinessTypes"
+                          :value="itemSelect.value"
+                          v-for="(itemSelect, indexSelect) in weeklyDays"
                           :key="indexSelect"
                         >
-                          {{ itemSelect.name }}
+                          {{ itemSelect.label }}
                         </a-select-option>
                       </a-select>
-                      <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                      <div>item.weekGetDay:{{ item.weekGetDay }}</div>
                     </a-form-item>
                   </template>
-
-                  <button v-show="awardList.length > 1" @click="handleDelete(index)">删除</button>
+                  <button class="common-award-btn" v-show="awardList.length > 1" @click="handleDelete(index)">
+                    删除
+                  </button>
                 </div>
-                <div style="display:flex;justify-content:center;padding-top:20px;">
+                <div style="display:flex;justify-content:center;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
 
@@ -597,6 +615,48 @@
         </div>
       </a-row>
     </div>
+    <a-modal
+      title="卡券选择"
+      :visible="modalVisible"
+      @ok="handleOk"
+      @cancel="handleModalCancel"
+      width="1300px"
+      :maskClosable="false"
+      :centered="true"
+    >
+      <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+      <a-table
+        :style="{ marginTop: '20px' }"
+        :columns="columns"
+        :data-source="tableDataList"
+        :pagination="false"
+        :loading="tableLoading"
+        :scroll="{ y: scrollY }"
+        :row-selection="rowSelection"
+      >
+        <template slot="faceAmountSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <span v-html="faceAmountStr(rowData)"></span>
+          </div>
+        </template>
+        <!-- <span slot="action" slot-scope="record">
+          <a @click="onCheck(record)">查看</a>
+        </span> -->
+      </a-table>
+      <a-pagination
+        :total="total"
+        :show-total="total => `共 ${total} 条`"
+        show-quick-jumper
+        show-size-changer
+        v-model="current"
+        :current="current"
+        :pageSize="pageSize"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="change"
+        @showSizeChange="showSizeChange"
+        style="margin-top:30px;width:100%;text-align: right;"
+      />
+    </a-modal>
   </div>
 </template>
 
@@ -606,40 +666,225 @@ import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
+import FilterForm from '@/components/FilterGroup/index.jsx';
+import {
+  couponsCenterList,
+  bangdouList,
+  cardList,
+  level,
+  typeList,
+  activityList
+} from '@/pages/coupons/release/createForms';
 
 export default {
   name: 'couponsManageNew',
-  components: {},
+  components: {
+    FilterForm
+  },
   data() {
     return {
-      //////////新建活动///////////
+      ////////// 新建活动 start ///////////
+      //表格分页
+      total: 0,
+      current: 1,
+      pageSize: 10,
+      //表格数据和Loading
+      tableDataList: [],
+      tableLoading: false,
+      //表头筛选和表格内容
+      formList: [
+        {
+          label: '卡券类型',
+          name: 'type',
+          type: 'select',
+          placeholder: '全部',
+          selectOptions: typeList
+        },
+        {
+          label: '卡券标题',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'title'
+        },
+        {
+          label: '卡券业务类型',
+          type: 'select',
+          placeholder: '全部',
+          name: 'activity',
+          selectOptions: activityList,
+          labelCol: { span: 9 },
+          wrapperCol: { span: 15 }
+        }
+      ],
+      columns: [
+        {
+          dataIndex: 'id',
+          key: 'id',
+          title: '卡券ID'
+        },
+        {
+          title: '卡券标题',
+          key: 'couponTitle',
+          dataIndex: 'couponTitle'
+        },
+        // {
+        //     title: '卡券副标题',
+        //     key: 'couponSubhead',
+        //     dataIndex: 'couponSubhead'
+        // },
+        {
+          title: '卡券类型',
+          key: 'couponType',
+          dataIndex: 'couponType',
+          customRender: text => typeList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券业务类',
+          key: 'activity',
+          dataIndex: 'activity',
+          customRender: text => activityList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券面值金额',
+          key: 'faceAmountSlot',
+          scopedSlots: { customRender: 'faceAmountSlot' }
+        },
+        {
+          title: '操作人员',
+          key: 'operator',
+          dataIndex: 'operator'
+        },
+        {
+          title: '创建时间',
+          key: 'createTime',
+          dataIndex: 'createTime',
+          customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+        }
+      ],
+      modalVisible: false,
+      showRedBorder: false,
+      couponName: '请选择',
+      couponValid: '',
+      selectedRows: [],
+      scrollY: 300,
       actModalVisible: false,
-      awardFormindex: undefined,
-      awardList: [{ couponTitle: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), couponBusinessType: '1' }],
+      awardFormindex: 0,
+      awardList: [{ couponTitle: '', condition: '', monthGetDay: '', weekGetDay: '' }],
       downLoadTplExist: false,
       downLoadTplUrl: '',
       file: '', //会员文件
       fileList1: [],
-      plainOptions: ['时代+', '邻里PRO'],
       checkboxValue: [],
+      plainOptions: [
+        { label: '周一', value: 1 },
+        { label: '周二', value: 2 }
+      ],
       radioValue: 1,
-      radioValue1: 1,
+      actRadioValue: 1,
       radioStyle: {
         display: 'block',
         height: '40px',
         lineHeight: '40px'
       },
-      //////////新建活动///////////
+      // 表单数据
+      themeId: 0, //活动主题名称
+      themeIds: [], //活动主题名称列表
+      activityName: '', // 活动名称
+      validityStartTime: '', //活动有效期-开始时间
+      validityEndTime: '', //	活动有效期-结束时间
+      memo: '', //活动描述
+      actImage: '', //活动封面
+      typeId: 1, //活动类型id
+      typeIds: [
+        { name: '领券中心', id: 1 },
+        { name: '会员权益', id: 2 },
+        { name: '邦豆兑换', id: 3 }
+      ], //活动类型列表
+      rightsType: 1,
+      rightsTypes: [
+        { name: '会员卡劵', id: 1 }
+        // { name: '会员卡劵2', id: 2 } //需要注释
+      ],
+      clientId: [],
+      clientIds: [
+        { label: '邻里邦Pro', value: 'sys_linlibang' },
+        { label: '地产Pro', value: 'sys_dichan' }
+      ],
+      startLevelId: 1,
+      endLevelId: 1,
+      levelIds: [
+        { name: '邻里会员V1', id: 1 },
+        { name: '邻里会员V2', id: 2 },
+        { name: '邻里会员V3', id: 3 },
+        { name: '邻里会员V4', id: 4 },
+        { name: '邻里会员V5', id: 5 }
+      ],
+      isPeriodic: 0,
+      isIncluded1: 1,
+      isIncluded2: 1,
+      isIncludeds: [
+        { name: '包含', id: 1 }
+        // { name: '不包含', id: 2 } //需要注释
+      ],
+      monthlyDay: [],
+      weeklyDay: [],
+      monthlyDays: [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '16',
+        '17',
+        '18',
+        '19',
+        '20',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31'
+      ],
+      weeklyDays: [
+        { label: '周一', value: '1' },
+        { label: '周二', value: '2' },
+        { label: '周三', value: '3' },
+        { label: '周四', value: '4' },
+        { label: '周五', value: '5' },
+        { label: '周六', value: '6' },
+        { label: '周日', value: '7' }
+      ],
+      conditions: [
+        { name: '请选择', id: '' },
+        { name: '手动领取', id: 1 },
+        { name: '邦豆兑换', id: 2 }
+      ],
+      ////////// 新建活动 end ///////////
       submitLoading: false,
       saveLoading: false,
-      //////////上传图片///////////
+      ////////// 上传图片 start ///////////
       conponForm: this.$form.createForm(this, { name: 'conponForm' }),
       previewVisible: false,
       previewImage: '',
       fileList: [],
-      couponImage: '',
       picUploading: false,
-      //////////上传图片///////////
+      ////////// 上传图片 end ///////////
       // pcRuleId: '',//没用
       couponTitle: '',
       couponSubhead: '',
@@ -660,8 +905,6 @@ export default {
         { name: '相对有效期', code: 3 }
       ],
       rangePickerValue: [], //日期对象清空日期用
-      validityStartTime: '', //固定有效期-卡券有效期开始时间
-      validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 1, //相对有效期-领取后几天后生效
       source: '1', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
@@ -681,11 +924,50 @@ export default {
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
       classification: 1, //	商城订单类型: 1全部/2零售
-      cost: '', //成本价
-      memo: '' //使用说明
+      cost: '' //成本价
     };
   },
   computed: {
+    monthlyDayStr() {
+      return param => {
+        return param.join();
+      };
+    },
+    weeklyDayStr() {
+      return param => {
+        let tempArr = [];
+        this.weeklyDays.forEach(element => {
+          param.forEach(item => {
+            if (item === element.value) {
+              tempArr.push(element.label);
+            }
+          });
+        });
+        return tempArr.join();
+      };
+    },
+    faceAmountStr() {
+      return param => {
+        if (param.couponType === 10) {
+          return param.faceAmount;
+        } else if (param.couponType === 20) {
+          return param.faceAmount;
+        } else if (param.couponType === 40) {
+          return param.discountRatio * 10 + '折';
+        } else {
+          return '';
+        }
+      };
+    },
+    rowSelection() {
+      return {
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.selectedRows = selectedRows;
+        },
+        type: 'radio'
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -716,16 +998,76 @@ export default {
   },
   methods: {
     moment,
-    //////////新建活动///////////
+    ////////// 新建活动:start ///////////
+    // 查询卡券列表
+    onSearch(args) {
+      console.log(args);
+      const { activity, title, type } = args;
+      this.activity = activity || null;
+      this.title = title || null;
+      this.type = type || null;
+      this.current = 1;
+      this.getCouponList();
+    },
+    // 点击弹窗确定
+    handleOk(e) {
+      // this.confirmLoading = true;
+      if (this.selectedRows.length > 0) {
+        this.modalVisible = false;
+        this.couponName = this.selectedRows[0].couponTitle;
+        this.couTypeCode = this.selectedRows[0].couTypeCode;
+        this.showRedBorder = false;
+        this.id = this.selectedRows[0].id;
+        console.log('=======', this.selectedRows);
+        if (this.selectedRows[0].validityType == 1) {
+          this.couponValid = `${this.selectedRows[0].validityStartTime} - ${this.selectedRows[0].validityEndTime}`;
+        } else {
+          this.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${this.selectedRows[0].takeEffectDayNums}天后生效`;
+        }
+      } else {
+        this.$message.error('必须选择一个卡券!');
+      }
+      // this.confirmLoading = false;
+    },
+    monthlyDayModal() {
+      if (this.monthlyDay.length === 0) {
+        this.$message.error('每月活动日不能为空!');
+        return;
+      }
+      this.actModalVisible = false;
+    },
+    weeklyDayModal() {
+      if (this.weeklyDay.length === 0) {
+        this.$message.error('每周活动日不能为空!');
+        return;
+      }
+      this.actModalVisible = false;
+    },
+    showMonthlyDayModal() {
+      this.actModalVisible = true;
+    },
+    showWeeklyDayModal() {
+      this.actModalVisible = true;
+    },
+    // 打开弹窗
+    handleSelectCoupon() {
+      this.modalVisible = true;
+    },
+    // 关闭弹窗
+    handleModalCancel(e) {
+      this.modalVisible = false;
+    },
     handleDelete(index) {
       this.$delete(this.awardList, index);
     },
     addAward() {
       const tempObj = {
-        couponTitle: this.momentStrHms(Date.now()),
-        couponBusinessType: '1'
+        couponTitle: '',
+        condition: '',
+        monthGetDay: '',
+        weekGetDay: ''
       };
-      this.awardList.unshift(tempObj);
+      this.awardList.push(tempObj);
     },
     uploadBefor(file) {
       this.file = file;
@@ -755,9 +1097,68 @@ export default {
         content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
       });
     },
-    //////////新建活动///////////
-    disabledDate(current) {
-      return current && current < Date.now() - 86400000;
+    change(page) {
+      this.current = page;
+      this.getCouponList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
+      this.getCouponList();
+    },
+    getActThemeList() {
+      api
+        .getActThemeList({
+          pageSize: 999,
+          pageIndex: 1,
+          isEnable: 0
+        })
+        .then(res => {
+          console.log('getActThemeList res :>> ', res);
+          if (res.code === 200) {
+            this.themeIds.splice(0, this.themeIds.length);
+            res.data.records.forEach(element => {
+              let tempObj = {};
+              tempObj.name = element.themeName;
+              tempObj.code = element.id;
+              this.themeIds.push(tempObj);
+            });
+            this.themeId = this.themeIds[0].code;
+            console.log('getActThemeList this.themeIds :>> ', this.themeIds);
+          }
+        });
+    },
+    // 获取卡券列表
+    getCouponList() {
+      this.tableLoading = true;
+      let args = {
+        pageIndex: this.current,
+        pageSize: this.pageSize,
+        activity: this.activity,
+        type: this.type,
+        title: this.title,
+        status: 99
+      };
+      api
+        .getCouponList(args)
+        .finally(() => {
+          this.tableLoading = false;
+        })
+        .then(res => {
+          console.log(res);
+          this.tableLoading = false;
+          this.tableDataList = res.data.records.map((item, index) => {
+            return {
+              ...item,
+              key: index
+            };
+          });
+          this.total = res.data.total;
+        });
+    },
+    ////////// 新建活动:end ///////////
+    disabledDate(currentParam) {
+      return currentParam && currentParam < Date.now() - 86400000;
     },
     checkCostFormat(rule, value, callback) {
       if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
@@ -821,7 +1222,7 @@ export default {
                 if (res.code === 200) {
                   console.log(this.fileList);
                   this.conponForm.setFieldsValue({
-                    couponImage: res.data
+                    actImage: res.data
                   });
                   this.$set(this.fileList, 0, {
                     uid: '-1',
@@ -829,7 +1230,7 @@ export default {
                     status: 'done',
                     url: res.data ? res.data : ''
                   });
-                  this.couponImage = res.data ? res.data : '';
+                  this.actImage = res.data ? res.data : '';
                 }
               });
           }
@@ -842,7 +1243,7 @@ export default {
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
       this.fileList = newFileList;
-      this.couponImage = '';
+      this.actImage = '';
     },
     deleteOssImage() {
       console.log('deleteOssImage');
@@ -867,9 +1268,9 @@ export default {
             .then(res => {
               if (res.code === 200) {
                 that.fileList = [];
-                that.couponImage = '';
+                that.actImage = '';
                 that.conponForm.setFieldsValue({
-                  couponImage: ''
+                  actImage: ''
                 });
               }
             });
@@ -925,6 +1326,9 @@ export default {
     couponTitleChange(e) {
       this.couponTitle = e.target.value;
     },
+    activityNameChange(e) {
+      this.activityName = e.target.value;
+    },
     couponTitleChange1(e) {
       console.log('couponTitleChange1 this.awardFormindex :>> ', this.awardFormindex);
       console.log('couponTitleChange1 e.target.value :>> ', e.target.value);
@@ -972,6 +1376,9 @@ export default {
     classificationChange(e) {
       this.classification = e.target.value;
     },
+    isPeriodicChange(e) {
+      this.isPeriodic = e.target.value;
+    },
     //多选
     checkboxChange(checkedValues) {
       console.log('checkboxChange checkedValues :>> ', checkedValues);
@@ -980,11 +1387,36 @@ export default {
         this.checkboxValue.push(element);
       });
     },
+    monthlyDayChange(checkedValues) {
+      console.log('monthlyDayChange checkedValues :>> ', checkedValues);
+      this.monthlyDay.splice(0, this.monthlyDay.length);
+      checkedValues.forEach(element => {
+        this.monthlyDay.push(element);
+      });
+    },
+    weeklyDayChange(checkedValues) {
+      console.log('weeklyDayChange checkedValues :>> ', checkedValues);
+      this.weeklyDay.splice(0, this.weeklyDay.length);
+      checkedValues.forEach(element => {
+        this.weeklyDay.push(element);
+      });
+    },
+    clientIdChange(checkedValues) {
+      console.log('clientIdChange checkedValues :>> ', checkedValues);
+      this.clientId.splice(0, this.clientId.length);
+      checkedValues.forEach(element => {
+        this.clientId.push(element);
+      });
+    },
 
     //下拉
     couponTypeSelect(value) {
       console.log('couponTypeSelect');
       this.couponType = value;
+    },
+    rightsTypeSelect(value) {
+      console.log('rightsTypeSelect');
+      this.rightsType = value;
     },
     validityTypeSelect(value) {
       console.log('validityTypeSelect');
@@ -994,9 +1426,48 @@ export default {
       console.log('sourceSelect');
       this.source = value;
     },
+    themeIdSelect(value) {
+      console.log('themeIdSelect value :>> ', value);
+      this.themeId = value;
+    },
+    typeIdSelect(value) {
+      console.log('typeIdSelect value :>> ', value);
+      this.typeId = value;
+    },
+    startLevelIdSelect(value) {
+      console.log('startLevelIdSelect value :>> ', value);
+      this.startLevelId = value;
+    },
+    endLevelIdSelect(value) {
+      console.log('endLevelIdSelect value :>> ', value);
+      this.endLevelId = value;
+    },
+    isIncluded1Select(value) {
+      console.log('isIncluded1Select value :>> ', value);
+      this.isIncluded1 = value;
+    },
+    isIncluded2Select(value) {
+      console.log('isIncluded2Select value :>> ', value);
+      this.isIncluded2 = value;
+    },
     couponBusinessTypeSelect(value) {
       console.log('couponBusinessTypeSelect value :>> ', value);
       this.couponBusinessType = value;
+    },
+    conditionSelect(value) {
+      console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('conditionSelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'condition', value);
+    },
+    monthGetDaySelect(value) {
+      console.log('monthGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('monthGetDaySelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'monthGetDay', value);
+    },
+    weekGetDaySelect(value) {
+      console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      console.log('weekGetDaySelect value :>> ', value);
+      this.$set(this.awardList[this.awardFormindex], 'weekGetDay', value);
     },
     couponBusinessTypeSelect1(value) {
       console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
@@ -1021,7 +1492,7 @@ export default {
           couponBusinessType: '4014',
           // couponCode: '',
           // couponId: '',
-          couponImage:
+          actImage:
             'https://hystxt-oss.oss-cn-shenzhen.aliyuncs.com/oss-frontend/sys-member-center/4402197751161_lalala.png',
           couponSubhead: '',
           couponTitle: '卡券标题',
@@ -1050,7 +1521,7 @@ export default {
           // this.pcRuleId = res.data.pcRuleId || this.pcRuleId;//没用
           this.classification = res.data.classification || this.classification;
           this.commercialTenants = res.data.commercialTenants || this.commercialTenants;
-          this.couponImage = res.data.couponImage || this.couponImage;
+          this.actImage = res.data.actImage || this.actImage;
           this.discountMaxDeduction = res.data.discountMaxDeduction || this.discountMaxDeduction;
           this.discountRatio = res.data.discountRatio || this.discountRatio;
           this.fullReductionDiscountAmount = res.data.voucherAmount || this.fullReductionDiscountAmount;
@@ -1110,7 +1581,7 @@ export default {
         couponBusinessType: this.couponBusinessType,
         // couponCode: '', //没用
         // couponId: this.$route.query.id,//没用
-        couponImage: this.couponImage,
+        actImage: this.actImage,
         couponSubhead: this.couponSubhead,
         couponTitle: this.couponTitle,
         couponType: this.couponType,
@@ -1152,11 +1623,44 @@ export default {
   },
   created() {
     console.log('this.$route :>> ', this.$route);
+    this.getActThemeList();
     this.getTplDownload();
+    this.getCouponList();
     // this.getCouponDetail();
   },
   mounted() {},
   watch: {
+    startLevelId: {
+      handler(newVal) {
+        console.log('watch startLevelId newVal :>> ', newVal);
+        if (this.startLevelId > this.endLevelId) {
+          this.endLevelId = this.startLevelId;
+          this.conponForm.setFieldsValue({
+            endLevelId: this.startLevelId
+          });
+        }
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    endLevelId: {
+      handler(newVal) {
+        console.log('watch endLevelId newVal :>> ', newVal);
+        if (this.endLevelId < this.startLevelId) {
+          this.startLevelId = this.endLevelId;
+          this.conponForm.setFieldsValue({
+            startLevelId: this.endLevelId
+          });
+        }
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    modalVisible: function(newVal, oldVal) {
+      if (newVal) {
+        this.getCouponList();
+      }
+    },
     fileList: {
       handler(newVal) {
         console.log('watch fileList newVal :>> ', newVal);
@@ -1171,7 +1675,6 @@ export default {
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
-
     awardList: {
       handler(newVal) {
         console.log('watch awardList newVal :>> ', newVal);
@@ -1179,11 +1682,10 @@ export default {
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
-
-    couponImage: {
+    actImage: {
       handler(newVal) {
-        console.log('watch couponImage newVal :>> ', newVal);
-        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
+        console.log('watch actImage newVal :>> ', newVal);
+        this.actImage = this.actImage.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }
@@ -1203,6 +1705,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ant-modal-root {
+  ::v-deep .ant-col-12 {
+    width: 100% !important;
+  }
+}
 #coupons-detail {
   height: 100%;
 
@@ -1249,13 +1756,42 @@ export default {
           .common-title:first-child {
             padding: 10px 0 20px 14px;
           }
-
           .common-award {
-            border: 1px solid #000;
+            position: relative;
+            border: 1px dashed #ccc;
             padding: 10px;
+            margin: 10px 11.5% 20px;
+            border-radius: 8px;
+
+            .common-award-couponSelect {
+              width: 100%;
+              line-height: 32px;
+              height: 32px;
+              border: 1px solid #bfbfbf;
+              color: #bfbfbf;
+              padding-left: 10px;
+              border-radius: 3px;
+            }
+
+            .border-red {
+              border-color: #f5222d;
+            }
+
+            .common-award-couponSelectTip {
+              color: #f5222d;
+              margin: 0;
+              line-height: 1.5;
+              padding-top: 3px;
+            }
+
+            .common-award-btn {
+              position: absolute;
+              bottom: 10px;
+              right: 10px;
+            }
 
             ::v-deep .ant-col-3 {
-              width: 15%;
+              width: 20%;
             }
           }
         }

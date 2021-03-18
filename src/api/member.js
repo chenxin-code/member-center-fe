@@ -46,3 +46,4 @@ export const getActList = data => fetchApi(URL.ACT_LIST, data, 'GET'); //获取�
 export const deleteAct = data => fetchApi(URL.DELETE_ACT, data, 'POST'); //删除活动
 export const updateActStatus = data => fetchApi(URL.UPDATE_ACT_STATUS, data, 'POST'); //更新活动状态
 export const getActDetail = data => fetchApi(URL.ACT_DETAIL, data, 'GET'); //活动详情
+export const getActDownload = data => fetchApi(URL.ACT_DOWNLOAD, data, 'GET'); //下载活动中指定会员信息

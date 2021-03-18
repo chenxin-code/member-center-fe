@@ -81,6 +81,5 @@ export default {
   DELETE_ACT: '/times/member-center/activity/api/v1/delete', //删除活动
   UPDATE_ACT_STATUS: '/times/member-center/activity/api/v1/update-status', //更新活动状态
   ACT_DETAIL: '/times/member-center/activity/api/v1/detail', //活动详情
-  //活动参与数据
-  ACT_JOIN_LIST: '/times/member-center/themeActivity/api/v1/selectThemeActivityPeople'
+  ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download'
 };
