@@ -276,6 +276,9 @@ export default {
       this.current = 1;
       this.pageSize = 10;
       this.$refs.actForm.form.resetFields();
+      // this.$refs.actForm.setFieldsValue({
+      //   typeId: this.formList[1].selectOptions[0].id
+      // });
       //初始化加载数据
       this.getList();
     }
