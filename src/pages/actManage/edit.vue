@@ -1709,6 +1709,7 @@ export default {
       }
 
       const param = {
+        id: this.$route.query.id,
         file: this.file,
         activityThemeId: this.activityThemeId,
         activityName: this.activityName,
@@ -1725,7 +1726,7 @@ export default {
         isPeriodic: this.isPeriodic,
         monthlyDay: this.monthlyDay.join(),
         weeklyDay: this.weeklyDay.join(),
-        activityAwards: this.activityAwards
+        activityAwards: JSON.stringify(this.activityAwards)
       };
 
       console.log('getActCreate param :>> ', param);
