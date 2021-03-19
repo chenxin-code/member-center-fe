@@ -825,7 +825,7 @@ export default {
       },
       // 表单数据
       activityThemeId: '', //活动主题名称
-      activityThemeIds: [], //活动主题名称列表
+      activityThemeIds: [{name:'请选择',code:''}], //活动主题名称列表
       activityName: '', // 活动名称
       validityStartTime: '', //活动有效期-开始时间
       validityEndTime: '', //	活动有效期-结束时间
@@ -1222,7 +1222,7 @@ export default {
         .then(res => {
           console.log('getActThemeList res :>> ', res);
           if (res.code === 200) {
-            this.activityThemeIds.splice(0, this.activityThemeIds.length);
+            this.activityThemeIds.splice(1, this.activityThemeIds.length);
             res.data.records.forEach(element => {
               let tempObj = {};
               tempObj.name = element.themeName;

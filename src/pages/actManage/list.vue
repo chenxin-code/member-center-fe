@@ -26,7 +26,7 @@
         </template>
         <template slot="createTimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStr(rowData.createTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
@@ -190,7 +190,7 @@ export default {
           title: '活动有效期',
           key: 'validitySlot',
           scopedSlots: { customRender: 'validitySlot' },
-          width: 350
+          width: 250
         },
         {
           title: '创建用户',
@@ -202,7 +202,7 @@ export default {
           title: '创建时间',
           key: 'createTimeSlot',
           scopedSlots: { customRender: 'createTimeSlot' },
-          width: 180
+          width: 150
         },
         {
           title: '操作',
@@ -271,7 +271,7 @@ export default {
     // },
     parseValidityStr() {
       return param => {
-        return `${this.momentStrHms(param.startTime)} - ${this.momentStrHms(param.endTime)}`;
+        return `${this.momentStr(param.startTime)} - ${this.momentStr(param.endTime)}`;
       };
     },
     actStatusStr() {

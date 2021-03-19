@@ -37,8 +37,8 @@
                   <div class="column-item">
                     <div class="column-right">活动有效期:</div>
                     <div class="column-left">
-                      {{ momentStrHms(actDetails.startTime) }} ~
-                      {{ momentStrHms(actDetails.endTime) }}
+                      {{ momentStr(actDetails.startTime) }} ~
+                      {{ momentStr(actDetails.endTime) }}
                     </div>
                   </div>
                 </div>
@@ -47,7 +47,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item column-memo">
-                    <div class="column-right">备注:</div>
+                    <div class="column-right">描述:</div>
                     <div class="column-left">
                       <div class="column-left">
                         <a-textarea
