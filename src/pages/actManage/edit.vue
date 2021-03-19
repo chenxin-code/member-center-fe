@@ -35,7 +35,7 @@
                     ]"
                     @change="themeIdSelect"
                   >
-                    <a-select-option :value="item.code" v-for="(item, index) in themeIds" :key="index">
+                    <a-select-option :value="item.code" v-for="(item, index) in activityThemeIds" :key="index">
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
@@ -315,7 +315,8 @@
                               v-decorator="[
                                 'isIncluded1',
                                 {
-                                  initialValue: isIncluded1
+                                  initialValue: isIncluded1,
+                                  rules: [{ validator: this.checkMonthlyDay, trigger: ['blur'] }]
                                 }
                               ]"
                               @change="isIncluded1Select"
@@ -339,7 +340,8 @@
                               v-decorator="[
                                 'isIncluded2',
                                 {
-                                  initialValue: isIncluded2
+                                  initialValue: isIncluded2,
+                                  rules: [{ validator: this.checkWeeklyDay, trigger: ['blur'] }]
                                 }
                               ]"
                               @change="isIncluded2Select"
@@ -413,7 +415,7 @@
                 <div
                   class="common-award"
                   :class="`common-award-${index}`"
-                  v-for="(item, index) in activityAwardList"
+                  v-for="(item, index) in activityAwards"
                   :key="item.keyIndex"
                   @click="awardFormindex = index"
                 >
@@ -583,11 +585,11 @@
                       <!-- <div>item.weekGetDay:{{ item.weekGetDay }}</div> -->
                     </a-form-item>
                   </template>
-                  <button class="common-award-btn" v-show="activityAwardList.length > 1" @click="handleDelete(index)">
+                  <button class="common-award-btn" v-show="activityAwards.length > 1" @click="handleDelete(index)">
                     删除
                   </button>
                 </div>
-                <div>activityAwardList: {{ activityAwardList }}</div>
+                <div>activityAwards: {{ activityAwards }}</div>
                 <div style="display:flex;justify-content:center;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
@@ -788,20 +790,7 @@ export default {
       scrollY: 300,
       actModalVisible: false,
       awardFormindex: '',
-      // awardFormindex1: '',
-      // activityAwardList: [
-      //   {
-      //     keyIndex: `${Date.now()}-0`,
-      //     couponTitle: '',
-      //     condition: '',
-      //     monthGetDay: '',
-      //     weekGetDay: '',
-      //     couponName: '请选择',
-      //     couTypeCode: '',
-      //     showRedBorder: false
-      //   }
-      // ],
-      activityAwardList: [
+      activityAwards: [
         {
           keyIndex: `${Date.now()}-0`,
           couponCode: '',
@@ -837,8 +826,8 @@ export default {
         lineHeight: '40px'
       },
       // 表单数据
-      activityThemeId: 0, //活动主题名称
-      themeIds: [], //活动主题名称列表
+      activityThemeId: '', //活动主题名称
+      activityThemeIds: [], //活动主题名称列表
       activityName: '', // 活动名称
       validityStartTime: '', //活动有效期-开始时间
       validityEndTime: '', //	活动有效期-结束时间
@@ -1090,6 +1079,22 @@ export default {
     validatorFn,
     validatorFn1,
     moment,
+    checkMonthlyDay(rule, value, callback) {
+      if (this.monthlyDay.length === 0) {
+        this.actModalVisible = true;
+        callback(new Error('每月活动日不能为空'));
+      } else {
+        callback();
+      }
+    },
+    checkWeeklyDay(rule, value, callback) {
+      if (this.weeklyDay.length === 0) {
+        this.actModalVisible = true;
+        callback(new Error('每周活动日不能为空'));
+      } else {
+        callback();
+      }
+    },
     ////////// 新建活动:start ///////////
     // 查询卡券列表
     onSearch(args) {
@@ -1106,6 +1111,10 @@ export default {
         this.$message.error('每月活动日不能为空!');
         return;
       }
+      this.conponForm.validateFields((err, values) => {
+        console.log('monthlyDayModal validateFields err :>> ', err);
+        //没有错误的情况下
+      });
       this.actModalVisible = false;
     },
     weeklyDayModal() {
@@ -1113,6 +1122,10 @@ export default {
         this.$message.error('每周活动日不能为空!');
         return;
       }
+      this.conponForm.validateFields((err, values) => {
+        console.log('weeklyDayModal validateFields err :>> ', err);
+        //没有错误的情况下
+      });
       this.actModalVisible = false;
     },
     showMonthlyDayModal() {
@@ -1156,7 +1169,7 @@ export default {
       this.handleItem = null;
     },
     handleDelete(index) {
-      this.$delete(this.activityAwardList, index);
+      this.$delete(this.activityAwards, index);
     },
     uploadBefor(file) {
       this.file = file;
@@ -1204,22 +1217,22 @@ export default {
     getActThemeList() {
       api
         .getActThemeList({
-          pageSize: 999,
+          pageSize: 99,
           pageIndex: 1,
           isEnable: 0
         })
         .then(res => {
           console.log('getActThemeList res :>> ', res);
           if (res.code === 200) {
-            this.themeIds.splice(0, this.themeIds.length);
+            this.activityThemeIds.splice(0, this.activityThemeIds.length);
             res.data.records.forEach(element => {
               let tempObj = {};
               tempObj.name = element.themeName;
               tempObj.code = element.id;
-              this.themeIds.push(tempObj);
+              this.activityThemeIds.push(tempObj);
             });
-            this.activityThemeId = this.themeIds[0].code;
-            console.log('getActThemeList this.themeIds :>> ', this.themeIds);
+            this.activityThemeId = this.activityThemeIds[0].code;
+            console.log('getActThemeList this.activityThemeIds :>> ', this.activityThemeIds);
           }
         });
     },
@@ -1424,32 +1437,32 @@ export default {
     perPersonDayLimitChange(value) {
       console.log('perPersonDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
       console.log('perPersonDayLimitChange valuevalue :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'perPersonDayLimit', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'perPersonDayLimit', value);
     },
     perDayLimitChange(value) {
       console.log('perDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
       console.log('perDayLimitChange value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'perDayLimit', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'perDayLimit', value);
     },
     perPersonLimitChange(value) {
       console.log('perPersonLimitChange this.awardFormindex :>> ', this.awardFormindex);
       console.log('perPersonLimitChange value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'perPersonLimit', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'perPersonLimit', value);
     },
     integrealCountChange(value) {
       console.log('integrealCountChange this.awardFormindex :>> ', this.awardFormindex);
       console.log('integrealCountChange value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'integrealCount', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'integrealCount', value);
     },
     issuedCountChange(value) {
       console.log('issuedCountChange this.awardFormindex :>> ', this.awardFormindex);
       console.log('issuedCountChange value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'issuedCount', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'issuedCount', value);
     },
     couponTitleChange1(e) {
       console.log('couponTitleChange1 this.awardFormindex :>> ', this.awardFormindex);
       console.log('couponTitleChange1 e.target.value :>> ', e.target.value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'couponTitle', e.target.value);
+      this.$set(this.activityAwards[this.awardFormindex], 'couponTitle', e.target.value);
     },
     couponSubheadChange(e) {
       this.couponSubhead = e.target.value;
@@ -1574,39 +1587,28 @@ export default {
     conditionSelect(value) {
       console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
       console.log('conditionSelect value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'condition', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'condition', value);
     },
     monthGetDaySelect(value) {
       console.log('monthGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
       console.log('monthGetDaySelect value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'monthGetDay', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'monthGetDay', value);
     },
     weekGetDaySelect(value) {
       console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
       console.log('weekGetDaySelect value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'weekGetDay', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'weekGetDay', value);
     },
     couponBusinessTypeSelect1(value) {
       console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
       console.log('couponBusinessTypeSelect1 value :>> ', value);
-      this.$set(this.activityAwardList[this.awardFormindex], 'couponBusinessType', value);
+      this.$set(this.activityAwards[this.awardFormindex], 'couponBusinessType', value);
     },
 
     //获取详情
-
     addAward() {
-      // const tempObj = {
-      //   keyIndex: `${Date.now()}-${this.activityAwardList.length}`,
-      //   couponTitle: '',
-      //   condition: '',
-      //   monthGetDay: '',
-      //   weekGetDay: '',
-      //   couponName: '请选择',
-      //   couTypeCode: '',
-      //   showRedBorder: false
-      // };
       const tempObj = {
-        keyIndex: `${Date.now()}-${this.activityAwardList.length}`,
+        keyIndex: `${Date.now()}-${this.activityAwards.length}`,
         couponCode: '',
         couponId: '',
         condition: '',
@@ -1623,19 +1625,19 @@ export default {
         couponValid: '',
         showRedBorder: false
       };
-      this.activityAwardList.push(tempObj);
+      this.activityAwards.push(tempObj);
     },
     handleSubmit(loadingType) {
       let showRedBorderNull = true;
 
-      this.activityAwardList.forEach(element => {
+      this.activityAwards.forEach(element => {
         if (!element.couponCode) {
           element.showRedBorder = true;
         }
       });
 
-      for (let index = 0; index < this.activityAwardList.length; index++) {
-        const element = this.activityAwardList[index];
+      for (let index = 0; index < this.activityAwards.length; index++) {
+        const element = this.activityAwards[index];
         if (!element.couponCode) {
           showRedBorderNull = false;
           break;
@@ -1646,6 +1648,7 @@ export default {
 
       this.conponForm.validateFields((err, values) => {
         console.log('handleSubmit validateFields err :>> ', err);
+        console.log('handleSubmit validateFields values :>> ', values);
         //没有错误的情况下
         if (!err && showRedBorderNull) {
           console.log('handleSubmit values :>> ', values);
@@ -1668,36 +1671,46 @@ export default {
           this.actDetails = res.data;
           console.log('this.actDetails :>> ', this.actDetails);
 
-          this.activityThemeId = res.data.themeId;
+          this.activityThemeId = res.data.activityThemeId;
           this.activityName = res.data.activityName;
-          this.startTime = res.data.startTime;
-          this.endTime = res.data.endTime;
+          // this.startTime = res.data.startTime;
+          // this.endTime = res.data.endTime;
+          // this.rangePickerValue = [];
           this.memo = res.data.memo;
-          this.activityCover =  res.data.activityCover;
+          this.activityCover = res.data.activityCover;
           this.typeId = res.data.typeId;
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
-          this.clientId = res.data.clientId.split();
+          // this.clientId = [];
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
-          this.monthlyDay = res.data.monthlyDay;
-          this.weeklyDay = res.data.weeklyDay;
-          this.activityAwardList = res.data.activityAwardList;
+          // this.monthlyDay = [];
+          // this.weeklyDay = [];
+          this.activityAwards = res.data.activityAwards;
+          this.activityAwards.forEach(element => {
+            element.couponCode = '';
+            element.couponId = '';
+            element.monthGetDay = '';
+            element.weekGetDay = '';
+            element.couponName = '请选择';
+            element.couponValid = '';
+            element.showRedBorder = false;
+          });
         }
       });
     },
 
     getActCreate(loadingType) {
-      for (let index = 0; index < this.activityAwardList.length; index++) {
-        const element = this.activityAwardList[index];
+      for (let index = 0; index < this.activityAwards.length; index++) {
+        const element = this.activityAwards[index];
         if (!element.integrealCount) {
           element.integrealCount = 0;
         }
       }
 
       const param = {
-        // file: this.file,
+        file: this.file,
         activityThemeId: this.activityThemeId,
         activityName: this.activityName,
         startTime: this.validityStartTime,
@@ -1713,7 +1726,7 @@ export default {
         isPeriodic: this.isPeriodic,
         monthlyDay: this.monthlyDay.join(),
         weeklyDay: this.weeklyDay.join(),
-        activityAwardList: this.activityAwardList
+        activityAwards: this.activityAwards
       };
 
       console.log('getActCreate param :>> ', param);
@@ -1742,17 +1755,42 @@ export default {
             this.$router.replace({ path: '/actManage' });
           }
         });
+    },
+    async initData() {
+      await this.getActThemeList();
+      await this.getTplDownload();
+      await this.getCouponList();
+      await this.getActDetail();
     }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getActThemeList();
-    this.getTplDownload();
-    this.getCouponList();
-    this.getActDetail();
+    this.initData();
   },
   mounted() {},
   watch: {
+    monthlyDay: {
+      handler(newVal) {
+        console.log('watch monthlyDay newVal :>> ', newVal);
+        this.conponForm.validateFields((err, values) => {
+          console.log('watch monthlyDay validateFields err :>> ', err);
+          //没有错误的情况下
+        });
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    weeklyDay: {
+      handler(newVal) {
+        console.log('watch weeklyDay newVal :>> ', newVal);
+        this.conponForm.validateFields((err, values) => {
+          console.log('watch weeklyDay validateFields err :>> ', err);
+          //没有错误的情况下
+        });
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
     scopeType: {
       handler(newVal) {
         console.log('watch scopeType newVal :>> ', newVal);
@@ -1763,32 +1801,36 @@ export default {
     typeId: {
       handler(newVal) {
         console.log('watch typeId newVal :>> ', newVal);
-        // console.log('this.awardFormindex1 :>> ', this.awardFormindex1);
         if (newVal === 2) {
           this.conditions = [
-            { name: '请选择', id: '' },
             { name: '手动领取', id: 2 },
             { name: '邦豆兑换', id: 3 }
           ];
         } else if (newVal === 1) {
-          this.conditions = [
-            { name: '请选择', id: '' },
-            { name: '手动领取', id: 2 }
-          ];
+          this.conditions = [{ name: '手动领取', id: 2 }];
         } else if (newVal === 3) {
-          this.conditions = [
-            { name: '请选择', id: '' },
-            { name: '邦豆兑换', id: 3 }
-          ];
+          this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
         this.$nextTick(() => {
-          this.activityAwardList.forEach((element, index) => {
-            element.condition = '';
-            const tempKey = 'condition-' + index;
-            this.conponForm.setFieldsValue({
-              [tempKey]: ''
-            });
+          this.activityAwards.forEach((element, index) => {
+            const tempKey = `condition-${index}`;
+            if (newVal === 2) {
+              element.condition = 2;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 2
+              });
+            } else if (newVal === 1) {
+              element.condition = 2;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 2
+              });
+            } else if (newVal === 3) {
+              element.condition = 3;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 3
+              });
+            }
           });
         });
       },
@@ -1840,9 +1882,9 @@ export default {
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
-    activityAwardList: {
+    activityAwards: {
       handler(newVal) {
-        console.log('watch activityAwardList newVal :>> ', newVal);
+        console.log('watch activityAwards newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
