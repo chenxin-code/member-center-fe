@@ -1652,7 +1652,7 @@ export default {
         if (!err && showRedBorderNull) {
           console.log('handleSubmit values :>> ', values);
           // return;
-          this.getActCreate(loadingType);
+          this.getActUpdate(loadingType);
         }
       });
     },
@@ -1700,7 +1700,7 @@ export default {
       });
     },
 
-    getActCreate(loadingType) {
+    getActUpdate(loadingType) {
       for (let index = 0; index < this.activityAwards.length; index++) {
         const element = this.activityAwards[index];
         if (!element.integrealCount) {
@@ -1729,7 +1729,7 @@ export default {
         activityAwards: JSON.stringify(this.activityAwards)
       };
 
-      console.log('getActCreate param :>> ', param);
+      console.log('getActUpdate param :>> ', param);
 
       const paramFormData = Object.keys(param).reduce((pre, key) => {
         pre.append([key], param[key]);
@@ -1738,18 +1738,18 @@ export default {
 
       //第二种
       for (let [a, b] of paramFormData.entries()) {
-        console.log('getActCreate: ', a, ' || ', b);
+        console.log('getActUpdate: ', a, ' || ', b);
       }
 
       this[loadingType] = true;
       // return;
       api
-        .getActCreate(paramFormData)
+        .getActUpdate(paramFormData)
         .finally(() => {
           this[loadingType] = false;
         })
         .then(res => {
-          console.log('getActCreate res :>> ', res);
+          console.log('getActUpdate res :>> ', res);
           if (res.code === 200) {
             console.log('res.data :>> ', res.data);
             this.$router.replace({ path: '/actManage' });

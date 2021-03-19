@@ -20,4 +20,8 @@ export const getActCreate = data =>
     Authorization: tokenStr,
     'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
   });
-// export const getActCreate = data => fetchApi(URL.ACT_ADD, data, 'POST');
+export const getActUpdate = data =>
+  fetchApi(URL.UPDATE_ADD, data, 'POST', {
+    Authorization: tokenStr,
+    'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+  });
