@@ -90,7 +90,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
-                    :maxLength="200"
+                    :maxLength="1000"
                     placeholder="请输入备注信息"
                   />
                   <div>活动描述 memo: {{ memo }}</div>
