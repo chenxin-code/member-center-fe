@@ -149,7 +149,7 @@
           <a-row
             class="common-row"
             :class="`common-row-${index}`"
-            v-for="(item, index) in actDetails.activityAwardList"
+            v-for="(item, index) in actDetails.activityAwards"
             :key="index"
           >
             <a-col :span="24">
@@ -203,27 +203,28 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">周可领取天:</div>
-                    <div class="column-left">
-                      {{ item.weekGetDay || '周可领取天 ～ 空' }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-if="item.monthGetDay">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">月可领取天:</div>
                     <div class="column-left">
-                      {{ item.monthGetDay || '月可领取天 ～ 空' }}
+                      {{ item.monthGetDay || '' }}
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-if="item.weekGetDay">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">周可领取天:</div>
+                    <div class="column-left">
+                      {{ item.weekGetDay || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="common-column-wrapp" v-if="item.startTime && item.expirationTime">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券有效期:</div>
@@ -449,9 +450,9 @@ export default {
               this.$set(this.actDetails, key, element);
             }
           }
-          this.actDetails.activityAwardList = this.actDetails.activityAwardList.concat(
-            this.actDetails.activityAwardList
-          );
+          // this.actDetails.activityAwards = this.actDetails.activityAwards.concat(
+          //   this.actDetails.activityAwards
+          // );
           console.log('this.actDetails :>> ', this.actDetails);
         }
       });
