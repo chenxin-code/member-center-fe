@@ -15,9 +15,9 @@ export const couponDistribute = data =>
     'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
   });
 export const getMemberLevelList = data => fetchApi(URL.GET_MEMBERLEVELLIST, data, 'GET');
-// export const getActCreate = data =>
-//   fetchApi(URL.ACT_ADD, data, 'POST', {
-//     Authorization: tokenStr,
-//     'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
-//   });
-export const getActCreate = data => fetchApi(URL.ACT_ADD, data, 'POST');
+export const getActCreate = data =>
+  fetchApi(URL.ACT_ADD, data, 'POST', {
+    Authorization: tokenStr,
+    'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+  });
+// export const getActCreate = data => fetchApi(URL.ACT_ADD, data, 'POST');
