@@ -57,7 +57,6 @@
                       }
                     ]"
                     placeholder="请输入活动名称"
-                    allow-clear
                   />
                   <div>活动名称 activityName: {{ activityName }}</div>
                 </a-form-item>
