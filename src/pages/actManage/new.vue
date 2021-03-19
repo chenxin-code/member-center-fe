@@ -825,7 +825,7 @@ export default {
       },
       // 表单数据
       activityThemeId: '', //活动主题名称
-      activityThemeIds: [{name:'请选择',code:''}], //活动主题名称列表
+      activityThemeIds: [{ name: '请选择', code: '' }], //活动主题名称列表
       activityName: '', // 活动名称
       validityStartTime: '', //活动有效期-开始时间
       validityEndTime: '', //	活动有效期-结束时间
@@ -1191,7 +1191,7 @@ export default {
     // 获取下载模版
     getTplDownload() {
       this.downLoadTplExist = false;
-      api.getTplDownload().then(res => {
+      return api.getTplDownload().then(res => {
         console.log('getTplDownload res :>> ', res);
         this.downLoadTplExist = true;
         this.downLoadTplUrl = res.data;
@@ -1213,7 +1213,7 @@ export default {
       this.getCouponList();
     },
     getActThemeList() {
-      api
+      return api
         .getActThemeList({
           pageSize: 99,
           pageIndex: 1,
@@ -1245,7 +1245,7 @@ export default {
         title: this.title,
         status: 99
       };
-      api
+      return api
         .getCouponList(args)
         .finally(() => {
           this.tableLoading = false;
@@ -1709,13 +1709,17 @@ export default {
             this.$router.replace({ path: '/actManage' });
           }
         });
+    },
+    async initData() {
+      await this.getCouponList();
+      await this.getTplDownload();
+      await this.getActThemeList();
+      // await this.getActDetail();
     }
   },
   created() {
     console.log('this.$route :>> ', this.$route);
-    this.getActThemeList();
-    this.getTplDownload();
-    this.getCouponList();
+    this.initData();
   },
   mounted() {},
   watch: {
@@ -1757,13 +1761,9 @@ export default {
             { name: '邦豆兑换', id: 3 }
           ];
         } else if (newVal === 1) {
-          this.conditions = [
-            { name: '手动领取', id: 2 }
-          ];
+          this.conditions = [{ name: '手动领取', id: 2 }];
         } else if (newVal === 3) {
-          this.conditions = [
-            { name: '邦豆兑换', id: 3 }
-          ];
+          this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
         this.$nextTick(() => {

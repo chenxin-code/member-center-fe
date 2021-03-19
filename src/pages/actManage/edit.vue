@@ -1192,7 +1192,7 @@ export default {
     // 获取下载模版
     getTplDownload() {
       this.downLoadTplExist = false;
-      api.getTplDownload().then(res => {
+      return api.getTplDownload().then(res => {
         console.log('getTplDownload res :>> ', res);
         this.downLoadTplExist = true;
         this.downLoadTplUrl = res.data;
@@ -1214,7 +1214,7 @@ export default {
       this.getCouponList();
     },
     getActThemeList() {
-      api
+      return api
         .getActThemeList({
           pageSize: 99,
           pageIndex: 1,
@@ -1246,7 +1246,7 @@ export default {
         title: this.title,
         status: 99
       };
-      api
+      return api
         .getCouponList(args)
         .finally(() => {
           this.tableLoading = false;
@@ -1664,7 +1664,7 @@ export default {
 
       console.log('getActDetail param :>> ', param);
 
-      api.getActDetail(param).then(res => {
+      return api.getActDetail(param).then(res => {
         console.log('getActDetail res :>> ', res);
         if (res.code === 200) {
           this.actDetails = res.data;
