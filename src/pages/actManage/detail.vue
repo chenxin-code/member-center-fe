@@ -47,7 +47,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item column-memo">
-                    <div class="column-right">描述:</div>
+                    <div class="column-right">活动描述:</div>
                     <div class="column-left">
                       <div class="column-left">
                         <a-textarea
