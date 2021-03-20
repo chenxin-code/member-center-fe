@@ -1833,7 +1833,7 @@ export default {
           this.activityAwards.forEach((element, index) => {
             // let tempKey = `condition-${index}`;
             if (newVal === 2) {
-              element.condition = 2;
+              // element.condition = 2;
               // this.conponForm.setFieldsValue({
               //   [tempKey]: 2
               // });
