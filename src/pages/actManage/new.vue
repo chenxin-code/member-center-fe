@@ -90,7 +90,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
-                    :maxLength="1000"
+                    :maxLength="200"
                     placeholder="请输入备注信息"
                   />
                   <div>活动描述 memo: {{ memo }}</div>
@@ -460,7 +460,11 @@
                           initialValue: item.issuedCount,
                           rules: [
                             { required: true, message: '请输入发放数量' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn0(rule, value, callback, '每人兑换数量限制, 1-5000')
+                            }
                           ]
                         }
                       ]"
@@ -477,7 +481,11 @@
                           initialValue: item.integrealCount,
                           rules: [
                             { required: true, message: '请输入邦豆兑换值!' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人兑换数量限制, 1-999999999')
+                            }
                           ]
                         }
                       ]"
@@ -675,6 +683,14 @@ import {
 
 const validatorFn = (rule, value, callback, message) => {
   if (parseInt(value, 10) < 1 || parseInt(value, 10) > 999999999) {
+    callback(message);
+  } else {
+    callback();
+  }
+};
+
+const validatorFn0 = (rule, value, callback, message) => {
+  if (parseInt(value, 10) < 1 || parseInt(value, 10) > 5000) {
     callback(message);
   } else {
     callback();
@@ -1075,6 +1091,7 @@ export default {
   },
   methods: {
     validatorFn,
+    validatorFn0,
     validatorFn1,
     moment,
     checkMonthlyDay(rule, value, callback) {
