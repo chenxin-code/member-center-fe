@@ -232,6 +232,8 @@ export default {
         }
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
           couponCode = this.$refs.memberForm.getFieldsValue().couponCode;
+        } else {
+          couponActivitiesId = '';
         }
 
         let couponName = '';
