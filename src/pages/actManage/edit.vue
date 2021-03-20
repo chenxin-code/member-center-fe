@@ -1718,12 +1718,12 @@ export default {
     },
 
     getActUpdate(loadingType) {
-      for (let index = 0; index < this.activityAwards.length; index++) {
-        const element = this.activityAwards[index];
-        if (!element.integrealCount) {
-          element.integrealCount = 1;
-        }
-      }
+      // for (let index = 0; index < this.activityAwards.length; index++) {
+      //   const element = this.activityAwards[index];
+      //   if (!element.integrealCount) {
+      //     element.integrealCount = 1;
+      //   }
+      // }
 
       const param = {
         id: this.$route.query.id,
