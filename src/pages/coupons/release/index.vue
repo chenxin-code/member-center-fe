@@ -206,15 +206,9 @@ export default {
           customRender: (text, record) =>
             text == 1
               ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss') +
-<<<<<<< HEAD
                 '-' +
                 moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
               : `相对有效期: ${record.valiDays}天, 领取后${record.offsetDays}天生效`
-=======
-              '-' +
-              moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
-              : `相对有效期, ${record.valiDays}天, 领取后${record.offsetDays}天生效`
->>>>>>> dev
         },
         {
           title: '派发类型',

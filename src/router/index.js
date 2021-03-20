@@ -119,23 +119,6 @@ const routes = [
       {
         path: '/couponsManage/new',
         name: 'couponsManageNew',
-<<<<<<< HEAD
-=======
-        menuKey: 'couponsManage',
-        meta: {
-          menu: '/couponsManage',
-          authKeys: [''],
-          bread: [
-            { path: '/couponsManage', name: '卡券管理' },
-            { path: '/couponsManage/new', name: '卡券创建' }
-          ]
-        },
-        component: CouponsManageNew
-      },
-      {
-        path: '/couponsManage/edit',
-        name: 'couponsManageEdit',
->>>>>>> dev
         menuKey: 'couponsManage',
         meta: {
           menu: '/couponsManage',
@@ -162,30 +145,18 @@ const routes = [
         component: CouponsManageEdit
       },
       {
-<<<<<<< HEAD
         path: '/couponsManage/copy',
         name: 'couponsManageCopy',
-=======
-        path: '/couponsManage/detail',
-        name: 'couponsManageDetail',
->>>>>>> dev
         menuKey: 'couponsManage',
         meta: {
           menu: '/couponsManage',
           authKeys: [''],
           bread: [
             { path: '/couponsManage', name: '卡券管理' },
-<<<<<<< HEAD
             { path: '/couponsManage/copy', name: '卡券创建' }
           ]
         },
         component: CouponsManageCopy
-=======
-            { path: '/couponsManage/detail', name: '卡券查看' }
-          ]
-        },
-        component: CouponsManageDetail
->>>>>>> dev
       },
       //// 活动管理 start
       {
