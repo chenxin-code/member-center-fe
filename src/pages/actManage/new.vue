@@ -1785,22 +1785,22 @@ export default {
         //重置遍历中的condition
         this.$nextTick(() => {
           this.activityAwards.forEach((element, index) => {
-            // const tempKey = `condition-${index}`;
+            const tempKey = `condition-${index}`;
             if (newVal === 2) {
               element.condition = 2;
-              // this.conponForm.setFieldsValue({
-              //   [tempKey]: 2
-              // });
+              this.conponForm.setFieldsValue({
+                [tempKey]: 2
+              });
             } else if (newVal === 1) {
               element.condition = 2;
-              // this.conponForm.setFieldsValue({
-              //   [tempKey]: 2
-              // });
+              this.conponForm.setFieldsValue({
+                [tempKey]: 2
+              });
             } else if (newVal === 3) {
               element.condition = 3;
-              // this.conponForm.setFieldsValue({
-              //   [tempKey]: 3
-              // });
+              this.conponForm.setFieldsValue({
+                [tempKey]: 3
+              });
             }
           });
         });
