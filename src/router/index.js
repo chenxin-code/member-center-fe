@@ -158,6 +158,20 @@ const routes = [
         },
         component: CouponsManageCopy
       },
+      {
+        path: '/couponsManage/detail',
+        name: 'couponsManageDetail',
+        menuKey: 'couponsManage',
+        meta: {
+          menu: '/couponsManage',
+          authKeys: [''],
+          bread: [
+            { path: '/couponsManage', name: '卡券管理' },
+            { path: '/couponsManage/detail', name: '卡券查看' }
+          ]
+        },
+        component: CouponsManageDetail
+      },
       //// 活动管理 start
       {
         path: '/actManage',
