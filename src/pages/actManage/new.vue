@@ -472,7 +472,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="邦豆兑换值" v-if="typeId !== 1">
+                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3 ) && item.condition === 3">
                     <a-input-number
                       @change="integrealCountChange"
                       v-decorator="[
