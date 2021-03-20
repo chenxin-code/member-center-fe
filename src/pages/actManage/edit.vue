@@ -1829,7 +1829,7 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        this.$nextTick(() => {
+        // this.$nextTick(() => {
           this.activityAwards.forEach((element, index) => {
             let tempKey = `condition-${index}`;
             if (newVal === 2) {
@@ -1849,7 +1849,7 @@ export default {
               });
             }
           });
-        });
+        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

@@ -1783,27 +1783,27 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        this.$nextTick(() => {
-          this.activityAwards.forEach((element, index) => {
-            const tempKey = `condition-${index}`;
-            if (newVal === 2) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 1) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 3) {
-              element.condition = 3;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 3
-              });
-            }
-          });
+        // this.$nextTick(() => {
+        this.activityAwards.forEach((element, index) => {
+          const tempKey = `condition-${index}`;
+          if (newVal === 2) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 1) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 3) {
+            element.condition = 3;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 3
+            });
+          }
         });
+        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
