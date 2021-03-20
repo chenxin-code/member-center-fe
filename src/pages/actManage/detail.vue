@@ -53,7 +53,7 @@
                         <a-textarea
                           v-model="actDetailsMemo"
                           :disabled="true"
-                          :maxLength="1000"
+                          :maxLength="200"
                           :auto-size="{ minRows: 3, maxRows: 5 }"
                           style="width: 267px;"
                           placeholder="请输入备注"
