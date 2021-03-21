@@ -715,6 +715,7 @@ const validatorFn1 = (rule, value, callback, message) => {
     }
   }
 };
+
 const validatorDate = (rule, value, callback, message) => {
   console.log('validatorDate value :>> ', value);
   if (
@@ -1304,7 +1305,7 @@ export default {
     },
     ////////// 新建活动:end ///////////
     disabledDate(currentParam) {
-      return currentParam && currentParam < Date.now() - 86400000 - 1186400000;
+      return currentParam && currentParam < Date.now() - 86400000;
     },
     checkCostFormat(rule, value, callback) {
       if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
