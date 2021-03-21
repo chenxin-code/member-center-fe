@@ -265,14 +265,20 @@
                       </a-upload>
                     </a-form-item>
                   </a-radio>
-                  <div v-if="scopeType === 1" style="padding-left: 148px;" :style="{ paddingTop: '40px' }">
+                  <div v-if="scopeType === 1" style="padding:40px 0 14px 148px;">
                     <p style="font-size: 12px;color: #c1c1c1;">
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
-                    <p>
+                    <div>
+                      <a-button @click="getDownloadInfo">
+                        <a-icon type="download" />
+                        会员信息
+                      </a-button>
+                    </div>
+                    <!-- <p>
                       <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
                       <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
-                    </p>
+                    </p> -->
                   </div>
                   <div>单选 scopeType: {{ scopeType }}</div>
                   <div>会员来源 clientId.join(): {{ clientId.join() }}</div>
@@ -673,6 +679,7 @@
 
 <script>
 import api from '@/api';
+import axios from 'axios';
 import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
@@ -1228,6 +1235,45 @@ export default {
       this.file = null;
       console.log('newFileList :>> ', newFileList);
       console.log('this.file :>> ', this.file);
+    },
+    // 下载会员信息
+    getDownloadInfo() {
+      const args = {
+        activityId: this.$route.query.id
+      };
+      // console.log('getDownloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/activity/api/v1/activity-member/download',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        console.log('getDownloadInfo res.data :>> ', res.data);
+        // return;
+        this.handleDownload(res.data);
+      });
+    },
+    handleDownload(content) {
+      const filename = '会员信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      console.log('blob :>> ', blob);
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
     },
     // 获取下载模版
     getTplDownload() {

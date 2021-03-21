@@ -67,9 +67,7 @@
                       'rangePickerValue',
                       {
                         initialValue: rangePickerValue,
-                        rules: [
-                          { type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }
-                        ]
+                        rules: [{ type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }]
                       }
                     ]"
                     :placeholder="['开始时间', '结束时间']"
@@ -261,7 +259,7 @@
                       </a-upload>
                     </a-form-item>
                   </a-radio>
-                  <div v-if="scopeType === 1" style="padding-left: 148px;" :style="{ paddingTop: '40px' }">
+                  <div v-if="scopeType === 1" style="padding:40px 0 0 148px;">
                     <p style="font-size: 12px;color: #c1c1c1;">
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
