@@ -68,11 +68,7 @@
                       {
                         initialValue: rangePickerValue,
                         rules: [
-                        { type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' },
-                                                  {
-                            validator: (rule, value, callback) =>
-                              validatorDate(rule, value, callback, '活动有效期不能小于当天, 请重新选择日期!')
-                          }
+                          { type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }
                         ]
                       }
                     ]"
@@ -716,22 +712,6 @@ const validatorFn1 = (rule, value, callback, message) => {
   }
 };
 
-const validatorDate = (rule, value, callback, message) => {
-  console.log('validatorDate value :>> ', value);
-  if (
-    Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
-    Number(
-      moment(Date.now())
-        .format('YYYY-MM-DD')
-        .replace(/-/g, '')
-    )
-  ) {
-    callback(message);
-  } else {
-    callback();
-  }
-};
-
 export default {
   name: 'couponsManageNew',
   components: {
@@ -1115,7 +1095,6 @@ export default {
     validatorFn,
     validatorFn0,
     validatorFn1,
-    validatorDate,
     moment,
     checkMonthlyDay(rule, value, callback) {
       if (this.monthlyDay.length === 0) {
