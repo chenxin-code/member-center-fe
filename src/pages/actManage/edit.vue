@@ -272,7 +272,7 @@
                     <div>
                       <a-button @click="getDownloadInfo">
                         <a-icon type="download" />
-                        会员信息
+                        下载会员信息
                       </a-button>
                     </div>
                     <!-- <p>

@@ -264,8 +264,8 @@
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
                     <p>
-                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
-                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无会员信息模板</a>
+                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息模板</a>
                     </p>
                   </div>
                   <div>单选 scopeType: {{ scopeType }}</div>
