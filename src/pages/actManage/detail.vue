@@ -97,7 +97,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每周活动日包含:</div>
-                    <div class="column-left">{{ weeklyDay(actDetails.weeklyDay) || '' }}</div>
+                    <div class="column-left">{{ weeklyDayStr(actDetails.weeklyDay) || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -255,7 +255,7 @@ export default {
   components: {},
   data() {
     return {
-      weekStrs: ['周一','周二','周三','周四','周五','周六','周日'],
+      weekStrs: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
       actDetails: {}
     };
   },
@@ -390,11 +390,15 @@ export default {
       };
     },
 
-    weeklyDay() {
+    weeklyDayStr() {
       return param => {
+        console.log('param :>> ', param);
+        if (!param) {
+          return '';
+        }
         let tempStr = '';
         param.split(',').forEach(element => {
-          tempStr += this.weekStrs[parseInt(element)-1] + '，';
+          tempStr += this.weekStrs[parseInt(element) - 1] + '，';
         });
         tempStr = tempStr.substring(0, tempStr.length - 1);
         return tempStr;

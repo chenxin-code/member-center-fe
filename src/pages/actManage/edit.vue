@@ -1697,7 +1697,7 @@ export default {
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
           // this.clientId = [];
-          this.clientId = this.clientId.split(',')
+          this.clientId = res.data.clientId.split(',')
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
