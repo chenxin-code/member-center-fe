@@ -270,15 +270,16 @@
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
                     <div>
-                      <a-button @click="getDownloadInfo">
+                      <a-button @click="getDownloadInfo" v-if="isUpload">
                         <a-icon type="download" />
                         下载会员信息
                       </a-button>
+                      <p v-if="!isUpload">
+                        <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
+                        <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                      </p>
                     </div>
-                    <!-- <p>
-                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
-                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
-                    </p> -->
+                    <!-- isUpload: false, -->
                   </div>
                   <div>单选 scopeType: {{ scopeType }}</div>
                   <div>会员来源 clientId.join(): {{ clientId.join() }}</div>
@@ -746,6 +747,7 @@ export default {
   },
   data() {
     return {
+      isUpload: false,
       actDetails: null,
       handleItem: null, //中转
       ////////// 新建活动 start ///////////
@@ -1768,6 +1770,9 @@ export default {
           this.typeId = res.data.typeId;
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
+          if (res.data.scopeType === 1) {
+            this.isUpload = true;
+          }
           // this.clientId = [];
           this.clientId = res.data.clientId.split(',');
           this.startLevelId = res.data.startLevelId;
@@ -1789,8 +1794,8 @@ export default {
             element.couponCode = '';
             element.couponId = '';
             // 可领取时间
-            element.monthGetDay = '';
-            element.weekGetDay = '';
+            element.monthGetDay = element.monthGetDay ? String(element.monthGetDay) : '';
+            element.weekGetDay = element.weekGetDay ? String(element.weekGetDay) : '';
             //三个非接口字段
             element.couponName = '请选择';
             element.couponValid = '';
@@ -1896,9 +1901,16 @@ export default {
         console.log('watch actRadioValue newVal :>> ', newVal);
         if (newVal === 1) {
           this.weeklyDay = [];
+          this.activityAwards.forEach(element => {
+            console.log('element :>> ', element);
+            element.weekGetDay = '';
+          });
         }
         if (newVal === 2) {
           this.monthlyDay = [];
+          this.activityAwards.forEach(element => {
+            element.monthGetDay = '';
+          });
         }
       },
       immediate: true, //刷新加载立马触发一次handler
