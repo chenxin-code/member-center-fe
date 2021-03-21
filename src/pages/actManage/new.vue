@@ -472,7 +472,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3 ) && item.condition === 3">
+                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3) && item.condition === 3">
                     <a-input-number
                       @change="integrealCountChange"
                       v-decorator="[
@@ -1740,24 +1740,37 @@ export default {
   },
   mounted() {},
   watch: {
-    monthlyDay: {
+    // monthlyDay: {
+    //   handler(newVal) {
+    //     console.log('watch monthlyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch monthlyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    // weeklyDay: {
+    //   handler(newVal) {
+    //     console.log('watch weeklyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch weeklyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    actRadioValue: {
       handler(newVal) {
-        console.log('watch monthlyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch monthlyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    },
-    weeklyDay: {
-      handler(newVal) {
-        console.log('watch weeklyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch weeklyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
+        console.log('watch actRadioValue newVal :>> ', newVal);
+        if (newVal === 1) {
+          this.weeklyDay = [];
+        }
+        if (newVal === 2) {
+          this.monthlyDay = [];
+        }
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

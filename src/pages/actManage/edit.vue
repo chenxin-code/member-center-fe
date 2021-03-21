@@ -67,7 +67,13 @@
                       'rangePickerValue',
                       {
                         initialValue: rangePickerValue,
-                        rules: [{ type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }]
+                        rules: [
+                          { type: 'array', required: true, message: '活动有效期不能为空, 请选择日期!' },
+                          {
+                            validator: (rule, value, callback) =>
+                              validatorDate(rule, value, callback, '活动有效期不能小于当天, 请重新选择日期!')
+                          }
+                        ]
                       }
                     ]"
                     :placeholder="['开始时间', '结束时间']"
@@ -472,7 +478,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3 ) && item.condition === 3">
+                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3) && item.condition === 3">
                     <a-input-number
                       @change="integrealCountChange"
                       v-decorator="[
@@ -707,6 +713,21 @@ const validatorFn1 = (rule, value, callback, message) => {
     } else {
       callback();
     }
+  }
+};
+const validatorDate = (rule, value, callback, message) => {
+  console.log('validatorDate value :>> ', value);
+  if (
+    Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
+    Number(
+      moment(Date.now())
+        .format('YYYY-MM-DD')
+        .replace(/-/g, '')
+    )
+  ) {
+    callback(message);
+  } else {
+    callback();
   }
 };
 
@@ -1094,6 +1115,7 @@ export default {
     validatorFn,
     validatorFn0,
     validatorFn1,
+    validatorDate,
     moment,
     checkMonthlyDay(rule, value, callback) {
       if (this.monthlyDay.length === 0) {
@@ -1282,7 +1304,7 @@ export default {
     },
     ////////// 新建活动:end ///////////
     disabledDate(currentParam) {
-      return currentParam && currentParam < Date.now() - 86400000;
+      return currentParam && currentParam < Date.now() - 86400000 - 1186400000;
     },
     checkCostFormat(rule, value, callback) {
       if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
@@ -1691,18 +1713,29 @@ export default {
           // this.startTime = res.data.startTime;
           // this.endTime = res.data.endTime;
           // this.rangePickerValue = [];
+          this.validityStartTime = this.momentStr(res.data.startTime);
+          this.validityEndTime = this.momentStr(res.data.endTime);
+          this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
           this.memo = res.data.memo;
           this.activityCover = res.data.activityCover;
           this.typeId = res.data.typeId;
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
           // this.clientId = [];
-          this.clientId = res.data.clientId.split(',')
+          this.clientId = res.data.clientId.split(',');
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
           // this.monthlyDay = [];
           // this.weeklyDay = [];
+          if (res.data.monthlyDay) {
+            this.actRadioValue = 1;
+            this.monthlyDay = res.data.monthlyDay.split(',');
+          }
+          if (res.data.weeklyDay) {
+            this.actRadioValue = 2;
+            this.weeklyDay = res.data.weeklyDay.split(',');
+          }
           this.activityAwards = res.data.activityAwards;
           this.activityAwards.forEach(element => {
             // 卡券
@@ -1789,24 +1822,37 @@ export default {
   },
   mounted() {},
   watch: {
-    monthlyDay: {
+    // monthlyDay: {
+    //   handler(newVal) {
+    //     console.log('watch monthlyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch monthlyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    // weeklyDay: {
+    //   handler(newVal) {
+    //     console.log('watch weeklyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch weeklyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    actRadioValue: {
       handler(newVal) {
-        console.log('watch monthlyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch monthlyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    },
-    weeklyDay: {
-      handler(newVal) {
-        console.log('watch weeklyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch weeklyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
+        console.log('watch actRadioValue newVal :>> ', newVal);
+        if (newVal === 1) {
+          this.weeklyDay = [];
+        }
+        if (newVal === 2) {
+          this.monthlyDay = [];
+        }
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
@@ -1833,25 +1879,25 @@ export default {
         }
         //重置遍历中的condition
         // this.$nextTick(() => {
-          this.activityAwards.forEach((element, index) => {
-            let tempKey = `condition-${index}`;
-            if (newVal === 2) {
-              // element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: element.condition
-              });
-            } else if (newVal === 1) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 3) {
-              element.condition = 3;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 3
-              });
-            }
-          });
+        this.activityAwards.forEach((element, index) => {
+          let tempKey = `condition-${index}`;
+          if (newVal === 2) {
+            // element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: element.condition
+            });
+          } else if (newVal === 1) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 3) {
+            element.condition = 3;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 3
+            });
+          }
+        });
         // });
       },
       immediate: true, //刷新加载立马触发一次handler
