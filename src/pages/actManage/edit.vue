@@ -108,7 +108,7 @@
                         { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
                       ]"
                       :before-upload="() => false"
-                      :remove="deleteOssImage"
+                      :remove="handleImgRemove"
                       @preview="handlePreview"
                       @change="addPic"
                     >
@@ -1361,8 +1361,7 @@ export default {
         }
       }
     },
-    handleRemove(file) {
-      console.log('handleRemove');
+    handleImgRemove(file) {
       const index = this.fileList.indexOf(file);
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
@@ -1698,6 +1697,7 @@ export default {
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
           // this.clientId = [];
+          this.clientId = this.clientId.split(',')
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
@@ -1705,10 +1705,13 @@ export default {
           // this.weeklyDay = [];
           this.activityAwards = res.data.activityAwards;
           this.activityAwards.forEach(element => {
+            // 卡券
             element.couponCode = '';
             element.couponId = '';
+            // 可领取时间
             element.monthGetDay = '';
             element.weekGetDay = '';
+            //三个非接口字段
             element.couponName = '请选择';
             element.couponValid = '';
             element.showRedBorder = false;
