@@ -67,7 +67,13 @@
                       'rangePickerValue',
                       {
                         initialValue: rangePickerValue,
-                        rules: [{ type: 'array', required: true, message: '活动有效期不能为空,请选择日期!' }]
+                        rules: [
+                          { type: 'array', required: true, message: '活动有效期不能为空, 请选择日期!' },
+                          {
+                            validator: (rule, value, callback) =>
+                              validatorDate(rule, value, callback, '活动有效期不能小于当天, 请重新选择日期!')
+                          }
+                        ]
                       }
                     ]"
                     :placeholder="['开始时间', '结束时间']"
@@ -90,7 +96,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
-                    :maxLength="1000"
+                    :maxLength="200"
                     placeholder="请输入备注信息"
                   />
                   <div>活动描述 memo: {{ memo }}</div>
@@ -108,7 +114,7 @@
                         { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
                       ]"
                       :before-upload="() => false"
-                      :remove="deleteOssImage"
+                      :remove="handleImgRemove"
                       @preview="handlePreview"
                       @change="addPic"
                     >
@@ -259,14 +265,21 @@
                       </a-upload>
                     </a-form-item>
                   </a-radio>
-                  <div v-if="scopeType === 1" style="padding-left: 148px;" :style="{ paddingTop: '40px' }">
+                  <div v-if="scopeType === 1" style="padding:40px 0 14px 148px;">
                     <p style="font-size: 12px;color: #c1c1c1;">
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
-                    <p>
-                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
-                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
-                    </p>
+                    <div>
+                      <a-button @click="getDownloadInfo" v-if="isUpload">
+                        <a-icon type="download" />
+                        下载会员信息
+                      </a-button>
+                      <p v-if="!isUpload">
+                        <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
+                        <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                      </p>
+                    </div>
+                    <!-- isUpload: false, -->
                   </div>
                   <div>单选 scopeType: {{ scopeType }}</div>
                   <div>会员来源 clientId.join(): {{ clientId.join() }}</div>
@@ -460,7 +473,11 @@
                           initialValue: item.issuedCount,
                           rules: [
                             { required: true, message: '请输入发放数量' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn0(rule, value, callback, '每人兑换数量限制, 1-5000')
+                            }
                           ]
                         }
                       ]"
@@ -468,7 +485,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="邦豆兑换值" v-if="typeId !== 1">
+                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3) && item.condition === 3">
                     <a-input-number
                       @change="integrealCountChange"
                       v-decorator="[
@@ -477,7 +494,11 @@
                           initialValue: item.integrealCount,
                           rules: [
                             { required: true, message: '请输入邦豆兑换值!' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+                            }
                           ]
                         }
                       ]"
@@ -659,6 +680,7 @@
 
 <script>
 import api from '@/api';
+import axios from 'axios';
 import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
@@ -681,6 +703,14 @@ const validatorFn = (rule, value, callback, message) => {
   }
 };
 
+const validatorFn0 = (rule, value, callback, message) => {
+  if (parseInt(value, 10) < 1 || parseInt(value, 10) > 5000) {
+    callback(message);
+  } else {
+    callback();
+  }
+};
+
 const validatorFn1 = (rule, value, callback, message) => {
   console.log('validatorFn1 value :>> ', value);
   if (!value) {
@@ -694,6 +724,22 @@ const validatorFn1 = (rule, value, callback, message) => {
   }
 };
 
+const validatorDate = (rule, value, callback, message) => {
+  console.log('validatorDate value :>> ', value);
+  if (
+    Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
+    Number(
+      moment(Date.now())
+        .format('YYYY-MM-DD')
+        .replace(/-/g, '')
+    )
+  ) {
+    callback(message);
+  } else {
+    callback();
+  }
+};
+
 export default {
   name: 'couponsManageNew',
   components: {
@@ -701,6 +747,7 @@ export default {
   },
   data() {
     return {
+      isUpload: false,
       actDetails: null,
       handleItem: null, //中转
       ////////// 新建活动 start ///////////
@@ -1076,7 +1123,9 @@ export default {
   },
   methods: {
     validatorFn,
+    validatorFn0,
     validatorFn1,
+    validatorDate,
     moment,
     checkMonthlyDay(rule, value, callback) {
       if (this.monthlyDay.length === 0) {
@@ -1188,6 +1237,45 @@ export default {
       this.file = null;
       console.log('newFileList :>> ', newFileList);
       console.log('this.file :>> ', this.file);
+    },
+    // 下载会员信息
+    getDownloadInfo() {
+      const args = {
+        activityId: this.$route.query.id
+      };
+      // console.log('getDownloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/activity/api/v1/activity-member/download',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        console.log('getDownloadInfo res.data :>> ', res.data);
+        // return;
+        this.handleDownload(res.data);
+      });
+    },
+    handleDownload(content) {
+      const filename = '会员信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      console.log('blob :>> ', blob);
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
     },
     // 获取下载模版
     getTplDownload() {
@@ -1344,8 +1432,7 @@ export default {
         }
       }
     },
-    handleRemove(file) {
-      console.log('handleRemove');
+    handleImgRemove(file) {
       const index = this.fileList.indexOf(file);
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
@@ -1675,23 +1762,41 @@ export default {
           // this.startTime = res.data.startTime;
           // this.endTime = res.data.endTime;
           // this.rangePickerValue = [];
+          this.validityStartTime = this.momentStr(res.data.startTime);
+          this.validityEndTime = this.momentStr(res.data.endTime);
+          this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
           this.memo = res.data.memo;
           this.activityCover = res.data.activityCover;
           this.typeId = res.data.typeId;
           this.rightsType = res.data.rightsType;
           this.scopeType = res.data.scopeType;
+          if (res.data.scopeType === 1) {
+            this.isUpload = true;
+          }
           // this.clientId = [];
+          this.clientId = res.data.clientId.split(',');
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
           // this.monthlyDay = [];
           // this.weeklyDay = [];
+          if (res.data.monthlyDay) {
+            this.actRadioValue = 1;
+            this.monthlyDay = res.data.monthlyDay.split(',');
+          }
+          if (res.data.weeklyDay) {
+            this.actRadioValue = 2;
+            this.weeklyDay = res.data.weeklyDay.split(',');
+          }
           this.activityAwards = res.data.activityAwards;
           this.activityAwards.forEach(element => {
+            // 卡券
             element.couponCode = '';
             element.couponId = '';
-            element.monthGetDay = '';
-            element.weekGetDay = '';
+            // 可领取时间
+            element.monthGetDay = element.monthGetDay ? String(element.monthGetDay) : '';
+            element.weekGetDay = element.weekGetDay ? String(element.weekGetDay) : '';
+            //三个非接口字段
             element.couponName = '请选择';
             element.couponValid = '';
             element.showRedBorder = false;
@@ -1701,12 +1806,12 @@ export default {
     },
 
     getActUpdate(loadingType) {
-      for (let index = 0; index < this.activityAwards.length; index++) {
-        const element = this.activityAwards[index];
-        if (!element.integrealCount) {
-          element.integrealCount = 0;
-        }
-      }
+      // for (let index = 0; index < this.activityAwards.length; index++) {
+      //   const element = this.activityAwards[index];
+      //   if (!element.integrealCount) {
+      //     element.integrealCount = 1;
+      //   }
+      // }
 
       const param = {
         id: this.$route.query.id,
@@ -1769,24 +1874,44 @@ export default {
   },
   mounted() {},
   watch: {
-    monthlyDay: {
+    // monthlyDay: {
+    //   handler(newVal) {
+    //     console.log('watch monthlyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch monthlyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    // weeklyDay: {
+    //   handler(newVal) {
+    //     console.log('watch weeklyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch weeklyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    actRadioValue: {
       handler(newVal) {
-        console.log('watch monthlyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch monthlyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    },
-    weeklyDay: {
-      handler(newVal) {
-        console.log('watch weeklyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch weeklyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
+        console.log('watch actRadioValue newVal :>> ', newVal);
+        if (newVal === 1) {
+          this.weeklyDay = [];
+          this.activityAwards.forEach(element => {
+            console.log('element :>> ', element);
+            element.weekGetDay = '';
+          });
+        }
+        if (newVal === 2) {
+          this.monthlyDay = [];
+          this.activityAwards.forEach(element => {
+            element.monthGetDay = '';
+          });
+        }
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
@@ -1812,27 +1937,27 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        this.$nextTick(() => {
-          this.activityAwards.forEach((element, index) => {
-            const tempKey = `condition-${index}`;
-            if (newVal === 2) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 1) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 3) {
-              element.condition = 3;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 3
-              });
-            }
-          });
+        // this.$nextTick(() => {
+        this.activityAwards.forEach((element, index) => {
+          let tempKey = `condition-${index}`;
+          if (newVal === 2) {
+            // element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: element.condition
+            });
+          } else if (newVal === 1) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 3) {
+            element.condition = 3;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 3
+            });
+          }
         });
+        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

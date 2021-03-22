@@ -90,7 +90,7 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
-                    :maxLength="1000"
+                    :maxLength="200"
                     placeholder="请输入备注信息"
                   />
                   <div>活动描述 memo: {{ memo }}</div>
@@ -259,13 +259,13 @@
                       </a-upload>
                     </a-form-item>
                   </a-radio>
-                  <div v-if="scopeType === 1" style="padding-left: 148px;" :style="{ paddingTop: '40px' }">
+                  <div v-if="scopeType === 1" style="padding:40px 0 0 148px;">
                     <p style="font-size: 12px;color: #c1c1c1;">
                       支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                     </p>
                     <p>
-                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无模板文件</a>
-                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载模板文件</a>
+                      <a v-show="!downLoadTplExist" @click.prevent="handleNullTpl">暂无会员信息模板</a>
+                      <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息模板</a>
                     </p>
                   </div>
                   <div>单选 scopeType: {{ scopeType }}</div>
@@ -460,7 +460,11 @@
                           initialValue: item.issuedCount,
                           rules: [
                             { required: true, message: '请输入发放数量' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入发放数量' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn0(rule, value, callback, '每人兑换数量限制, 1-5000')
+                            }
                           ]
                         }
                       ]"
@@ -468,7 +472,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="邦豆兑换值" v-if="typeId !== 1">
+                  <a-form-item label="邦豆兑换值" v-if="(typeId === 2 || typeId === 3) && item.condition === 3">
                     <a-input-number
                       @change="integrealCountChange"
                       v-decorator="[
@@ -477,7 +481,11 @@
                           initialValue: item.integrealCount,
                           rules: [
                             { required: true, message: '请输入邦豆兑换值!' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' }
+                            { pattern: /^[1-9]\d*$/, message: '请输入邦豆兑换值!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人兑换数量限制, 1-999999999')
+                            }
                           ]
                         }
                       ]"
@@ -675,6 +683,14 @@ import {
 
 const validatorFn = (rule, value, callback, message) => {
   if (parseInt(value, 10) < 1 || parseInt(value, 10) > 999999999) {
+    callback(message);
+  } else {
+    callback();
+  }
+};
+
+const validatorFn0 = (rule, value, callback, message) => {
+  if (parseInt(value, 10) < 1 || parseInt(value, 10) > 5000) {
     callback(message);
   } else {
     callback();
@@ -1075,6 +1091,7 @@ export default {
   },
   methods: {
     validatorFn,
+    validatorFn0,
     validatorFn1,
     moment,
     checkMonthlyDay(rule, value, callback) {
@@ -1655,12 +1672,12 @@ export default {
     },
 
     getActCreate(loadingType) {
-      for (let index = 0; index < this.activityAwards.length; index++) {
-        const element = this.activityAwards[index];
-        if (!element.integrealCount) {
-          element.integrealCount = 0;
-        }
-      }
+      // for (let index = 0; index < this.activityAwards.length; index++) {
+      //   const element = this.activityAwards[index];
+      //   if (!element.integrealCount) {
+      //     element.integrealCount = 1;
+      //   }
+      // }
 
       const param = {
         file: this.file,
@@ -1723,24 +1740,37 @@ export default {
   },
   mounted() {},
   watch: {
-    monthlyDay: {
+    // monthlyDay: {
+    //   handler(newVal) {
+    //     console.log('watch monthlyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch monthlyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    // weeklyDay: {
+    //   handler(newVal) {
+    //     console.log('watch weeklyDay newVal :>> ', newVal);
+    //     this.conponForm.validateFields((err, values) => {
+    //       console.log('watch weeklyDay validateFields err :>> ', err);
+    //       //没有错误的情况下
+    //     });
+    //   },
+    //   immediate: true, //刷新加载立马触发一次handler
+    //   deep: true
+    // },
+    actRadioValue: {
       handler(newVal) {
-        console.log('watch monthlyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch monthlyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
-      },
-      immediate: true, //刷新加载立马触发一次handler
-      deep: true
-    },
-    weeklyDay: {
-      handler(newVal) {
-        console.log('watch weeklyDay newVal :>> ', newVal);
-        this.conponForm.validateFields((err, values) => {
-          console.log('watch weeklyDay validateFields err :>> ', err);
-          //没有错误的情况下
-        });
+        console.log('watch actRadioValue newVal :>> ', newVal);
+        if (newVal === 1) {
+          this.weeklyDay = [];
+        }
+        if (newVal === 2) {
+          this.monthlyDay = [];
+        }
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
@@ -1766,27 +1796,27 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        this.$nextTick(() => {
-          this.activityAwards.forEach((element, index) => {
-            const tempKey = `condition-${index}`;
-            if (newVal === 2) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 1) {
-              element.condition = 2;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 2
-              });
-            } else if (newVal === 3) {
-              element.condition = 3;
-              this.conponForm.setFieldsValue({
-                [tempKey]: 3
-              });
-            }
-          });
+        // this.$nextTick(() => {
+        this.activityAwards.forEach((element, index) => {
+          const tempKey = `condition-${index}`;
+          if (newVal === 2) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 1) {
+            element.condition = 2;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 2
+            });
+          } else if (newVal === 3) {
+            element.condition = 3;
+            this.conponForm.setFieldsValue({
+              [tempKey]: 3
+            });
+          }
         });
+        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

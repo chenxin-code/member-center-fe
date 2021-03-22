@@ -650,8 +650,8 @@ export default {
         }
       }
     },
-    handleRemove(file) {
-      console.log('handleRemove');
+    handleImgRemove(file) {
+      console.log('handleImgRemove');
       const index = this.fileList.indexOf(file);
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
