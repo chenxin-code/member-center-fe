@@ -231,11 +231,8 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
                   refreshToken(); //刷新token
                   return resolve(res);
                 }
-              } else if (res.code === 500) {
-                //res.code === 500的情况
-                return resolve(res);
               } else if (res.code !== 200) {
-                //res.code 非 200，401，500 的情况
+                //res.code 非 200，401 的情况
                 message.error(res.message);
                 return resolve(res);
               } else {

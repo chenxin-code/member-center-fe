@@ -271,7 +271,7 @@ export default {
     // },
     parseValidityStr() {
       return param => {
-        return `${this.momentStr(param.startTime)} - ${this.momentStr(param.endTime)}`;
+        return `${this.momentStr(param.startTime)} ～ ${this.momentStr(param.endTime)}`;
       };
     },
     actStatusStr() {
