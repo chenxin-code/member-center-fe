@@ -34,15 +34,16 @@
                     allow-clear v-else />
                 </a-form-item>
                 <a-form-item label="备注">
-                  <a-input
+                  <a-textarea
                     @change="memoChange"
                     v-decorator="[
                       'memo',
                       {
                         initialValue: memo,
-                        rules: [{ max: 50, message: '最多输入50个字符' }]
+                        rules: [{ max: 100, message: '最多输入100个字符' }]
                       }
                     ]"
+                    :auto-size="{minRows: 1}"
                     placeholder="请输入备注信息"
                     allow-clear />
                 </a-form-item>

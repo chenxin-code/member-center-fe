@@ -39,7 +39,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>活动主题名称 activityThemeId: {{ activityThemeId }}</div>
+                  <!-- <div>活动主题名称 activityThemeId: {{ activityThemeId }}</div> -->
                 </a-form-item>
                 <!-- 活动名称 -->
                 <a-form-item label="活动名称">
@@ -58,7 +58,7 @@
                     ]"
                     placeholder="请输入活动名称"
                   />
-                  <div>活动名称 activityName: {{ activityName }}</div>
+                  <!-- <div>活动名称 activityName: {{ activityName }}</div> -->
                 </a-form-item>
                 <!-- 活动有效期 -->
                 <a-form-item label="活动有效期">
@@ -93,7 +93,7 @@
                     :maxLength="200"
                     placeholder="请输入备注信息"
                   />
-                  <div>活动描述 memo: {{ memo }}</div>
+                  <!-- <div>活动描述 memo: {{ memo }}</div> -->
                 </a-form-item>
                 <!-- 请上传活动封面 -->
                 <a-form-item label="请上传活动封面">
@@ -126,7 +126,7 @@
                   <span style="margin-top:-20px;color:#999999;font-size:12px;">
                     建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
                   </span>
-                  <div>活动封面 activityCover: {{ activityCover }}</div>
+                  <!-- <div>活动封面 activityCover: {{ activityCover }}</div> -->
                 </a-form-item>
                 <!-- 活动类型 -->
                 <a-form-item label="活动类型">
@@ -144,7 +144,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>活动类型 typeId: {{ typeId }}</div>
+                  <!-- <div>活动类型 typeId: {{ typeId }}</div> -->
                 </a-form-item>
 
                 <!-- ********************************************************************* -->
@@ -169,7 +169,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>会员权益类型 rightsType: {{ rightsType }}</div>
+                  <!-- <div>会员权益类型 rightsType: {{ rightsType }}</div> -->
                 </a-form-item>
                 <!-- 会员来源+上传指定会员 -->
                 <a-radio-group v-model="scopeType" style="padding-left: 50px;">
@@ -268,10 +268,10 @@
                       <a v-show="downLoadTplExist" :href="downLoadTplUrl">下载会员信息模板</a>
                     </p>
                   </div>
-                  <div>单选 scopeType: {{ scopeType }}</div>
+                  <!-- <div>单选 scopeType: {{ scopeType }}</div>
                   <div>会员来源 clientId.join(): {{ clientId.join() }}</div>
                   <div>开始等级 startLevelId: {{ startLevelId }}</div>
-                  <div>结束等级 endLevelId: {{ endLevelId }}</div>
+                  <div>结束等级 endLevelId: {{ endLevelId }}</div> -->
                 </a-radio-group>
                 <!-- ********************************************************************* -->
 
@@ -299,7 +299,7 @@
                         是
                       </a-radio>
                     </a-radio-group>
-                    <div>是否为周期性活动 isPeriodic:{{ isPeriodic }}</div>
+                    <!-- <div>是否为周期性活动 isPeriodic:{{ isPeriodic }}</div> -->
                   </a-form-item>
 
                   <div v-if="isPeriodic === 1">
@@ -355,11 +355,11 @@
                           </a-button>
                         </template>
                       </a-radio>
-                      <div>actRadioValue: {{ actRadioValue }}</div>
+                      <!-- <div>actRadioValue: {{ actRadioValue }}</div>
                       <div>isIncluded1: {{ isIncluded1 }}</div>
                       <div>isIncluded2: {{ isIncluded2 }}</div>
                       <div>每月活动日 monthlyDay: {{ monthlyDay }}</div>
-                      <div>每周活动日 weeklyDay: {{ weeklyDay }}</div>
+                      <div>每周活动日 weeklyDay: {{ weeklyDay }}</div> -->
                     </a-radio-group>
                     <!-- 对话框 -->
                     <a-modal
@@ -449,7 +449,7 @@
                         {{ itemSelect.name }}
                       </a-select-option>
                     </a-select>
-                    <!-- <div>item.couponBusinessType:{{ item.couponBusinessType }}</div> -->
+                    <!-- <div>item.condition:{{ item.condition }}</div> -->
                   </a-form-item>
                   <a-form-item label="发放数量">
                     <a-input-number
@@ -596,7 +596,7 @@
                     删除
                   </button>
                 </div>
-                <div>activityAwards: {{ activityAwards }}</div>
+                <div>奖品参数activityAwards: {{ activityAwards }}</div>
                 <div style="display:flex;justify-content:center;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
@@ -670,7 +670,6 @@ import api from '@/api';
 import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
-import { CARD_TYPE_MAP } from '@/constance';
 import FilterForm from '@/components/FilterGroup/index.jsx';
 import {
   couponsCenterList,
@@ -762,11 +761,6 @@ export default {
           key: 'couponTitle',
           dataIndex: 'couponTitle'
         },
-        // {
-        //     title: '卡券副标题',
-        //     key: 'couponSubhead',
-        //     dataIndex: 'couponSubhead'
-        // },
         {
           title: '卡券类型',
           key: 'couponType',
@@ -970,7 +964,6 @@ export default {
       conditions: [],
       scopeType: 0,
       ////////// 新建活动 end ///////////
-      submitLoading: false,
       saveLoading: false,
       ////////// 上传图片 start ///////////
       conponForm: this.$form.createForm(this, { name: 'conponForm' }),
@@ -979,45 +972,7 @@ export default {
       fileList: [],
       picUploading: false,
       ////////// 上传图片 end ///////////
-      // pcRuleId: '',//没用
-      couponSubhead: '',
-      couponType: '1',
-      couponTypes: [
-        { name: '会员卡券', code: '1' },
-        { name: '会员卡券1', code: '2' }
-      ],
-
-      voucherAmount: '', //代金券抵扣金额
-      satisfyAmount: '', //	折扣券/满减券 满多少金额可用
-      fullReductionDiscountAmount: '', //满减券抵扣金额
-      discountMaxDeduction: '', //	折扣券 最高抵扣金额
-      discountRatio: '0.9', //折扣券 折扣比例
-      validityType: 1,
-      validityTypes: [
-        { name: '固定有效期', code: 1 },
-        { name: '相对有效期', code: 3 }
-      ],
       rangePickerValue: [], //日期对象清空日期用
-      validityDayNums: 1, //相对有效期-卡券有效天数
-      takeEffectDayNums: 1, //相对有效期-领取后几天后生效
-      source: '1', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
-      sources: [
-        { name: '主题1', code: '1' },
-        { name: '主题2', code: '2' },
-        { name: '主题3', code: '3' },
-        { name: '主题4', code: '4' },
-        { name: '主题5', code: '5' }
-      ],
-      couponBusinessType: '1', //卡券业务类型
-      couponBusinessTypes: [
-        { name: '领券中心', code: '1' },
-        { name: '邦豆兑换', code: '2' },
-        { name: '会员权益', code: '3' }
-      ],
-      commercialTenants: '', //购物券-商户id
-      merchandises: '', //购物券——商品id
-      classification: 1, //	商城订单类型: 1全部/2零售
-      cost: '' //成本价
     };
   },
   computed: {
@@ -1077,15 +1032,6 @@ export default {
         } else {
           return moment(param).format('YYYY-MM-DD HH:mm:ss');
         }
-      };
-    },
-    cardTypeStr() {
-      return param => {
-        let str = '';
-        if (Object.keys(CARD_TYPE_MAP).includes(param)) {
-          str = CARD_TYPE_MAP[param];
-        }
-        return str;
       };
     }
   },
@@ -1283,35 +1229,6 @@ export default {
     disabledDate(currentParam) {
       return currentParam && currentParam < Date.now() - 86400000;
     },
-    checkCostFormat(rule, value, callback) {
-      if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
-        callback(new Error('成本价格式不正确'));
-      } else {
-        callback();
-      }
-    },
-    checkAmountFormat(rule, value, callback) {
-      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
-        callback(new Error('金额格式不正确'));
-      } else {
-        if (value == 0) {
-          callback(new Error('金额不能为0'));
-        }
-        callback();
-      }
-    },
-    checkDiscountFormat(rule, value, callback) {
-      if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
-        callback(new Error('折扣格式不正确'));
-      } else {
-        if (value == 0) {
-          callback(new Error('折扣不能为0'));
-        } else if (value == 1) {
-          callback(new Error('折扣不能为1'));
-        }
-        callback();
-      }
-    },
     ...mapActions(['FALLBACK']),
     //////////上传图片///////////
     //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
@@ -1431,20 +1348,6 @@ export default {
       this.validityStartTime = dateStrings[0];
       this.validityEndTime = dateStrings[1];
     },
-
-    /**
-     **判断日期格式为yyyy-mm-dd和正确的日期
-     */
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      if (reg.test(str)) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
     //输入框
     activityNameChange(e) {
       this.activityName = e.target.value;
@@ -1474,53 +1377,11 @@ export default {
       console.log('issuedCountChange value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'issuedCount', value);
     },
-    couponTitleChange1(e) {
-      console.log('couponTitleChange1 this.awardFormindex :>> ', this.awardFormindex);
-      console.log('couponTitleChange1 e.target.value :>> ', e.target.value);
-      this.$set(this.activityAwards[this.awardFormindex], 'couponTitle', e.target.value);
-    },
-    couponSubheadChange(e) {
-      this.couponSubhead = e.target.value;
-    },
-    voucherAmountChange(e) {
-      this.voucherAmount = e.target.value;
-    },
-    satisfyAmountChange(e) {
-      this.satisfyAmount = e.target.value;
-    },
-    discountMaxDeductionChange(e) {
-      this.discountMaxDeduction = e.target.value;
-    },
-    discountRatioChange(e) {
-      // console.log('discountRatioChange e.target.value :>> ', e.target.value);
-      this.discountRatio = e.target.value.toString();
-    },
-    fullReductionDiscountAmountChange(e) {
-      this.fullReductionDiscountAmount = e.target.value;
-    },
-    validityDayNumsChange(newVal) {
-      this.validityDayNums = newVal;
-    },
-    takeEffectDayNumsChange(newVal) {
-      this.takeEffectDayNums = newVal;
-    },
-    commercialTenantsChange(e) {
-      this.commercialTenants = e.target.value;
-    },
-    merchandisesChange(e) {
-      this.merchandises = e.target.value;
-    },
-    costChange(e) {
-      this.cost = e.target.value;
-    },
     memoChange(e) {
       this.memo = e.target.value;
     },
 
     //单选
-    classificationChange(e) {
-      this.classification = e.target.value;
-    },
     isPeriodicChange(e) {
       this.isPeriodic = e.target.value;
     },
@@ -1555,21 +1416,9 @@ export default {
     },
 
     //下拉
-    couponTypeSelect(value) {
-      console.log('couponTypeSelect');
-      this.couponType = value;
-    },
     rightsTypeSelect(value) {
       console.log('rightsTypeSelect');
       this.rightsType = value;
-    },
-    validityTypeSelect(value) {
-      console.log('validityTypeSelect');
-      this.validityType = value;
-    },
-    sourceSelect(value) {
-      console.log('sourceSelect');
-      this.source = value;
     },
     themeIdSelect(value) {
       console.log('themeIdSelect value :>> ', value);
@@ -1595,10 +1444,6 @@ export default {
       console.log('isIncluded2Select value :>> ', value);
       this.isIncluded2 = value;
     },
-    couponBusinessTypeSelect(value) {
-      console.log('couponBusinessTypeSelect value :>> ', value);
-      this.couponBusinessType = value;
-    },
     conditionSelect(value) {
       console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
       console.log('conditionSelect value :>> ', value);
@@ -1613,11 +1458,6 @@ export default {
       console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
       console.log('weekGetDaySelect value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'weekGetDay', value);
-    },
-    couponBusinessTypeSelect1(value) {
-      console.log('couponBusinessTypeSelect1 this.awardFormindex :>> ', this.awardFormindex);
-      console.log('couponBusinessTypeSelect1 value :>> ', value);
-      this.$set(this.activityAwards[this.awardFormindex], 'couponBusinessType', value);
     },
 
     addAward() {
@@ -1740,28 +1580,6 @@ export default {
   },
   mounted() {},
   watch: {
-    // monthlyDay: {
-    //   handler(newVal) {
-    //     console.log('watch monthlyDay newVal :>> ', newVal);
-    //     this.conponForm.validateFields((err, values) => {
-    //       console.log('watch monthlyDay validateFields err :>> ', err);
-    //       //没有错误的情况下
-    //     });
-    //   },
-    //   immediate: true, //刷新加载立马触发一次handler
-    //   deep: true
-    // },
-    // weeklyDay: {
-    //   handler(newVal) {
-    //     console.log('watch weeklyDay newVal :>> ', newVal);
-    //     this.conponForm.validateFields((err, values) => {
-    //       console.log('watch weeklyDay validateFields err :>> ', err);
-    //       //没有错误的情况下
-    //     });
-    //   },
-    //   immediate: true, //刷新加载立马触发一次handler
-    //   deep: true
-    // },
     actRadioValue: {
       handler(newVal) {
         console.log('watch actRadioValue newVal :>> ', newVal);
