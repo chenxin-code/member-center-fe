@@ -1348,20 +1348,6 @@ export default {
       this.validityStartTime = dateStrings[0];
       this.validityEndTime = dateStrings[1];
     },
-
-    /**
-     **判断日期格式为yyyy-mm-dd和正确的日期
-     */
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      if (reg.test(str)) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-
     //输入框
     activityNameChange(e) {
       this.activityName = e.target.value;
