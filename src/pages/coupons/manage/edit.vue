@@ -243,7 +243,7 @@
                 <template v-else-if="validityType === 3">
                   <a-form-item label="有效天数">
                     <a-input-number
-                      :min="1"
+                      :min="0"
                       :max="999"
                       @change="validityDayNumsChange"
                       v-decorator="[
@@ -517,7 +517,7 @@ export default {
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //固定有效期-卡券有效期开始时间
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
-      validityDayNums: 1, //相对有效期-卡券有效天数
+      validityDayNums: 0, //相对有效期-卡券有效天数
       takeEffectDayNums: 1, //相对有效期-领取后几天后生效
       source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
