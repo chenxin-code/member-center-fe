@@ -35,7 +35,7 @@
             </template>
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
-              <a v-if="record.condition==4" @click="getCardCode(record)">  下载卡密</a>
+              <a v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
             </span>
           </a-table>
           <a-pagination
@@ -165,7 +165,7 @@ export default {
           name: 'activityName',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
-        },
+        }
       ],
       columns: [
         {
@@ -315,10 +315,13 @@ export default {
       api
         .downloadCamilo(args)
         .then(res => {
-          if (res.code == "200") {
-            this.downloadInfo(item.id)
-          } else {
-            alert("生成中请稍后");
+          if (res.code === 200) {
+            this.downloadInfo(item.id);
+          } else if (res.code === 500) {
+            this.$warning({
+              title: '提示',
+              content: '生成中请稍后'
+            });
           }
         })
         .finally(() => {
