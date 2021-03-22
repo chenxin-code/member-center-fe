@@ -35,7 +35,7 @@
             </template>
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
-              <a v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
+              <a style="padding-left:10px;" v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
             </span>
           </a-table>
           <a-pagination
@@ -233,7 +233,8 @@ export default {
         {
           title: '操作',
           key: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          width: 150
         }
       ],
       dataList: [],
