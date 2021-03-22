@@ -67,6 +67,9 @@ export default {
   COUPON_CREATE: '/times/member-center/coupon/api/v1/create',
   COUPON_UPDATE: '/times/member-center/coupon/api/v1/update',
   COUPON_ONOROFF: '/times/member-center/coupon/api/v1/onOrOff',
+  DOWNLOAD_CAMILO: '/times/member-center/coupon/api/v1/downloadCamilo',
+  DOWNLOAD_CAMILO_EXCEL: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+
   //活动主题
   ACT_THEME_LIST: '/times/member-center/themeActivity/api/v1/selectThemeActivity',
   STOP_THEME: '/times/member-center/themeActivity/api/v1/stopThemeActivity',
@@ -83,5 +86,7 @@ export default {
   DELETE_ACT: '/times/member-center/activity/api/v1/delete', //删除活动
   UPDATE_ACT_STATUS: '/times/member-center/activity/api/v1/update-status', //更新活动状态
   ACT_DETAIL: '/times/member-center/activity/api/v1/detail', //活动详情
-  ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download'
+  ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download',
+  ACT_ADD: '/times/member-center/activity/api/v1/add',
+  UPDATE_ADD:'/times/member-center/activity/api/v1/update'
 };

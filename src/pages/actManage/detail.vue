@@ -37,8 +37,8 @@
                   <div class="column-item">
                     <div class="column-right">活动有效期:</div>
                     <div class="column-left">
-                      {{ momentStrHms(actDetails.startTime) }} ~
-                      {{ momentStrHms(actDetails.endTime) }}
+                      {{ momentStr(actDetails.startTime) }} ~
+                      {{ momentStr(actDetails.endTime) }}
                     </div>
                   </div>
                 </div>
@@ -47,13 +47,13 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item column-memo">
-                    <div class="column-right">备注:</div>
+                    <div class="column-right">活动描述:</div>
                     <div class="column-left">
                       <div class="column-left">
                         <a-textarea
                           v-model="actDetailsMemo"
                           :disabled="true"
-                          :maxLength="50"
+                          :maxLength="200"
                           :auto-size="{ minRows: 3, maxRows: 5 }"
                           style="width: 267px;"
                           placeholder="请输入备注"
@@ -97,7 +97,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">每周活动日包含:</div>
-                    <div class="column-left">{{ actDetails.weeklyDay || '' }}</div>
+                    <div class="column-left">{{ weeklyDayStr(actDetails.weeklyDay) || '' }}</div>
                   </div>
                 </div>
               </div>
@@ -149,7 +149,7 @@
           <a-row
             class="common-row"
             :class="`common-row-${index}`"
-            v-for="(item, index) in actDetails.activityAwardList"
+            v-for="(item, index) in actDetails.activityAwards"
             :key="index"
           >
             <a-col :span="24">
@@ -203,27 +203,28 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">周可领取天:</div>
-                    <div class="column-left">
-                      {{ item.weekGetDay || '周可领取天 ～ 空' }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-if="item.monthGetDay">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">月可领取天:</div>
                     <div class="column-left">
-                      {{ item.monthGetDay || '月可领取天 ～ 空' }}
+                      {{ item.monthGetDay || '' }}
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-if="item.weekGetDay">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">周可领取天:</div>
+                    <div class="column-left">
+                      {{ item.weekGetDay || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="common-column-wrapp" v-if="item.startTime && item.expirationTime">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券有效期:</div>
@@ -254,6 +255,7 @@ export default {
   components: {},
   data() {
     return {
+      weekStrs: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
       actDetails: {}
     };
   },
@@ -386,6 +388,21 @@ export default {
           return `${this.cardLevelStr(startParam)} ～ ${this.cardLevelStr(endParam)}`;
         }
       };
+    },
+
+    weeklyDayStr() {
+      return param => {
+        console.log('param :>> ', param);
+        if (!param) {
+          return '';
+        }
+        let tempStr = '';
+        param.split(',').forEach(element => {
+          tempStr += this.weekStrs[parseInt(element) - 1] + '，';
+        });
+        tempStr = tempStr.substring(0, tempStr.length - 1);
+        return tempStr;
+      };
     }
   },
   methods: {
@@ -449,9 +466,9 @@ export default {
               this.$set(this.actDetails, key, element);
             }
           }
-          this.actDetails.activityAwardList = this.actDetails.activityAwardList.concat(
-            this.actDetails.activityAwardList
-          );
+          // this.actDetails.activityAwards = this.actDetails.activityAwards.concat(
+          //   this.actDetails.activityAwards
+          // );
           console.log('this.actDetails :>> ', this.actDetails);
         }
       });
@@ -516,7 +533,7 @@ export default {
               align-items: center;
 
               .column-right {
-                width: 200px;
+                width: 180px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;
