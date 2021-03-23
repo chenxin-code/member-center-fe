@@ -1747,11 +1747,11 @@ export default {
         console.log('watch typeId newVal :>> ', newVal);
         if (newVal === 2) {
           this.conditions = [
-            { name: '手动领取', id: 2 },
+            { name: '手动领取', id: 1 },
             { name: '邦豆兑换', id: 3 }
           ];
         } else if (newVal === 1) {
-          this.conditions = [{ name: '手动领取', id: 2 }];
+          this.conditions = [{ name: '手动领取', id: 1 }];
         } else if (newVal === 3) {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
