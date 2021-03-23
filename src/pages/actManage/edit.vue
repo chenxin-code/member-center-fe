@@ -1760,14 +1760,14 @@ export default {
         this.activityAwards.forEach((element, index) => {
           let tempKey = `condition-${index}`;
           if (newVal === 2) {
-            // element.condition = 2;
+            // element.condition = 1;
             this.conponForm.setFieldsValue({
               [tempKey]: element.condition
             });
           } else if (newVal === 1) {
-            element.condition = 2;
+            element.condition = 1;
             this.conponForm.setFieldsValue({
-              [tempKey]: 2
+              [tempKey]: 1
             });
           } else if (newVal === 3) {
             element.condition = 3;
