@@ -225,7 +225,6 @@ export default {
         // this.addPreviewNotice();
         this.$emit('addPreviewNotice', this.list);
         // this.$parent.addPreviewNotice();
-        // debugger
       }
 
       //   api[this.urls.previewQRCode]().then(res => {
