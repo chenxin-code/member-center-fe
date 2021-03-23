@@ -107,12 +107,15 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券数据
       </p>
-      <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
-        <span class="detail-main-items-label">{{ item.label }}</span>
-        <a-button @click="downloadCamilo(dataObj)" v-show="item.type === 'downloadCamilo'">
+      <div class="detail-main-items" v-if="dataObj.condition === 4">
+        <span class="detail-main-items-label">线下卡密下载：</span>
+        <a-button @click="downloadCamilo(dataObj)">
           <a-icon type="download" />
           下载线下卡密
         </a-button>
+      </div>
+      <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
+        <span class="detail-main-items-label">{{ item.label }}</span>
         <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.url)">
           {{ item.buttonTxt }}
@@ -145,7 +148,7 @@ export default {
       ],
       dataObj: {},
       couponSourse: [
-        { label: '线下卡密下载：', type: 'downloadCamilo' },
+        // { label: '线下卡密下载：'},
         { label: '发放数量：', type: 'msg', name: 'issuedCount' },
         { label: '领取数量：', type: 'href', name: 'received', url: 'couponsClaim', buttonTxt: '查看领取数量' },
         { label: '核销数量：', type: 'href', name: 'offCount', url: 'couponsCancel', buttonTxt: '查看核销数量' }
