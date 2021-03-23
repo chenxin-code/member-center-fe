@@ -109,6 +109,10 @@
       </p>
       <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
+        <a-button @click="downloadCamilo(dataObj)" v-show="item.type === 'downloadCamilo'">
+          <a-icon type="download" />
+          下载线下卡密
+        </a-button>
         <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.url)">
           {{ item.buttonTxt }}
@@ -141,7 +145,7 @@ export default {
       ],
       dataObj: {},
       couponSourse: [
-        // { label: '线下卡密下载：' },
+        { label: '线下卡密下载：', type: 'downloadCamilo' },
         { label: '发放数量：', type: 'msg', name: 'issuedCount' },
         { label: '领取数量：', type: 'href', name: 'received', url: 'couponsClaim', buttonTxt: '查看领取数量' },
         { label: '核销数量：', type: 'href', name: 'offCount', url: 'couponsCancel', buttonTxt: '查看核销数量' }
@@ -211,6 +215,62 @@ export default {
     },
     download(content) {
       const filename = '会员信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
+    },
+    downloadCamilo(item) {
+      this.tableLoading = true;
+      let args = {
+        couponActivitiesId: item.id
+      };
+      api
+        .downloadCamilo(args)
+        .then(res => {
+          if (res.code === 200) {
+            this.downloadInfo1(item.id);
+          } else if (res.code === 500) {
+            this.$warning({
+              title: '提示',
+              content: '生成中请稍后'
+            });
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    downloadInfo1(cuid) {
+      const args = {
+        couponActivitiesId: cuid
+      };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        this.download1(res.data);
+      });
+    },
+    download1(content) {
+      const filename = '卡密信息.xlsx';
       // 创建隐藏的可下载链接
       var eleLink = document.createElement('a');
       eleLink.download = filename;

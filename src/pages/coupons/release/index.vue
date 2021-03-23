@@ -345,7 +345,6 @@ export default {
         },
         responseType: 'blob'
       }).then(res => {
-        debugger;
         this.download(res.data);
       });
     },
