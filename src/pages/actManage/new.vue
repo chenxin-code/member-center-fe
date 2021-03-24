@@ -91,7 +91,7 @@
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
                     :maxLength="200"
-                    placeholder="请输入备注信息"
+                    placeholder="请输入备注信息, 最多200个字符"
                   />
                   <!-- <div>活动描述 memo: {{ memo }}</div> -->
                 </a-form-item>
@@ -556,7 +556,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <template v-if="isPeriodic === 1">
+                  <template v-if="isPeriodic === 1 && typeId === 2">
                     <a-form-item label="可领取时间" v-if="actRadioValue === 1">
                       <a-select
                         placeholder="请输入发放数量"
