@@ -75,8 +75,8 @@
                     @change="handleRangePicker"
                     :disabled-date="disabledDate"
                   />
-                  <div>活动有效期 validityStartTime: {{ validityStartTime }}</div>
-                  <div>活动有效期 validityEndTime: {{ validityEndTime }}</div>
+                  <!-- <div>活动有效期 validityStartTime: {{ validityStartTime }}</div>
+                  <div>活动有效期 validityEndTime: {{ validityEndTime }}</div> -->
                 </a-form-item>
                 <!-- 活动描述 -->
                 <a-form-item label="活动描述">
@@ -596,7 +596,7 @@
                     删除
                   </button>
                 </div>
-                <div>奖品参数activityAwards: {{ activityAwards }}</div>
+                <!-- <div>奖品参数activityAwards: {{ activityAwards }}</div> -->
                 <div style="display:flex;justify-content:center;">
                   <a-button style="width:30%;" type="primary" @click="addAward">添加奖品</a-button>
                 </div>
