@@ -173,6 +173,16 @@
                   </div>
                 </div>
               </div>
+              <div class="common-column-wrapp" v-if="item.integrealCount">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">邦豆兑换值:</div>
+                    <div class="column-left">
+                      {{ item.integrealCount || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
