@@ -325,8 +325,8 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;width:500px;" @click="showMonthlyDayModal" block>
-                            {{ monthlyDayStr(monthlyDay) }}
+                          <a-button style="margin-left:20px;margin-top:4px;width:500px;" @click="showMonthlyDayModal" block>
+                            {{ monthlyDayStr(monthlyDay) || '请选择每月活动日' }}
                           </a-button>
                         </template>
                       </a-radio>
@@ -350,8 +350,8 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;width:500px;" @click="showWeeklyDayModal" block>
-                            {{ weeklyDayStr(weeklyDay) }}
+                          <a-button style="margin-left:20px;margin-top:4px;width:500px;" @click="showWeeklyDayModal" block>
+                            {{ weeklyDayStr(weeklyDay) || '请选择每周活动日' }}
                           </a-button>
                         </template>
                       </a-radio>
