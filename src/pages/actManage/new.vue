@@ -325,7 +325,11 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;margin-top:4px;width:500px;" @click="showMonthlyDayModal" block>
+                          <a-button
+                            style="margin-left:20px;margin-top:4px;width:500px;"
+                            @click="showMonthlyDayModal"
+                            block
+                          >
                             {{ monthlyDayStr(monthlyDay) || '请选择每月活动日' }}
                           </a-button>
                         </template>
@@ -350,7 +354,11 @@
                               </a-select-option>
                             </a-select>
                           </a-form-item>
-                          <a-button style="margin-left:20px;margin-top:4px;width:500px;" @click="showWeeklyDayModal" block>
+                          <a-button
+                            style="margin-left:20px;margin-top:4px;width:500px;"
+                            @click="showWeeklyDayModal"
+                            block
+                          >
                             {{ weeklyDayStr(weeklyDay) || '请选择每周活动日' }}
                           </a-button>
                         </template>
@@ -1524,6 +1532,13 @@ export default {
     },
 
     addAward() {
+      if (this.activityAwards.length >= 50){
+        this.$warning({
+          title: '提示',
+          content: '最多可以添加50个商品～'
+        });
+        return;
+      }
       const tempObj = {
         keyIndex: `${Date.now()}-${this.activityAwards.length}`,
         couponCode: '',
