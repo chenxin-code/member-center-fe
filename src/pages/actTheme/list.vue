@@ -26,7 +26,7 @@
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <a @click="$router.push({path: '/actTheme/edit', query: {id: rowData.id}})" style="padding-right: 10px;">编辑</a>
-            <a @click="goDel(rowData.id)" style="padding-right: 10px;">删除</a>
+            <!-- <a @click="goDel(rowData.id)" style="padding-right: 10px;">删除</a> -->
             <a @click="OnOff(rowData.id, 0)" v-if="rowData.isEnable === 1">
               启用
             </a>
