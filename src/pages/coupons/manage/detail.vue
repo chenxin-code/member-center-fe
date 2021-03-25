@@ -72,9 +72,8 @@
                   <div class="column-item" v-show="couponDetails.validityType === 3">
                     <div class="column-right">有效期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{
-                        couponDetails.takeEffectDayNums || ''
-                      }}天生效
+                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{ couponDetails.takeEffectDayNums || ''
+                      }}{{ couponDetails.takeEffectDayNums ? '天' : '' }}生效
                     </div>
                   </div>
                 </div>
