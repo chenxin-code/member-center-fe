@@ -243,7 +243,7 @@
                 <template v-else-if="validityType === 3">
                   <a-form-item label="有效天数">
                     <a-input-number
-                      :min="0"
+                      :min="1"
                       :max="999"
                       @change="validityDayNumsChange"
                       v-decorator="[
@@ -260,7 +260,7 @@
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
                     <a-input-number
-                      :min="1"
+                      :min="0"
                       :max="999"
                       @change="takeEffectDayNumsChange"
                       v-decorator="[
