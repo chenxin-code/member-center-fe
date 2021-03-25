@@ -131,7 +131,7 @@ export default {
             { name: '进行中', id: 2 },
             { name: '已结束', id: 3 },
             { name: '已停用', id: 4 },
-            { name: '已删除', id: 5 }
+            // { name: '已删除', id: 5 }
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
