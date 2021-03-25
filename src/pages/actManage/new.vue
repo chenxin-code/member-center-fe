@@ -493,7 +493,28 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="每人兑换数量限制">
+                  <a-form-item label="每人领取数量限制" v-if="item.condition === 1">
+                    <a-input-number
+                      @change="perPersonLimitChange"
+                      v-decorator="[
+                        `perPersonLimit-${index}`,
+                        {
+                          initialValue: item.perPersonLimit,
+                          rules: [
+                            { required: true, message: '请输入每人领取数量限制!' },
+                            { pattern: /^[1-9]\d*$/, message: '请输入每人领取数量限制!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人领取数量限制, 1-999999999')
+                            }
+                          ]
+                        }
+                      ]"
+                      placeholder="1-999999999"
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每人兑换数量限制" v-if="item.condition === 3">
                     <a-input-number
                       @change="perPersonLimitChange"
                       v-decorator="[
@@ -514,7 +535,7 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="每日兑换数量限制">
+                  <a-form-item label="每日领取数量限制" v-if="item.condition === 1">
                     <a-input-number
                       @change="perDayLimitChange"
                       v-decorator="[
@@ -522,8 +543,8 @@
                         {
                           initialValue: item.perDayLimit,
                           rules: [
-                            { required: true, message: '请输入每日兑换数量限制!' },
-                            { pattern: /^[1-9]\d*$/, message: '请输入每日兑换数量限制!' },
+                            { required: true, message: '请输入每日领取数量限制!' },
+                            { pattern: /^[1-9]\d*$/, message: '请输入每日领取数量限制!' },
                             {
                               validator: (rule, value, callback) =>
                                 validatorFn(rule, value, callback, '每人每日领取数量限制, 1-999999999')
@@ -535,7 +556,49 @@
                     />
                     <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
                   </a-form-item>
-                  <a-form-item label="每人每日兑换数量限制">
+                  <a-form-item label="每日兑换数量限制" v-if="item.condition === 3">
+                    <a-input-number
+                      @change="perDayLimitChange"
+                      v-decorator="[
+                        `perDayLimit-${index}`,
+                        {
+                          initialValue: item.perDayLimit,
+                          rules: [
+                            { required: true, message: '请输入每日兑换数量限制!' },
+                            { pattern: /^[1-9]\d*$/, message: '请输入每日兑换数量限制!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人每日兑换数量限制, 1-999999999')
+                            }
+                          ]
+                        }
+                      ]"
+                      placeholder="1-999999999"
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每人每日领取数量限制" v-if="item.condition === 1">
+                    <a-input-number
+                      @change="perPersonDayLimitChange"
+                      v-decorator="[
+                        `perPersonDayLimit-${index}`,
+                        {
+                          initialValue: item.perPersonDayLimit,
+                          rules: [
+                            { required: true, message: '请输入每人每日领取数量限制!' },
+                            { pattern: /^[1-9]\d*$/, message: '请输入每人每日领取数量限制!' },
+                            {
+                              validator: (rule, value, callback) =>
+                                validatorFn(rule, value, callback, '每人每日领取数量限制, 1-999999999')
+                            }
+                          ]
+                        }
+                      ]"
+                      placeholder="1-999999999"
+                    />
+                    <!-- <div>item.couponTitle: {{ item.couponTitle }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="每人每日兑换数量限制" v-if="item.condition === 3">
                     <a-input-number
                       @change="perPersonDayLimitChange"
                       v-decorator="[
@@ -972,7 +1035,7 @@ export default {
       fileList: [],
       picUploading: false,
       ////////// 上传图片 end ///////////
-      rangePickerValue: [], //日期对象清空日期用
+      rangePickerValue: [] //日期对象清空日期用
     };
   },
   computed: {
@@ -1479,6 +1542,15 @@ export default {
         couponValid: '',
         showRedBorder: false
       };
+
+      if (this.typeId === 1) {
+        tempObj.condition = 1;
+      } else if (this.typeId === 3) {
+        tempObj.condition = 3;
+      } else if (this.typeId === 2) {
+        tempObj.condition = 1;
+      }
+
       this.activityAwards.push(tempObj);
     },
     handleSubmit(loadingType) {
