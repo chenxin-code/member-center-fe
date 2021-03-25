@@ -186,7 +186,17 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">每日领取限制:</div>
+                    <div class="column-right">每人{{ claimExchangeStr(item.condition) }}限制:</div>
+                    <div class="column-left">
+                      {{ item.perPersonLimit || '' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">每日{{ claimExchangeStr(item.condition) }}限制:</div>
                     <div class="column-left">
                       {{ item.perDayLimit || '' }}
                     </div>
@@ -196,19 +206,9 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">每人每日领取限制:</div>
+                    <div class="column-right">每人每日{{ claimExchangeStr(item.condition) }}限制:</div>
                     <div class="column-left">
                       {{ item.perPersonDayLimit || '' }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">每人领取限制:</div>
-                    <div class="column-left">
-                      {{ item.perPersonLimit || '' }}
                     </div>
                   </div>
                 </div>
@@ -272,6 +272,17 @@ export default {
   computed: {
     actDetailsMemo() {
       return this.actDetails.memo ? this.actDetails.memo : '';
+    },
+    claimExchangeStr() {
+      return param => {
+        if (param === 1) {
+          return '领取';
+        } else if (param === 3) {
+          return '兑换';
+        } else {
+          return '';
+        }
+      };
     },
     momentStr() {
       return param => {

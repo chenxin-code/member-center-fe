@@ -1542,6 +1542,15 @@ export default {
         couponValid: '',
         showRedBorder: false
       };
+
+      if (this.typeId === 1) {
+        tempObj.condition = 1;
+      } else if (this.typeId === 3) {
+        tempObj.condition = 3;
+      } else if (this.typeId === 2) {
+        tempObj.condition = 1;
+      }
+
       this.activityAwards.push(tempObj);
     },
     handleSubmit(loadingType) {
