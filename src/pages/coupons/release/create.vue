@@ -70,7 +70,16 @@
           </a-form-item>
           <a-form-item label="上传指定会员" v-if="issuedRang == 2">
             <a-upload
-              v-decorator="['file', { rules: [{ required: true, message: '请选择文件上传!' }] }]"
+              v-decorator="[
+                'file',
+                {
+                  rules: [
+                    {
+                      validator: (rule, value, callback) => validatorFn1(rule, value, callback, '请选择文件上传!')
+                    }
+                  ]
+                }
+              ]"
               :file-list="fileList"
               :remove="handleRemove"
               name="file"
@@ -188,6 +197,19 @@ import moment from 'moment';
 import api from '@/api';
 import { debounce } from '@/utils/util';
 
+const validatorFn1 = (rule, value, callback, message) => {
+  console.log('validatorFn1 value :>> ', value);
+  if (!value) {
+    callback(message);
+  } else {
+    if (value.fileList.length === 0) {
+      callback(message);
+    } else {
+      callback();
+    }
+  }
+};
+
 export default {
   name: 'release_create',
   components: {
@@ -303,7 +325,7 @@ export default {
       couTypeCode: '', // 卡券类型编号
       dataSourse: {
         memberCardName: '', // 会员卡名称
-        file: '' //会员文件
+        file: null //会员文件
       },
       fileList: [],
       id: null
@@ -315,6 +337,7 @@ export default {
     this.getSystemList();
   },
   methods: {
+    validatorFn1,
     handleNullTpl() {
       this.$warning({
         title: '提示',
@@ -333,10 +356,12 @@ export default {
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
       this.fileList = newFileList;
+      this.dataSourse.file = null;
     },
     uploadBefor(file) {
       this.dataSourse.file = file;
-      this.fileList[0] = file;
+      this.$set(this.fileList, 0, file);
+      // this.fileList[0] = file;
       console.log('uploadBefor this.fileList :>> ', this.fileList);
       return false;
     },
@@ -458,6 +483,7 @@ export default {
         id: this.id
       };
       this.formBasic.validateFields((err, values) => {
+        console.log('couponDistribute err :>> ', err);
         console.log('couponDistribute values :>> ', values);
         if (!err && !this.showRedBorder) {
           if (values.file) {
