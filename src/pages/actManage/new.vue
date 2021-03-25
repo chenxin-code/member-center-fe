@@ -1532,10 +1532,10 @@ export default {
     },
 
     addAward() {
-      if (this.activityAwards.length >= 50){
+      if (this.activityAwards.length >= 10){
         this.$warning({
           title: '提示',
-          content: '最多可以添加50个商品～'
+          content: '最多可以添加10个商品～'
         });
         return;
       }
