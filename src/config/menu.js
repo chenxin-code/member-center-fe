@@ -101,8 +101,8 @@ export default [
   {
     title: '活动主题管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/conpon_manage_show.png'),
-    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    icon: require('@/assets/img/menu/act-theme-show.png'),
+    iconHide: require('@/assets/img/menu/act-theme-hide.png'),
     menuKey: 'actTheme',
     group: 'hyzx',
     path: '/actTheme'
@@ -110,8 +110,8 @@ export default [
   {
     title: '活动管理',
     authKeys: [''],
-    icon: require('@/assets/img/menu/conpon_manage_show.png'),
-    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    icon: require('@/assets/img/menu/act-manage-show.png'),
+    iconHide: require('@/assets/img/menu/act-manage-hide.png'),
     menuKey: 'actManage',
     group: 'hyzx',
     path: '/actManage'
@@ -119,8 +119,8 @@ export default [
   {
     title: '活动参与数据',
     authKeys: [''],
-    icon: require('@/assets/img/menu/conpon_manage_show.png'),
-    iconHide: require('@/assets/img/menu/conpon_manage_hide.png'),
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
     menuKey: 'actJoin',
     group: 'hyzx',
     path: '/actJoin'
