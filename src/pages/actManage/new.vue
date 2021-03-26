@@ -1535,7 +1535,7 @@ export default {
       if (this.activityAwards.length >= 10){
         this.$warning({
           title: '提示',
-          content: '最多可以添加10个商品～'
+          content: '最多可以添加10个奖品～'
         });
         return;
       }
