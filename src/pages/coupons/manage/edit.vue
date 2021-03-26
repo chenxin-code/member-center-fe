@@ -344,7 +344,10 @@
                         'commercialTenants',
                         {
                           initialValue: commercialTenants,
-                          rules: []
+                          rules: [
+                            { required: true, message: '商户id不能为空' },
+                            { whitespace: true, message: '商户id不能为空' }
+                          ]
                         }
                       ]"
                       placeholder="请输入商户id，多个以,间隔"
@@ -359,7 +362,10 @@
                         'merchandises',
                         {
                           initialValue: merchandises,
-                          rules: []
+                          rules: [
+                            { required: true, message: '商品id不能为空' },
+                            { whitespace: true, message: '商品id不能为空' }
+                          ]
                         }
                       ]"
                       placeholder="请输入商品id，多个以,间隔"
