@@ -137,4 +137,4 @@
 │       ├── filter.js // 全局过滤器
 │       ├── lazy_use.js //不用管
 │       └── util.js // 工具函数
-├── vue.config.js // webpack自定义配置文件
+├── vue.config.js // webpack自定义配置
