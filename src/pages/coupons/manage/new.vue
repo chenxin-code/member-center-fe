@@ -519,13 +519,13 @@ export default {
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 0, //相对有效期-领取后几天后生效
-      source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
+      source: '20', //卡券平台 20-邻里邦,30-邻里商城,40-会员中心,50-收费中心,10-地产
       sources: [
-        { name: '地产', code: '10' },
         { name: '邻里邦', code: '20' },
         { name: '邻里商城', code: '30' },
         { name: '会员中心', code: '40' },
-        { name: '收费中心', code: '50' }
+        { name: '收费中心', code: '50' },
+        { name: '地产', code: '10' }
       ],
       couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
