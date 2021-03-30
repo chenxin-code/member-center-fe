@@ -164,7 +164,7 @@
       </a-form>
     </div>
     <a-modal title="卡券选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
       <a-table
         :style="{ marginTop: '20px' }"
         :columns="columns"
@@ -201,7 +201,7 @@
 </template>
 <script>
 import { couponsCenterList, bangdouList, cardList, level, typeList, activityList } from './createForms';
-import FilterForm from '@/components/FilterGroup/index.jsx';
+import FilterForm from './../../../components/FilterGroup/index.jsx';
 import moment from 'moment';
 import api from '@/api';
 import { debounce } from '@/utils/util';
@@ -258,6 +258,12 @@ export default {
       ],
       issueForm: couponsCenterList,
       formList: [
+        {
+          label: '卡券ID',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'newid'
+        },
         {
           label: '卡券类型',
           name: 'type',
@@ -326,6 +332,7 @@ export default {
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
         }
       ],
+      newid: null,
       activity: null,
       title: '',
       type: null,
@@ -418,7 +425,8 @@ export default {
     // 查询卡券列表
     onSearch(args) {
       console.log(args);
-      const { activity, title, type } = args;
+      const { newid, activity, title, type } = args;
+      this.newid = newid || null;
       this.activity = activity || null;
       this.title = title || null;
       this.type = type || null;
@@ -446,6 +454,7 @@ export default {
       let args = {
         pageIndex: this.current,
         pageSize: this.pageSize,
+        newid: this.newid,//待接口确定
         activity: this.activity,
         type: this.type,
         title: this.title,
