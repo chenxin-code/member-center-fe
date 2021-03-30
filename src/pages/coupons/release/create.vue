@@ -50,6 +50,15 @@
               v-decorator="[`${item.name}`, { rules: item.rules }]"
             />
           </a-form-item>
+          <a-form-item label="领取有效期" v-if="condition === 1">
+            <a-range-picker
+              v-decorator="['rangePickerValue',{initialValue: rangePickerValue}]"
+              :placeholder="['开始时间', '结束时间']"
+              format="YYYY-MM-DD HH:mm:ss"
+              @change="handleRangePicker"
+              :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
+              :disabled-date="disabledDate"/>
+          </a-form-item>
         </div>
         <div v-if="condition == 2">
           <a-form-item label="发放范围">
@@ -328,7 +337,8 @@ export default {
         file: null //会员文件
       },
       fileList: [],
-      id: null
+      id: null,
+      rangePickerValue: [], //日期对象清空日期用
     };
   },
   created() {
@@ -338,6 +348,17 @@ export default {
   },
   methods: {
     validatorFn1,
+    moment,
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
+    handleRangePicker(dates, dateStrings) {
+      console.log('handleRangePicker dates :>> ', dates);
+      console.log('handleRangePicker dateStrings :>> ', dateStrings);
+      this.rangePickerValue = dates;
+      this.validityStartTime = dateStrings[0];
+      this.validityEndTime = dateStrings[1];
+    },
     handleNullTpl() {
       this.$warning({
         title: '提示',
