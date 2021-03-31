@@ -263,6 +263,7 @@
             <a-input-number
               v-model="bangdouAddVal"
               :min="1"
+              :max="100000"
               defaultValue="1"
               style="width: 267px;"
               :style="bangdouAddValNull ? bangdouAddNullStyle1 : ''"

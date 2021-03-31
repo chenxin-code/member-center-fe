@@ -40,7 +40,7 @@ export default {
   GET_COUPONLIST: '/times/member-center/coupon/api/v1/coupon/list', // 获取卡券列表
   COUPONDISTRIBUTE: '/times/member-center/coupon/api/v1/assgin-member/distribute', // 卡券派发
   GET_MEMBERLEVELLIST: '/times/member-center/member-card/api/v1/level/list', // 会员卡等级
-  TPL_DOWNLOAD:'/times/member-center/coupon/api/v1/memberTemplate/download', // 下载卡券模板
+  TPL_DOWNLOAD: '/times/member-center/coupon/api/v1/memberTemplate/download', // 下载卡券模板
 
   //会员中心:张
   MEMBER_LIST: option.member + '/api/v1/member/list',
@@ -66,5 +66,27 @@ export default {
   COUPON_DETAIL_BYCODE: '/times/member-center/coupon/api/v1/coupon/detailByCouTypeCode',
   COUPON_CREATE: '/times/member-center/coupon/api/v1/create',
   COUPON_UPDATE: '/times/member-center/coupon/api/v1/update',
-  COUPON_ONOROFF: '/times/member-center/coupon/api/v1/onOrOff'
+  COUPON_ONOROFF: '/times/member-center/coupon/api/v1/onOrOff',
+  DOWNLOAD_CAMILO: '/times/member-center/coupon/api/v1/downloadCamilo',
+  DOWNLOAD_CAMILO_EXCEL: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+
+  //活动主题
+  ACT_THEME_LIST: '/times/member-center/themeActivity/api/v1/selectThemeActivity',
+  STOP_THEME: '/times/member-center/themeActivity/api/v1/stopThemeActivity',
+  DEL_THEME: '/times/member-center/themeActivity/api/v1/deleteThemeActivity',
+  ADD_THEME: '/times/member-center/themeActivity/api/v1/createThemeActivity',
+  EDIT_THEME: '/times/member-center/themeActivity/api/v1/editThemeActivity',
+  EDIT_THEME_SHOW_DETAIL: '/times/member-center/themeActivity/api/v1/selectId',
+  //活动参与数据
+  ACT_JOIN_LIST: '/times/member-center/themeActivity/api/v1/selectThemeActivityPeople',
+  //任务奖励数量编辑
+  EDIT_TASK_REWARD: '/times/member-center/task/api/v1/editTask',
+  //活动管理
+  ACT_LIST: '/times/member-center/activity/api/v1/list', //获取活动列表
+  DELETE_ACT: '/times/member-center/activity/api/v1/delete', //删除活动
+  UPDATE_ACT_STATUS: '/times/member-center/activity/api/v1/update-status', //更新活动状态
+  ACT_DETAIL: '/times/member-center/activity/api/v1/detail', //活动详情
+  ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download',
+  ACT_ADD: '/times/member-center/activity/api/v1/add',
+  UPDATE_ADD:'/times/member-center/activity/api/v1/update'
 };

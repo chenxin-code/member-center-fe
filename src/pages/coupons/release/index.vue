@@ -4,7 +4,7 @@
     <div class="release-main" ref="contentMain">
       <a-row type="flex" style="height:100%;flex-flow: row;">
         <a-col flex="auto" style="padding:20px 10px;height:100%;">
-          <FilterForm
+          <!--<FilterForm
             ref="form"
             rowCol="3"
             :formList="this.formList"
@@ -12,6 +12,13 @@
             :doubleBtn="true"
             :doubleBtnText="'新建派发'"
             :doubleBtnEvent="() => this.$router.push({ name: 'release_create' })"
+          />-->
+          <FormList
+            routePath="/couponsRelease/create"
+            ref="form"
+            :rowCol="4"
+            :formList="formList"
+            :onSubmit="onSearch"
           />
           <a-table
             :style="{ marginTop: '20px' }"
@@ -28,6 +35,7 @@
             </template>
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
+              <a style="padding-left:10px;" v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
             </span>
           </a-table>
           <a-pagination
@@ -50,10 +58,11 @@
 </template>
 
 <script>
-import FilterForm from '@/components/FilterGroup/index.jsx';
+//import FilterForm from '@/components/FilterGroup/index.jsx';
+import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
-
+import axios from 'axios';
 const typeList = [
   { id: '', name: '全部' },
   { id: 10, name: '代金券' },
@@ -70,7 +79,7 @@ const conditionList = [
   { id: 1, name: '领券中心' },
   { id: 2, name: '直接发放' },
   { id: 3, name: '邦豆兑换' },
-  { id: 4, name: '' }
+  { id: 4, name: '卡密兑换' }
 ];
 export default {
   name: 'release',
@@ -87,13 +96,17 @@ export default {
           name: 'type',
           type: 'select',
           placeholder: '全部',
-          selectOptions: typeList
+          selectOptions: typeList,
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '卡券标题',
           type: 'input',
           placeholder: '请输入',
-          name: 'title'
+          name: 'title',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '卡券业务类型',
@@ -101,8 +114,16 @@ export default {
           placeholder: '全部',
           name: 'activity',
           selectOptions: activityList,
-          labelCol: { span: 9 },
-          wrapperCol: { span: 15 }
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
+        },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
         },
         {
           label: '派发类型',
@@ -110,12 +131,40 @@ export default {
           name: 'condition',
           placeholder: '全部',
           selectOptions: conditionList,
-          initialValue: '全部'
+          initialValue: '全部',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         },
         {
           label: '派发时间',
           type: 'rangePicker',
-          name: 'rangeDate'
+          name: 'rangeDate',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
+        },
+        {
+          label: '活动主题',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'themeName',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
+        },
+        {
+          type: 'btn-default',
+          buttonName: '新建派发',
+          htmlType: 'button',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
+        },
+        {
+          label: '活动名称',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'activityName',
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
         }
       ],
       columns: [
@@ -184,7 +233,8 @@ export default {
         {
           title: '操作',
           key: 'action',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: { customRender: 'action' },
+          width: 150
         }
       ],
       dataList: [],
@@ -192,11 +242,14 @@ export default {
       condition: '',
       title: '',
       type: '',
-      rangeDate: []
+      rangeDate: [],
+      themeName: null,
+      activityName: null
     };
   },
   components: {
-    FilterForm
+    //FilterForm,
+    FormList
   },
   mounted() {
     this.getReleaseList();
@@ -222,18 +275,23 @@ export default {
   methods: {
     onSearch(args) {
       console.log(args);
-      const { activity, condition, title, type, rangeDate } = args;
+      const { activity, condition, title, type, rangeDate, themeName, activityName } = args;
       this.activity = activity || null;
       this.condition = condition || null;
       this.title = title || null;
       this.type = type || null;
       this.rangeDate = rangeDate || [];
+      this.themeName = themeName || null;
+      this.activityName = activityName || null;
       this.current = 1;
       this.getReleaseList();
     },
 
     onCheck(record) {
       this.$router.push({ name: 'release_detail', query: { id: record.id } });
+    },
+    getCardCode(record) {
+      this.downloadCamilo(record);
     },
 
     // onShowSizeChange(current, pageSize) {
@@ -250,7 +308,62 @@ export default {
       this.pageSize = size;
       this.getReleaseList();
     },
-
+    downloadCamilo(item) {
+      this.tableLoading = true;
+      let args = {
+        couponActivitiesId: item.id
+      };
+      api
+        .downloadCamilo(args)
+        .then(res => {
+          if (res.code === 200) {
+            this.downloadInfo(item.id);
+          } else if (res.code === 500) {
+            this.$warning({
+              title: '提示',
+              content: '生成中请稍后'
+            });
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    downloadInfo(cuid) {
+      const args = {
+        couponActivitiesId: cuid
+      };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        this.download(res.data);
+      });
+    },
+    download(content) {
+      const filename = '卡密信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
+    },
     getReleaseList() {
       this.tableLoading = true;
       let args = {
@@ -260,6 +373,8 @@ export default {
         createTimeEnd: this.rangeDate.length ? moment(this.rangeDate[1]).format('YYYY-MM-DD') : null,
         type: this.type,
         title: this.title,
+        themeName: this.themeName,
+        activityName: this.activityName,
         activity: this.activity,
         condition: this.condition
       };
@@ -326,7 +441,7 @@ export default {
 <style lang="less" scoped>
 .release {
   height: 100%;
-  overflow: hide;
+  overflow: hidden;
   &-header {
     border-bottom: 1px solid #e8e8e8;
     line-height: 60px;
@@ -334,6 +449,40 @@ export default {
   }
   &-main {
     height: 100%;
+    ::v-deep .ant-btn {
+      width: 98px !important;
+    }
+
+    ::v-deep .ant-input-number {
+      width: 100%;
+    }
+
+    ::v-deep .ant-form > .ant-row > .ant-col {
+      width: 27.5% !important;
+    }
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(4) {
+      width: 15% !important;
+      padding-left: 0 !important;
+      padding-right: 30px !important;
+    }
+
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(8) {
+      width: 15% !important;
+      padding-left: 0 !important;
+      padding-right: 30px !important;
+    }
+
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(3) {
+      width: 30% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    ::v-deep .ant-form > .ant-row > .ant-col:nth-child(7) {
+      width: 30% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
   }
 }
 </style>

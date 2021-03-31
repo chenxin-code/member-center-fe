@@ -5,6 +5,16 @@ const validator = (rule, value, callback, message) => {
         callback()
     }
 }
+
+const validatorFn0 = (rule, value, callback, message) => {
+  if (parseInt(value, 10) < 1 || parseInt(value, 10) > 5000) {
+    callback(message);
+  } else {
+    callback();
+  }
+};
+
+
 export const couponsCenterList = [
     {
         label: '发放数量',
@@ -114,6 +124,10 @@ export const cardList = [
         rules: [
             { required: true, message: '请输入发放数量!' },
             {pattern: /^[1-9]\d*$/, message: '请输入发放数量'},
+            {
+              validator: (rule, value, callback) =>
+                validatorFn0(rule, value, callback, '发放数量限制, 1-5000')
+            }
         ]
     }
 ]

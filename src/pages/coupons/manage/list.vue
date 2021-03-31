@@ -57,7 +57,7 @@
             <!-- <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
               启用
             </a> -->
-            <a @click="couponOnOrOff(rowData, 0)" v-else-if="rowData.couponStatus === 1">
+            <a @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
           </div>
@@ -413,17 +413,17 @@ export default {
       });
     },
 
-    couponOnOrOff(rowData, state) {
-      let stateStr = '';
+    couponOnOrOff(paramId, state) {
+      let stateStr;
       if (state === 0) {
         stateStr = '禁用';
       } else if (state === 1) {
         stateStr = '启用';
       } else {
-        return;
+        stateStr = '';
       }
 
-      console.log('rowData :>> ', rowData);
+      console.log('paramId :>> ', paramId);
       console.log('state :>> ', state);
       this.$confirm({
         title: `${stateStr}卡券`,
@@ -433,7 +433,7 @@ export default {
         cancelText: '取消',
         onOk: () => {
           const para = {
-            id: rowData.id,
+            id: paramId,
             state: state
           };
           console.log('couponOnOrOff para :>> ', para);
@@ -535,6 +535,17 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.memberForm.setFieldsValue({
+          couponType: this.formList[0].selectOptions[0].id
+        });
+        this.$refs.memberForm.setFieldsValue({
+          couponBusinessType: this.formList[2].selectOptions[0].id
+        });
+        this.$refs.memberForm.setFieldsValue({
+          couponStatus: this.formList[4].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
@@ -547,17 +558,17 @@ export default {
     //重置
     this.$route.meta.isUseCache = false;
 
-    this.$nextTick(() => {
-      this.$refs.memberForm.setFieldsValue({
-        couponType: this.formList[0].selectOptions[0].id
-      });
-      this.$refs.memberForm.setFieldsValue({
-        couponBusinessType: this.formList[2].selectOptions[0].id
-      });
-      this.$refs.memberForm.setFieldsValue({
-        couponStatus: this.formList[4].selectOptions[0].id
-      });
-    });
+    // this.$nextTick(() => {
+    //   this.$refs.memberForm.setFieldsValue({
+    //     couponType: this.formList[0].selectOptions[0].id
+    //   });
+    //   this.$refs.memberForm.setFieldsValue({
+    //     couponBusinessType: this.formList[2].selectOptions[0].id
+    //   });
+    //   this.$refs.memberForm.setFieldsValue({
+    //     couponStatus: this.formList[4].selectOptions[0].id
+    //   });
+    // });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'couponsManageDetail') {
