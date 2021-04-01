@@ -290,6 +290,23 @@
           <div v-if="bangdouAddRemarkNull" :style="bangdouAddNullStyle2">
             请输入备注
           </div>
+          <div :style="modalInputStyle" v-if="bangdouModalType === 1">
+            <div :style="modalInputStyleTop">
+              <span style="color: red;">*</span>
+              <span>描述</span>
+            </div>
+            <a-textarea
+              v-model="bangdouAddDescr"
+              :maxLength="20"
+              :auto-size="{ minRows: 1, maxRows: 2 }"
+              style="width: 267px;"
+              :style="bangdouAddDescrNull ? bangdouAddNullStyle1 : ''"
+              placeholder="请输入描述"
+            />
+          </div>
+          <div v-if="bangdouModalType === 1 && bangdouAddDescrNull" :style="bangdouAddNullStyle2">
+            请输入描述
+          </div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -392,6 +409,7 @@ export default {
     return {
       bangdouAddValNull: false,
       bangdouAddRemarkNull: false,
+      bangdouAddDescrNull: false,
       memberIntegral: '',
       //bangdou modal:start
       bangdouAddNullStyle1: {
@@ -425,6 +443,7 @@ export default {
       bangdouModalType: '',
       bangdouAddVal: 1,
       bangdouAddRemark: '',
+      bangdouAddDescr: '',
       //bangdou modal:end
       bangdouImage,
       memberId: '',
@@ -576,15 +595,16 @@ export default {
   },
   methods: {
     handleOk() {
-      if (!this.bangdouAddVal || !this.bangdouAddRemark) {
+      if (!this.bangdouAddVal || !this.bangdouAddRemark || (this.bangdouModalType === 1 && !this.bangdouAddDescr)) {
         if (!this.bangdouAddVal) {
           this.bangdouAddValNull = true;
         }
-
         if (!this.bangdouAddRemark) {
           this.bangdouAddRemarkNull = true;
         }
-
+        if (this.bangdouModalType === 1 && !this.bangdouAddDescr) {
+          this.bangdouAddDescrNull = true;
+        }
         return;
       }
 
@@ -594,7 +614,8 @@ export default {
         memberId: this.memberId,
         type: this.bangdouModalType,
         integral: this.bangdouAddVal,
-        notes: this.bangdouAddRemark
+        notes: this.bangdouAddRemark,
+        aaaaaa: this.bangdouModalType === 1 ? this.bangdouAddDescr : null//新参数
       };
 
       console.log('handleOk param :>> ', param);
@@ -614,8 +635,9 @@ export default {
     },
     bangdouHandle(type) {
       this.bangdouModalType = ''; //类型
-      this.bangdouAddVal = 1; //充值帮豆
-      this.bangdouAddRemark = ''; //抵扣帮豆
+      this.bangdouAddVal = 1;
+      this.bangdouAddRemark = '';
+      this.bangdouAddDescr = '';
       this.visibleBangdou = true; //显示对话框
       if (type === 1) {
         this.bangdouModalType = 1;
@@ -848,6 +870,7 @@ export default {
         if (!newVal) {
           this.bangdouAddValNull = false;
           this.bangdouAddRemarkNull = false;
+          this.bangdouAddDescrNull = false;
         }
       },
       immediate: true //刷新加载 立马触发一次handler
@@ -864,6 +887,14 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.bangdouAddRemarkNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    bangdouAddDescr: {
+      handler(newVal) {
+        if (newVal) {
+          this.bangdouAddDescrNull = false;
         }
       },
       immediate: true //刷新加载 立马触发一次handler
