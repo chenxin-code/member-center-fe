@@ -86,7 +86,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat1, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -109,7 +109,7 @@
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -128,7 +128,7 @@
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
                             { whitespace: true, message: '抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -150,7 +150,7 @@
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -169,7 +169,7 @@
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
                             { whitespace: true, message: '最高抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -580,12 +580,38 @@ export default {
         callback();
       }
     },
-    checkAmountFormat(rule, value, callback) {
+    checkAmountFormat1(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if (value == 0) {
+        if (value && value == 0) {
           callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat2(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.fullReductionDiscountAmount && this.satisfyAmount < this.fullReductionDiscountAmount){
+          callback(new Error('门槛金额不能小于抵扣金额'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat3(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.discountMaxDeduction && this.satisfyAmount < this.discountMaxDeduction){
+          callback(new Error('门槛金额不能小于最高抵扣金额'));
         }
         callback();
       }
@@ -594,9 +620,9 @@ export default {
       if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
         callback(new Error('折扣格式不正确'));
       } else {
-        if (value == 0) {
+        if (value && value == 0) {
           callback(new Error('折扣不能为0'));
-        } else if (value == 1) {
+        } else if (value && value == 1) {
           callback(new Error('折扣不能为1'));
         }
         callback();
