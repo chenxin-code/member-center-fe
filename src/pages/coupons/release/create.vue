@@ -50,15 +50,6 @@
               v-decorator="[`${item.name}`, { rules: item.rules }]"
             />
           </a-form-item>
-          <a-form-item label="领取有效期" v-if="condition === 1">
-            <a-range-picker
-              v-decorator="['rangePickerValue',{initialValue: rangePickerValue}]"
-              :placeholder="['开始时间', '结束时间']"
-              format="YYYY-MM-DD HH:mm:ss"
-              @change="handleRangePicker"
-              :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
-              :disabled-date="disabledDate"/>
-          </a-form-item>
         </div>
         <div v-if="condition == 2">
           <a-form-item label="发放范围">
@@ -149,6 +140,24 @@
             </a-form-item>
           </a-form-item>
         </div>
+        <a-form-item label="领取有效期" v-if="condition === 1">
+          <a-range-picker
+            v-decorator="[
+              'rangePickerValue',
+              {
+                initialValue: rangePickerValue,
+                rules: [
+                  { validator: (rule, value, callback) => validatorDate(rule, value, callback, 'ddddddd') }
+                ]
+              }
+            ]"
+            :placeholder="['开始时间', '结束时间']"
+            format="YYYY-MM-DD HH:mm:ss"
+            @change="handleRangePicker"
+            :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
+            :disabled-date="disabledDate"
+            style="width: 100%"/>
+        </a-form-item>
         <a-form-item class="create-main-button">
           <a-button
             :disabled="submitLoading"
@@ -216,6 +225,23 @@ const validatorFn1 = (rule, value, callback, message) => {
     } else {
       callback();
     }
+  }
+};
+
+const validatorDate = (rule, value, callback, message) => {
+  callback();return
+  console.log('validatorDate value :>> ', value);
+  if (
+    Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
+    Number(
+      moment(Date.now())
+        .format('YYYY-MM-DD')
+        .replace(/-/g, '')
+    )
+  ) {
+    callback(message);
+  } else {
+    callback();
   }
 };
 
@@ -346,6 +372,8 @@ export default {
       fileList: [],
       id: null,
       rangePickerValue: [], //日期对象清空日期用
+      validityStartTime: null, //领取有效期-开始时间
+      validityExpirationTime: null, //	领取有效期-结束时间
     };
   },
   created() {
@@ -355,6 +383,7 @@ export default {
   },
   methods: {
     validatorFn1,
+    validatorDate,
     moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
@@ -364,7 +393,7 @@ export default {
       console.log('handleRangePicker dateStrings :>> ', dateStrings);
       this.rangePickerValue = dates;
       this.validityStartTime = dateStrings[0];
-      this.validityEndTime = dateStrings[1];
+      this.validityExpirationTime = dateStrings[1];
     },
     handleNullTpl() {
       this.$warning({
@@ -504,7 +533,6 @@ export default {
     },
     // 开始派发
     couponDistribute() {
-      console.log('111111111');
       if (!this.couTypeCode) {
         this.showRedBorder = true;
       }
@@ -515,6 +543,10 @@ export default {
       this.formBasic.validateFields((err, values) => {
         console.log('couponDistribute err :>> ', err);
         console.log('couponDistribute values :>> ', values);
+        if(this.validityStartTime && this.validityExpirationTime){
+          Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
+        }
+        console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });
