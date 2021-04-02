@@ -482,6 +482,19 @@ const routes = [
           keepAlive: true
         },
         component: () => import('@/pages/actJoin/list')
+      },
+      {
+        path: '/systemRecord',
+        name: 'systemRecord',
+        menuKey: 'systemRecord',
+        meta: {
+          menu: '/systemRecord',
+          authKeys: [''],
+          bread: [{ path: '/systemRecord', name: '系统运行日志' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/systemRecord/list')
       }
     ]
   },
