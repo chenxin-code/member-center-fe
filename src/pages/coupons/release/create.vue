@@ -426,7 +426,7 @@ export default {
     onSearch(args) {
       console.log(args);
       const { newid, activity, title, type } = args;
-      this.newid = newid || null;
+      this.newid = parseInt(newid) || null;
       this.activity = activity || null;
       this.title = title || null;
       this.type = type || null;
@@ -454,7 +454,7 @@ export default {
       let args = {
         pageIndex: this.current,
         pageSize: this.pageSize,
-        newid: this.newid,//待接口确定
+        id: this.newid,
         activity: this.activity,
         type: this.type,
         title: this.title,
