@@ -47,3 +47,5 @@ export const deleteAct = data => fetchApi(URL.DELETE_ACT, data, 'POST'); //删�
 export const updateActStatus = data => fetchApi(URL.UPDATE_ACT_STATUS, data, 'POST'); //更新活动状态
 export const getActDetail = data => fetchApi(URL.ACT_DETAIL, data, 'GET'); //活动详情
 export const getActDownload = data => fetchApi(URL.ACT_DOWNLOAD, data, 'GET'); //下载活动中指定会员信息
+//修改会员手机号
+export const alterMemberPhone = data => fetchApi(URL.ALTER_MEMBER_PHONE, data, 'POST');
