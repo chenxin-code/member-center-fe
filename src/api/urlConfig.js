@@ -88,5 +88,7 @@ export default {
   ACT_DETAIL: '/times/member-center/activity/api/v1/detail', //活动详情
   ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download',
   ACT_ADD: '/times/member-center/activity/api/v1/add',
-  UPDATE_ADD:'/times/member-center/activity/api/v1/update'
+  UPDATE_ADD: '/times/member-center/activity/api/v1/update',
+  //修改会员手机号
+  ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone'
 };

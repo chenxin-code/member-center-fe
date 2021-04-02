@@ -125,4 +125,13 @@ export default [
     group: 'hyzx',
     path: '/actJoin'
   },
+  {
+    title: '系统运行日志',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'systemRecord',
+    group: 'hyzx',
+    path: '/systemRecord'
+  },
 ];

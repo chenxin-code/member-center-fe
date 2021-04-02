@@ -53,12 +53,18 @@
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
             <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
-            <a @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
-            <!-- <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
+            <a style="padding-right: 10px;" @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
+            <!-- <a style="padding-right: 10px;" @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
               启用
             </a> -->
-            <a @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
+            <a style="padding-right: 10px;" @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
+            </a>
+            <a @click="zhiding(rowData.id, 1)" v-if="rowData.aaaaaa === 0">
+              置顶
+            </a>
+            <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.aaaaaa === 1">
+              取消置顶
             </a>
           </div>
         </template>
@@ -186,6 +192,13 @@ export default {
         //   width: 150
         // },
         {
+          title: '是否置顶',
+          dataIndex: 'isZhiding',
+          key: 'isZhiding',
+          width: 150,
+          customRender: text => (text === 1 ? '是' : '否')
+        },
+        {
           title: '卡券类型',
           key: 'couponTypeSlot',
           scopedSlots: { customRender: 'couponTypeSlot' },
@@ -239,7 +252,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
           fixed: 'right',
-          width: 150
+          width: 220
         }
       ],
       tableData: [],
@@ -447,6 +460,8 @@ export default {
         }
       });
     },
+
+    zhiding(){},
 
     // 分页
     // onShowSizeChange(current, pageSize) {

@@ -86,7 +86,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat1, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -109,7 +109,7 @@
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -128,7 +128,7 @@
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
                             { whitespace: true, message: '抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -150,7 +150,7 @@
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
                             { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -169,7 +169,7 @@
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
                             { whitespace: true, message: '最高抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]"
@@ -519,13 +519,13 @@ export default {
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
       takeEffectDayNums: 0, //相对有效期-领取后几天后生效
-      source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
+      source: '20', //卡券平台 20-邻里邦,30-邻里商城,40-会员中心,50-收费中心,10-地产
       sources: [
-        { name: '地产', code: '10' },
         { name: '邻里邦', code: '20' },
         { name: '邻里商城', code: '30' },
         { name: '会员中心', code: '40' },
-        { name: '收费中心', code: '50' }
+        { name: '收费中心', code: '50' },
+        { name: '地产', code: '10' }
       ],
       couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
@@ -580,12 +580,38 @@ export default {
         callback();
       }
     },
-    checkAmountFormat(rule, value, callback) {
+    checkAmountFormat1(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
-        if (value == 0) {
+        if (value && value == 0) {
           callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat2(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.fullReductionDiscountAmount && this.satisfyAmount < this.fullReductionDiscountAmount){
+          callback(new Error('门槛金额不能小于抵扣金额'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat3(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.discountMaxDeduction && this.satisfyAmount < this.discountMaxDeduction){
+          callback(new Error('门槛金额不能小于最高抵扣金额'));
         }
         callback();
       }
@@ -594,9 +620,9 @@ export default {
       if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
         callback(new Error('折扣格式不正确'));
       } else {
-        if (value == 0) {
+        if (value && value == 0) {
           callback(new Error('折扣不能为0'));
-        } else if (value == 1) {
+        } else if (value && value == 1) {
           callback(new Error('折扣不能为1'));
         }
         callback();
