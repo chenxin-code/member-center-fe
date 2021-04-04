@@ -314,8 +314,8 @@ const routes = [
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskCenter/task/index.vue')
-      }, 
+        component: () => import('@/pages/taskCenter/task/index.vue')
+      },
       {
         path: '/task-manager',
         name: 'task-manager',
@@ -332,7 +332,7 @@ const routes = [
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskManager/index.vue')
+        component: () => import('@/pages/taskManager/index.vue')
       },
       {
         path: '/taskCenter-task',
@@ -350,7 +350,7 @@ const routes = [
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskCenter/task/index.vue')
+        component: () => import('@/pages/taskCenter/task/index.vue')
       },
       {
         path: '/taskCenter-task/detial',
@@ -367,12 +367,34 @@ const routes = [
             {
               path: '/taskCenter-task-detial',
               name: '任务管理详情'
-            },
+            }
           ],
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskCenter/task/detial.vue')
+        component: () => import('@/pages/taskCenter/task/detial.vue')
+      },
+      {
+        path: '/taskCenter-task/create',
+        name: 'taskCenter-task-create',
+        menuKey: 'taskCenter-task-create',
+        meta: {
+          menu: '/taskCenter-task-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/task-manager',
+              name: '任务管理'
+            },
+            {
+              path: '/taskCenter-task-create',
+              name: '新建任务'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/create.vue')
       },
       {
         path: '/taskCenter-task/edit',
@@ -389,12 +411,12 @@ const routes = [
             {
               path: '/taskCenter-task-edit',
               name: '编辑任务'
-            },
+            }
           ],
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskCenter/task/Edit.vue')
+        component: () => import('@/pages/taskCenter/task/Edit.vue')
       },
       {
         path: '/taskCenter-behavior',
@@ -407,12 +429,12 @@ const routes = [
             {
               path: '/task-manager',
               name: '行为管理'
-            }           
+            }
           ],
           isUseCache: false,
           keepAlive: true
         },
-        component: ()=>import('@/pages/taskCenter/behavior/index.vue')
+        component: () => import('@/pages/taskCenter/behavior/index.vue')
       },
       {
         path: '/task-manager/detail',

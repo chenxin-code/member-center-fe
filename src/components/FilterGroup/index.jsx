@@ -62,14 +62,7 @@ const FormList = {
   },
   methods: {
     generateItem(attrs) {
-      const {
-        type,
-        name,
-        rules,
-        onChange = defaultFn,
-        buttonName,
-        ...others
-      } = attrs;
+      const { type, name, rules, onChange = defaultFn, buttonName, ...others } = attrs;
       switch (type) {
         case 'input':
           return <a-input v-decorator={[name, { rules: rules }]} {...others} placeholder={attrs.placeholder} />;
@@ -99,7 +92,7 @@ const FormList = {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-            this.onSubmit(values);
+          this.onSubmit(values);
         }
       });
     }
@@ -114,24 +107,38 @@ const FormList = {
         {...this.formSetting}
         onSubmit={this.handleSubmit}>
         <a-row>
-            <a-col span="20">
+          <a-col span='20'>
             <a-row gutter={24}>
-                {this.formList.map((item, index) => {
-                    const { align, labelCol, wrapperCol, ...others } = item;
-                    return (
-                    <a-col span={this.formList.length % 3 === 1 ? 6 : this.rowSpan}>
-                        <a-form-item key={index} label={item.label} align={align} labelCol={labelCol} wrapperCol={wrapperCol}>
-                        {this.generateItem(others)}
-                        </a-form-item>
-                    </a-col>
-                    );
-                })}
+              {this.formList.map((item, index) => {
+                const { align, labelCol, wrapperCol, ...others } = item;
+                return (
+                  <a-col span={this.formList.length % 3 === 1 ? 6 : this.rowSpan}>
+                    <a-form-item
+                      key={index}
+                      label={item.label}
+                      align={align}
+                      labelCol={labelCol}
+                      wrapperCol={wrapperCol}>
+                      {this.generateItem(others)}
+                    </a-form-item>
+                  </a-col>
+                );
+              })}
             </a-row>
-            </a-col>
-            <a-col span="2" offset="2">
-                <a-button style={{width: '100%'}} type="primary" html-type="submit" onClick={this.handleSubmit}>查询</a-button>
-              <a-button v-show={this.doubleBtn} style={{width: '100%', marginTop: '20px'}} type="primary" html-type="submit" onClick={this.doubleBtnEvent}>{this.doubleBtnText}</a-button>
-            </a-col>
+          </a-col>
+          <a-col span='2' offset='2'>
+            <a-button style={{ width: '100%' }} type='primary' html-type='submit' onClick={this.handleSubmit}>
+              查询
+            </a-button>
+            <a-button
+              v-show={this.doubleBtn}
+              style={{ width: '100%', marginTop: '20px' }}
+              type='primary'
+              html-type='submit'
+              onClick={this.doubleBtnEvent}>
+              {this.doubleBtnText}
+            </a-button>
+          </a-col>
         </a-row>
       </a-form>
     );

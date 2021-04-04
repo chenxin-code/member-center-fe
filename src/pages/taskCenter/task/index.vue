@@ -2,9 +2,55 @@
   <div class="taskManager">
     <div class="taskManager-header">任务管理</div>
     <div class="taskManager-main" ref="contentMain">
+      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-row class="searchContent">
+          <a-col :span="6">
+            <a-form-model-item label="任务名称">
+              <a-input v-model="formList.taskName" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="任务key">
+              <a-input v-model="formList.taskKey" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="任务状态">
+              <a-select v-model="formList.status" placeholder="请选择">
+                <a-select-option
+                  v-for="(item,sindex) in formList.statusOption"
+                  :key="sindex"
+                  :value="item.id"
+                >{{item.name}}</a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="任务来源" style="width:300px">
+              <a-select v-model="formList.taskSource" placeholder="请选择">
+                <a-select-option
+                  v-for="(item,sindex) in formList.taskSourceOption"
+                  :key="sindex"
+                  :value="item.id"
+                >{{item.name}}</a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="创建时间">
+              <a-range-picker @change="onChange" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
+              <a-button type="primary" @click="onSearch">查询</a-button>
+              <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建任务</a-button>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+      </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
         <a-col flex="auto" style="padding:20px 10px;height:100%;">
-          <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
           <a-table
             :style="{ marginTop: '20px' }"
             :columns="columns"
@@ -17,7 +63,7 @@
               <a @click="onCheck(record)">查看</a>
               <a @click="onCheck(record)">启用</a>
               <a @click="onCheck(record)">禁用</a>
-              <a @click="onCheck(record)">编辑</a>
+              <a @click="onEditTask(record)">编辑</a>
             </span>
           </a-table>
           <a-pagination
@@ -40,65 +86,36 @@
 </template>
 
 <script>
-import FilterForm from '@/components/FilterGroup/index.jsx';
+// import FilterForm from '@/components/FilterGroup/index.jsx';
+import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
 export default {
   name: 'task-manager',
   data() {
     return {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
       scrollY: 100,
       pageSize: 10,
       current: 1,
       total: null,
       tableLoading: false,
-      formList: [
-        {
-          label: '任务名称',
-          name: 'taskName',
-          type: 'input',
-          placeholder: '请输入'
-        },
-        {
-          label: '任务Key',
-          type: 'input',
-          placeholder: '请输入',
-          name: 'taskKey'
-        },
-        {
-          label: '任务状态',
-          type: 'select',
-          placeholder: '全部',
-          name: 'status',
-          selectOptions: [
-            { id: '', name: '全部' },
-            { id: '0', name: '禁用' },
-            { id: '1', name: '启用' }
-          ]
-        },
-        {
-          label: '任务来源',
-          type: 'select',
-          name: 'taskSource',
-          placeholder: '全部',
-          selectOptions: [],
-          rules: [],
-          initialValue: '全部'
-        },
-        {
-          label: '创建时间',
-          type: 'rangePicker',
-          name: 'taskDate'
-        },
-        {
-          type: 'btn-default',
-          buttonName: '新建任务',
-          htmlType: 'button',
-          align: 'right',
-          labelCol: { span: 0 },
-          wrapperCol: { span: 24 }
-        }
-      ],
+      formList: {
+        taskName: "",
+        taskKey: "",
+        status: "",
+        taskDate: "",
+        taskSource: "",
+        createTimeStart: "",
+        createTimeEnd: "",
+        statusOption: [
+          { id: '', name: '全部' },
+          { id: '0', name: '禁用' },
+          { id: '1', name: '启用' }
+        ],
+        taskSourceOption: []
+      },
       columns: [
         {
           dataIndex: 'taskKey',
@@ -158,7 +175,7 @@ export default {
     };
   },
   components: {
-    FilterForm
+    // FormList
   },
   mounted() {
     this.getTaskSource();
@@ -168,21 +185,28 @@ export default {
     }, 0);
   },
   methods: {
-    onSearch(args) {
-      const { taskKey, taskDate, taskName, taskSource, status } = args;
-      this.taskKey = taskKey || null;
-      this.taskName = taskName || null;
-      this.taskSource = taskSource || null;
-      this.status = status || null;
-      this.taskDate = taskDate || [];
+    onChange(time) {
+      this.formList.taskDate = time;
+    },
+    onSearch() {
+      this.taskKey = this.formList.taskKey || null;
+      this.taskName = this.formList.taskName || null;
+      this.taskSource = this.formList.taskSource || null;
+      this.status = this.formList.status || null;
+      this.taskDate = this.formList.taskDate || [];
       this.current = 1;
       this.getTaskList();
     },
 
     onCheck(record) {
-      this.$router.push({ name: 'task_detail', query: { id: record.id } });
+      this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
     },
-
+    onEditTask(record) {
+      this.$router.push({ name: 'taskCenter-task-edit',query: { id: record.id }  });
+    },
+    onCreateTask() {
+      this.$router.push({ name: 'taskCenter-task-create' });
+    },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
     //   this.pageSize = pageSize;
@@ -232,21 +256,12 @@ export default {
         .getTaskSource()
         .then(
           res =>
-            (sourceList = res.data.map(item => {
-              return { id: item.appCode, name: item.appName };
-            }))
+          (sourceList = res.data.map(item => {
+            return { id: item.appCode, name: item.appName };
+          }))
         )
         .then(() => {
-          this.formList = this.formList.map(item => {
-            if (item.name === 'taskSource') {
-              return {
-                ...item,
-                selectOptions: [].concat({ id: '', name: '全部' }, sourceList)
-              };
-            } else {
-              return item;
-            }
-          });
+          this.formList.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
         });
     }
   },
@@ -294,6 +309,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.searchContent {
+  margin-top: 20px;
+}
 .taskManager {
   height: 100%;
   overflow: hide;
@@ -305,7 +323,7 @@ export default {
   &-main {
     height: 100%;
   }
-  .record a{
+  .record a {
     margin-right: 5px;
   }
 }
