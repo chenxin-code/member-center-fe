@@ -437,6 +437,72 @@ const routes = [
         component: () => import('@/pages/taskCenter/behavior/index.vue')
       },
       {
+        path: '/taskCenter-behavior/create',
+        name: 'taskCenter-behavior-create',
+        menuKey: 'taskCenter-behavior-create',
+        meta: {
+          menu: '/taskCenter-behavior-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/create',
+              name: '行为创建'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/create.vue')
+      },
+      {
+        path: '/taskCenter-behavior/edit',
+        name: 'taskCenter-behavior-edit',
+        menuKey: 'taskCenter-behavior-edit',
+        meta: {
+          menu: '/taskCenter-behavior-edit',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/edit',
+              name: '编辑行为'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/Edit.vue')
+      },
+      {
+        path: '/taskCenter-behavior/detial',
+        name: 'taskCenter-behavior-detial',
+        menuKey: 'taskCenter-behavior-detial',
+        meta: {
+          menu: '/taskCenter-behavior-detial',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/detial',
+              name: '行为创建'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/detial.vue')
+      },
+      {
         path: '/task-manager/detail',
         name: 'task_detail',
         menuKey: 'task-manager',
