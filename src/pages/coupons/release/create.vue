@@ -22,7 +22,7 @@
           <a-input :placeholder="couponValid" disabled />
         </a-form-item>
         <p class="create-main-title">
-          <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+          <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
           卡券发放信息
         </p>
         <a-form-item label="领取条件设置：">
@@ -147,7 +147,7 @@
               {
                 initialValue: rangePickerValue,
                 rules: [
-                  { validator: (rule, value, callback) => validatorDate(rule, value, callback, 'ddddddd') }
+                  { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
                 ]
               }
             ]"
@@ -225,23 +225,6 @@ const validatorFn1 = (rule, value, callback, message) => {
     } else {
       callback();
     }
-  }
-};
-
-const validatorDate = (rule, value, callback, message) => {
-  callback();return
-  console.log('validatorDate value :>> ', value);
-  if (
-    Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
-    Number(
-      moment(Date.now())
-        .format('YYYY-MM-DD')
-        .replace(/-/g, '')
-    )
-  ) {
-    callback(message);
-  } else {
-    callback();
   }
 };
 
@@ -383,7 +366,17 @@ export default {
   },
   methods: {
     validatorFn1,
-    validatorDate,
+    validatorDate(rule, value, callback){
+      let time1 = new Date(value[1]).getTime(),//领取有效期结束时间
+        time2 = new Date(this.selectedRows[0].validityEndTime).getTime();//卡券有效期结束时间
+      console.log('领取有效期结束时间',time1);
+      console.log('卡券有效期结束时间',time2);
+      if (this.selectedRows[0].validityType == 1 && time1 < time2) {
+        callback('领取有效期结束时间不能小于卡券有效期结束时间');
+      } else {
+        callback();
+      }
+    },
     moment,
     disabledDate(current) {
       return current && current < Date.now() - 86400000;
