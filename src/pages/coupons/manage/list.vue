@@ -60,10 +60,10 @@
             <a style="padding-right: 10px;" @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
-            <a @click="zhiding(rowData.id, 1)" v-if="rowData.aaaaaa === 0">
+            <a @click="zhiding(rowData.id, 1)" v-if="rowData.referrer === false">
               置顶
             </a>
-            <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.aaaaaa === 1">
+            <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.referrer === true">
               取消置顶
             </a>
           </div>
@@ -193,10 +193,10 @@ export default {
         // },
         {
           title: '是否置顶',
-          dataIndex: 'isZhiding',
-          key: 'isZhiding',
+          dataIndex: 'referrer',
+          key: 'referrer',
           width: 150,
-          customRender: text => (text === 1 ? '是' : '否')
+          customRender: text => (text === true ? '是' : '否')
         },
         {
           title: '卡券类型',
@@ -435,7 +435,6 @@ export default {
       } else {
         stateStr = '';
       }
-
       console.log('paramId :>> ', paramId);
       console.log('state :>> ', state);
       this.$confirm({
@@ -460,9 +459,34 @@ export default {
         }
       });
     },
-
-    zhiding(){},
-
+    zhiding(paramId, referrer){
+      let referrerStr;
+      if (referrer === 0) {
+        referrerStr = '取消置顶';
+      } else if (referrer === 1) {
+        referrerStr = '置顶';
+      } else {
+        referrerStr = '';
+      }
+      this.$confirm({
+        title: `${referrerStr}卡券`,
+        content: `您确定要${referrerStr}该卡券吗？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+          const formData = new FormData();
+          formData.append('id', paramId);
+          formData.append('referrer', referrer);
+          api.recommendCoupon(formData).then(res => {
+            if (res.code === 200) {
+              this.getCouponsList();
+            }
+          });
+        }
+      });
+    },
     // 分页
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
