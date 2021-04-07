@@ -49,3 +49,5 @@ export const getActDetail = data => fetchApi(URL.ACT_DETAIL, data, 'GET'); //活
 export const getActDownload = data => fetchApi(URL.ACT_DOWNLOAD, data, 'GET'); //下载活动中指定会员信息
 //修改会员手机号
 export const alterMemberPhone = data => fetchApi(URL.ALTER_MEMBER_PHONE, data, 'POST');
+//卡券推荐
+export const recommendCoupon = data => fetchApi(URL.RECOMMEND_COUPON, data, 'POST');

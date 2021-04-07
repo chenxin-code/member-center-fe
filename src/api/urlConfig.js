@@ -90,5 +90,7 @@ export default {
   ACT_ADD: '/times/member-center/activity/api/v1/add',
   UPDATE_ADD: '/times/member-center/activity/api/v1/update',
   //修改会员手机号
-  ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone'
+  ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone',
+  //卡券推荐
+  RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon'
 };
