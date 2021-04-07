@@ -2,34 +2,46 @@
   <div class="taskManager">
     <div class="taskManager-header">行为管理</div>
     <div class="taskManager-main" ref="contentMain">
+      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-row class="searchContent">
+          <a-col :span="6">
+            <a-form-model-item label="行为名称">
+              <a-input v-model="formList.name" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="行为类型" style="width:300px">
+              <a-select v-model="formList.type" placeholder="请选择">
+                <a-select-option v-for="(item,sindex) in formList.selectOptions" :key="sindex" :value="item.id">{{item.name}}</a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="创建时间">
+              <a-range-picker @change="onChange" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
+              <a-button type="primary" @click="onSearch">查询</a-button>
+              <a-button type="primary" @click="onCreateBehavior" style="margin-left: 10px;">新建行为</a-button>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+      </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
         <a-col flex="auto" style="padding:20px 10px;height:100%;">
           <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
-          <a-table
-            :style="{marginTop: '20px'}"
-            :columns="columns"
-            :data-source="dataList"
-            :pagination="false"
-            :loading="tableLoading"
-            :scroll="{y: scrollY}"
-          >
-            <span slot="action" slot-scope="record">
+          <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{y: scrollY}">
+            <span slot="action" class="record" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
+              <a @click="onCheck(record)">编辑</a>
+              <a @click="onCheck(record)">启用</a>
+              <a @click="onCheck(record)">禁用</a>
             </span>
           </a-table>
-          <a-pagination
-            :total="total"
-            :show-total="total => `共 ${total} 条`"
-            show-quick-jumper
-            show-size-changer
-            v-model="current"
-            :current="current"
-            :pageSize="pageSize"
-            :pageSizeOptions="['10','20','50','100']"
-            @change="change"
-            @showSizeChange="showSizeChange"
-            style="margin-top:30px;width:100%;text-align: right;"
-          />
+          <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer v-model="current" :current="current" :pageSize="pageSize" :pageSizeOptions="['10','20','50','100']"
+            @change="change" @showSizeChange="showSizeChange" style="margin-top:30px;width:100%;text-align: right;" />
         </a-col>
       </a-row>
     </div>
@@ -48,38 +60,19 @@ export default {
       current: 1,
       total: null,
       tableLoading: false,
-      formList: [
-        {
-          label: '行为类型',
-          type: 'select',
-          placeholder: "全部",
-          name: 'type',
-          selectOptions: [
-            { id: '', name: '全部' },
-            { id: '1', name: '消费' },
-            { id: '2', name: '其他' }
-          ]
-        },
-        {
-          label: '行为名称',
-          type: "input",
-          placeholder: "请输入",
-          name: 'name'
-        },
-        {
-          label: '创建时间',
-          type: 'rangePicker',
-          name: 'createTime',
-        },
-        {
-          type: 'btn-default',
-          buttonName: '新建行为',
-          htmlType: 'button',
-          align: 'right',
-          labelCol: { span: 0 },
-          wrapperCol: { span: 24 }
-        }
-      ],
+      labelCol: { span: 6 },
+      wrapperCol: { span: 14 },
+      formList: {
+        type: "",
+        name: "",
+        createTime: "",
+        selectOptions: [
+          { id: '', name: '全部' },
+          { id: '1', name: '消费' },
+          { id: '2', name: '其他' }
+        ]
+
+      },
       columns: [
         {
           dataIndex: 'type',
@@ -126,17 +119,27 @@ export default {
     }, 0)
   },
   methods: {
-    onSearch(args) {
-      const { type, name, createTime } = args;
-      this.name = name || null;
-      this.type = type || null;
-      this.rangeTime = createTime || [];
+    onChange(time) {
+      this.formList.rangeTime = time;
+    },
+    onSearch() {
+      this.name = this.formList.name || null;
+      this.type = this.formList.type || null;
+      this.rangeTime = this.formList.rangeTime || [];
       this.current = 1;
       this.getTaskList();
     },
 
+    //查看详情
     onCheck(record) {
-      this.$router.push({ name: 'dealing_detail', query: { id: record.id } });
+      this.$router.push({ name: 'taskCenter-behavior-detial', query: { id: record.id } });
+    },
+    //创建行为
+    onCreateBehavior() {
+      this.$router.push({ name: 'taskCenter-behavior-create' });
+    },
+    onEditBehavior(record) {
+      this.$router.push({ name: 'taskCenter-behavior-edit', query: { id: record.id } });
     },
 
     // onShowSizeChange(current, pageSize) {
@@ -219,6 +222,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.searchContent {
+  margin-top: 20px;
+  margin-left: 10px;
+}
 .taskManager {
   height: 100%;
   &-header {
@@ -229,5 +236,8 @@ export default {
   &-main {
     height: 100%;
   }
+}
+.record a {
+  margin-right: 5px;
 }
 </style>
