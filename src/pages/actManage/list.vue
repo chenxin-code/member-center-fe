@@ -348,6 +348,8 @@ export default {
             if (res.code === 200) {
               this.getActList();
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
         }
       });
@@ -388,6 +390,8 @@ export default {
             if (res.code === 200) {
               this.getActList();
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
         }
       });
