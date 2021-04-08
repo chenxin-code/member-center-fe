@@ -455,6 +455,8 @@ export default {
             if (res.code === 200) {
               this.getCouponsList();
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
         }
       });
@@ -483,6 +485,8 @@ export default {
             if (res.code === 200) {
               this.getCouponsList();
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
         }
       });
@@ -552,9 +556,6 @@ export default {
 
         return api
           .getCouponsList(para)
-          .finally(() => {
-            this.tableLoading = false;
-          })
           .then(res => {
             console.log('getCouponsList res :>> ', res);
             if (res.code === 200) {
@@ -564,6 +565,8 @@ export default {
                 this.tableData.push(element);
               });
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
       });
     }

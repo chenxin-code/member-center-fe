@@ -198,13 +198,13 @@ export default {
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
-          //this.tableLoading = true;
+          this.tableLoading = true;
           api.delTheme({id: id}).then(res => {
             if (res.code === 200) {
               this.getList();
             }
           }).finally(() => {
-            //this.tableLoading = false;
+            this.tableLoading = false;
           });
         }
       });
@@ -230,7 +230,6 @@ export default {
           themeName: this.searchObj.themeName,
           isEnable: this.searchObj.isEnable
         }).then(res => {
-          this.tableLoading = false;
           this.total = res.data.total;
           this.tableData = res.data.records;
         }).finally(() => {
