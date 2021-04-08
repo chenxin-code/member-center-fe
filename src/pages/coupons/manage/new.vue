@@ -345,8 +345,8 @@
                         {
                           initialValue: commercialTenants,
                           rules: [
-                            { required: true, message: '商户id不能为空' },
-                            { whitespace: true, message: '商户id不能为空' }
+                            { required: false, message: '商户id不能为空' },
+                            { whitespace: false, message: '商户id不能为空' }
                           ]
                         }
                       ]"
@@ -363,8 +363,8 @@
                         {
                           initialValue: merchandises,
                           rules: [
-                            { required: true, message: '商品id不能为空' },
-                            { whitespace: true, message: '商品id不能为空' }
+                            { required: false, message: '商品id不能为空' },
+                            { whitespace: false, message: '商品id不能为空' }
                           ]
                         }
                       ]"

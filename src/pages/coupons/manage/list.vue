@@ -60,12 +60,12 @@
             <a style="padding-right: 10px;" @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
-            <a @click="zhiding(rowData.id, 1)" v-if="rowData.referrer === false">
+            <!-- <a @click="zhiding(rowData.id, 1)" v-if="rowData.referrer === false">
               置顶
             </a>
             <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.referrer === true">
               取消置顶
-            </a>
+            </a> -->
           </div>
         </template>
       </a-table>
@@ -191,13 +191,13 @@ export default {
         //   key: 'couponSubhead',
         //   width: 150
         // },
-        {
-          title: '是否置顶',
-          dataIndex: 'referrer',
-          key: 'referrer',
-          width: 150,
-          customRender: text => (text === true ? '是' : '否')
-        },
+        // {
+        //   title: '是否置顶',
+        //   dataIndex: 'referrer',
+        //   key: 'referrer',
+        //   width: 150,
+        //   customRender: text => (text === true ? '是' : '否')
+        // },
         {
           title: '卡券类型',
           key: 'couponTypeSlot',

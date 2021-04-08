@@ -25,3 +25,9 @@ export const getActUpdate = data =>
     Authorization: tokenStr,
     'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
   });
+
+export const recommendCouponActivity = data =>
+  fetchApi(URL.RECOMMENDCOUPONACTIVITY, data, 'POST', {
+    Authorization: tokenStr,
+    'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+  });

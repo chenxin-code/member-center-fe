@@ -92,5 +92,10 @@ export default {
   //修改会员手机号
   ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone',
   //卡券推荐
-  RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon'
+  RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon',
+
+  //卡券派发记录置顶
+  RECOMMENDCOUPONACTIVITY:'/times/member-center/coupon/api/v1/coupon/recommendCouponActivity'
+  
+
 };
