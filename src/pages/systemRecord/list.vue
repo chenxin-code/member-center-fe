@@ -2,7 +2,7 @@
   <div id="list">
     <div class="content-header">系统运行日志</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList routePath="/actTheme/add" ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
+      <FormList ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -13,19 +13,19 @@
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="isEnable" slot-scope="rowData">
+        <template slot="behavior" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="isEnableParse(rowData.isEnable)"></span>
+            <span v-html="behaviorParse(rowData.behavior)"></span>
           </div>
         </template>
-        <template slot="createTime" slot-scope="rowData">
+        <template slot="date" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStrHms(rowData.date)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="$router.push({path: '', query: {id: rowData.id}})">查看详情</a>
+            <a @click="$router.push({path: '/systemRecord/detail', query: {id: rowData.id}})">查看详情</a>
           </div>
         </template>
       </a-table>
@@ -50,19 +50,21 @@ import FormList from './../../components/FormList/index.jsx';
 import api from './../../api';
 import moment from 'moment';
 export default {
-  name: 'actTheme',
+  name: 'systemRecord',
   data() {
     return {
       formList: [
         {
           label: '行为名称',
           type: 'select',
-          name: 'a',
+          name: 'behavior',
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '九宫格', id: '' },
-            { name: '砸金蛋', id: '' }
+            { name: '邦豆充值异常', id: '1' },
+            { name: '成长值发放异常', id: '2' },
+            { name: '优惠券派发异常', id: '3' },
+            { name: '手机号修改异常', id: '4' },
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -70,7 +72,7 @@ export default {
         {
           label: '会员手机号',
           type: 'input',
-          name: 'd',
+          name: 'memberPhone',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -78,7 +80,7 @@ export default {
         {
           label: '会员ID',
           type: 'input',
-          name: 'c',
+          name: 'memberId',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -98,26 +100,26 @@ export default {
       tableColumns: [
         {
           title: '行为名称',
-          dataIndex: 'a',
-          key: 'a',
+          dataIndex: 'behavior',
+          key: 'behavior',
           width: 150
         },
         {
-          title: '记录日期',
-          key: 'b',
-          scopedSlots: { customRender: 'b' },
+          title: '记录时间',
+          key: 'date',
+          scopedSlots: { customRender: 'date' },
           width: 150
         },
         {
           title: '会员ID',
-          dataIndex: 'c',
-          key: 'c',
+          dataIndex: 'memberId',
+          key: 'memberId',
           width: 150
         },
         {
           title: '会员手机号',
-          dataIndex: 'd',
-          key: 'd',
+          dataIndex: 'memberPhone',
+          key: 'memberPhone',
           width: 150
         },
         {
@@ -141,12 +143,16 @@ export default {
     FormList
   },
   computed: {
-    isEnableParse() {
+    behaviorParse() {
       return param => {
-        if(param === 0){
-          return '已启用';
-        }else if(param === 1){
-          return '已禁用';
+        if(param === 1){
+          return '邦豆充值异常';
+        }else if(param === 2){
+          return '成长值发放异常';
+        }else if(param === 3){
+          return '优惠券派发异常';
+        }else if(param === 4){
+          return '手机号修改异常';
         }else{
           return '';
         }
@@ -192,11 +198,12 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        api.getActThemeList({
+        api.systemRecord({
           pageSize: this.pageSize,
           pageIndex: this.current,
-          themeName: this.searchObj.themeName,
-          isEnable: this.searchObj.isEnable
+          behavior: this.searchObj.behavior,
+          memberPhone: this.searchObj.memberPhone,
+          memberId: this.searchObj.memberId
         }).then(res => {
           this.tableLoading = false;
           this.total = res.data.total;

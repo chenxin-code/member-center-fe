@@ -51,3 +51,7 @@ export const getActDownload = data => fetchApi(URL.ACT_DOWNLOAD, data, 'GET'); /
 export const alterMemberPhone = data => fetchApi(URL.ALTER_MEMBER_PHONE, data, 'POST');
 //卡券推荐
 export const recommendCoupon = data => fetchApi(URL.RECOMMEND_COUPON, data, 'POST');
+//系统运行日志
+export const systemRecord = data => fetchApi(URL.SYSTEM_RECORD, data, 'GET');
+//系统运行日志详情
+export const systemRecordDetail = data => fetchApi(URL.SYSTEM_RECORD_DETAIL, data, 'GET');

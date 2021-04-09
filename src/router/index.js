@@ -694,6 +694,20 @@ const routes = [
           keepAlive: true
         },
         component: () => import('@/pages/systemRecord/list')
+      },
+      {
+        path: '/systemRecord/detail',
+        name: 'systemRecordDetail',
+        menuKey: 'systemRecord',
+        meta: {
+          menu: '/systemRecord',
+          authKeys: [''],
+          bread: [
+            { path: '/systemRecord', name: '系统运行日志' },
+            { path: '/systemRecord/detail', name: '日志详情' }
+          ]
+        },
+        component: () => import('@/pages/systemRecord/detail')
       }
     ]
   },

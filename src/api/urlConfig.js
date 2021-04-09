@@ -93,9 +93,12 @@ export default {
   ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone',
   //卡券推荐
   RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon',
-
+  //系统运行日志
+  SYSTEM_RECORD: '/times/member-center/record/api/v1/selectRecord',
+  //系统运行日志详情
+  SYSTEM_RECORD_DETAIL: '/times/member-center/record/api/v1/selectRecordId',
   //卡券派发记录置顶
   RECOMMENDCOUPONACTIVITY:'/times/member-center/coupon/api/v1/coupon/recommendCouponActivity'
-  
+
 
 };
