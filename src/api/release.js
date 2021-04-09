@@ -31,3 +31,5 @@ export const recommendCouponActivity = data =>
     Authorization: tokenStr,
     'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
   });
+
+export const couponExchange = data => fetchApi(URL.COUPONEXCHANGE, data, 'GET');

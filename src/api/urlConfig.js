@@ -95,7 +95,8 @@ export default {
   RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon',
 
   //卡券派发记录置顶
-  RECOMMENDCOUPONACTIVITY:'/times/member-center/coupon/api/v1/coupon/recommendCouponActivity'
-  
+  RECOMMENDCOUPONACTIVITY: '/times/member-center/coupon/api/v1/coupon/recommendCouponActivity',
 
+  //获取实物券的核销记录
+  COUPONEXCHANGE: '/times/member-center/coupon-exchange/api/v1/list'
 };
