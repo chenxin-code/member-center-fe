@@ -98,7 +98,10 @@ export default {
   //系统运行日志详情
   SYSTEM_RECORD_DETAIL: '/times/member-center/record/api/v1/selectRecordId',
   //卡券派发记录置顶
+  RECOMMENDCOUPONACTIVITY: '/times/member-center/coupon/api/v1/coupon/recommendCouponActivity',
   RECOMMENDCOUPONACTIVITY:'/times/member-center/coupon/api/v1/coupon/recommendCouponActivity'
 
 
+  //获取实物券的核销记录
+  COUPONEXCHANGE: '/times/member-center/coupon-exchange/api/v1/list'
 };

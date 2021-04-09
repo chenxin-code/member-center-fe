@@ -4,16 +4,7 @@
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/couponsManage/new" ref="memberForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
-      <a-table
-        :columns="tableColumns"
-        :data-source="tableData"
-        :pagination="false"
-        :scroll="{ x: 988, y: scrollY }"
-        :rowKey="(r, i) => i"
-        style="width:100%;margin-top:8px;"
-        :selectable="false"
-        :loading="tableLoading"
-      >
+      <a-table :columns="tableColumns" :data-source="tableData" :pagination="false" :scroll="{ x: 988, y: scrollY }" :rowKey="(r, i) => i" style="width:100%;margin-top:8px;" :selectable="false" :loading="tableLoading">
         <template slot="couponTypeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="couponTypeStr(rowData.couponType)"></span>
@@ -69,18 +60,8 @@
           </div>
         </template>
       </a-table>
-      <a-pagination
-        :total="total"
-        :show-total="total => `共 ${total} 条`"
-        show-quick-jumper
-        show-size-changer
-        :current="current"
-        :pageSize="pageSize"
-        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="change"
-        @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
-      />
+      <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer :current="current" :pageSize="pageSize" :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="change" @showSizeChange="showSizeChange" style="margin-top:30px;width:100%;text-align: right;" />
     </div>
   </div>
 </template>
@@ -311,13 +292,19 @@ export default {
     },
     activityStr() {
       return param => {
-        if (param === '4014') {
-          return '物业费';
-        } else if (param === '4005') {
-          return '购物券';
-        } else {
-          return '';
+        var msg = '';
+        switch (param) {
+          case '4014':
+            msg = "物业费"
+            break;
+          case '4005':
+            msg = "购物券"
+            break;
+          case '4015':
+            msg = "实物券"
+            break;
         }
+        return msg;
       };
     },
     faceAmountStr() {
@@ -379,7 +366,7 @@ export default {
       };
     }
   },
-  created() {},
+  created() { },
   mounted() {
     const timer1 = setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 275 + 'px';
@@ -461,7 +448,7 @@ export default {
         }
       });
     },
-    zhiding(paramId, referrer){
+    zhiding(paramId, referrer) {
       let referrerStr;
       if (referrer === 0) {
         referrerStr = '取消置顶';
