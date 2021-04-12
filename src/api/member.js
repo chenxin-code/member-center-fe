@@ -55,3 +55,7 @@ export const recommendCoupon = data => fetchApi(URL.RECOMMEND_COUPON, data, 'POS
 export const systemRecord = data => fetchApi(URL.SYSTEM_RECORD, data, 'GET');
 //系统运行日志详情
 export const systemRecordDetail = data => fetchApi(URL.SYSTEM_RECORD_DETAIL, data, 'GET');
+//更新成长值
+export const updateGrowth = data => fetchApi(URL.UPDATE_GROWTH, data, 'POST');
+//异常卡卷补发
+export const reissueCoupon = data => fetchApi(URL.REISSUE_COUPON, data, 'POST');

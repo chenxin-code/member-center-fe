@@ -100,5 +100,9 @@ export default {
   //卡券派发记录置顶
   RECOMMENDCOUPONACTIVITY: '/times/member-center/coupon/api/v1/coupon/recommendCouponActivity',
   //获取实物券的核销记录
-  COUPONEXCHANGE: '/times/member-center/coupon-exchange/api/v1/list'
+  COUPONEXCHANGE: '/times/member-center/coupon-exchange/api/v1/list',
+  //更新成长值
+  UPDATE_GROWTH: '/times/member-center/member/api/v1/member/updateGrowth',
+  //异常卡卷补发
+  REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon'
 };
