@@ -61,10 +61,10 @@ export default {
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '邦豆充值异常', id: '1' },
-            { name: '成长值发放异常', id: '2' },
-            { name: '优惠券派发异常', id: '3' },
-            { name: '手机号修改异常', id: '4' },
+            { name: '邦豆充值异常', id: '0' },
+            { name: '成长值发放异常', id: '1' },
+            { name: '优惠券派发异常', id: '2' },
+            { name: '手机号修改异常', id: '3' },
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -100,8 +100,8 @@ export default {
       tableColumns: [
         {
           title: '行为名称',
-          dataIndex: 'behavior',
           key: 'behavior',
+          scopedSlots: { customRender: 'behavior' },
           width: 150
         },
         {
@@ -145,13 +145,13 @@ export default {
   computed: {
     behaviorParse() {
       return param => {
-        if(param === 1){
+        if(param === 0){
           return '邦豆充值异常';
-        }else if(param === 2){
+        }else if(param === 1){
           return '成长值发放异常';
-        }else if(param === 3){
+        }else if(param === 2){
           return '优惠券派发异常';
-        }else if(param === 4){
+        }else if(param === 3){
           return '手机号修改异常';
         }else{
           return '';
