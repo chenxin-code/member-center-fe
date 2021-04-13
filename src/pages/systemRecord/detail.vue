@@ -89,7 +89,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">修改前的手机号:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{memberPhone}}</div>
                   </div>
                 </div>
               </div>
@@ -97,7 +97,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">修改后的手机号:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{changePhone}}</div>
                   </div>
                 </div>
               </div>
@@ -105,7 +105,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">冲突手机号:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{reusePhone}}</div>
                   </div>
                 </div>
               </div>
@@ -228,6 +228,8 @@ export default {
     return {
       memberId: null,
       memberPhone: null,
+      changePhone: null,
+      reusePhone: null,
       date: null,
       behavior: null,
       num: null,
@@ -300,27 +302,12 @@ export default {
       api.systemRecordDetail({
         id: this.$route.query.id
       }).then(resp => {
-        //模拟数据
-        // let resp = {
-        //   "code": 200,
-        //   "data": {
-        //     "behavior": 0,
-        //     "changePhone": "",
-        //     "date": 1617724800000,
-        //     "id": 1,
-        //     "memberId": "2142986319024881672",
-        //     "memberPhone": "13025347025",
-        //     "memo": "成长值发放异常",
-        //     "num": 100,
-        //     "solutionTime": 1617724800000,
-        //     "type": 1
-        //   },
-        //   "message": "success"
-        // };
         console.log('日志详情接口--------->', resp);
         if (resp.code === 200) {
           this.memberId = resp.data.memberId;
           this.memberPhone = resp.data.memberPhone;
+          this.changePhone = resp.data.changePhone;
+          this.reusePhone = resp.data.reusePhone;
           this.date = resp.data.date;
           this.behavior = resp.data.behavior;
           this.num = resp.data.num;
