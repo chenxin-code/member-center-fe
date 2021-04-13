@@ -59,3 +59,5 @@ export const systemRecordDetail = data => fetchApi(URL.SYSTEM_RECORD_DETAIL, dat
 export const updateGrowth = data => fetchApi(URL.UPDATE_GROWTH, data, 'POST');
 //异常卡卷补发
 export const reissueCoupon = data => fetchApi(URL.REISSUE_COUPON, data, 'POST');
+//系统异常处理接口修改异常是否处理
+export const editRecord = data => fetchApi(URL.EDIT_RECORD, data, 'POST');

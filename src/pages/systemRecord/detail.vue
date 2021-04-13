@@ -357,7 +357,14 @@ export default {
         reason: this.bangdouAddDescr
       }).then(resp => {
         if(resp.code === 200){
-          this.systemRecordDetail();
+          this.$message.success(resp.message);
+          const formData = new FormData();
+          formData.append('id', this.$route.query.id);
+          api.editRecord(formData).then(resp => {
+            if(resp.code === 200){
+              this.systemRecordDetail();
+            }
+          })
         }
       }).finally(() => {
         this.visibleBangdou = false;
@@ -366,20 +373,24 @@ export default {
     },
     czzff() {
       const formData = new FormData();
+      formData.append('id', this.$route.query.id);
       formData.append('memberId', this.memberId);
       formData.append('num', this.num);
       api.updateGrowth(formData).then(resp => {
         if(resp.code === 200){
+          this.$message.success(resp.message);
           this.systemRecordDetail();
         }
       })
     },
     pfcyhq() {
       api.reissueCoupon({
+        id: this.$route.query.id,
         memberId: this.memberId,
         couTypeCode: this.couTypeCode
       }).then(resp => {
         if(resp.code === 200){
+          this.$message.success(resp.message);
           this.systemRecordDetail();
         }
       })

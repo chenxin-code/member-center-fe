@@ -104,5 +104,7 @@ export default {
   //更新成长值
   UPDATE_GROWTH: '/times/member-center/member/api/v1/member/updateGrowth',
   //异常卡卷补发
-  REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon'
+  REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon',
+  //系统异常处理接口修改异常是否处理
+  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord'
 };
