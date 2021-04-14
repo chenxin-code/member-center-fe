@@ -53,7 +53,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 2">
+              <div class="common-column-wrapp" v-if="behavior == '3'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">优惠券ID:</div>
@@ -61,7 +61,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 0">
+              <div class="common-column-wrapp" v-if="behavior == '1'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">邦豆数量:</div>
@@ -69,7 +69,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-else-if="behavior === 1">
+              <div class="common-column-wrapp" v-else-if="behavior == '2'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">成长值数量:</div>
@@ -77,7 +77,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-else-if="behavior === 2">
+              <div class="common-column-wrapp" v-else-if="behavior == '3'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">发放数量:</div>
@@ -85,7 +85,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 3">
+              <div class="common-column-wrapp" v-if="behavior == '4'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">修改前的手机号:</div>
@@ -93,7 +93,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 3">
+              <div class="common-column-wrapp" v-if="behavior == '4'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">修改后的手机号:</div>
@@ -101,7 +101,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 3">
+              <div class="common-column-wrapp" v-if="behavior == '4'">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">冲突手机号:</div>
@@ -117,7 +117,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 0 && !isSolution">
+              <div class="common-column-wrapp" v-if="behavior == '1' && !isSolution">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right"></div>
@@ -125,7 +125,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 1 && !isSolution">
+              <div class="common-column-wrapp" v-if="behavior == '2' && !isSolution">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right"></div>
@@ -133,7 +133,7 @@
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp" v-if="behavior === 2 && !isSolution">
+              <div class="common-column-wrapp" v-if="behavior == '3' && !isSolution">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right"></div>
@@ -274,13 +274,13 @@ export default {
   computed: {
     behaviorParse() {
       return param => {
-        if (param === 0) {
+        if (param == '1') {
           return '邦豆充值异常';
-        } else if (param === 1) {
+        } else if (param == '2') {
           return '成长值发放异常';
-        } else if (param === 2) {
+        } else if (param == '3') {
           return '优惠券派发异常';
-        } else if (param === 3) {
+        } else if (param == '4') {
           return '手机号修改异常';
         } else {
           return '';

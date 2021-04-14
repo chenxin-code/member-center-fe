@@ -164,8 +164,7 @@ export default {
       //分页
       total: 0,
       current: 1,
-      pageSize: 10,
-      searchObj: {}
+      pageSize: 10
     };
   },
   components: {
@@ -218,7 +217,6 @@ export default {
   },
   methods: {
     onQuery(params) {
-      this.searchObj = params;
       this.current = 1;
       this.getList(true);
     },
@@ -237,14 +235,30 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
+        let id = null,themeName = null,activityName = null,typeId = null,status = null;
+        if (this.$refs.actForm.getFieldsValue().id) {
+          id = this.$refs.actForm.getFieldsValue().id;
+        }
+        if (this.$refs.actForm.getFieldsValue().themeName) {
+          themeName = this.$refs.actForm.getFieldsValue().themeName;
+        }
+        if (this.$refs.actForm.getFieldsValue().activityName) {
+          activityName = this.$refs.actForm.getFieldsValue().activityName;
+        }
+        if (this.$refs.actForm.getFieldsValue().typeId) {
+          typeId = this.$refs.actForm.getFieldsValue().typeId;
+        }
+        if (this.$refs.actForm.getFieldsValue().status) {
+          status = this.$refs.actForm.getFieldsValue().status;
+        }
         api.getActJoinList({
           pageSize: this.pageSize,
           pageIndex: this.current,
-          id: this.searchObj.id,
-          themeName: this.searchObj.themeName,
-          activityName: this.searchObj.activityName,
-          typeId: this.searchObj.typeId,
-          status: this.searchObj.status
+          id: id,
+          themeName: themeName,
+          activityName: activityName,
+          typeId: typeId,
+          status: status
         }).then(res => {
           this.tableLoading = false;
           this.total = res.data.total;
@@ -261,30 +275,39 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.actForm.setFieldsValue({
+          typeId: this.formList[4].selectOptions[0].id
+        });
+        this.$refs.actForm.setFieldsValue({
+          status: this.formList[5].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
       this.$refs.actForm.form.resetFields();
-      this.$refs.actForm.setFieldsValue({
-        typeId: this.formList[4].selectOptions[0].id
-      });
-      this.$refs.actForm.setFieldsValue({
-        status: this.formList[5].selectOptions[0].id
-      });
-
       //初始化加载数据
       this.getList();
     }
     //重置
     this.$route.meta.isUseCache = false;
-
-
   },
   beforeRouteEnter(to, from, next) {
+    if (from.name === 'xxxxxxxxx') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   beforeRouteLeave(to, from, next) {
+    if (to.name === 'xxxxxxxxx') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   watch: {}

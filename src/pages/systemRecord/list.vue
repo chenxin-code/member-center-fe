@@ -61,10 +61,10 @@ export default {
           placeholder: '请选择',
           selectOptions: [
             { name: '全部', id: '' },
-            { name: '邦豆充值异常', id: '0' },
-            { name: '成长值发放异常', id: '1' },
-            { name: '优惠券派发异常', id: '2' },
-            { name: '手机号修改异常', id: '3' },
+            { name: '邦豆充值异常', id: '1' },
+            { name: '成长值发放异常', id: '2' },
+            { name: '优惠券派发异常', id: '3' },
+            { name: '手机号修改异常', id: '4' },
           ],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -135,8 +135,7 @@ export default {
       //分页
       total: 0,
       current: 1,
-      pageSize: 10,
-      searchObj: {},
+      pageSize: 10
     };
   },
   components: {
@@ -145,13 +144,13 @@ export default {
   computed: {
     behaviorParse() {
       return param => {
-        if(param === 0){
+        if(param == '1'){
           return '邦豆充值异常';
-        }else if(param === 1){
+        }else if(param == '2'){
           return '成长值发放异常';
-        }else if(param === 2){
+        }else if(param == '3'){
           return '优惠券派发异常';
-        }else if(param === 3){
+        }else if(param == '4'){
           return '手机号修改异常';
         }else{
           return '';
@@ -179,7 +178,6 @@ export default {
   },
   methods: {
     onQuery(params) {
-      this.searchObj = params;
       this.current = 1;
       this.getList(true);
     },
@@ -198,12 +196,22 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
+        let behavior = null,memberPhone = null,memberId = null;
+        if (this.$refs.actForm.getFieldsValue().behavior) {
+          behavior = this.$refs.actForm.getFieldsValue().behavior;
+        }
+        if (this.$refs.actForm.getFieldsValue().memberPhone) {
+          memberPhone = this.$refs.actForm.getFieldsValue().memberPhone;
+        }
+        if (this.$refs.actForm.getFieldsValue().memberId) {
+          memberId = this.$refs.actForm.getFieldsValue().memberId;
+        }
         api.systemRecord({
           pageSize: this.pageSize,
           pageIndex: this.current,
-          behavior: this.searchObj.behavior,
-          memberPhone: this.searchObj.memberPhone,
-          memberId: this.searchObj.memberId
+          behavior: behavior,
+          memberPhone: memberPhone,
+          memberId: memberId
         }).then(res => {
           this.tableLoading = false;
           this.total = res.data.total;
@@ -219,14 +227,16 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.actForm.setFieldsValue({
+          behavior: this.formList[0].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
       this.$refs.actForm.form.resetFields();
-      // this.$refs.actForm.setFieldsValue({
-      //   typeId: this.formList[1].selectOptions[0].id
-      // });
       //初始化加载数据
       this.getList();
     }
@@ -234,9 +244,19 @@ export default {
     this.$route.meta.isUseCache = false;
   },
   beforeRouteEnter(to, from, next) {
+    if (from.name === 'systemRecordDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   beforeRouteLeave(to, from, next) {
+    if (to.name === 'systemRecordDetail') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   watch: {}
