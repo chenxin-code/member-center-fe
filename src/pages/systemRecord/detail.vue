@@ -347,8 +347,8 @@ export default {
           this.$message.success(resp.message);
           const formData = new FormData();
           formData.append('id', this.$route.query.id);
-          api.editRecord(formData).then(resp => {
-            if(resp.code === 200){
+          api.editRecord(formData).then(resp2 => {
+            if(resp2.code === 200){
               this.systemRecordDetail();
             }
           })
