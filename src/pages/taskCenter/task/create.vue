@@ -404,6 +404,7 @@ export default {
   },
 };
 </script>
+<<<<<<< HEAD
 <style>
 .form-body {
   padding: 20px 0px;
@@ -414,3 +415,5 @@ export default {
   resize: none;
 }
 </style>
+=======
+>>>>>>> e013f1f50ebb6c4ba6deb9d676c86e5210f53d12

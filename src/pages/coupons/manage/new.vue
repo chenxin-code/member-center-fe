@@ -314,7 +314,40 @@
                   </a-select>
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
-
+                <!-- 实物券 -->
+                <template v-if="couponBusinessType === '4015'">                  
+                  <a-form-item label="上传优惠券封面图">
+                    <a-spin :spinning="picUploading">
+                      <a-upload
+                        name="avatar"
+                        accept="image/jpeg,image/jpg,image/png"
+                        list-type="picture-card"
+                        :file-list="fileList"
+                        v-decorator="[
+                          'couponImage',
+                          { initialValue: couponImage, rules: [{ required: true, message: '图片不能为空' }] }
+                        ]"
+                        :before-upload="() => false"
+                        :remove="deleteOssImage"
+                        @preview="handlePreview"
+                        @change="addPic"
+                      >
+                        <template v-if="fileList.length < 1">
+                          <a-icon type="plus" />
+                          <div class="ant-upload-text">
+                            上传图片
+                          </div>
+                        </template>
+                      </a-upload>
+                      <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                        <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                      </a-modal>
+                    </a-spin>
+                    <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                      建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
+                    </span>
+                  </a-form-item>
+                </template>
                 <!-- 购物券 -->
                 <template v-if="couponBusinessType === '4005'">
                   <a-form-item label="商城订单类型">
@@ -345,8 +378,8 @@
                         {
                           initialValue: commercialTenants,
                           rules: [
-                            { required: true, message: '商户id不能为空' },
-                            { whitespace: true, message: '商户id不能为空' }
+                            { required: false, message: '商户id不能为空' },
+                            { whitespace: false, message: '商户id不能为空' }
                           ]
                         }
                       ]"
@@ -363,8 +396,8 @@
                         {
                           initialValue: merchandises,
                           rules: [
-                            { required: true, message: '商品id不能为空' },
-                            { whitespace: true, message: '商品id不能为空' }
+                            { required: false, message: '商品id不能为空' },
+                            { whitespace: false, message: '商品id不能为空' }
                           ]
                         }
                       ]"
@@ -530,7 +563,8 @@ export default {
       couponBusinessType: '4014', //卡券业务类型
       couponBusinessTypes: [
         { name: '物业费', code: '4014' },
-        { name: '购物券', code: '4005' }
+        { name: '购物券', code: '4005' },
+        { name: '实物券', code: '4015' }
       ],
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
@@ -951,7 +985,8 @@ export default {
         validityEndTime: this.validityEndTime,
         validityStartTime: this.validityStartTime,
         validityType: this.validityType,
-        voucherAmount: this.voucherAmount
+        voucherAmount: this.voucherAmount,
+        referrer:0
       };
 
       console.log('getCouponCreate param :>> ', param);

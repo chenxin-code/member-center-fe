@@ -49,3 +49,15 @@ export const getActDetail = data => fetchApi(URL.ACT_DETAIL, data, 'GET'); //活
 export const getActDownload = data => fetchApi(URL.ACT_DOWNLOAD, data, 'GET'); //下载活动中指定会员信息
 //修改会员手机号
 export const alterMemberPhone = data => fetchApi(URL.ALTER_MEMBER_PHONE, data, 'POST');
+//卡券推荐
+export const recommendCoupon = data => fetchApi(URL.RECOMMEND_COUPON, data, 'POST');
+//系统运行日志
+export const systemRecord = data => fetchApi(URL.SYSTEM_RECORD, data, 'GET');
+//系统运行日志详情
+export const systemRecordDetail = data => fetchApi(URL.SYSTEM_RECORD_DETAIL, data, 'GET');
+//更新成长值
+export const updateGrowth = data => fetchApi(URL.UPDATE_GROWTH, data, 'POST');
+//异常卡卷补发
+export const reissueCoupon = data => fetchApi(URL.REISSUE_COUPON, data, 'POST');
+//系统异常处理接口修改异常是否处理
+export const editRecord = data => fetchApi(URL.EDIT_RECORD, data, 'POST');

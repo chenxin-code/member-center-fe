@@ -319,7 +319,7 @@
       <a-form layout="inline">
         <a-form-item>
           <div :style="modalInputStyle">
-            <div :style="modalInputStyleTop">
+            <div :style="modalInputStyleTop2">
               <span style="color: red;">*</span>
               <span>区号</span>
             </div>
@@ -704,10 +704,10 @@ export default {
         phoneAreaCode	: this.phoneAreaCode,
         phone: this.memberPhone
       }).finally(() => {
-        this.showPhoneModal = false;
         this.modalLoading = false;
       }).then(res => {
         if (res.code === 200) {
+          this.showPhoneModal = false;
           this.getMemberDetail();
         }
       });
