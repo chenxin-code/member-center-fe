@@ -57,6 +57,7 @@
                     <div class="right-item-bottom-right" @click="bangdouHandle(2)">邦豆抵扣</div>
                   </div>
                 </div>
+                <a-button type="primary" style="margin-top: 25px" @click="alterMemberPhone()">修改会员手机号</a-button>
               </div>
             </a-col>
           </a-row>
@@ -290,6 +291,49 @@
           <div v-if="bangdouAddRemarkNull" :style="bangdouAddNullStyle2">
             请输入备注
           </div>
+          <div :style="modalInputStyle" v-if="bangdouModalType === 1">
+            <div :style="modalInputStyleTop">
+              <span style="color: red;">*</span>
+              <span>描述</span>
+            </div>
+            <a-textarea
+              v-model="bangdouAddDescr"
+              :maxLength="20"
+              :auto-size="{ minRows: 1, maxRows: 2 }"
+              style="width: 267px;"
+              :style="bangdouAddDescrNull ? bangdouAddNullStyle1 : ''"
+              placeholder="请输入描述"
+            />
+          </div>
+          <div v-if="bangdouModalType === 1 && bangdouAddDescrNull" :style="bangdouAddNullStyle2">
+            请输入描述
+          </div>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal :centered="true" v-model="showPhoneModal" title="修改会员手机号" :maskClosable="false" on-ok="handlePhoneOk">
+      <template slot="footer">
+        <a-button :disabled="modalLoading" key="back" @click="showPhoneModal = false">取消</a-button>
+        <a-button :disabled="modalLoading" key="submit" type="primary" :loading="modalLoading" @click="handlePhoneOk">确定</a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item>
+          <div :style="modalInputStyle">
+            <div :style="modalInputStyleTop2">
+              <span style="color: red;">*</span>
+              <span>区号</span>
+            </div>
+            <a-input v-model="phoneAreaCode" style="width: 267px;" :style="phoneAreaCodeValNull ? bangdouAddNullStyle1 : ''" placeholder="请输入区号"/>
+          </div>
+          <div v-if="phoneAreaCodeValNull" :style="bangdouAddNullStyle2">请输入区号</div>
+          <div :style="modalInputStyle">
+            <div :style="modalInputStyleTop2">
+              <span style="color: red;">*</span>
+              <span>手机号</span>
+            </div>
+            <a-input v-model="memberPhone" style="width: 267px;" :style="phoneValNull ? bangdouAddNullStyle1 : ''" placeholder="请输入手机号"/>
+          </div>
+          <div v-if="phoneValNull" :style="bangdouAddNullStyle2">请输入手机号</div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -391,7 +435,10 @@ export default {
   data() {
     return {
       bangdouAddValNull: false,
+      phoneValNull: false,
+      phoneAreaCodeValNull: false,
       bangdouAddRemarkNull: false,
+      bangdouAddDescrNull: false,
       memberIntegral: '',
       //bangdou modal:start
       bangdouAddNullStyle1: {
@@ -419,12 +466,24 @@ export default {
         'justify-content': 'flex-end',
         'align-items': 'center'
       },
+      modalInputStyleTop2: {
+        width: '80px',
+        'margin-right': '10px',
+        display: 'flex',
+        'flex-direction': 'row',
+        'justify-content': 'flex-end',
+        'align-items': 'center'
+      },
       modalLoading: false,
       bangdouModalTitle: '',
       visibleBangdou: false,
+      showPhoneModal: false,
       bangdouModalType: '',
       bangdouAddVal: 1,
+      memberPhone: null,
+      phoneAreaCode: '86',//默认86
       bangdouAddRemark: '',
+      bangdouAddDescr: '',
       //bangdou modal:end
       bangdouImage,
       memberId: '',
@@ -576,15 +635,16 @@ export default {
   },
   methods: {
     handleOk() {
-      if (!this.bangdouAddVal || !this.bangdouAddRemark) {
+      if (!this.bangdouAddVal || !this.bangdouAddRemark || (this.bangdouModalType === 1 && !this.bangdouAddDescr)) {
         if (!this.bangdouAddVal) {
           this.bangdouAddValNull = true;
         }
-
         if (!this.bangdouAddRemark) {
           this.bangdouAddRemarkNull = true;
         }
-
+        if (this.bangdouModalType === 1 && !this.bangdouAddDescr) {
+          this.bangdouAddDescrNull = true;
+        }
         return;
       }
 
@@ -594,7 +654,8 @@ export default {
         memberId: this.memberId,
         type: this.bangdouModalType,
         integral: this.bangdouAddVal,
-        notes: this.bangdouAddRemark
+        notes: this.bangdouAddRemark,
+        reason: this.bangdouModalType === 1 ? this.bangdouAddDescr : null//描述
       };
 
       console.log('handleOk param :>> ', param);
@@ -614,8 +675,9 @@ export default {
     },
     bangdouHandle(type) {
       this.bangdouModalType = ''; //类型
-      this.bangdouAddVal = 1; //充值帮豆
-      this.bangdouAddRemark = ''; //抵扣帮豆
+      this.bangdouAddVal = 1;
+      this.bangdouAddRemark = '';
+      this.bangdouAddDescr = '';
       this.visibleBangdou = true; //显示对话框
       if (type === 1) {
         this.bangdouModalType = 1;
@@ -624,6 +686,31 @@ export default {
         this.bangdouModalType = 2;
         this.bangdouModalTitle = '邦豆扣减';
       }
+    },
+    //修改会员手机号
+    alterMemberPhone(){
+      this.showPhoneModal = true;
+    },
+    handlePhoneOk() {
+      if (!this.phoneAreaCode) {
+        this.phoneAreaCodeValNull = true;return
+      }
+      if (!this.memberPhone) {
+        this.phoneValNull = true;return
+      }
+      this.modalLoading = true;
+      api.alterMemberPhone({
+        id: this.memberId,
+        phoneAreaCode	: this.phoneAreaCode,
+        phone: this.memberPhone
+      }).finally(() => {
+        this.modalLoading = false;
+      }).then(res => {
+        if (res.code === 200) {
+          this.showPhoneModal = false;
+          this.getMemberDetail();
+        }
+      });
     },
     loadAvatarError(e) {
       e.target.src = defaultAvatar;
@@ -848,6 +935,7 @@ export default {
         if (!newVal) {
           this.bangdouAddValNull = false;
           this.bangdouAddRemarkNull = false;
+          this.bangdouAddDescrNull = false;
         }
       },
       immediate: true //刷新加载 立马触发一次handler
@@ -864,6 +952,30 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.bangdouAddRemarkNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    bangdouAddDescr: {
+      handler(newVal) {
+        if (newVal) {
+          this.bangdouAddDescrNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    phoneAreaCode: {
+      handler(newVal) {
+        if (newVal) {
+          this.phoneAreaCodeValNull = false;
+        }
+      },
+      immediate: true //刷新加载 立马触发一次handler
+    },
+    memberPhone: {
+      handler(newVal) {
+        if (newVal) {
+          this.phoneValNull = false;
         }
       },
       immediate: true //刷新加载 立马触发一次handler

@@ -88,5 +88,23 @@ export default {
   ACT_DETAIL: '/times/member-center/activity/api/v1/detail', //活动详情
   ACT_DOWNLOAD: '/times/member-center/activity/api/v1/activity-member/download',
   ACT_ADD: '/times/member-center/activity/api/v1/add',
-  UPDATE_ADD:'/times/member-center/activity/api/v1/update'
+  UPDATE_ADD: '/times/member-center/activity/api/v1/update',
+  //修改会员手机号
+  ALTER_MEMBER_PHONE: '/times/member-center/member/api/v1/member/alterPhone',
+  //卡券推荐
+  RECOMMEND_COUPON: '/times/member-center/coupon/api/v1/coupon/recommendCoupon',
+  //系统运行日志
+  SYSTEM_RECORD: '/times/member-center/record/api/v1/selectRecord',
+  //系统运行日志详情
+  SYSTEM_RECORD_DETAIL: '/times/member-center/record/api/v1/selectRecordId',
+  //卡券派发记录置顶
+  RECOMMENDCOUPONACTIVITY: '/times/member-center/coupon/api/v1/coupon/recommendCouponActivity',
+  //获取实物券的核销记录
+  COUPONEXCHANGE: '/times/member-center/coupon-exchange/api/v1/list',
+  //更新成长值
+  UPDATE_GROWTH: '/times/member-center/member/api/v1/member/updateGrowth',
+  //异常卡卷补发
+  REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon',
+  //系统异常处理接口修改异常是否处理
+  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord'
 };

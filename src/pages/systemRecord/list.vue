@@ -1,8 +1,8 @@
 <template>
   <div id="list">
-    <div class="content-header">活动参与数据</div>
+    <div class="content-header">系统运行日志</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
-      <FormList routePath="/actTheme/add" ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
+      <FormList ref="actForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table
         :columns="tableColumns"
@@ -13,14 +13,19 @@
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="typeId" slot-scope="rowData">
+        <template slot="behavior" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="parseTypeId(rowData.typeId)"></span>
+            <span v-html="behaviorParse(rowData.behavior)"></span>
           </div>
         </template>
-        <template slot="status" slot-scope="rowData">
+        <template slot="date" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="parseStatus(rowData.status)"></span>
+            <span v-html="momentStrHms(rowData.date)"></span>
+          </div>
+        </template>
+        <template slot="detailsSlot" slot-scope="rowData">
+          <div class="editable-row-operations">
+            <a @click="$router.push({path: '/systemRecord/detail', query: {id: rowData.id}})">查看详情</a>
           </div>
         </template>
       </a-table>
@@ -43,31 +48,39 @@
 <script>
 import FormList from './../../components/FormList/index.jsx';
 import api from './../../api';
+import moment from 'moment';
 export default {
-  name: 'actJoin',
+  name: 'systemRecord',
   data() {
     return {
       formList: [
         {
-          label: '活动id',
+          label: '行为名称',
+          type: 'select',
+          name: 'behavior',
+          placeholder: '请选择',
+          selectOptions: [
+            { name: '全部', id: '' },
+            { name: '邦豆充值异常', id: '1' },
+            { name: '成长值发放异常', id: '2' },
+            { name: '优惠券派发异常', id: '3' },
+            { name: '手机号修改异常', id: '4' },
+          ],
+          labelCol: { span: 6 },
+          wrapperCol: { span: 18 }
+        },
+        {
+          label: '会员手机号',
           type: 'input',
-          name: 'id',
+          name: 'memberPhone',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
         {
-          label: '活动主题',
+          label: '会员ID',
           type: 'input',
-          name: 'activityName',
-          placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
-          label: '活动名称',
-          type: 'input',
-          name: 'themeName',
+          name: 'memberId',
           placeholder: '请输入',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -79,37 +92,6 @@ export default {
           align: 'right',
           labelCol: { span: 0 },
           wrapperCol: { span: 24 }
-        },
-        {
-          label: '活动类型',
-          type: 'select',
-          name: 'typeId',
-          placeholder: '请选择',
-          selectOptions: [
-            { name: '全部', id: '' },
-            { name: '领券中心', id: '1' },
-            { name: '会员权益', id: '2' },
-            { name: '邦豆兑换', id: '3' }
-          ],
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
-          label: '活动状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请选择',
-          selectOptions: [
-            { name: '全部', id: '' },
-            { name: '已创建', id: '0' },
-            { name: '未开始', id: '1' },
-            { name: '进行中', id: '2' },
-            { name: '已结束', id: '3' },
-            { name: '已停用', id: '4' },
-            { name: '已删除', id: '5' }
-          ],
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
         }
       ],
       //表格高度
@@ -117,46 +99,42 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '活动id',
-          dataIndex: 'id',
-          key: 'id',
+          title: '行为名称',
+          key: 'behavior',
+          scopedSlots: { customRender: 'behavior' },
           width: 150
         },
         {
-          title: '活动主题',
-          dataIndex: 'activityName',
-          key: 'activityName',
+          title: '记录时间',
+          key: 'date',
+          scopedSlots: { customRender: 'date' },
           width: 150
         },
         {
-          title: '活动名称',
-          dataIndex: 'themeName',
-          key: 'themeName',
+          title: '会员ID',
+          dataIndex: 'memberId',
+          key: 'memberId',
           width: 150
         },
         {
-          title: '活动类型',
-          key: 'typeId',
-          scopedSlots: { customRender: 'typeId' },
+          title: '会员手机号',
+          dataIndex: 'memberPhone',
+          key: 'memberPhone',
           width: 150
         },
         {
-          title: '活动状态',
-          key: 'status',
-          scopedSlots: { customRender: 'status' },
-          width: 150
+          title: '异常是否解决',
+          dataIndex: 'type',
+          key: 'type',
+          width: 150,
+          customRender: text => (text === 1 ? '已解决' : '未解决')
         },
         {
-          title: '参与人数',
-          dataIndex: 'peopleTime',
-          key: 'peopleTime',
-          width: 150
-        },
-        {
-          title: '参与次数',
-          dataIndex: 'time',
-          key: 'time',
-          width: 150
+          title: '操作',
+          key: 'detailsSlot',
+          scopedSlots: { customRender: 'detailsSlot' },
+          fixed: 'right',
+          width: 200
         }
       ],
       tableData: [],
@@ -171,40 +149,30 @@ export default {
     FormList
   },
   computed: {
-    //1:领券中心,2:会员权益,3:邦豆兑换
-    parseTypeId() {
+    behaviorParse() {
       return param => {
-        if(param === 1){
-          return '领券中心';
-        }else if(param === 2){
-          return '会员权益';
-        }else if(param === 3){
-          return '邦豆兑换';
+        if(param == '1'){
+          return '邦豆充值异常';
+        }else if(param == '2'){
+          return '成长值发放异常';
+        }else if(param == '3'){
+          return '优惠券派发异常';
+        }else if(param == '4'){
+          return '手机号修改异常';
         }else{
           return '';
         }
       }
     },
-    //0已创建，1未开始，2进行中，3已结束，4已停用，5已删除
-    parseStatus() {
+    momentStrHms() {
       return param => {
-        if(param === 0){
-          return '已创建';
-        }else if(param === 1){
-          return '未开始';
-        }else if(param === 2){
-          return '进行中';
-        }else if(param === 3){
-          return '已结束';
-        }else if(param === 4){
-          return '已停用';
-        }else if(param === 5){
-          return '已删除';
-        }else{
+        if (!param) {
           return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
         }
-      }
-    }
+      };
+    },
   },
   created() {},
   mounted() {
@@ -235,30 +203,22 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let id = null,themeName = null,activityName = null,typeId = null,status = null;
-        if (this.$refs.actForm.getFieldsValue().id) {
-          id = this.$refs.actForm.getFieldsValue().id;
+        let behavior = null,memberPhone = null,memberId = null;
+        if (this.$refs.actForm.getFieldsValue().behavior) {
+          behavior = this.$refs.actForm.getFieldsValue().behavior;
         }
-        if (this.$refs.actForm.getFieldsValue().themeName) {
-          themeName = this.$refs.actForm.getFieldsValue().themeName;
+        if (this.$refs.actForm.getFieldsValue().memberPhone) {
+          memberPhone = this.$refs.actForm.getFieldsValue().memberPhone;
         }
-        if (this.$refs.actForm.getFieldsValue().activityName) {
-          activityName = this.$refs.actForm.getFieldsValue().activityName;
+        if (this.$refs.actForm.getFieldsValue().memberId) {
+          memberId = this.$refs.actForm.getFieldsValue().memberId;
         }
-        if (this.$refs.actForm.getFieldsValue().typeId) {
-          typeId = this.$refs.actForm.getFieldsValue().typeId;
-        }
-        if (this.$refs.actForm.getFieldsValue().status) {
-          status = this.$refs.actForm.getFieldsValue().status;
-        }
-        api.getActJoinList({
+        api.systemRecord({
           pageSize: this.pageSize,
           pageIndex: this.current,
-          id: id,
-          themeName: themeName,
-          activityName: activityName,
-          typeId: typeId,
-          status: status
+          behavior: behavior,
+          memberPhone: memberPhone,
+          memberId: memberId
         }).then(res => {
           this.tableLoading = false;
           this.total = res.data.total;
@@ -269,7 +229,6 @@ export default {
       });
     }
   },
-
   activated() {
     console.log('this.$route.meta.isUseCache :>> ', this.$route.meta.isUseCache);
     // isUseCache为false时才重新刷新获取数据
@@ -277,10 +236,7 @@ export default {
     if (!this.$route.meta.isUseCache) {
       this.$nextTick(() => {
         this.$refs.actForm.setFieldsValue({
-          typeId: this.formList[4].selectOptions[0].id
-        });
-        this.$refs.actForm.setFieldsValue({
-          status: this.formList[5].selectOptions[0].id
+          behavior: this.formList[0].selectOptions[0].id
         });
       });
       //重置data
@@ -295,7 +251,7 @@ export default {
     this.$route.meta.isUseCache = false;
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'xxxxxxxxx') {
+    if (from.name === 'systemRecordDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -303,7 +259,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'xxxxxxxxx') {
+    if (to.name === 'systemRecordDetail') {
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;

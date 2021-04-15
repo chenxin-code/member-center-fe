@@ -22,7 +22,7 @@
           <a-input :placeholder="couponValid" disabled />
         </a-form-item>
         <p class="create-main-title">
-          <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+          <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
           卡券发放信息
         </p>
         <a-form-item label="领取条件设置：">
@@ -140,6 +140,24 @@
             </a-form-item>
           </a-form-item>
         </div>
+        <a-form-item label="领取有效期" v-if="condition === 1">
+          <a-range-picker
+            v-decorator="[
+              'rangePickerValue',
+              {
+                initialValue: rangePickerValue,
+                rules: [
+                  { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
+                ]
+              }
+            ]"
+            :placeholder="['开始时间', '结束时间']"
+            format="YYYY-MM-DD HH:mm:ss"
+            @change="handleRangePicker"
+            :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
+            :disabled-date="disabledDate"
+            style="width: 100%"/>
+        </a-form-item>
         <a-form-item class="create-main-button">
           <a-button
             :disabled="submitLoading"
@@ -155,7 +173,7 @@
       </a-form>
     </div>
     <a-modal title="卡券选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
       <a-table
         :style="{ marginTop: '20px' }"
         :columns="columns"
@@ -192,7 +210,7 @@
 </template>
 <script>
 import { couponsCenterList, bangdouList, cardList, level, typeList, activityList } from './createForms';
-import FilterForm from '@/components/FilterGroup/index.jsx';
+import FilterForm from './../../../components/FilterGroup/index.jsx';
 import moment from 'moment';
 import api from '@/api';
 import { debounce } from '@/utils/util';
@@ -249,6 +267,12 @@ export default {
       ],
       issueForm: couponsCenterList,
       formList: [
+        {
+          label: '卡券ID',
+          type: 'input',
+          placeholder: '请输入',
+          name: 'newid'
+        },
         {
           label: '卡券类型',
           name: 'type',
@@ -317,6 +341,7 @@ export default {
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
         }
       ],
+      newid: null,
       activity: null,
       title: '',
       type: null,
@@ -328,7 +353,10 @@ export default {
         file: null //会员文件
       },
       fileList: [],
-      id: null
+      id: null,
+      rangePickerValue: [], //日期对象清空日期用
+      validityStartTime: null, //领取有效期-开始时间
+      validityExpirationTime: null, //	领取有效期-结束时间
     };
   },
   created() {
@@ -338,6 +366,28 @@ export default {
   },
   methods: {
     validatorFn1,
+    validatorDate(rule, value, callback){
+      let time1 = new Date(value[1]).getTime(),//领取有效期结束时间
+        time2 = new Date(this.selectedRows[0].validityEndTime).getTime();//卡券有效期结束时间
+      console.log('领取有效期结束时间',time1);
+      console.log('卡券有效期结束时间',time2);
+      if (this.selectedRows[0].validityType == 1 && time1 < time2) {
+        callback('领取有效期结束时间不能小于卡券有效期结束时间');
+      } else {
+        callback();
+      }
+    },
+    moment,
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
+    handleRangePicker(dates, dateStrings) {
+      console.log('handleRangePicker dates :>> ', dates);
+      console.log('handleRangePicker dateStrings :>> ', dateStrings);
+      this.rangePickerValue = dates;
+      this.validityStartTime = dateStrings[0];
+      this.validityExpirationTime = dateStrings[1];
+    },
     handleNullTpl() {
       this.$warning({
         title: '提示',
@@ -397,7 +447,8 @@ export default {
     // 查询卡券列表
     onSearch(args) {
       console.log(args);
-      const { activity, title, type } = args;
+      const { newid, activity, title, type } = args;
+      this.newid = parseInt(newid) || null;
       this.activity = activity || null;
       this.title = title || null;
       this.type = type || null;
@@ -425,10 +476,11 @@ export default {
       let args = {
         pageIndex: this.current,
         pageSize: this.pageSize,
+        id: this.newid,
         activity: this.activity,
         type: this.type,
         title: this.title,
-        status: 99
+        //status: 99
       };
       api
         .getCouponList(args)
@@ -474,7 +526,6 @@ export default {
     },
     // 开始派发
     couponDistribute() {
-      console.log('111111111');
       if (!this.couTypeCode) {
         this.showRedBorder = true;
       }
@@ -485,6 +536,10 @@ export default {
       this.formBasic.validateFields((err, values) => {
         console.log('couponDistribute err :>> ', err);
         console.log('couponDistribute values :>> ', values);
+        if(this.validityStartTime && this.validityExpirationTime){
+          Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
+        }
+        console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });

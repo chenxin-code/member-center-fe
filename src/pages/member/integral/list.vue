@@ -163,6 +163,11 @@ export default {
           scopedSlots: { customRender: 'jointimeSlot' }
         },
         {
+          title: '备注',
+          dataIndex: 'note',
+          key: 'note'
+        },
+        {
           title: '操作人',
           dataIndex: 'createUserName',
           key: 'createUserName'
