@@ -123,6 +123,13 @@ export default {
           width: 150
         },
         {
+          title: '异常是否解决',
+          dataIndex: 'type',
+          key: 'type',
+          width: 150,
+          customRender: text => (text === 1 ? '已解决' : '未解决')
+        },
+        {
           title: '操作',
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
