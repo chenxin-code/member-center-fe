@@ -6,7 +6,6 @@
       <!-- 表格 -->
       <!-- :row-selection="{ type: 'radio', selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" -->
       <a-table
-        :row-selection="{ type: 'radio', selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :columns="tableColumns"
         :data-source="tableData"
         :pagination="false"
@@ -42,11 +41,11 @@
         :show-total="total => `共 ${total} 条`"
         show-quick-jumper
         show-size-changer
-        :default-current="current"
-        :page-size.sync="pageSize"
+        :current="current"
+        :pageSize="pageSize"
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="onShowSizeChange"
-        @showSizeChange="onShowSizeChange"
+        @change="change"
+        @showSizeChange="showSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
       />
     </div>
@@ -64,8 +63,8 @@ export default {
   name: 'integralManage',
   data() {
     return {
-      selectedRowKeys: [], //表格单选
-      selectedRowData: {}, //表格单选
+      // selectedRowKeys: [], //表格单选
+      // selectedRowData: {}, //表格单选
       formList: [
         {
           label: '类型',
@@ -104,7 +103,7 @@ export default {
 
         {
           label: '手机号',
-          type: 'inputNumber',
+          type: 'inputPhone',
           name: 'phoneNo',
           placeholder: '请输入'
         },
@@ -234,15 +233,15 @@ export default {
     });
   },
   methods: {
-    onSelectChange(selectedKeys, selectedRows) {
-      console.log('onSelectChange selectedKeys :>> ', selectedKeys);
-      console.log('onSelectChange selectedRows :>> ', selectedRows);
-      //切换分页要清空selectedRowKeys
-      this.selectedRowKeys = selectedKeys;
-      this.selectedRowData = selectedRows[0];
-      console.log('this.selectedRowKeys :>> ', this.selectedRowKeys);
-      console.log('this.selectedRowData :>> ', this.selectedRowData);
-    },
+    // onSelectChange(selectedKeys, selectedRows) {
+    //   console.log('onSelectChange selectedKeys :>> ', selectedKeys);
+    //   console.log('onSelectChange selectedRows :>> ', selectedRows);
+    //   //切换分页要清空selectedRowKeys
+    //   this.selectedRowKeys = selectedKeys;
+    //   this.selectedRowData = selectedRows[0];
+    //   console.log('this.selectedRowKeys :>> ', this.selectedRowKeys);
+    //   console.log('this.selectedRowData :>> ', this.selectedRowData);
+    // },
     //查询按钮
     onQuery(params) {
       // console.log('params :>> ', params);
@@ -260,12 +259,21 @@ export default {
       });
     },
     // 分页
-    onShowSizeChange(current, pageSize) {
-      this.selectedRowKeys = []; //表格单选
-      this.selectedRowData = {}; //表格单选
-      this.$forceUpdate(); //表格单选
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   // this.selectedRowKeys = []; //表格单选
+    //   // this.selectedRowData = {}; //表格单选
+    //   // this.$forceUpdate(); //表格单选
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getIntegralList();
+    // },
+    change(page) {
+      this.current = page;
+      this.getIntegralList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getIntegralList();
     },
 
@@ -357,6 +365,14 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.memberForm.setFieldsValue({
+          type: this.formList[0].selectOptions[0].id
+        });
+        this.$refs.memberForm.setFieldsValue({
+          memberSourceCode: this.formList[1].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
@@ -370,14 +386,14 @@ export default {
     //重置
     this.$route.meta.isUseCache = false;
 
-    this.$nextTick(() => {
-      this.$refs.memberForm.setFieldsValue({
-        type: this.formList[0].selectOptions[0].id
-      });
-      this.$refs.memberForm.setFieldsValue({
-        memberSourceCode: this.formList[1].selectOptions[0].id
-      });
-    });
+    // this.$nextTick(() => {
+    //   this.$refs.memberForm.setFieldsValue({
+    //     type: this.formList[0].selectOptions[0].id
+    //   });
+    //   this.$refs.memberForm.setFieldsValue({
+    //     memberSourceCode: this.formList[1].selectOptions[0].id
+    //   });
+    // });
   },
   beforeRouteEnter(to, from, next) {
     if (from.name === 'integralManageDetail') {

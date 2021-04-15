@@ -30,14 +30,15 @@
                         initialValue: couponTitle,
                         rules: [
                           { required: true, message: '卡券标题不能为空' },
-                          { whitespace: true, message: '卡券标题不能为空' }
+                          { whitespace: true, message: '卡券标题不能为空' },
+                          { max: 20, message: '最多输入20个字符' }
                         ]
                       }
                     ]"
-                    placeholder="请输入卡券标题"
+                    placeholder="请输入卡券标题，最多20个字符"
                     allow-clear
                   />
-                  <div>couponTitle: {{ couponTitle }}</div>
+                  <!-- <div>couponTitle: {{ couponTitle }}</div> -->
                 </a-form-item>
                 <!-- 卡券副标题 -->
                 <a-form-item label="卡券副标题">
@@ -46,13 +47,14 @@
                     v-decorator="[
                       'couponSubhead',
                       {
-                        initialValue: couponSubhead
+                        initialValue: couponSubhead,
+                        rules: [{ max: 20, message: '最多输入20个字符' }]
                       }
                     ]"
-                    placeholder="请输入卡券副标题"
+                    placeholder="请输入卡券副标题，最多20个字符"
                     allow-clear
                   />
-                  <div>couponSubhead: {{ couponSubhead }}</div>
+                  <!-- <div>couponSubhead: {{ couponSubhead }}</div> -->
                 </a-form-item>
                 <!-- 卡券类型 -->
                 <a-form-item label="卡券类型">
@@ -70,7 +72,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>couponType: {{ couponType }}</div>
+                  <!-- <div>couponType: {{ couponType }}</div> -->
                 </a-form-item>
                 <!-- 代金券:10 -->
                 <template v-if="couponType === 10">
@@ -83,14 +85,16 @@
                           initialValue: voucherAmount,
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
-                            { whitespace: true, message: '代金券金额不能为空' }
+                            { whitespace: true, message: '代金券金额不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入代金券金额"
                       allow-clear
+                      prefix="￥"
                     />
-                    <div>voucherAmount:{{ voucherAmount }}</div>
+                    <!-- <div>voucherAmount:{{ voucherAmount }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 满减券:20 -->
@@ -104,14 +108,15 @@
                           initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' }
+                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>satisfyAmount:{{ satisfyAmount }}</div>
+                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="抵扣金额">
                     <a-input
@@ -122,14 +127,15 @@
                           initialValue: fullReductionDiscountAmount,
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
-                            { whitespace: true, message: '抵扣金额不能为空' }
+                            { whitespace: true, message: '抵扣金额不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入满减券抵扣金额"
                       allow-clear
                     />
-                    <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div>
+                    <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 折扣券:40 -->
@@ -143,14 +149,15 @@
                           initialValue: satisfyAmount,
                           rules: [
                             { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' }
+                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入"
                       allow-clear
                     />
-                    <div>satisfyAmount:{{ satisfyAmount }}</div>
+                    <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="最高抵扣金额">
                     <a-input
@@ -161,33 +168,33 @@
                           initialValue: discountMaxDeduction,
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
-                            { whitespace: true, message: '最高抵扣金额不能为空' }
+                            { whitespace: true, message: '最高抵扣金额不能为空' },
+                            { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
                       ]"
                       placeholder="请输入折扣券最高抵扣金额"
                       allow-clear
                     />
-                    <div>discountMaxDeduction:{{ discountMaxDeduction }}</div>
+                    <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">
-                    <a-input-number
-                      :min="0"
-                      :max="1"
-                      :step="0.1"
-                      :precision="2"
+                    <a-input
                       @change="discountRatioChange"
                       v-decorator="[
                         'discountRatio',
                         {
                           initialValue: discountRatio,
-                          rules: [{ required: true, message: '折扣比例不能为空' }]
+                          rules: [
+                            { required: true, message: '折扣比例不能为空' },
+                            { validator: this.checkDiscountFormat, trigger: ['blur'] }
+                          ]
                         }
                       ]"
                       placeholder="请输入折扣比例，支持小数点后2位"
                       allow-clear
                     />
-                    <div>discountRatio:{{ discountRatio }}</div>
+                    <!-- <div>discountRatio:{{ discountRatio }}</div> -->
                   </a-form-item>
                 </template>
 
@@ -207,7 +214,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>validityType:{{ validityType }}</div>
+                  <!-- <div>validityType:{{ validityType }}</div> -->
                 </a-form-item>
                 <!-- 固定有效期:1 -->
                 <template v-if="validityType === 1">
@@ -221,11 +228,15 @@
                         }
                       ]"
                       :placeholder="['开始时间', '结束时间']"
-                      format="YYYY-MM-DD"
+                      format="YYYY-MM-DD HH:mm:ss"
                       @change="handleRangePicker"
+                      :show-time="{
+                        defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]
+                      }"
+                      :disabled-date="disabledDate"
                     />
-                    <div>validityStartTime:{{ validityStartTime }}</div>
-                    <div>validityEndTime:{{ validityEndTime }}</div>
+                    <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
+                    <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 相对有效期:2 -->
@@ -245,11 +256,11 @@
                       placeholder="请输入有效天数，1-999"
                       allow-clear
                     />
-                    <div>validityDayNums:{{ validityDayNums }}</div>
+                    <!-- <div>validityDayNums:{{ validityDayNums }}</div> -->
                   </a-form-item>
                   <a-form-item label="领取后几天后生效">
                     <a-input-number
-                      :min="1"
+                      :min="0"
                       :max="999"
                       @change="takeEffectDayNumsChange"
                       v-decorator="[
@@ -262,7 +273,7 @@
                       placeholder="输入天数，1-999"
                       allow-clear
                     />
-                    <div>takeEffectDayNums:{{ takeEffectDayNums }}</div>
+                    <!-- <div>takeEffectDayNums:{{ takeEffectDayNums }}</div> -->
                   </a-form-item>
                 </template>
 
@@ -282,7 +293,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>source:{{ source }}</div>
+                  <!-- <div>source:{{ source }}</div> -->
                 </a-form-item>
 
                 <!-- 卡券业务类型 -->
@@ -301,7 +312,7 @@
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
-                  <div>couponBusinessType:{{ couponBusinessType }}</div>
+                  <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
 
                 <!-- 购物券 -->
@@ -324,7 +335,7 @@
                         零售
                       </a-radio>
                     </a-radio-group>
-                    <div>classification:{{ classification }}</div>
+                    <!-- <div>classification:{{ classification }}</div> -->
                   </a-form-item>
                   <a-form-item label="商户id">
                     <a-input
@@ -342,7 +353,7 @@
                       placeholder="请输入商户id，多个以,间隔"
                       allow-clear
                     />
-                    <div>commercialTenants:{{ commercialTenants }}</div>
+                    <!-- <div>commercialTenants:{{ commercialTenants }}</div> -->
                   </a-form-item>
                   <a-form-item label="商品id">
                     <a-input
@@ -360,7 +371,7 @@
                       placeholder="请输入商品id，多个以,间隔"
                       allow-clear
                     />
-                    <div>merchandises:{{ merchandises }}</div>
+                    <!-- <div>merchandises:{{ merchandises }}</div> -->
                   </a-form-item>
                   <a-form-item label="上传优惠券封面图">
                     <a-spin :spinning="picUploading">
@@ -402,13 +413,15 @@
                     v-decorator="[
                       'cost',
                       {
-                        initialValue: cost
+                        initialValue: cost,
+                        rules: [{ validator: this.checkCostFormat, trigger: ['blur'] }]
                       }
                     ]"
                     placeholder="请输入卡券的成本价，小数点后两位"
                     allow-clear
+                    prefix="￥"
                   />
-                  <div>cost:{{ cost }}</div>
+                  <!-- <div>cost:{{ cost }}</div> -->
                 </a-form-item>
                 <!-- 使用说明 -->
                 <a-form-item label="使用说明">
@@ -425,9 +438,10 @@
                       }
                     ]"
                     :auto-size="{ minRows: 3, maxRows: 5 }"
+                    :maxLength="200"
                     placeholder="请输入使用说明"
                   />
-                  <div>memo:{{ memo }}</div>
+                  <!-- <div>memo:{{ memo }}</div> -->
                 </a-form-item>
               </a-form>
               <!-- 提交和取消 -->
@@ -466,7 +480,7 @@ import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'couponsManageNew',
+  name: 'couponsManageEdit',
   components: {},
   data() {
     return {
@@ -504,7 +518,7 @@ export default {
       validityStartTime: '', //固定有效期-卡券有效期开始时间
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
       validityDayNums: 1, //相对有效期-卡券有效天数
-      takeEffectDayNums: 1, //相对有效期-领取后几天后生效
+      takeEffectDayNums: 0, //相对有效期-领取后几天后生效
       source: '10', //卡券平台 10-地产,20-邻里邦,30-邻里商城,40-会员中心,50-收费中心
       sources: [
         { name: '地产', code: '10' },
@@ -555,6 +569,39 @@ export default {
     }
   },
   methods: {
+    moment,
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
+    checkCostFormat(rule, value, callback) {
+      if (value && !/^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/.test(value)) {
+        callback(new Error('成本价格式不正确'));
+      } else {
+        callback();
+      }
+    },
+    checkAmountFormat(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkDiscountFormat(rule, value, callback) {
+      if (value && !/^(0(\.\d{1,2})?|1(\.0{1,2})?)$/.test(value)) {
+        callback(new Error('折扣格式不正确'));
+      } else {
+        if (value == 0) {
+          callback(new Error('折扣不能为0'));
+        } else if (value == 1) {
+          callback(new Error('折扣不能为1'));
+        }
+        callback();
+      }
+    },
     ...mapActions(['FALLBACK']),
     //////////上传图片///////////
     //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
@@ -679,7 +726,7 @@ export default {
      **判断日期格式为yyyy-mm-dd和正确的日期
      */
     isDateString(str) {
-      const reg = /^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
       if (str === '' || str === undefined || str === null) return false;
       if (reg.test(str)) {
         return true;
@@ -704,9 +751,9 @@ export default {
     discountMaxDeductionChange(e) {
       this.discountMaxDeduction = e.target.value;
     },
-    discountRatioChange(newVal) {
-      console.log('discountRatioChange newVal :>> ', newVal);
-      this.discountRatio = newVal.toString();
+    discountRatioChange(e) {
+      // console.log('discountRatioChange e.target.value :>> ', e.target.value);
+      this.discountRatio = e.target.value.toString();
     },
     fullReductionDiscountAmountChange(e) {
       this.fullReductionDiscountAmount = e.target.value;
@@ -796,7 +843,6 @@ export default {
         // //////////////////mock/////////////////
 
         if (res.code === 200) {
-
           if (Object.prototype.toString.call(res.data) !== '[object Object]') {
             res.data = {};
           }
@@ -807,7 +853,7 @@ export default {
           this.couponImage = res.data.couponImage || this.couponImage;
           this.discountMaxDeduction = res.data.discountMaxDeduction || this.discountMaxDeduction;
           this.discountRatio = res.data.discountRatio || this.discountRatio;
-          this.fullReductionDiscountAmount = res.data.fullReductionDiscountAmount || this.fullReductionDiscountAmount;
+          this.fullReductionDiscountAmount = res.data.voucherAmount || this.fullReductionDiscountAmount;
           this.merchandises = res.data.merchandises || this.merchandises;
           this.satisfyAmount = res.data.satisfyAmount || this.satisfyAmount;
           this.state = res.data.state || this.state;
@@ -820,13 +866,18 @@ export default {
           this.voucherAmount = res.data.voucherAmount || this.voucherAmount;
           this.validityType = res.data.validityType || this.validityType;
           ///////////日期//////////
-          this.validityStartTime = this.isDateString(this.momentStr(res.data.validityStartTime))
-            ? this.momentStr(res.data.validityStartTime)
+          this.validityStartTime = this.isDateString(this.momentStrHms(res.data.validityStartTime))
+            ? this.momentStrHms(res.data.validityStartTime)
             : ''; //固定有效期-卡券有效期开始时间
-          this.validityEndTime = this.isDateString(this.momentStr(res.data.validityEndTime))
-            ? this.momentStr(res.data.validityEndTime)
+          this.validityEndTime = this.isDateString(this.momentStrHms(res.data.validityEndTime))
+            ? this.momentStrHms(res.data.validityEndTime)
             : ''; //	固定有效期-卡券有效期结束时间
-          if (this.isDateString(this.validityStartTime) && this.isDateString(this.validityEndTime)) {
+          if (
+            this.isDateString(this.validityStartTime) &&
+            this.isDateString(this.validityEndTime) &&
+            res.data.validityStartTime > Date.now() &&
+            res.data.validityEndTime > Date.now()
+          ) {
             this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
           } else {
             this.rangePickerValue = [];
@@ -907,7 +958,6 @@ export default {
   created() {
     console.log('this.$route :>> ', this.$route);
     this.getCouponDetail();
-    console.log([moment(''), moment('')]);
   },
   mounted() {},
   watch: {
@@ -921,6 +971,7 @@ export default {
     couponImage: {
       handler(newVal) {
         console.log('watch couponImage newVal :>> ', newVal);
+        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
         }
@@ -974,6 +1025,10 @@ export default {
 
         ::v-deep .ant-form .ant-input-number {
           width: 100%;
+        }
+
+        ::v-deep .ant-calendar-picker {
+          width: 380px !important;
         }
 
         .common-submit-cancle {

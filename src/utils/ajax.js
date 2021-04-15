@@ -2,6 +2,7 @@ import axios from 'axios';
 import NProgress from 'nprogress';
 import JSONbig from 'json-bigint';
 import message from 'ant-design-vue/es/message';
+import Modal from 'ant-design-vue/es/modal';
 // import * as api from '@/api/login';
 // import QS from 'qs';
 
@@ -16,7 +17,8 @@ const JSONBigString = JSONbig({ storeAsString: true });
 export const HTTP = axios.create({
   baseURL: BASEURL,
   withCredentials: true,
-  timeout: 20000,
+  // timeout: 20000,
+  timeout: 100000,
   headers: {
     // post: {
     //   'Content-Type': 'application/json'
@@ -54,9 +56,9 @@ HTTP.interceptors.request.use(async config => {
 function handleParams(url, rawData, rawMethod, responseType) {
   const method = rawMethod.toUpperCase();
   let data = {};
-  if (method === 'GET') {
-    data = { params: rawData };
-  }
+  // if (method === 'GET') {
+  //   data = { params: rawData };
+  // }
   switch (method) {
     case 'GET':
       data = { params: rawData };
@@ -71,6 +73,9 @@ function handleParams(url, rawData, rawMethod, responseType) {
       data = { params: rawData };
       break;
   }
+
+  console.log('handleParams method :>> ', method);
+  console.log('handleParams data :>> ', data);
 
   return Promise.resolve({
     url,
@@ -124,7 +129,16 @@ let defaultHeader = {
 let isRefresh = false;
 async function refreshToken() {
   isRefresh = true;
-  window.location.href = localStorage.getItem('SD_LOGIN_URL');
+
+  Modal.warning({
+    title: 'Token过期提示',
+    content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
+    okText: '确认',
+    onOk() {
+      console.log('Modal warning OK');
+      window.location.href = localStorage.getItem('SD_LOGIN_URL');
+    }
+  });
 
   // const para = QS.stringify({
   //   grant_type: 'refresh_token',
@@ -149,6 +163,7 @@ async function refreshToken() {
 
 export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, responseType = 'json', url = BASEURL) => {
   return handleParams(api, rawData, method, headers, responseType).then(options => {
+    console.log('fetchApi options :>> ', options);
     return new Promise((resolve, reject) => {
       if (responseType == 'blob') {
         let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
@@ -192,7 +207,7 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
           link.click();
         });
       } else {
-        console.log('api ----', {...defaultHeader, ...headers})
+        console.log('api ----', { ...defaultHeader, ...headers });
         HTTP({
           baseURL: url,
           withCredentials: true,
@@ -205,22 +220,24 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
             NProgress.done();
             const res = resp.data;
             if (res.code === 0) {
-              resolve(res);
+              return resolve(res);
             } else {
               if (res.code === 401) {
                 if (isRefresh) {
-                  message.error(res.message);
-                  resolve(res);
+                  // message.error(res.message);
+                  return resolve(res);
                 } else {
                   message.error(res.message);
                   refreshToken(); //刷新token
-                  resolve(res);
+                  return resolve(res);
                 }
               } else if (res.code !== 200) {
+                //res.code 非 200，401 的情况
                 message.error(res.message);
-                resolve(res);
+                return resolve(res);
               } else {
-                resolve(res);
+                //res.code === 200的情况
+                return resolve(res);
               }
             }
           },

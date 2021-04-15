@@ -1,0 +1,30 @@
+diff --git a/node_modules/ant-design-vue/es/vc-pagination/Options.js b/node_modules/ant-design-vue/es/vc-pagination/Options.js
+index 53bf868..e712d5b 100644
+--- a/node_modules/ant-design-vue/es/vc-pagination/Options.js
++++ b/node_modules/ant-design-vue/es/vc-pagination/Options.js
+@@ -46,6 +46,13 @@ export default {
+       });
+     },
+     handleBlur: function handleBlur(e) {
++      //FIXME: blur bug
++      var goInputText = this.goInputText;
++      if (goInputText === '') {
++        return;
++      }
++      //FIXME: blur bug
++
+       var _$props = this.$props,
+           goButton = _$props.goButton,
+           quickGo = _$props.quickGo,
+@@ -58,6 +65,11 @@ export default {
+         return;
+       }
+       quickGo(this.getValidValue());
++      //FIXME: blur bug
++      this.setState({
++        goInputText: ''
++      });
++      //FIXME: blur bug
+     },
+     go: function go(e) {
+       var goInputText = this.goInputText;

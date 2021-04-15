@@ -16,12 +16,12 @@
       >
         <template slot="jointimeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.receiveTime)"></span>
+            <span v-html="momentStrHms(rowData.createTime)"></span>
           </div>
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData.couponId)">查看卡券</a>
+            <a @click="goDetail(rowData.couponCode)">查看卡券</a>
           </div>
         </template>
       </a-table>
@@ -30,11 +30,11 @@
         :show-total="total => `共 ${total} 条`"
         show-quick-jumper
         show-size-changer
-        :default-current="current"
-        :page-size.sync="pageSize"
+        :current="current"
+        :pageSize="pageSize"
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="onShowSizeChange"
-        @showSizeChange="onShowSizeChange"
+        @change="change"
+        @showSizeChange="showSizeChange"
         style="margin-top:30px;width:100%;text-align: right;"
       />
     </div>
@@ -52,7 +52,7 @@ export default {
     return {
       formList: [
         {
-          label: '卡券id',
+          label: '卡券编号',
           type: 'input',
           name: 'couponCode',
           placeholder: '请输入'
@@ -76,7 +76,7 @@ export default {
         },
         {
           label: '手机号',
-          type: 'inputNumber',
+          type: 'inputPhone',
           name: 'memberPhone',
           placeholder: '请输入'
         },
@@ -94,7 +94,7 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '卡券id',
+          title: '卡券编号',
           dataIndex: 'couponCode',
           key: 'couponCode'
         },
@@ -190,34 +190,53 @@ export default {
       this.getClaimCancel(true);
     },
     //查看卡券详情
-    goDetail(id) {
-      console.log('id :>> ', id);
+    goDetail(code) {
+      console.log('goDetail code :>> ', code);
       this.$router.push({
         name: 'couponsManageDetail',
         query: {
-          id: id
+          code: code
         }
       });
     },
     // 分页
-    onShowSizeChange(current, pageSize) {
-      this.current = current;
-      this.pageSize = pageSize;
+    // onShowSizeChange(current, pageSize) {
+    //   this.current = current;
+    //   this.pageSize = pageSize;
+    //   this.getClaimCancel();
+    // },
+    change(page) {
+      this.current = page;
+      this.getClaimCancel();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
       this.getClaimCancel();
     },
 
     //获取积分列表
     getClaimCancel(isQuery = false) {
+      console.log('getClaimCancel isQuery :>> ', isQuery);
       if (isQuery) {
         this.current = 1;
       }
       this.tableLoading = true;
       this.$nextTick(() => {
         let couponCode = '';
-        let couponName = '';
+        let couponActivitiesId = this.$route.query.id ? this.$route.query.id : '';
+        if (!isQuery) {
+          this.$refs.memberForm.setFieldsValue({
+            couponCode: this.$route.query.code ? this.$route.query.code : ''
+          });
+        }
         if (this.$refs.memberForm.getFieldsValue().couponCode) {
           couponCode = this.$refs.memberForm.getFieldsValue().couponCode;
+        } else {
+          couponActivitiesId = '';
         }
+
+        let couponName = '';
         if (this.$refs.memberForm.getFieldsValue().couponName) {
           couponName = this.$refs.memberForm.getFieldsValue().couponName;
         }
@@ -246,7 +265,8 @@ export default {
           pageIndex: this.current,
           pageSize: this.pageSize,
           status: 1,
-          couponCode: couponCode, //卡券id
+          couponActivitiesId: couponActivitiesId,
+          couponCode: couponCode, //卡券编号
           createTimeStart: jointimeStart, //领取开始时间
           createTimeEnd: jointimeEnd, //领取结束时间
           memberCode: memberCode, //会员唯一标识

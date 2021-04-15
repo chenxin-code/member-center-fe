@@ -12,17 +12,25 @@
         卡券基础信息
       </p>
       <div class="detail-main-items">
-            <span class="detail-main-items-label">卡券id：</span>
-            <span class="detail-main-items-value">{{dataObj.couponId}}</span>
+        <span class="detail-main-items-label">卡券id：</span>
+        <span class="detail-main-items-value">{{ dataObj.couponId }}</span>
       </div>
       <div class="detail-main-items">
-            <span class="detail-main-items-label">卡券标题：</span>
-            <span class="detail-main-items-value">{{dataObj.couponName}}</span>
+        <span class="detail-main-items-label">卡券标题：</span>
+        <span class="detail-main-items-value">{{ dataObj.couponName }}</span>
       </div>
       <div class="detail-main-items">
-            <span class="detail-main-items-label">卡券有效期：</span>
-            <span v-show="dataObj.expirationType == 1" class="detail-main-items-value">{{`${moment(dataObj.startTime).format('YYYY-MM-DD HH:mm:ss')} ~ ${moment(dataObj.expirationTime).format('YYYY-MM-DD HH:mm:ss')}`}}</span>
-            <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">相对有效期，{{dataObj.offsetDays}}天</span>
+        <span class="detail-main-items-label">卡券有效期：</span>
+        <span v-show="dataObj.expirationType == 1" class="detail-main-items-value">
+          {{
+            `${moment(dataObj.startTime).format('YYYY-MM-DD HH:mm:ss')} ~ ${moment(dataObj.expirationTime).format(
+              'YYYY-MM-DD HH:mm:ss'
+            )}`
+          }}
+        </span>
+        <span v-show="dataObj.expirationType == 3" class="detail-main-items-value">
+          相对有效期: {{ dataObj.valiDays }}天, 领取后{{ dataObj.offsetDays }}天生效
+        </span>
       </div>
     </div>
     <div class="detail-main">
@@ -37,43 +45,48 @@
       <!-- 领取类型：领券中心 -->
       <div v-show="dataObj.condition == 1">
         <div class="detail-main-items" v-for="item in receiveCenter" :key="item.label">
-            <span class="detail-main-items-label">{{ item.label }}</span>
-            <span class="detail-main-items-value">{{ dataObj[item.name]}}</span>
+          <span class="detail-main-items-label">{{ item.label }}</span>
+          <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         </div>
       </div>
       <!-- 领取类型：邦豆兑换 -->
       <div v-show="dataObj.condition == 3">
         <div class="detail-main-items" v-for="item in bangdouList" :key="item.label">
-            <span class="detail-main-items-label">{{ item.label }}</span>
-            <span class="detail-main-items-value">{{ dataObj[item.name]}}</span>
+          <span class="detail-main-items-label">{{ item.label }}</span>
+          <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         </div>
       </div>
       <!-- 领取类型：卡密兑换 -->
       <div v-show="dataObj.condition == 4">
         <div class="detail-main-items">
-            <span class="detail-main-items-label">派发数量：</span>
-            <span class="detail-main-items-value">{{ dataObj.issuedCount }}</span>
+          <span class="detail-main-items-label">派发数量：</span>
+          <span class="detail-main-items-value">{{ dataObj.issuedCount }}</span>
         </div>
       </div>
       <!-- 领取类型：直接发放 -->
       <div v-show="dataObj.condition == 2">
         <div class="detail-main-items">
-            <span class="detail-main-items-label">发放范围：</span>
-            <span class="detail-main-items-value">{{ filterValue(issueRangeList, dataObj.issuedRang) }}</span>
+          <span class="detail-main-items-label">发放范围：</span>
+          <span class="detail-main-items-value">{{ filterValue(issueRangeList, dataObj.issuedRang) }}</span>
         </div>
         <div class="detail-main-items" v-show="dataObj.issuedRang == 2">
-            <span class="detail-main-items-label">指定会员：</span>
-            <span class="detail-main-items-value">
-                <a-button @click="downloadInfo"><a-icon type="download" />下载会员信息</a-button>
-            </span>
+          <span class="detail-main-items-label">指定会员：</span>
+          <span class="detail-main-items-value">
+            <a-button @click="downloadInfo">
+              <a-icon type="download" />
+              下载会员信息
+            </a-button>
+          </span>
         </div>
-        <div class="detail-main-items" v-show="dataObj.issuedRange == 3">
-            <span class="detail-main-items-label">接入系统：</span>
-            <span class="detail-main-items-value">{{ dataObj.clientName }}</span>
+        <div class="detail-main-items" v-show="dataObj.issuedRang == 3">
+          <span class="detail-main-items-label">接入系统：</span>
+          <span class="detail-main-items-value">{{ dataObj.clientName }}</span>
         </div>
-        <div class="detail-main-items" v-show="dataObj.issuedRange == 4">
-            <span class="detail-main-items-label">会员卡：</span>
-            <span class="detail-main-items-value">{{ `${dataObj.memberCardName}，${dataObj.startLevelId}-${dataObj.endLevelId}` }}</span>
+        <div class="detail-main-items" v-show="dataObj.issuedRang == 4">
+          <span class="detail-main-items-label">会员卡：</span>
+          <span class="detail-main-items-value">
+            {{ `${dataObj.memberCardName}，V${dataObj.startLevelId}-V${dataObj.endLevelId}` }}
+          </span>
         </div>
       </div>
     </div>
@@ -84,7 +97,9 @@
       </p>
       <div class="detail-main-items">
         <span class="detail-main-items-label">卡券发放：</span>
-        <span class="detail-main-items-value">{{`${moment(dataObj.createTime).format('YYYY-MM-DD HH:mm:ss')} ${dataObj.operator}`}}</span>
+        <span class="detail-main-items-value">
+          {{ `${moment(dataObj.createTime).format('YYYY-MM-DD HH:mm:ss')} ${dataObj.operator}` }}
+        </span>
       </div>
     </div>
     <div class="detail-main">
@@ -92,10 +107,19 @@
         <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
         卡券数据
       </p>
+      <div class="detail-main-items" v-if="dataObj.condition === 4">
+        <span class="detail-main-items-label">线下卡密下载：</span>
+        <a-button @click="downloadCamilo(dataObj)">
+          <a-icon type="download" />
+          下载线下卡密
+        </a-button>
+      </div>
       <div class="detail-main-items" v-for="item in couponSourse" :key="item.label">
         <span class="detail-main-items-label">{{ item.label }}</span>
         <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
-        <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.href)">{{item.buttonTxt}}</a-button>
+        <a-button style="marginLeft: 20px" v-show="item.type === 'href'" type="primary" @click="goCheck(item.url)">
+          {{ item.buttonTxt }}
+        </a-button>
       </div>
     </div>
   </div>
@@ -104,42 +128,45 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
+import { message } from 'ant-design-vue';
+import axios from 'axios';
 export default {
   name: 'release_detail',
   data() {
     return {
-        receiveType: [
-            {label: '领券中心', value: 1},
-            {label: '直接发放', value: 2},
-            {label: '邦豆兑换', value: 3},
-            {label: '卡密兑换', value: 4},
-        ],
-        issueRangeList: [
-            { label: '全部会员', value: 1},
-            { label: '指定会员', value: 2},
-            { label: '接入系统', value: 3},
-            { label: '指定会员卡', value: 4},
-        ],
-        dataObj: {},
-        couponSourse: [
-            // { label: '线下卡密下载：' },
-            { label: '发放数量：', type: 'msg', name: 'issuedCount' },
-            { label: '领取数量：', type: 'href', name: 'received', url: 'couponsClaim', buttonTxt: '查看领取数量' },
-            { label: '核销数量：', type: 'href', name: 'offCount', url: 'couponsCancel', buttonTxt: '查看核销数量' },
-        ],
-        receiveCenter: [ //领券中心
-            { label: '派发数量：', name: 'issuedCount' },
-            { label: '每人领取数量限制：', name: 'perPersonLimit' },
-            { label: '每日领取数量限制：', name: 'perDayLimit' },
-            { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' },
-        ],
-        bangdouList: [
-            { label: '派发数量', name: 'issuedCount' },
-            { label: '邦豆兑换值', name: 'integrealCount' },
-            { label: '每人领取数量限制：', name: 'perPersonLimit' },
-            { label: '每日领取数量限制：', name: 'perDayLimit' },
-            { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' },
-        ],
+      receiveType: [
+        { label: '领券中心', value: 1 },
+        { label: '直接发放', value: 2 },
+        { label: '邦豆兑换', value: 3 },
+        { label: '卡密兑换', value: 4 }
+      ],
+      issueRangeList: [
+        { label: '全部会员', value: 1 },
+        { label: '指定会员', value: 2 },
+        { label: '接入系统', value: 3 },
+        { label: '指定会员卡', value: 4 }
+      ],
+      dataObj: {},
+      couponSourse: [
+        // { label: '线下卡密下载：'},
+        { label: '发放数量：', type: 'msg', name: 'issuedCount' },
+        { label: '领取数量：', type: 'href', name: 'received', url: 'couponsClaim', buttonTxt: '查看领取数量' },
+        { label: '核销数量：', type: 'href', name: 'offCount', url: 'couponsCancel', buttonTxt: '查看核销数量' }
+      ],
+      receiveCenter: [
+        //领券中心
+        { label: '派发数量：', name: 'issuedCount' },
+        { label: '每人领取数量限制：', name: 'perPersonLimit' },
+        { label: '每日领取数量限制：', name: 'perDayLimit' },
+        { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' }
+      ],
+      bangdouList: [
+        { label: '派发数量', name: 'issuedCount' },
+        { label: '邦豆兑换值', name: 'integrealCount' },
+        { label: '每人领取数量限制：', name: 'perPersonLimit' },
+        { label: '每日领取数量限制：', name: 'perDayLimit' },
+        { label: '每人每日领取数量限制：', name: 'perPersonDayLimit' }
+      ]
     };
   },
   mounted() {
@@ -148,48 +175,118 @@ export default {
   methods: {
     moment,
     initData(id) {
-      api.getReleaseDetail({id: id}).then(res => {
+      api.getReleaseDetail({ id: id }).then(res => {
         if (res.code === 200) {
           this.dataObj = res.data;
+          console.log('this.dataObj :>> ', this.dataObj);
         }
       });
     },
     filterValue(list, type) {
-        return type && list.filter(item => item.value == type)[0].label
+      return type && list.filter(item => item.value == type)[0].label;
     },
     goCheck(url) {
-        this.$router.push({name: url})
+      console.log('url :>> ', url);
+      if (url === 'couponsClaim') {
+        this.$router.push({ name: url, query: { id: this.dataObj.id, code: this.dataObj.couTypeCode } });
+      }
+
+      if (url === 'couponsCancel') {
+        this.$router.push({ name: url, query: { code: this.dataObj.couTypeCode } });
+      }
+      return;
     },
-    downloadInfo () {
-        const args = {
-            couponCode: this.dataObj.couTypeCode
-        }
-        api.downReleseMember(Object.keys(args).reduce((pre, key) => {
-            pre.append([key], args[key]);
-            return pre;
-        }, new FormData()))
-        .then(
-            res => console.log('------')
-        )
-        .catch(
-            // 这块等有时间看下为啥走的err
-            err => this.download(err.text)
-        )
+    downloadInfo() {
+      const args = {
+        couponCode: this.dataObj.couTypeCode,
+        couponActivitiesId: this.dataObj.id
+      };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/coupon/api/v1/download',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        this.download(res.data);
+      });
     },
-    download (content) {
-        const filename = '会员信息.xlsx'
-        // 创建隐藏的可下载链接
-        var eleLink = document.createElement('a');
-        eleLink.download = filename;
-        eleLink.style.display = 'none';
-        // 字符内容转变成blob地址
-        var blob = new Blob([content], {type: 'application/vnd.ms-excel'});
-        eleLink.href = URL.createObjectURL(blob);
-        // 触发点击
-        document.body.appendChild(eleLink);
-        eleLink.click();
-        // 然后移除
-        document.body.removeChild(eleLink);
+    download(content) {
+      const filename = '会员信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
+    },
+    downloadCamilo(item) {
+      this.tableLoading = true;
+      let args = {
+        couponActivitiesId: item.id
+      };
+      api
+        .downloadCamilo(args)
+        .then(res => {
+          if (res.code === 200) {
+            this.downloadInfo1(item.id);
+          } else if (res.code === 500) {
+            this.$warning({
+              title: '提示',
+              content: '生成中请稍后'
+            });
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    downloadInfo1(cuid) {
+      const args = {
+        couponActivitiesId: cuid
+      };
+      // console.log('downloadInfo args :>> ', args);
+      // return;
+      axios({
+        method: 'get',
+        params: args,
+        url: '/times/member-center/coupon/api/v1/downloadCamiloExcel',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        responseType: 'blob'
+      }).then(res => {
+        this.download1(res.data);
+      });
+    },
+    download1(content) {
+      const filename = '卡密信息.xlsx';
+      // 创建隐藏的可下载链接
+      var eleLink = document.createElement('a');
+      eleLink.download = filename;
+      eleLink.style.display = 'none';
+      // 字符内容转变成blob地址
+      var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      eleLink.href = URL.createObjectURL(blob);
+      // 触发点击
+      document.body.appendChild(eleLink);
+      eleLink.click();
+      URL.revokeObjectURL(eleLink.href);
+      // 然后移除
+      document.body.removeChild(eleLink);
     }
   }
 };

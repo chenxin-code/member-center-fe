@@ -23,7 +23,7 @@
                 </div>
               </div>
               <!-- 卡券副标题 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.couponSubhead">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券副标题:</div>
@@ -44,14 +44,12 @@
                       {{ couponDetails.voucherAmount || '' }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 20">
-                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{
-                        couponDetails.fullReductionDiscountAmount || ''
-                      }}元
+                      满{{ couponDetails.satisfyAmount || '' }}元抵扣{{ couponDetails.voucherAmount || '' }}元
                     </div>
                     <div class="column-left" v-show="couponDetails.couponType === 40">
-                      满{{ couponDetails.satisfyAmount || '' }}元{{ couponDetails.discountRatio || '' }}折最高抵扣{{
-                        couponDetails.discountMaxDeduction || ''
-                      }}元
+                      满{{ couponDetails.satisfyAmount || '' }}元{{
+                        couponDetails.discountRatio * 10 || ''
+                      }}折最高抵扣{{ couponDetails.discountMaxDeduction || '' }}元
                     </div>
                   </div>
                 </div>
@@ -67,15 +65,15 @@
                   <div class="column-item" v-show="couponDetails.validityType === 1">
                     <div class="column-right">选择日期:</div>
                     <div class="column-left">
-                      {{ momentStr(couponDetails.validityStartTime) }} ~ {{ momentStr(couponDetails.validityEndTime) }}
+                      {{ momentStrHms(couponDetails.validityStartTime) }} ~
+                      {{ momentStrHms(couponDetails.validityEndTime) }}
                     </div>
                   </div>
                   <div class="column-item" v-show="couponDetails.validityType === 3">
                     <div class="column-right">有效期:</div>
                     <div class="column-left">
-                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{
-                        couponDetails.takeEffectDayNums || ''
-                      }}天生效
+                      {{ couponDetails.validityDayNums || '' }}天, 领取后{{ couponDetails.takeEffectDayNums || ''
+                      }}{{ couponDetails.takeEffectDayNums ? '天' : '' }}生效
                     </div>
                   </div>
                 </div>
@@ -109,7 +107,7 @@
                       <div class="column-right">优惠券封面:</div>
                       <div class="column-left">
                         <div class="column-left-image">
-                          <img :src="couponDetails.couponImage" width="85" height="85" alt="" />
+                          <img :src="couponDetails.couponImage.replace(/\s+/g, '')" width="85" height="85" alt="" />
                         </div>
                       </div>
                     </div>
@@ -117,7 +115,7 @@
                 </div>
               </div>
               <!-- 成本价 -->
-              <div class="common-column-wrapp">
+              <div class="common-column-wrapp" v-show="couponDetails.cost">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">成本价:</div>
@@ -150,43 +148,49 @@
         <!-- 卡券记录信息 -->
         <div class="coupons-common coupons-record">
           <div class="common-title">
-            <div class="common-title-content">卡券记录信息</div>
+            <div class="common-title-content">卡券创建信息</div>
           </div>
           <a-row class="common-row">
             <a-col :span="24">
-              <div class="common-column-wrapp">
+              <div
+                class="common-column-wrapp"
+                v-show="momentStrHms(couponDetails.createTime) && couponDetails.createOperator"
+              >
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券创建:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.createTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.createTime) || '' }}</div>
                       <div>{{ couponDetails.createOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="common-column-wrapp">
+              <!-- <div class="common-column-wrapp" v-show="momentStrHms(couponDetails.onTime) && couponDetails.onOperator">
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券启用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.onTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.onTime) || '' }}</div>
                       <div>{{ couponDetails.onOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="common-column-wrapp">
+              </div> -->
+              <!-- <div
+                class="common-column-wrapp"
+                v-show="momentStrHms(couponDetails.offTime) && couponDetails.offOperator"
+              >
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">卡券禁用:</div>
                     <div class="column-left">
-                      <div style="padding-right:20px">{{ couponDetails.offTime || '' }}</div>
+                      <div style="padding-right:20px">{{ momentStrHms(couponDetails.offTime) || '' }}</div>
                       <div>{{ couponDetails.offOperator || '' }}</div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </a-col>
           </a-row>
         </div>
@@ -202,7 +206,7 @@ import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
 
 export default {
-  name: 'memberInfoDetail',
+  name: 'couponsManageDetail',
   components: {},
   data() {
     return {
@@ -266,15 +270,15 @@ export default {
     },
     sourceStr() {
       return param => {
-        if (param === '10') {
+        if (param === '10' || param === 10) {
           return '地产';
-        } else if (param === '20') {
+        } else if (param === '20' || param === 20) {
           return '邻里邦';
-        } else if (param === '30') {
+        } else if (param === '30' || param === 30) {
           return '邻里商城';
-        } else if (param === '40') {
+        } else if (param === '40' || param === 40) {
           return '会员中心';
-        } else if (param === '50') {
+        } else if (param === '50' || param === 50) {
           return '收费中心';
         } else {
           return '';
@@ -307,11 +311,24 @@ export default {
   methods: {
     ...mapActions(['FALLBACK']),
     getCouponDetail() {
-      const param = {
-        couponId: this.$route.query.id
-      };
+      let param = {};
+      let apiString = '';
+      if (Object.keys(this.$route.query)[0] === 'id') {
+        param = {
+          couponId: this.$route.query.id
+        };
+        apiString = 'getCouponDetail';
+      }
+      if (Object.keys(this.$route.query)[0] === 'code') {
+        param = {
+          couTypeCode: this.$route.query.code
+        };
+        apiString = 'getCouponDetailByCode';
+      }
+
       console.log('getCouponDetail param :>> ', param);
-      api.getCouponDetail(param).then(res => {
+
+      api[apiString](param).then(res => {
         console.log('getCouponDetail res :>> ', res);
 
         // //////////////////mock/////////////////

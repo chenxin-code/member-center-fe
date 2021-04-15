@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "npm run postinstall && vue-cli-service serve",
+    "build": "npm run postinstall && vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.7",
@@ -45,6 +46,7 @@
     "http-proxy-middleware": "^1.0.5",
     "less": "^3.12.2",
     "less-loader": "^6.2.0",
+    "patch-package": "^6.2.2",
     "vue-template-compiler": "^2.6.11",
     "webpack-merge": "^4.1.0",
     "webpack-theme-color-replacer": "^1.3.14"
@@ -66,7 +68,6 @@
     },
     "rules": {
       "no-console": "off",
-      "no-debugger": "off",
       "no-unused-vars": "off",
       "no-unreachable": "off"
     }
