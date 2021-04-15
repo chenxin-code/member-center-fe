@@ -234,6 +234,7 @@ export default {
       behavior: null,
       num: null,
       memo: null,
+      couTypeCode: null,
       isSolution: null,//是否已解决
       //邦豆发放
       bangdouAddValNull: false,
@@ -312,6 +313,7 @@ export default {
           this.behavior = resp.data.behavior;
           this.num = resp.data.num;
           this.memo = resp.data.memo;
+          this.couTypeCode = resp.data.couTypeCode;
           this.isSolution = resp.data.type;
         }
       });
