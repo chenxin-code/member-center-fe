@@ -45,15 +45,6 @@ export default [
     path: '/taskCenter-task'
   },
   {
-    title: '任务派发-1.5',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/task_show.png'),
-    iconHide: require('@/assets/img/menu/task_hide.png'),
-    menuKey: 'taskCenter-distribution',
-    group: 'hyzx',
-    path: '/taskCenter-distribution'
-  },
-  {
     title: '行为管理-1.5',
     authKeys: [''],
     icon: require('@/assets/img/menu/task_show.png'),
@@ -61,24 +52,6 @@ export default [
     menuKey: 'taskCenter-behavior',
     group: 'hyzx',
     path: '/taskCenter-behavior'
-  },
-  {
-    title: '行为日志-1.5',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/task_show.png'),
-    iconHide: require('@/assets/img/menu/task_hide.png'),
-    menuKey: 'taskCenter-journal',
-    group: 'hyzx',
-    path: '/taskCenter-journal'
-  },
-  {
-    title: '游戏管理-1.5',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/task_show.png'),
-    iconHide: require('@/assets/img/menu/task_hide.png'),
-    menuKey: 'game-index',
-    group: 'hyzx',
-    path: '/game-index'
   },
   {
     title: '接入系统管理',

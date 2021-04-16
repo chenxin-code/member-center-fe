@@ -43,10 +43,10 @@ HTTP.interceptors.request.use(async config => {
     return config;
   } else {
     // 通过调用ajax拿到存在localStorage里面的token
-    let tokenStr =
-      'Bearer ' +
-      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjE4ODQzODY4LCJhdXRob3JpdGllcyI6WyJ6Yl9xdWFsaXR5X2RpcmVjdG9yIiwiYXBwX2FjdGl2aXR5X2FkbWluIiwic3lzX2FkbWluIiwiYW55dGltZXMiXSwianRpIjoiMWFjMWYzN2EtOWM1ZC00ZWNlLTg5MmUtZmIwYWIwYmUzYTJlIiwiY2xpZW50X2lkIjoiYXBwX2IifQ.Ycm2FkjaAtEEw-vZlUsEe6rKE-fwwyOn9hZT8JIVpPtdi5LXM1f34mr8NwP32Q45ckSGm6Cyalb6S73ESHvgD4E3N-u-TvQsUaxCgotAkh9btDk7bSqeOvenA7pbZnVbk6Z_1a-pZYmCZ3g8oaiXND6EqfF87LzFZf7oOJtrRcitvL8o1Q-DyyShyoUhsjH5t1qASeOlg565ONcFZNSz3Gr3N6o4VL7Vjcf7VAstBGfvSMRF3PBd1EUg-c_B907Itgr8JTqsYA7aQJpRKKN3w37_ReEjOpboG7kfFaG-16pjk7fBMUep7UCiLfGOcVHvriuWblUvC1gqg4DDJJ8tOQ';
-    //let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
+    // let tokenStr =
+    //   'Bearer ' +
+    //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDY4NzQzLCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiIyNDJjOGNhYS02YmU4LTQ5OWYtYjI5Ny0zMjVhNzEwY2UxZGUiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.WgYr5lRJ7-10vuu0iSU5yQr1kbFhVNtmOglMVHCXC2_IyKaWNW8dcUAU7Jr-CKBwkJ97u5x6dyXVzmBKrmP5GAxXplEdLFxbSLE_inyCP_b8UtKj5gwWo3-OXXGQd_az-3gY8UWdjapGwXq3ASxvFoZmEsDXq9IsxRdP2NoL7dx4wpxtQNBNt2VsdYhzGPzxjH82-UqRbZi5l_vKJuqO1jGTLQhNOYFMqkLe7QQgcBqJzgoDoQd_FuLWT_agFxEiOBn92RKaxG9oDJ8EB8lBJB3AhKJBkdoZRvEf5MXCzz8_PF2z4V-e1uePXZF46Pt36596daxP4pAVv9WYdZMxiA';
+    let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
     console.log('ajax tokenStr :>> ', tokenStr);
     config.headers.Authorization = tokenStr;
     return config;

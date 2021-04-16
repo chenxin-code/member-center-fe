@@ -31,8 +31,8 @@
       </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
         <a-col flex="auto" style="padding:20px 10px;height:100%;">
-          <!-- <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" /> -->
-          <a-table :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{y: scrollY}">
+          <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+          <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{y: scrollY}">
             <span slot="action" class="record" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
               <a @click="onCheck(record)">编辑</a>
@@ -193,7 +193,7 @@ export default {
       this.name = '';
       this.type = '';
       //初始化加载数据
-      // this.$refs.form.form.resetFields();
+      this.$refs.form.form.resetFields();
       this.getTaskList();
     }
 
