@@ -391,8 +391,6 @@ const routes = [
               name: '新建任务'
             }
           ],
-          isUseCache: false,
-          keepAlive: true
         },
         component: () => import('@/pages/taskCenter/task/create.vue')
       },
@@ -419,6 +417,64 @@ const routes = [
         component: () => import('@/pages/taskCenter/task/Edit.vue')
       },
       {
+        path: '/taskCenter-distribution',
+        name: 'taskCenter-distribution',
+        menuKey: 'taskCenter-distribution',
+        meta: {
+          menu: '/taskCenter-distribution',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribution',
+              name: '任务派发'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/distribution/index.vue')
+      },
+      {
+        path: '/taskCenter-distribution/create',
+        name: 'taskCenter-distribution-create',
+        menuKey: 'taskCenter-distribution-create',
+        meta: {
+          menu: '/taskCenter-distribution-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribution',
+              name: '任务派发'
+            },
+            {
+              path: '/taskCenter-distribution-create',
+              name: '编辑任务派发'
+            }
+          ],
+        },
+        component: () => import('@/pages/taskCenter/distribution/create.vue')
+      },
+      {
+        path: '/taskCenter-distribution/detial',
+        name: 'taskCenter-distribution-detial',
+        menuKey: 'taskCenter-distribution-detial',
+        meta: {
+          menu: '/taskCenter-distribution-detial',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribution',
+              name: '任务派发'
+            },
+            {
+              path: '/taskCenter-distribution-detial',
+              name: '任务派发详情'
+            }
+          ],
+        },
+        component: () => import('@/pages/taskCenter/distribution/detial.vue')
+      },
+      {
         path: '/taskCenter-behavior',
         name: 'taskCenter-behavior',
         menuKey: 'taskCenter-behavior',
@@ -435,6 +491,22 @@ const routes = [
           keepAlive: true
         },
         component: () => import('@/pages/taskCenter/behavior/index.vue')
+      },
+      {
+        path: '/taskCenter-journal',
+        name: 'journal',
+        menuKey: 'taskCenter-journal',
+        meta: {
+          menu: '/taskCenter-journal',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-journal',
+              name: '行为日志'
+            }
+          ]
+        },
+        component: () => import('@/pages/taskCenter/behavior/journal.vue')
       },
       {
         path: '/taskCenter-behavior/create',
@@ -515,6 +587,44 @@ const routes = [
           ]
         },
         component: TaskDetail
+      },
+      {
+        path: '/game-index',
+        name: 'game',
+        menuKey: 'game-index',
+        meta: {
+          menu: '/game-index',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/game-index',
+              name: '游戏管理'
+            }
+          ]
+        },
+        component: () => import('@/pages/game/index.vue')
+      },
+      {
+        path: '/game-index/create',
+        name: 'game-create',
+        menuKey: 'game-create',
+        meta: {
+          menu: '/game-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/game-index',
+              name: '游戏管理'
+            },
+            {
+              path: '/game/create',
+              name: '游戏创建'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/game/create.vue')
       },
       {
         path: '/access-manager',

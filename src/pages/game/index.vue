@@ -5,39 +5,35 @@
       <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
-            <a-form-model-item label="行为名称">
-              <a-input v-model="formList.name" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-model-item label="行为类型" style="width:300px">
+            <a-form-model-item label="游戏方式" >
               <a-select v-model="formList.type" placeholder="请选择">
                 <a-select-option v-for="(item,sindex) in formList.selectOptions" :key="sindex" :value="item.id">{{item.name}}</a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="创建时间">
-              <a-range-picker @change="onChange" />
+            <a-form-model-item label="游戏名称">
+              <a-input v-model="formList.name" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
               <a-button type="primary" @click="onSearch">查询</a-button>
-              <a-button type="primary" @click="onCreateBehavior" style="margin-left: 10px;">新建行为</a-button>
+              <a-button type="primary" @click="onCreateBehavior" style="margin-left: 10px;">新建游戏</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
         <a-col flex="auto" style="padding:20px 10px;height:100%;">
-          <!-- <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" /> -->
-          <a-table :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{y: scrollY}">
+          <FilterForm ref="form" rowCol="3" :formList="this.formList" :onSubmit="this.onSearch" />
+          <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{y: scrollY}">
             <span slot="action" class="record" slot-scope="record">
-              <a @click="onCheck(record)">查看</a>
-              <a @click="onCheck(record)">编辑</a>
               <a @click="onCheck(record)">启用</a>
               <a @click="onCheck(record)">禁用</a>
+              <a @click="onCheck(record)">删除</a>
+              <a @click="onCheck(record)">编辑</a>
+              <a @click="onCheck(record)">查看活动人员</a>
             </span>
           </a-table>
           <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer v-model="current" :current="current" :pageSize="pageSize" :pageSizeOptions="['10','20','50','100']"
@@ -68,32 +64,37 @@ export default {
         createTime: "",
         selectOptions: [
           { id: '', name: '全部' },
-          { id: '1', name: '消费' },
-          { id: '2', name: '其他' }
+          { id: '1', name: '九宫格' },
+          { id: '2', name: '砸金蛋' }
         ]
 
       },
       columns: [
         {
-          dataIndex: 'type',
-          key: 'type',
-          title: '行为类型',
-          customRender: text => text === 1 ? '消费' : '其他'
+          dataIndex: 'theme',
+          key: 'theme',
+          title: '游戏主题',
         },
         {
-          title: '行为名称',
-          key: 'name',
-          dataIndex: 'name'
+          title: '游戏名称',
+          key: 'gameName',
+          dataIndex: 'gameName'
         },
         {
-          title: '行为来源',
-          key: 'sourceName',
-          dataIndex: 'sourceName'
+          title: '游戏方式',
+          key: 'gameMode',
+          dataIndex: 'gameMode'
         },
         {
-          title: '创建时间',
+          title: '开始时间',
           key: 'createTime',
           dataIndex: 'createTime',
+          customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+        },
+        {
+          title: '结束时间',
+          key: 'endTime',
+          dataIndex: 'endTime',
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
         },
         {
@@ -136,7 +137,7 @@ export default {
     },
     //创建行为
     onCreateBehavior() {
-      this.$router.push({ name: 'taskCenter-behavior-create' });
+      this.$router.push({ name: 'game-create' });
     },
     onEditBehavior(record) {
       this.$router.push({ name: 'taskCenter-behavior-edit', query: { id: record.id } });
@@ -193,7 +194,7 @@ export default {
       this.name = '';
       this.type = '';
       //初始化加载数据
-      // this.$refs.form.form.resetFields();
+      this.$refs.form.form.resetFields();
       this.getTaskList();
     }
 

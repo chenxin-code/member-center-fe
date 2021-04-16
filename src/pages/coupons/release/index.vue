@@ -50,7 +50,8 @@ const typeList = [
 const activityList = [
   { id: '', name: '全部' },
   { id: 4014, name: '物业费' },
-  { id: 4005, name: '消费券' }
+  { id: 4005, name: '购物券' },
+  { id: 4015, name: '实物券' }
 ];
 const conditionList = [
   { id: '', name: '全部' },
