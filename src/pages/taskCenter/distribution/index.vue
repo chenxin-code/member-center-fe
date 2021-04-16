@@ -1,21 +1,16 @@
 <template>
   <div class="taskManager">
-    <div class="taskManager-header">任务管理</div>
+    <div class="taskManager-header">任务派发管理</div>
     <div class="taskManager-main" ref="contentMain">
       <a-form-model ref="form" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
-            <a-form-model-item label="任务名称">
+            <a-form-model-item label="任务标题">
               <a-input v-model="formList.taskName" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务key">
-              <a-input v-model="formList.taskKey" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-model-item label="任务状态">
+            <a-form-model-item label="派发类型">
               <a-select v-model="formList.status" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.statusOption"
@@ -26,25 +21,14 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务来源" style="width:300px">
-              <a-select v-model="formList.taskSource" placeholder="请选择">
-                <a-select-option
-                  v-for="(item,sindex) in formList.taskSourceOption"
-                  :key="sindex"
-                  :value="item.id"
-                >{{item.name}}</a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-model-item label="创建时间">
+            <a-form-model-item label="派发时间">
               <a-range-picker @change="onChange" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
               <a-button type="primary" @click="onSearch">查询</a-button>
-              <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建任务</a-button>
+              <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建派发</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -61,8 +45,7 @@
           >
             <span slot="action" slot-scope="record" class="record">
               <a @click="onCheck(record)">查看</a>
-              <a @click="onCheck(record)">启用</a>
-              <a @click="onCheck(record)">禁用</a>
+              <a @click="onCheck(record)">派发</a>
               <a @click="onEditTask(record)">编辑</a>
             </span>
           </a-table>
@@ -111,8 +94,8 @@ export default {
         createTimeEnd: "",
         statusOption: [
           { id: '', name: '全部' },
-          { id: '0', name: '禁用' },
-          { id: '1', name: '启用' }
+          { id: '0', name: '自动派发' },
+          { id: '1', name: '人工派发' }
         ],
         taskSourceOption: []
       },
@@ -120,7 +103,7 @@ export default {
         {
           dataIndex: 'taskKey',
           key: 'id',
-          title: '任务key'
+          title: '任务ID'
         },
         {
           title: '任务名称',
@@ -128,34 +111,17 @@ export default {
           dataIndex: 'taskName'
         },
         {
-          title: '任务有效期(天)',
-          key: 'validity',
-          dataIndex: 'validity'
+          title: '派发类型',
+          key: 'distribute',
+          dataIndex: 'distribute'
         },
         {
-          title: '是否周期性',
-          key: 'isPeriodic',
-          dataIndex: 'isPeriodic',
-          customRender: text => (text === 1 ? '是' : '否')
+          title: '操作人员',
+          key: 'personnel',
+          dataIndex: 'personnel',
         },
         {
-          title: '状态',
-          key: 'status',
-          dataIndex: 'status',
-          customRender: text => (text === 0 ? '禁用' : '启用')
-        },
-        {
-          title: '对应行为',
-          key: 'behaviourName',
-          dataIndex: 'behaviourName'
-        },
-        {
-          title: '任务来源',
-          key: 'sourceName',
-          dataIndex: 'sourceName'
-        },
-        {
-          title: '创建时间',
+          title: '派发时间',
           key: 'createTime',
           dataIndex: 'createTime',
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
@@ -199,13 +165,13 @@ export default {
     },
 
     onCheck(record) {
-      this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
+      this.$router.push({ name: 'taskCenter-distribution-detial', query: { id: record.id } });
     },
     onEditTask(record) {
-      this.$router.push({ name: 'taskCenter-task-create',query: { id: record.id }  });
+      this.$router.push({ name: 'taskCenter-distribution-create',query: { id: record.id }  });
     },
     onCreateTask() {
-      this.$router.push({ name: 'taskCenter-task-create' });
+      this.$router.push({ name: 'taskCenter-distribution-create' });
     },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -302,6 +268,7 @@ export default {
     } else {
       to.meta.isUseCache = false;
     }
+
     next();
   }
 };
