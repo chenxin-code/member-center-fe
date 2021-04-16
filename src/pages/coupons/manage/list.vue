@@ -106,7 +106,8 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '物业费', id: '4014' },
-            { name: '购物券', id: '4005' }
+            { name: '购物券', id: '4005' },
+            { name: '实物券', id: '4015' }
           ],
           labelCol: { span: 9 },
           wrapperCol: { span: 15 }
