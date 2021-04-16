@@ -2,7 +2,7 @@
   <div class="taskManager">
     <div class="taskManager-header">任务管理</div>
     <div class="taskManager-main" ref="contentMain">
-      <a-form-model ref="form" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
@@ -202,7 +202,7 @@ export default {
       this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
     },
     onEditTask(record) {
-      this.$router.push({ name: 'taskCenter-task-create',query: { id: record.id }  });
+      this.$router.push({ name: 'taskCenter-task-edit',query: { id: record.id }  });
     },
     onCreateTask() {
       this.$router.push({ name: 'taskCenter-task-create' });
@@ -279,7 +279,7 @@ export default {
       this.taskSource = '';
       this.status = null;
       //初始化加载数据
-      this.$refs.form.resetFields();
+      this.$refs.form.form.resetFields();
       this.getTaskList();
     }
 
@@ -302,6 +302,7 @@ export default {
     } else {
       to.meta.isUseCache = false;
     }
+
     next();
   }
 };
