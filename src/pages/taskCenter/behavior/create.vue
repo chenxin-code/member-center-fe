@@ -52,7 +52,7 @@
 <script>
 import api from '@/api';
 import moment from 'moment';
-import taskModal from "./task";
+import taskModal from './task';
 export default {
   components: {
     taskModal
@@ -60,94 +60,104 @@ export default {
   data() {
     return {
       //表单
-      formBasic: this.$form.createForm(this, { name: "formBasic" }),
+      formBasic: this.$form.createForm(this, { name: 'formBasic' }),
       rules: {
-          behaviorName:[
-              'behaviorName',{
-              rules:[{ required: true, message: '请输入行为名称' }]
-          }],
-          behaviorSource:[
-              'behaviorSource',{
-              rules:[{ required: true, message: '请选择行为来源' }]
-          }],
-          behaviorType:[
-              'behaviorType',{
-              rules:[{ required: true, message: '请选择行为类型' }]
-          }],
-          behaviorDescribe:[
-              'behaviorDescribe',{
-              rules:[{ required: true, message: '请输入行为描述' }]
-          }],
-          behaviorState:[
-              'behaviorState',{
-              initialValue:'1',
-              rules:[{ required: true, message: '请选择行为状态', }]
-          }],
+        behaviorName: [
+          'behaviorName',
+          {
+            rules: [{ required: true, message: '请输入行为名称' }]
+          }
+        ],
+        behaviorSource: [
+          'behaviorSource',
+          {
+            rules: [{ required: true, message: '请选择行为来源' }]
+          }
+        ],
+        behaviorType: [
+          'behaviorType',
+          {
+            rules: [{ required: true, message: '请选择行为类型' }]
+          }
+        ],
+        behaviorDescribe: [
+          'behaviorDescribe',
+          {
+            rules: [{ required: true, message: '请输入行为描述' }]
+          }
+        ],
+        behaviorState: [
+          'behaviorState',
+          {
+            initialValue: '1',
+            rules: [{ required: true, message: '请选择行为状态' }]
+          }
+        ]
       },
       //表格
-      columns:[{
-        title:'任务名称',
-        dataIndex: 'taskName',
-        key: 'taskName',
-        align:"center",
-      },
-      {
-        title: '任务描述',
-        dataIndex: 'memo',
-        key: 'memo',
-        align:"center",
-      },
-      {
-        title: '奖励类型',
-        dataIndex: 'taskCondition',
-        key: 'taskCondition',
-        align:"center",
-      },
-      {
-        title: '操作',
-        key: 'action',
-        align:"center",
-        scopedSlots: { customRender: 'action' }
-      }],
-      data:[],
-      selectTask:false,
-      taskSourceOption:[],
-    }
+      columns: [
+        {
+          title: '任务名称',
+          dataIndex: 'taskName',
+          key: 'taskName',
+          align: 'center'
+        },
+        {
+          title: '任务描述',
+          dataIndex: 'memo',
+          key: 'memo',
+          align: 'center'
+        },
+        {
+          title: '奖励类型',
+          dataIndex: 'taskCondition',
+          key: 'taskCondition',
+          align: 'center'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          scopedSlots: { customRender: 'action' }
+        }
+      ],
+      data: [],
+      selectTask: false,
+      taskSourceOption: []
+    };
   },
-  created(){
+  created() {
     this.getTaskSource();
     this.formBasic.resetFields();
-    this.$nextTick(()=>{
-      if(this.$route.query.id){
+    this.$nextTick(() => {
+      if (this.$route.query.id) {
         //数据查询
         //this.initData(this.$route.query.id);
       }
-    })
+    });
   },
-  methods:{
-    fn_selectTask(){
+  methods: {
+    fn_selectTask() {
       this.selectTask = true;
     },
-    fn_selectTaskOk(){
+    fn_selectTaskOk() {
       let this_ = this;
       this.data = [];
-      if(this.$refs.dataRows.selectedRows){
-        this.$refs.dataRows.selectedRows.forEach(item=>{
-          this_.data.push(item)
-        })
+      if (this.$refs.dataRows.selectedRows) {
+        this.$refs.dataRows.selectedRows.forEach(item => {
+          this_.data.push(item);
+        });
       }
       this.selectTask = false;
     },
-    fn_selectTaskHide() {     
+    fn_selectTaskHide() {
       this.selectTask = false;
     },
     /****************数据请求********************/
-    initData(){
-      this.formBasic.setFieldsValue({
-
-      })
+    initData() {
+      this.formBasic.setFieldsValue({});
     },
-    btnCreateTask(){
+    btnCreateTask() {
       this.formBasic.validateFields((err, values) => {
         if (err) {
           alert('submit!');
@@ -157,47 +167,33 @@ export default {
         }
       });
     },
-    deleteTask(resData){
+    deleteTask(resData) {
       let this_ = this;
-      this.data.forEach(function(item,index){
-        if(resData.key == item.key){
-          this_.data.splice(index,1);
+      this.data.forEach(function(item, index) {
+        if (resData.key == item.key) {
+          this_.data.splice(index, 1);
         }
-      })
+      });
     },
     getTaskSource() {
       let sourceList = [];
       api
         .getTaskSource()
-<<<<<<< HEAD
         .then(
           res =>
-          (sourceList = res.data.map(item => {
-            return { id: item.appCode, name: item.appName };
-          }))
+            (sourceList = res.data.map(item => {
+              return { id: item.appCode, name: item.appName };
+            }))
         )
         .then(() => {
-          this.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
+          this.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList);
         });
-    },
+    }
   }
-}
+};
 </script>
 <style lang="less">
 .form-body {
   padding: 20px 0px;
 }
 </style>
-=======
-        .then(res => {
-          self.form.taskSource = res.data[0].appName;
-          self.taskSourceOption = [].concat(res.data)
-        })
-      // .then(() => {
-      //   this.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
-      // });
-    }
-  },
-};
-</script>
->>>>>>> e013f1f50ebb6c4ba6deb9d676c86e5210f53d12
