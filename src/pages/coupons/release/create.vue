@@ -147,6 +147,7 @@
               {
                 initialValue: rangePickerValue,
                 rules: [
+                  { required: true, message: '请填写领取有效期' },
                   { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
                 ]
               }

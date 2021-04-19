@@ -315,7 +315,7 @@
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
                 <!-- 实物券 -->
-                <template v-if="couponBusinessType === '4015'">                  
+                <template v-if="couponBusinessType === '4015'">
                   <a-form-item label="上传优惠券封面图">
                     <a-spin :spinning="picUploading">
                       <a-upload
@@ -632,7 +632,7 @@ export default {
           callback(new Error('金额不能为0'));
         }
         if(this.satisfyAmount && this.fullReductionDiscountAmount && this.satisfyAmount < this.fullReductionDiscountAmount){
-          callback(new Error('门槛金额不能小于抵扣金额'));
+          callback(new Error('满减金额不能小于抵扣金额'));
         }
         callback();
       }
@@ -645,7 +645,7 @@ export default {
           callback(new Error('金额不能为0'));
         }
         if(this.satisfyAmount && this.discountMaxDeduction && this.satisfyAmount < this.discountMaxDeduction){
-          callback(new Error('门槛金额不能小于最高抵扣金额'));
+          callback(new Error('满减金额不能小于最高抵扣金额'));
         }
         callback();
       }
