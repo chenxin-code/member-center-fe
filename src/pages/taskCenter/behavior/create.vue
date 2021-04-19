@@ -169,7 +169,6 @@ export default {
       let sourceList = [];
       api
         .getTaskSource()
-<<<<<<< HEAD
         .then(
           res =>
           (sourceList = res.data.map(item => {
@@ -188,16 +187,3 @@ export default {
   padding: 20px 0px;
 }
 </style>
-=======
-        .then(res => {
-          self.form.taskSource = res.data[0].appName;
-          self.taskSourceOption = [].concat(res.data)
-        })
-      // .then(() => {
-      //   this.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
-      // });
-    }
-  },
-};
-</script>
->>>>>>> e013f1f50ebb6c4ba6deb9d676c86e5210f53d12
