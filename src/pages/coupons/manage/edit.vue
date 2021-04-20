@@ -85,7 +85,7 @@
                             { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入" allow-clear />
+                      ]" placeholder="请输入满减金额" allow-clear />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="抵扣金额">
@@ -99,7 +99,7 @@
                             { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入满减券抵扣金额" allow-clear />
+                      ]" placeholder="请输入抵扣金额" allow-clear />
                     <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
                   </a-form-item>
                 </template>
@@ -116,7 +116,7 @@
                             { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入" allow-clear />
+                      ]" placeholder="请输入满减金额" allow-clear />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="最高抵扣金额">
@@ -130,7 +130,7 @@
                             { validator: this.checkAmountFormat, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入折扣券最高抵扣金额" allow-clear />
+                      ]" placeholder="请输入最高抵扣金额" allow-clear />
                     <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">

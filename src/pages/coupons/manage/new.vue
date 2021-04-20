@@ -113,7 +113,7 @@
                           ]
                         }
                       ]"
-                      placeholder="请输入"
+                      placeholder="请输入满减金额"
                       allow-clear
                     />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
@@ -132,7 +132,7 @@
                           ]
                         }
                       ]"
-                      placeholder="请输入满减券抵扣金额"
+                      placeholder="请输入抵扣金额"
                       allow-clear
                     />
                     <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
@@ -154,7 +154,7 @@
                           ]
                         }
                       ]"
-                      placeholder="请输入"
+                      placeholder="请输入满减金额"
                       allow-clear
                     />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
@@ -173,7 +173,7 @@
                           ]
                         }
                       ]"
-                      placeholder="请输入折扣券最高抵扣金额"
+                      placeholder="请输入最高抵扣金额"
                       allow-clear
                     />
                     <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
