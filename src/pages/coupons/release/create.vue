@@ -140,14 +140,13 @@
             </a-form-item>
           </a-form-item>
         </div>
-        <a-form-item label="领取有效期" v-if="condition === 1">
+        <a-form-item label="领取有效期" v-if="condition === 1 || condition === 3">
           <a-range-picker
             v-decorator="[
               'rangePickerValue',
               {
                 initialValue: rangePickerValue,
                 rules: [
-                  { required: true, message: '请填写领取有效期' },
                   { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
                 ]
               }
