@@ -99,7 +99,7 @@
                 </template>
                 <!-- 满减券:20 -->
                 <template v-else-if="couponType === 20">
-                  <a-form-item label="满">
+                  <a-form-item label="满减金额">
                     <a-input
                       @change="satisfyAmountChange"
                       v-decorator="[
@@ -107,8 +107,8 @@
                         {
                           initialValue: satisfyAmount,
                           rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { required: true, message: '满减金额不能为空' },
+                            { whitespace: true, message: '满减金额不能为空' },
                             { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
@@ -140,7 +140,7 @@
                 </template>
                 <!-- 折扣券:40 -->
                 <template v-else-if="couponType === 40">
-                  <a-form-item label="满">
+                  <a-form-item label="满减金额">
                     <a-input
                       @change="satisfyAmountChange"
                       v-decorator="[
@@ -148,8 +148,8 @@
                         {
                           initialValue: satisfyAmount,
                           rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
+                            { required: true, message: '满减金额不能为空' },
+                            { whitespace: true, message: '满减金额不能为空' },
                             { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
@@ -538,7 +538,7 @@ export default {
       ],
 
       voucherAmount: '', //代金券抵扣金额
-      satisfyAmount: '', //	折扣券/满减券 满多少金额可用
+      satisfyAmount: '', //	折扣券/满减券 满减金额
       fullReductionDiscountAmount: '', //满减券抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
       discountRatio: '0.9', //折扣券 折扣比例
