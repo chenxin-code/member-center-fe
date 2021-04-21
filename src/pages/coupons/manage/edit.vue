@@ -65,7 +65,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat1, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入代金券金额" allow-clear prefix="￥" />
@@ -74,18 +74,18 @@
                 </template>
                 <!-- 满减券:20 -->
                 <template v-else-if="couponType === 20">
-                  <a-form-item label="满">
+                  <a-form-item label="满减金额">
                     <a-input @change="satisfyAmountChange" v-decorator="[
                         'satisfyAmount',
                         {
                           initialValue: satisfyAmount,
                           rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { required: true, message: '满减金额不能为空' },
+                            { whitespace: true, message: '满减金额不能为空' },
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入" allow-clear />
+                      ]" placeholder="请输入满减金额" allow-clear />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="抵扣金额">
@@ -96,27 +96,27 @@
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
                             { whitespace: true, message: '抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入满减券抵扣金额" allow-clear />
+                      ]" placeholder="请输入抵扣金额" allow-clear />
                     <!-- <div>fullReductionDiscountAmount:{{ fullReductionDiscountAmount }}</div> -->
                   </a-form-item>
                 </template>
                 <!-- 折扣券:40 -->
                 <template v-else-if="couponType === 40">
-                  <a-form-item label="满">
+                  <a-form-item label="满减金额">
                     <a-input @change="satisfyAmountChange" v-decorator="[
                         'satisfyAmount',
                         {
                           initialValue: satisfyAmount,
                           rules: [
-                            { required: true, message: '满多少金额可用不能为空' },
-                            { whitespace: true, message: '满多少金额可用不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { required: true, message: '满减金额不能为空' },
+                            { whitespace: true, message: '满减金额不能为空' },
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入" allow-clear />
+                      ]" placeholder="请输入满减金额" allow-clear />
                     <!-- <div>satisfyAmount:{{ satisfyAmount }}</div> -->
                   </a-form-item>
                   <a-form-item label="最高抵扣金额">
@@ -127,10 +127,10 @@
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
                             { whitespace: true, message: '最高抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
-                      ]" placeholder="请输入折扣券最高抵扣金额" allow-clear />
+                      ]" placeholder="请输入最高抵扣金额" allow-clear />
                     <!-- <div>discountMaxDeduction:{{ discountMaxDeduction }}</div> -->
                   </a-form-item>
                   <a-form-item label="折扣（0-1）">
@@ -235,7 +235,7 @@
                   <!-- <div>couponBusinessType:{{ couponBusinessType }}</div> -->
                 </a-form-item>
                 <!-- 实物券 -->
-                <template v-if="couponBusinessType === '4015'">                  
+                <template v-if="couponBusinessType === '4015'">
                   <a-form-item label="上传优惠券封面图">
                     <a-spin :spinning="picUploading">
                       <a-upload name="avatar" accept="image/jpeg,image/jpg,image/png" list-type="picture-card" :file-list="fileList" v-decorator="[
@@ -408,8 +408,8 @@ export default {
       ],
 
       voucherAmount: '', //代金券抵扣金额
-      satisfyAmount: '', //	折扣券/满减券 满多少金额可用
-      fullReductionDiscountAmount: '', //满减券抵扣金额
+      satisfyAmount: '', //	折扣券/满减券 满减金额
+      fullReductionDiscountAmount: '', //满减券 抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
       discountRatio: '0.9', //折扣券 折扣比例
       validityType: 1,
@@ -484,12 +484,38 @@ export default {
         callback();
       }
     },
-    checkAmountFormat(rule, value, callback) {
+    checkAmountFormat1(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat2(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.fullReductionDiscountAmount && Number(this.satisfyAmount) < Number(this.fullReductionDiscountAmount)){
+          callback(new Error('满减金额不能小于抵扣金额'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat3(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.discountMaxDeduction && Number(this.satisfyAmount) < Number(this.discountMaxDeduction)){
+          callback(new Error('满减金额不能小于最高抵扣金额'));
         }
         callback();
       }
