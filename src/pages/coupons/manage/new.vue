@@ -539,7 +539,7 @@ export default {
 
       voucherAmount: '', //代金券抵扣金额
       satisfyAmount: '', //	折扣券/满减券 满减金额
-      fullReductionDiscountAmount: '', //满减券抵扣金额
+      fullReductionDiscountAmount: '', //满减券 抵扣金额
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
       discountRatio: '0.9', //折扣券 折扣比例
       validityType: 1,
