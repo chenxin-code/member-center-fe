@@ -65,7 +65,7 @@
                           rules: [
                             { required: true, message: '代金券金额不能为空' },
                             { whitespace: true, message: '代金券金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat1, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入代金券金额" allow-clear prefix="￥" />
@@ -82,7 +82,7 @@
                           rules: [
                             { required: true, message: '满减金额不能为空' },
                             { whitespace: true, message: '满减金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入满减金额" allow-clear />
@@ -96,7 +96,7 @@
                           rules: [
                             { required: true, message: '抵扣金额不能为空' },
                             { whitespace: true, message: '抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat2, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入抵扣金额" allow-clear />
@@ -113,7 +113,7 @@
                           rules: [
                             { required: true, message: '满减金额不能为空' },
                             { whitespace: true, message: '满减金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入满减金额" allow-clear />
@@ -127,7 +127,7 @@
                           rules: [
                             { required: true, message: '最高抵扣金额不能为空' },
                             { whitespace: true, message: '最高抵扣金额不能为空' },
-                            { validator: this.checkAmountFormat, trigger: ['blur'] }
+                            { validator: this.checkAmountFormat3, trigger: ['blur'] }
                           ]
                         }
                       ]" placeholder="请输入最高抵扣金额" allow-clear />
@@ -484,12 +484,38 @@ export default {
         callback();
       }
     },
-    checkAmountFormat(rule, value, callback) {
+    checkAmountFormat1(rule, value, callback) {
       if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
         callback(new Error('金额格式不正确'));
       } else {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat2(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.fullReductionDiscountAmount && Number(this.satisfyAmount) < Number(this.fullReductionDiscountAmount)){
+          callback(new Error('满减金额不能小于抵扣金额'));
+        }
+        callback();
+      }
+    },
+    checkAmountFormat3(rule, value, callback) {
+      if (value && !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value)) {
+        callback(new Error('金额格式不正确'));
+      } else {
+        if (value && value == 0) {
+          callback(new Error('金额不能为0'));
+        }
+        if(this.satisfyAmount && this.discountMaxDeduction && Number(this.satisfyAmount) < Number(this.discountMaxDeduction)){
+          callback(new Error('满减金额不能小于最高抵扣金额'));
         }
         callback();
       }

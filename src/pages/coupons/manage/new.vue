@@ -631,7 +631,7 @@ export default {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
         }
-        if(this.satisfyAmount && this.fullReductionDiscountAmount && this.satisfyAmount < this.fullReductionDiscountAmount){
+        if(this.satisfyAmount && this.fullReductionDiscountAmount && Number(this.satisfyAmount) < Number(this.fullReductionDiscountAmount)){
           callback(new Error('满减金额不能小于抵扣金额'));
         }
         callback();
@@ -644,7 +644,7 @@ export default {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
         }
-        if(this.satisfyAmount && this.discountMaxDeduction && this.satisfyAmount < this.discountMaxDeduction){
+        if(this.satisfyAmount && this.discountMaxDeduction && Number(this.satisfyAmount) < Number(this.discountMaxDeduction)){
           callback(new Error('满减金额不能小于最高抵扣金额'));
         }
         callback();
