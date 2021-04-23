@@ -57,7 +57,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">优惠券ID:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{couTypeCode}}</div>
                   </div>
                 </div>
               </div>
