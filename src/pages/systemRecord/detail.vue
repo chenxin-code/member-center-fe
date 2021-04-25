@@ -96,15 +96,7 @@
               <div class="common-column-wrapp" v-if="behavior == '4'">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">修改后的手机号:</div>
-                    <div class="column-left">{{changePhone}}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="common-column-wrapp" v-if="behavior == '4'">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">冲突手机号:</div>
+                    <div class="column-right">修改后的手机号（冲突手机号）:</div>
                     <div class="column-left">{{reusePhone}}</div>
                   </div>
                 </div>
