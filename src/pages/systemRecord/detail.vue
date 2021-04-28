@@ -56,7 +56,7 @@
               <div class="common-column-wrapp" v-if="behavior == '3'">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">优惠券ID:</div>
+                    <div class="column-right">优惠券编号:</div>
                     <div class="column-left">{{couTypeCode}}</div>
                   </div>
                 </div>
