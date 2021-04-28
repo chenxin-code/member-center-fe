@@ -1,15 +1,6 @@
-<style>
-.form-body {
-  padding: 20px 0px;
-}
-.tc-textTarea {
-  height: 200px;
-  width: 100%;
-  resize: none;
-}
-</style>
+
 <template>
-  <div class="form-body">
+    <div class="form-body">
     <a-form-model ref="ruleForm" :rules="rules" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
       <a-form-model-item ref="taskName" label="任务名称" prop="taskName">
         <a-input v-model="form.taskName" />
@@ -189,7 +180,14 @@
 </template>
 
 <script>
-import { couponsCenterList, bangdouList, cardList, level, typeList, activityList } from '@/pages/coupons/release/createForms';
+import {
+  couponsCenterList,
+  bangdouList,
+  cardList,
+  level,
+  typeList,
+  activityList
+} from '@/pages/coupons/release/createForms';
 import FilterForm from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
@@ -210,82 +208,54 @@ export default {
       selectActivity: false,
       selectGame: false,
       form: {
-        taskName: "",
-        taskValidityDate: "",
-        taskValidityStart: "",
-        taskValidityEnd: "",
-        taskDescribe: "",
-        taskCycleType: "0",
-        cycleRange: "",//周期范围
-        taskMaxNum: "",//最大执行次数
-        taskSource: "",
-        taskState: "1",
-        taskExecutionMode: "0",
-        taskUrl: "",
-        taskInitialization: "1",
-        isTaskIntegral: "1",
-        TaskIntegralType: "1",
-        BangDouNumber: "",
-        GrowthNumber: "",
-        BangDouProportion: "",
-        BangDouMaxNumber: "",
-        GrowthProportion: "",
-        GrowthMaxNumber: "",
-        otherReward: "0",
-        ActivityName: "",
-        ActivityID: "",
-        giftBagName: "",
-        giftBagID: "",
-        gameName: "",
-        gameID: "",
-        gameMaxNumberType: "0",
-        gameMaxNumber: "",
-        gameMaxNumberProportion: ""
+        taskName: '',
+        taskValidityDate: '',
+        taskValidityStart: '',
+        taskValidityEnd: '',
+        taskDescribe: '',
+        taskCycleType: '0',
+        cycleRange: '', //周期范围
+        taskMaxNum: '', //最大执行次数
+        taskSource: '',
+        taskState: '1',
+        taskExecutionMode: '0',
+        taskUrl: '',
+        taskInitialization: '1',
+        isTaskIntegral: '1',
+        TaskIntegralType: '1',
+        BangDouNumber: '',
+        GrowthNumber: '',
+        BangDouProportion: '',
+        BangDouMaxNumber: '',
+        GrowthProportion: '',
+        GrowthMaxNumber: '',
+        otherReward: '0',
+        ActivityName: '',
+        ActivityID: '',
+        giftBagName: '',
+        giftBagID: '',
+        gameName: '',
+        gameID: '',
+        gameMaxNumberType: '0',
+        gameMaxNumber: '',
+        gameMaxNumberProportion: ''
       },
       taskSourceOption: [],
       rules: {
-        taskName: [
-          { required: true, message: '请输入任务名称', trigger: 'blur' }
-        ],
-        cycleRange: [
-          { required: true, message: '请输入周期范围', trigger: 'blur' }
-        ],
-        taskMaxNum: [
-          { required: true, message: '请输入最大执行次数', trigger: 'blur' }
-        ],
-        gameName: [
-          { required: true, message: '请选择游戏', trigger: 'blur' }
-        ],
-        BangDouNumber: [
-          { required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }
-        ],
-        GrowthNumber: [
-          { required: true, message: '请输入成长值奖励数量', trigger: 'blur' }
-        ],
-        BangDouProportion: [
-          { required: true, message: '请输入邦豆计算比例', trigger: 'blur' }
-        ],
-        BangDouMaxNumber: [
-          { required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }
-        ],
-        ActivityName: [
-          { required: true, message: '请选择活动', trigger: 'blur' }
-        ],
-        giftBagName: [
-          { required: true, message: '请选择礼包', trigger: 'blur' }
-        ],
-        GrowthProportion: [
-          { required: true, message: '请输入成长值计算比例', trigger: 'blur' }
-        ],
-        GrowthMaxNumber: [
-          { required: true, message: '请输入成长值最大数量', trigger: 'blur' }
-        ],
-        gameMaxNumber: [
-          { required: true, message: '请输入最新数量', trigger: 'blur' }
-        ],
-        gameMaxNumberProportion: [
-          { required: true, message: '请输入计算比例', trigger: 'blur' }
-        ],
+        taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
+        cycleRange: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
+        taskMaxNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
+        gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
+        BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
+        GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
+        BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
+        BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
+        ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
+        giftBagName: [{ required: true, message: '请选择礼包', trigger: 'blur' }],
+        GrowthProportion: [{ required: true, message: '请输入成长值计算比例', trigger: 'blur' }],
+        GrowthMaxNumber: [{ required: true, message: '请输入成长值最大数量', trigger: 'blur' }],
+        gameMaxNumber: [{ required: true, message: '请输入最新数量', trigger: 'blur' }],
+        gameMaxNumberProportion: [{ required: true, message: '请输入计算比例', trigger: 'blur' }]
       },
       formList: [
         {
@@ -361,7 +331,7 @@ export default {
           dataIndex: 'createTime',
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
         }
-      ],
+      ]
     };
   },
   beforeCreate() {
@@ -471,16 +441,14 @@ export default {
     getTaskSource() {
       var self = this;
       let sourceList = [];
-      api
-        .getTaskSource()
-        .then(res => {
-          self.form.taskSource = res.data[0].appName;
-          self.taskSourceOption = [].concat(res.data)
-        })
+      api.getTaskSource().then(res => {
+        self.form.taskSource = res.data[0].appName;
+        self.taskSourceOption = [].concat(res.data);
+      });
       // .then(() => {
       //   this.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
       // });
     }
-  },
+  }
 };
 </script>

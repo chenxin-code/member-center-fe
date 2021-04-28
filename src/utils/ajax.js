@@ -35,7 +35,7 @@ export const HTTP = axios.create({
 HTTP.interceptors.request.use(async config => {
   NProgress.start();
 
-  console.log('config.url :>> ', config.url);
+  // console.log('config.url :>> ', config.url);
 
   if (config.url.indexOf('/times/member-pub-center/integrated') >= 0) {
     let tokenStr = '';
@@ -47,7 +47,7 @@ HTTP.interceptors.request.use(async config => {
     //   'Bearer ' +
     //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJpZCI6MSwiZXhwIjoxNjA4MDY4NzQzLCJhdXRob3JpdGllcyI6WyJhcHBfYWN0aXZpdHlfYWRtaW4iLCJhcHBfcXVhbGl0eV9hZG1pbiIsImFwcF9ob3VzZV9hZG1pbiIsImFwcF92aXNpdG9yX2FkbWluIiwic3lzX2FkbWluIiwiYXBwX2RldmljZV9hZG1pbiIsImFwcF9hZHZlcnRfYWRtaW4iLCJhcHBfbm90aWNlX2FkbWluIiwiYXBwX21pY3JvX2FkbWluIiwiYXBwX2FyZWFfYWRtaW4iLCJhcHBfYWlfYWRtaW4iLCJhcHBfZGVjb3JhdGVfYWRtaW4iLCJhcHBfdmVoaWNsZV9hZG1pbiIsImFwcF9hcmVhX2VtcF9hZG1pbiIsImFwcF9wYXNzYWdlX2FkbWluIiwiYW55dGltZXMiLCJhcHBfdXNlcl9hZG1pbiIsImFwcF9zcGFjZV9hZG1pbiIsImFwcF9vd25lcl9hZG1pbiIsImFwcF9jb21wYW55X2xpYl9hZG1pbiIsImFwcF9hZG1pbiJdLCJqdGkiOiIyNDJjOGNhYS02YmU4LTQ5OWYtYjI5Ny0zMjVhNzEwY2UxZGUiLCJjbGllbnRfaWQiOiJ3ZWJfYiJ9.WgYr5lRJ7-10vuu0iSU5yQr1kbFhVNtmOglMVHCXC2_IyKaWNW8dcUAU7Jr-CKBwkJ97u5x6dyXVzmBKrmP5GAxXplEdLFxbSLE_inyCP_b8UtKj5gwWo3-OXXGQd_az-3gY8UWdjapGwXq3ASxvFoZmEsDXq9IsxRdP2NoL7dx4wpxtQNBNt2VsdYhzGPzxjH82-UqRbZi5l_vKJuqO1jGTLQhNOYFMqkLe7QQgcBqJzgoDoQd_FuLWT_agFxEiOBn92RKaxG9oDJ8EB8lBJB3AhKJBkdoZRvEf5MXCzz8_PF2z4V-e1uePXZF46Pt36596daxP4pAVv9WYdZMxiA';
     let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
-    console.log('ajax tokenStr :>> ', tokenStr);
+    // console.log('ajax tokenStr :>> ', tokenStr);
     config.headers.Authorization = tokenStr;
     return config;
   }
@@ -74,8 +74,8 @@ function handleParams(url, rawData, rawMethod, responseType) {
       break;
   }
 
-  console.log('handleParams method :>> ', method);
-  console.log('handleParams data :>> ', data);
+  //console.log('handleParams method :>> ', method);
+  //console.log('handleParams data :>> ', data);
 
   return Promise.resolve({
     url,
@@ -86,7 +86,7 @@ function handleParams(url, rawData, rawMethod, responseType) {
 }
 
 async function handleFail(option) {
-  console.log(option);
+  //console.log(option);
   const { error, reject } = option;
   const { response } = error;
   if (response) {
@@ -135,7 +135,7 @@ async function refreshToken() {
     content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
     okText: '确认',
     onOk() {
-      console.log('Modal warning OK');
+      //console.log('Modal warning OK');
       window.location.href = localStorage.getItem('SD_LOGIN_URL');
     }
   });
@@ -163,7 +163,7 @@ async function refreshToken() {
 
 export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, responseType = 'json', url = BASEURL) => {
   return handleParams(api, rawData, method, headers, responseType).then(options => {
-    console.log('fetchApi options :>> ', options);
+    // console.log('fetchApi options :>> ', options);
     return new Promise((resolve, reject) => {
       if (responseType == 'blob') {
         let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
@@ -178,22 +178,22 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
           responseType: 'blob' // 设置服务器响应的数据类型（必选）
         }).then(resp => {
           const res = resp.data;
-          console.log(resp);
+          // console.log(resp);
           // 下载正常处理
           let fileName = resp.headers['content-disposition'];
-          console.log(fileName);
+          // console.log(fileName);
           // 获取文件名
           if (fileName && fileName.length >= 2) {
             fileName = fileName.split('=')[1];
           }
           fileName = decodeURI(escape(fileName));
-          console.log(fileName);
+          // console.log(fileName);
           // 兼容ie11
           if (window.navigator.msSaveOrOpenBlob) {
             try {
               window.navigator.msSaveOrOpenBlob(new Blob([res]), fileName);
             } catch (e) {
-              console.log(e);
+              //console.log(e);
             }
             return;
           }
@@ -207,7 +207,7 @@ export const fetchApi = (api, rawData = {}, method = 'GET', headers = {}, respon
           link.click();
         });
       } else {
-        console.log('api ----', { ...defaultHeader, ...headers });
+        // console.log('api ----', { ...defaultHeader, ...headers });
         HTTP({
           baseURL: url,
           withCredentials: true,
