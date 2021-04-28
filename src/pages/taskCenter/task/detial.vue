@@ -16,9 +16,6 @@
           <!-- 奖励成长值{{awardGrow}}, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整） -->
           <a-button type="primary" @click="bangdouHandle()">修改邦豆</a-button>
         </span>
-        <span class="detail-main-items-value detail-main-items-value-tag" v-if="item.name === 'behaviourVoList'">
-          <a-tag color="blue" v-for="behavior in dataObj[item.name]" :key="behavior.id">{{behavior}}</a-tag>
-        </span>
         <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '' }}</span>
       </div>
     </div>
@@ -60,7 +57,6 @@
 
 <script>
 import api from '@/api';
-import { getTaskDetail } from '@/api/task'
 import moment from 'moment';
 export default {
   name: 'task_detail',
@@ -80,7 +76,7 @@ export default {
           name: 'validity'
         },
         {
-          label: '任务周期性',
+          label: '是否周期性：',
           name: 'isPeriodic'
         },
         {
@@ -88,20 +84,16 @@ export default {
           name: 'status'
         },
         {
+          label: '对应行为：',
+          name: 'behaviourName'
+        },
+        {
           label: '任务来源：',
           name: 'sourceName'
         },
         {
-          label: '是否初始化任务：',
-          name: 'isDefault'
-        },
-        {
-          label: '关联任务',
-          name: 'afterTaskName'
-        },
-        {
-          label: '已关联的行为：',
-          name: 'behaviourVoList'
+          label: '领取条件：',
+          name: 'taskCondition'
         },
         {
           label: '任务结果：',
@@ -110,14 +102,6 @@ export default {
         {
           label: '创建时间：',
           name: 'createTime'
-        },
-        {
-          label: '任务执行方式',
-          name: 'executeType'
-        },
-        {
-          label: '跳转路径：',
-          name: 'jumpPath'
         }
       ],
       dataObj: {},
@@ -130,23 +114,23 @@ export default {
         borderColor: 'red'
       },
       bangdouAddValNull: false,
-      bangdouAddVal: null
+      bangdouAddVal: null,
     };
   },
   mounted() {
     this.initData(this.$route.query.id);
   },
   methods: {
-    changeBangdouAddVal(value) {
+    changeBangdouAddVal(value){
       this.bangdouAddVal = value;
     },
     initData(id) {
-      getTaskDetail({ taskId: id }).then(res => {
+      api.getTaskDetail({ taskId: id }).then(res => {
         this.dataObj = Object.assign(
           res.data,
           { createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss') },
           { isPeriodic: res.data.isPeriodic === 0 ? '否' : '是' },
-          { status: res.data.status === 0 ? '禁用' : '启用' }
+          { status: res.data.status === 0 ? '禁用' : '启用' },
           // {
           //   result: `奖励成长值${res.data.awardGrow}, 奖励邦豆: ${Math.floor(res.data.awardIntegral / 100)}邦豆/${
           //     res.data.awardIntegral
@@ -158,7 +142,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push({ name: 'taskCenter-task' });
+      this.$router.push({ name: 'task-manager' });
     },
     handleOk() {
       if (!this.bangdouAddVal) {
@@ -166,23 +150,21 @@ export default {
         return;
       }
       this.modalLoading = true;
-      api
-        .editTaskReward({
-          id: this.$route.query.id,
-          awardIntegral: this.bangdouAddVal
-        })
-        .then(res => {
-          this.visibleBangdou = false;
-          this.modalLoading = false;
-          if (res.code === 200) {
-            this.initData(this.$route.query.id);
-          }
-        });
+      api.editTaskReward({
+        id: this.$route.query.id,
+        awardIntegral: this.bangdouAddVal
+      }).then(res => {
+        this.visibleBangdou = false;
+        this.modalLoading = false;
+        if(res.code === 200){
+          this.initData(this.$route.query.id);
+        }
+      });
     },
     bangdouHandle() {
       this.bangdouAddVal = this.awardIntegral; //充值帮豆
       this.visibleBangdou = true; //显示对话框
-    }
+    },
   },
   watch: {
     visibleBangdou: {
@@ -200,7 +182,7 @@ export default {
         }
       },
       immediate: true //刷新加载 立马触发一次handler
-    }
+    },
   }
 };
 </script>
@@ -242,11 +224,6 @@ export default {
         width: 120px;
         text-align: right;
         color: #333;
-      }
-      &-value {
-        &-tag {
-          margin: 0 10px;
-        }
       }
     }
   }
