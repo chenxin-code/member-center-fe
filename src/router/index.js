@@ -256,6 +256,19 @@ const routes = [
         component: CouponsCancel
       },
       {
+        path: '/vopCertificates',
+        name: 'vopCertificates',
+        menuKey: 'vopCertificates',
+        meta: {
+          menu: '/vopCertificates',
+          authKeys: [''],
+          bread: [{ path: '/vopCertificates', name: '实物券核销记录' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/coupons/cancel/vopCertificates.vue')
+      },
+      {
         path: '/card',
         name: 'card',
         menuKey: 'card',
@@ -286,6 +299,24 @@ const routes = [
         component: CardDetail
       },
       {
+        path: '/taskCenter-task',
+        name: 'taskCenter-task',
+        menuKey: 'taskCenter-task',
+        meta: {
+          menu: '/taskCenter-task',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-task',
+              name: '任务管理'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/index.vue')
+      },
+      {
         path: '/task-manager',
         name: 'task-manager',
         menuKey: 'task-manager',
@@ -301,7 +332,175 @@ const routes = [
           isUseCache: false,
           keepAlive: true
         },
-        component: TaskManager
+        component: () => import('@/pages/taskManager/index.vue')
+      },
+      {
+        path: '/taskCenter-task',
+        name: 'taskCenter-task',
+        menuKey: 'taskCenter-task',
+        meta: {
+          menu: '/taskCenter-task',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-task',
+              name: '任务管理'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/index.vue')
+      },
+      {
+        path: '/taskCenter-task/detial',
+        name: 'taskCenter-task-detial',
+        menuKey: 'taskCenter-task-detial',
+        meta: {
+          menu: '/taskCenter-task-detial',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/task-manager',
+              name: '任务管理'
+            },
+            {
+              path: '/taskCenter-task-detial',
+              name: '任务管理详情'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/detial.vue')
+      },
+      {
+        path: '/taskCenter-task/create',
+        name: 'taskCenter-task-create',
+        menuKey: 'taskCenter-task-create',
+        meta: {
+          menu: '/taskCenter-task-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/task-manager',
+              name: '任务管理'
+            },
+            {
+              path: '/taskCenter-task-create',
+              name: '新建任务'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/create.vue')
+      },
+      {
+        path: '/taskCenter-task/edit',
+        name: 'taskCenter-task-edit',
+        menuKey: 'taskCenter-task-edit',
+        meta: {
+          menu: '/taskCenter-task-edit',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/task-manager',
+              name: '任务管理'
+            },
+            {
+              path: '/taskCenter-task-edit',
+              name: '编辑任务'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/task/Edit.vue')
+      },
+      {
+        path: '/taskCenter-behavior',
+        name: 'taskCenter-behavior',
+        menuKey: 'taskCenter-behavior',
+        meta: {
+          menu: '/taskCenter-behavior',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/task-manager',
+              name: '行为管理'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/index.vue')
+      },
+      {
+        path: '/taskCenter-behavior/create',
+        name: 'taskCenter-behavior-create',
+        menuKey: 'taskCenter-behavior-create',
+        meta: {
+          menu: '/taskCenter-behavior-create',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/create',
+              name: '行为创建'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/create.vue')
+      },
+      {
+        path: '/taskCenter-behavior/edit',
+        name: 'taskCenter-behavior-edit',
+        menuKey: 'taskCenter-behavior-edit',
+        meta: {
+          menu: '/taskCenter-behavior-edit',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/edit',
+              name: '编辑行为'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/Edit.vue')
+      },
+      {
+        path: '/taskCenter-behavior/detial',
+        name: 'taskCenter-behavior-detial',
+        menuKey: 'taskCenter-behavior-detial',
+        meta: {
+          menu: '/taskCenter-behavior-detial',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/detial',
+              name: '行为创建'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/behavior/detial.vue')
       },
       {
         path: '/task-manager/detail',
@@ -482,6 +681,33 @@ const routes = [
           keepAlive: true
         },
         component: () => import('@/pages/actJoin/list')
+      },
+      {
+        path: '/systemRecord',
+        name: 'systemRecord',
+        menuKey: 'systemRecord',
+        meta: {
+          menu: '/systemRecord',
+          authKeys: [''],
+          bread: [{ path: '/systemRecord', name: '系统运行日志' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/systemRecord/list')
+      },
+      {
+        path: '/systemRecord/detail',
+        name: 'systemRecordDetail',
+        menuKey: 'systemRecord',
+        meta: {
+          menu: '/systemRecord',
+          authKeys: [''],
+          bread: [
+            { path: '/systemRecord', name: '系统运行日志' },
+            { path: '/systemRecord/detail', name: '日志详情' }
+          ]
+        },
+        component: () => import('@/pages/systemRecord/detail')
       }
     ]
   },

@@ -146,8 +146,7 @@ export default {
       //分页
       total: 0,
       current: 1,
-      pageSize: 10,
-      searchObj: {},
+      pageSize: 10
     };
   },
   components: {
@@ -186,7 +185,6 @@ export default {
   },
   methods: {
     onQuery(params) {
-      this.searchObj = params;
       this.current = 1;
       this.getList(true);
     },
@@ -198,13 +196,13 @@ export default {
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
-          //this.tableLoading = true;
+          this.tableLoading = true;
           api.delTheme({id: id}).then(res => {
             if (res.code === 200) {
               this.getList();
             }
           }).finally(() => {
-            //this.tableLoading = false;
+            this.tableLoading = false;
           });
         }
       });
@@ -224,13 +222,19 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
+        let themeName = null,isEnable = null;
+        if (this.$refs.actForm.getFieldsValue().themeName) {
+          themeName = this.$refs.actForm.getFieldsValue().themeName;
+        }
+        if (this.$refs.actForm.getFieldsValue().isEnable) {
+          isEnable = this.$refs.actForm.getFieldsValue().isEnable;
+        }
         api.getActThemeList({
           pageSize: this.pageSize,
           pageIndex: this.current,
-          themeName: this.searchObj.themeName,
-          isEnable: this.searchObj.isEnable
+          themeName: themeName,
+          isEnable: isEnable
         }).then(res => {
-          this.tableLoading = false;
           this.total = res.data.total;
           this.tableData = res.data.records;
         }).finally(() => {
@@ -271,14 +275,16 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.actForm.setFieldsValue({
+          isEnable: this.formList[1].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
       this.$refs.actForm.form.resetFields();
-      // this.$refs.actForm.setFieldsValue({
-      //   typeId: this.formList[1].selectOptions[0].id
-      // });
       //初始化加载数据
       this.getList();
     }
@@ -286,9 +292,19 @@ export default {
     this.$route.meta.isUseCache = false;
   },
   beforeRouteEnter(to, from, next) {
+    if (from.name === 'xxxxxxxxx') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   beforeRouteLeave(to, from, next) {
+    if (to.name === 'xxxxxxxxx') {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
     next();
   },
   watch: {}

@@ -4,16 +4,7 @@
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/couponsManage/new" ref="memberForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
-      <a-table
-        :columns="tableColumns"
-        :data-source="tableData"
-        :pagination="false"
-        :scroll="{ x: 988, y: scrollY }"
-        :rowKey="(r, i) => i"
-        style="width:100%;margin-top:8px;"
-        :selectable="false"
-        :loading="tableLoading"
-      >
+      <a-table :columns="tableColumns" :data-source="tableData" :pagination="false" :scroll="{ x: 988, y: scrollY }" :rowKey="(r, i) => i" style="width:100%;margin-top:8px;" :selectable="false" :loading="tableLoading">
         <template slot="couponTypeSlot" slot-scope="rowData">
           <div class="editable-row-operations">
             <span v-html="couponTypeStr(rowData.couponType)"></span>
@@ -53,28 +44,24 @@
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
             <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
-            <a @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
-            <!-- <a @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
+            <a style="padding-right: 10px;" @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
+            <!-- <a style="padding-right: 10px;" @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
               启用
             </a> -->
-            <a @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
+            <a style="padding-right: 10px;" @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
               禁用
             </a>
+            <!-- <a @click="zhiding(rowData.id, 1)" v-if="rowData.referrer === false">
+              置顶
+            </a>
+            <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.referrer === true">
+              取消置顶
+            </a> -->
           </div>
         </template>
       </a-table>
-      <a-pagination
-        :total="total"
-        :show-total="total => `共 ${total} 条`"
-        show-quick-jumper
-        show-size-changer
-        :current="current"
-        :pageSize="pageSize"
-        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-        @change="change"
-        @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
-      />
+      <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer :current="current" :pageSize="pageSize" :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="change" @showSizeChange="showSizeChange" style="margin-top:30px;width:100%;text-align: right;" />
     </div>
   </div>
 </template>
@@ -119,7 +106,8 @@ export default {
           selectOptions: [
             { name: '全部', id: '' },
             { name: '物业费', id: '4014' },
-            { name: '购物券', id: '4005' }
+            { name: '购物券', id: '4005' },
+            { name: '实物券', id: '4015' }
           ],
           labelCol: { span: 9 },
           wrapperCol: { span: 15 }
@@ -185,6 +173,13 @@ export default {
         //   key: 'couponSubhead',
         //   width: 150
         // },
+        // {
+        //   title: '是否置顶',
+        //   dataIndex: 'referrer',
+        //   key: 'referrer',
+        //   width: 150,
+        //   customRender: text => (text === true ? '是' : '否')
+        // },
         {
           title: '卡券类型',
           key: 'couponTypeSlot',
@@ -239,7 +234,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
           fixed: 'right',
-          width: 150
+          width: 220
         }
       ],
       tableData: [],
@@ -298,13 +293,19 @@ export default {
     },
     activityStr() {
       return param => {
-        if (param === '4014') {
-          return '物业费';
-        } else if (param === '4005') {
-          return '购物券';
-        } else {
-          return '';
+        var msg = '';
+        switch (param) {
+          case '4014':
+            msg = "物业费"
+            break;
+          case '4005':
+            msg = "购物券"
+            break;
+          case '4015':
+            msg = "实物券"
+            break;
         }
+        return msg;
       };
     },
     faceAmountStr() {
@@ -366,7 +367,7 @@ export default {
       };
     }
   },
-  created() {},
+  created() { },
   mounted() {
     const timer1 = setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 275 + 'px';
@@ -422,7 +423,6 @@ export default {
       } else {
         stateStr = '';
       }
-
       console.log('paramId :>> ', paramId);
       console.log('state :>> ', state);
       this.$confirm({
@@ -443,11 +443,42 @@ export default {
             if (res.code === 200) {
               this.getCouponsList();
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
         }
       });
     },
-
+    zhiding(paramId, referrer) {
+      let referrerStr;
+      if (referrer === 0) {
+        referrerStr = '取消置顶';
+      } else if (referrer === 1) {
+        referrerStr = '置顶';
+      } else {
+        referrerStr = '';
+      }
+      this.$confirm({
+        title: `${referrerStr}卡券`,
+        content: `您确定要${referrerStr}该卡券吗？`,
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.tableLoading = true;
+          const formData = new FormData();
+          formData.append('id', paramId);
+          formData.append('referrer', referrer);
+          api.recommendCoupon(formData).then(res => {
+            if (res.code === 200) {
+              this.getCouponsList();
+            }
+          }).finally(() => {
+            this.tableLoading = false;
+          });
+        }
+      });
+    },
     // 分页
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -513,9 +544,6 @@ export default {
 
         return api
           .getCouponsList(para)
-          .finally(() => {
-            this.tableLoading = false;
-          })
           .then(res => {
             console.log('getCouponsList res :>> ', res);
             if (res.code === 200) {
@@ -525,6 +553,8 @@ export default {
                 this.tableData.push(element);
               });
             }
+          }).finally(() => {
+            this.tableLoading = false;
           });
       });
     }

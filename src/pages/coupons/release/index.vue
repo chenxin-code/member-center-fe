@@ -13,21 +13,8 @@
             :doubleBtnText="'新建派发'"
             :doubleBtnEvent="() => this.$router.push({ name: 'release_create' })"
           />-->
-          <FormList
-            routePath="/couponsRelease/create"
-            ref="form"
-            :rowCol="4"
-            :formList="formList"
-            :onSubmit="onSearch"
-          />
-          <a-table
-            :style="{ marginTop: '20px' }"
-            :columns="columns"
-            :data-source="dataList"
-            :pagination="false"
-            :loading="tableLoading"
-            :scroll="{ y: scrollY }"
-          >
+          <FormList routePath="/couponsRelease/create" ref="form" :rowCol="4" :formList="formList" :onSubmit="onSearch" />
+          <a-table :style="{ marginTop: '20px' }" :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{ y: scrollY }">
             <template slot="faceAmountSlot" slot-scope="rowData">
               <div class="editable-row-operations">
                 <span v-html="faceAmountStr(rowData)"></span>
@@ -36,21 +23,12 @@
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
               <a style="padding-left:10px;" v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
+              <a style="padding-left:10px;" v-if="record.referrer == 0" @click="cardTop(record)">置顶</a>
+              <a style="padding-left:10px;" v-if="record.referrer == 1" @click="cardNotTop(record)">取消置顶</a>
             </span>
           </a-table>
-          <a-pagination
-            :total="total"
-            :show-total="total => `共 ${total} 条`"
-            show-quick-jumper
-            show-size-changer
-            v-model="current"
-            :current="current"
-            :pageSize="pageSize"
-            :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
-            @change="change"
-            @showSizeChange="showSizeChange"
-            style="margin-top:30px;width:100%;text-align: right;"
-          />
+          <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer v-model="current" :current="current" :pageSize="pageSize"
+            :pageSizeOptions="['10', '20', '30', '40', '50', '100']" @change="change" @showSizeChange="showSizeChange" style="margin-top:30px;width:100%;text-align: right;" />
         </a-col>
       </a-row>
     </div>
@@ -72,7 +50,8 @@ const typeList = [
 const activityList = [
   { id: '', name: '全部' },
   { id: 4014, name: '物业费' },
-  { id: 4005, name: '消费券' }
+  { id: 4005, name: '购物券' },
+  { id: 4015, name: '实物券' }
 ];
 const conditionList = [
   { id: '', name: '全部' },
@@ -206,8 +185,8 @@ export default {
           customRender: (text, record) =>
             text == 1
               ? moment(record.startTime).format('YYYY-MM-DD HH:mm:ss') +
-                '-' +
-                moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
+              '-' +
+              moment(record.expirationTime).format('YYYY-MM-DD HH:mm:ss')
               : `相对有效期: ${record.valiDays}天, 领取后${record.offsetDays}天生效`
         },
         {
@@ -218,6 +197,12 @@ export default {
             conditionList.filter(item => item.id == text)[0].name
               ? conditionList.filter(item => item.id == text)[0].name
               : ''
+        },
+        {
+          title: '是否置顶',
+          key: 'referrer',
+          dataIndex: 'referrer',
+          customRender: text => text == 1 ? '置顶' : '不置顶'
         },
         {
           title: '操作人员',
@@ -292,6 +277,47 @@ export default {
     },
     getCardCode(record) {
       this.downloadCamilo(record);
+    },
+
+    cardTop(record) {
+      const param = {
+        id: record.id,
+        referrer: "1"
+      };
+      const paramFormData = Object.keys(param).reduce((pre, key) => {
+        pre.append([key], param[key]);
+        return pre;
+      }, new FormData());
+      api
+        .recommendCouponActivity(paramFormData)
+        .finally(() => {
+          this.tableLoading = false;
+        })
+        .then(res => {
+          if (res.code == 200) {
+            this.getReleaseList();
+          }
+        });
+    },
+    cardNotTop(record) {
+      const param = {
+        id: record.id,
+        referrer: "0"
+      };
+      const paramFormData = Object.keys(param).reduce((pre, key) => {
+        pre.append([key], param[key]);
+        return pre;
+      }, new FormData());
+      api
+        .recommendCouponActivity(paramFormData)
+        .finally(() => {
+          this.tableLoading = false;
+        })
+        .then(res => {
+          if (res.code == 200) {
+            this.getReleaseList();
+          }
+        });
     },
 
     // onShowSizeChange(current, pageSize) {

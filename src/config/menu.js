@@ -36,6 +36,24 @@ export default [
     path: '/task-manager'
   },
   {
+    title: '任务管理-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-task',
+    group: 'hyzx',
+    path: '/taskCenter-task'
+  },
+  {
+    title: '行为管理-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-behavior',
+    group: 'hyzx',
+    path: '/taskCenter-behavior'
+  },
+  {
     title: '接入系统管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/client_show.png'),
@@ -97,7 +115,16 @@ export default [
     menuKey: 'couponsCancel',
     group: 'hyzx',
     path: '/couponsCancel'
-  },
+  }, 
+  {
+    title: '实物券核销记录',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/conpon_cancel_show.png'),
+    iconHide: require('@/assets/img/menu/conpon_cancel_hide.png'),
+    menuKey: 'vopCertificates',
+    group: 'hyzx',
+    path: '/vopCertificates'
+  }, 
   {
     title: '活动主题管理',
     authKeys: [''],
@@ -124,5 +151,14 @@ export default [
     menuKey: 'actJoin',
     group: 'hyzx',
     path: '/actJoin'
+  },
+  {
+    title: '系统运行日志',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'systemRecord',
+    group: 'hyzx',
+    path: '/systemRecord'
   },
 ];
