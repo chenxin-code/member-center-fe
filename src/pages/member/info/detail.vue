@@ -291,7 +291,7 @@
           <div v-if="bangdouAddRemarkNull" :style="bangdouAddNullStyle2">
             请输入备注
           </div>
-          <div :style="modalInputStyle" v-if="bangdouModalType === 1">
+          <div :style="modalInputStyle">
             <div :style="modalInputStyleTop">
               <span style="color: red;">*</span>
               <span>描述</span>
@@ -305,7 +305,7 @@
               placeholder="请输入描述"
             />
           </div>
-          <div v-if="bangdouModalType === 1 && bangdouAddDescrNull" :style="bangdouAddNullStyle2">
+          <div v-if="bangdouAddDescrNull" :style="bangdouAddNullStyle2">
             请输入描述
           </div>
         </a-form-item>
@@ -635,14 +635,14 @@ export default {
   },
   methods: {
     handleOk() {
-      if (!this.bangdouAddVal || !this.bangdouAddRemark || (this.bangdouModalType === 1 && !this.bangdouAddDescr)) {
+      if (!this.bangdouAddVal || !this.bangdouAddRemark || !this.bangdouAddDescr) {
         if (!this.bangdouAddVal) {
           this.bangdouAddValNull = true;
         }
         if (!this.bangdouAddRemark) {
           this.bangdouAddRemarkNull = true;
         }
-        if (this.bangdouModalType === 1 && !this.bangdouAddDescr) {
+        if (!this.bangdouAddDescr) {
           this.bangdouAddDescrNull = true;
         }
         return;
@@ -655,7 +655,7 @@ export default {
         type: this.bangdouModalType,
         integral: this.bangdouAddVal,
         notes: this.bangdouAddRemark,
-        reason: this.bangdouModalType === 1 ? this.bangdouAddDescr : null//描述
+        reason: this.bangdouAddDescr//描述
       };
 
       console.log('handleOk param :>> ', param);

@@ -251,7 +251,7 @@ export default {
     this.$route.meta.isUseCache = false;
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === 'systemRecordDetail') {
+    if (from.name === 'xxxxxxxxxxxxxxxxx') {//systemRecordDetail
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
@@ -259,7 +259,7 @@ export default {
     next();
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name === 'systemRecordDetail') {
+    if (to.name === 'xxxxxxxxxxxxxxxxx') {//systemRecordDetail
       to.meta.isUseCache = true;
     } else {
       to.meta.isUseCache = false;
