@@ -115,7 +115,7 @@ export default [
     menuKey: 'couponsCancel',
     group: 'hyzx',
     path: '/couponsCancel'
-  }, 
+  },
   {
     title: '实物券核销记录',
     authKeys: [''],
@@ -124,7 +124,7 @@ export default [
     menuKey: 'vopCertificates',
     group: 'hyzx',
     path: '/vopCertificates'
-  }, 
+  },
   {
     title: '活动主题管理',
     authKeys: [''],
@@ -160,5 +160,32 @@ export default [
     menuKey: 'systemRecord',
     group: 'hyzx',
     path: '/systemRecord'
+  },
+  {
+    title: '礼包',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'gift',
+    group: 'hyzx',
+    path: '/gift'
+  },
+  {
+    title: '节日礼包',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'giftH',
+    group: 'hyzx',
+    path: '/giftH'
+  },
+  {
+    title: '礼包派发',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'giftDist',
+    group: 'hyzx',
+    path: '/giftDist'
   },
 ];

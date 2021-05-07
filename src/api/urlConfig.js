@@ -106,5 +106,11 @@ export default {
   //异常卡卷补发
   REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon',
   //系统异常处理接口修改异常是否处理
-  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord'
+  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord',
+  //创建行为
+  createBehaviour: '/times/member-center/behaviour/api/v1/createBehaviour',
+  //编辑行为
+  editBehaviour: '/times/member-center/behaviour/api/v1/editBehaviour',
+  //查看行为详情
+  selectBehaviour: '/times/member-center/behaviour/api/v1/selectBehaviour',
 };

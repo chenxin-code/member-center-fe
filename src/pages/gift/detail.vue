@@ -1,18 +1,18 @@
 <template>
-  <div id="act-detail">
+  <div id="coupons-detail">
     <div class="content-header">
-      行为详情
+      礼包详情
       <span class="fallback" @click="$router.go(-1)" style="cursor: pointer">返回</span>
     </div>
-    <div class="act-main">
+    <div class="coupons-main">
       <a-row style="height: 100%">
-        <div class="act-common act-base">
+        <div class="coupons-common coupons-base">
           <a-row class="common-row">
             <a-col :span="24">
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">行为名称:</div>
+                    <div class="column-right">礼包名称:</div>
                     <div class="column-left"></div>
                   </div>
                 </div>
@@ -20,7 +20,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">行为来源:</div>
+                    <div class="column-right">礼包状态:</div>
                     <div class="column-left"></div>
                   </div>
                 </div>
@@ -28,7 +28,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">行为类型:</div>
+                    <div class="column-right">有效期:</div>
                     <div class="column-left"></div>
                   </div>
                 </div>
@@ -36,7 +36,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">行为描述:</div>
+                    <div class="column-right">礼包描述:</div>
                     <div class="column-left"></div>
                   </div>
                 </div>
@@ -44,18 +44,18 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">关联的任务:</div>
+                    <div class="column-right">礼包背景:</div>
+                    <div class="column-left"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">内容列表:</div>
                     <div class="column-left">
-                      <a-table :columns="columns" :bordered="true" :pagination="false" :data-source="taskData"></a-table>
+                      <a-table :columns="columns" :data-source="[]" :pagination="false"></a-table>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="common-column-wrapp">
-                <div class="common-column">
-                  <div class="column-item">
-                    <div class="column-right">行为状态:</div>
-                    <div class="column-left"></div>
                   </div>
                 </div>
               </div>
@@ -68,61 +68,77 @@
 </template>
 
 <script>
-import api from './../../../api';
+import moment from 'moment';
+import api from './../../api';
+import {activityList, typeList} from "../coupons/release/createForms";
 export default {
-  name: 'taskCenter-behavior-detial',
+  name: 'giftDetail',
   components: {},
   data() {
     return {
       columns: [
         {
-          title: '任务名称',
-          dataIndex: 'taskName',
-          key: 'taskName',
-          align: "center",
+          dataIndex: 'id',
+          key: 'id',
+          title: '卡券ID'
         },
         {
-          title: '任务描述',
-          dataIndex: 'memo',
-          key: 'memo',
-          align: "center",
+          title: '卡券标题',
+          key: 'couponTitle',
+          dataIndex: 'couponTitle'
         },
         {
-          title: '奖励类型',
-          dataIndex: 'taskCondition',
-          key: 'taskCondition',
-          align: "center",
+            title: '卡券副标题',
+            key: 'couponSubhead',
+            dataIndex: 'couponSubhead'
+        },
+        {
+          title: '卡券类型',
+          key: 'couponType',
+          dataIndex: 'couponType',
+          customRender: text => typeList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券业务类型',
+          key: 'activity',
+          dataIndex: 'activity',
+          customRender: text => activityList.filter(item => item.id == text)[0].name || ''
+        },
+        {
+          title: '卡券面值金额',
+          key: 'faceAmountSlot',
+          scopedSlots: { customRender: 'faceAmountSlot' }
+        },
+        {
+          title: '卡券有效期',
+          key: 'operator',
+          dataIndex: 'operator'
         }
-      ],
-      taskData: [],
+      ]
     };
   },
   computed: {
 
   },
   methods: {
-    selectBehaviour(){
-      api.selectBehaviour({
-        id: this.$route.query.id
-      }).then(resp => {
+    getDetail() {
+      api.getDetail({}).then(resp => {
         if (resp.code === 200) {
 
         }
       });
-    },
-
+    }
   },
   created() {
-    this.selectBehaviour();
+    this.getDetail();
   },
-  mounted() {
-  },
+  mounted() {},
   watch: {}
 };
 </script>
 
 <style lang="less" scoped>
-#act-detail {
+#coupons-detail {
   height: 100%;
 
   .content-header {
@@ -130,18 +146,14 @@ export default {
       cursor: pointer;
     }
   }
-
-  .act-main {
+  .coupons-main {
     height: calc(100% - 50px);
     overflow-y: auto;
-
-    .act-common {
+    .coupons-common {
       background-color: #fff;
-
       .common-title {
         color: #666;
         padding: 20px 0 0 30px;
-
         .common-title-content {
           font-size: 16px;
           height: 16px;
@@ -150,9 +162,8 @@ export default {
           border-left: 3px solid rgba(33, 33, 206, 0.5);
         }
       }
-
       .common-row {
-        padding: 30px 16px 0;
+        padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
         display: flex;
         flex-direction: row;
@@ -160,31 +171,29 @@ export default {
         align-items: center;
 
         .common-column-wrapp {
-          margin-bottom: 20px;
+          // padding-left: 80px;
+          margin-bottom: 30px;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
           align-items: flex-start;
-
           .common-column {
             padding-right: 50px;
-
             .column-item {
-              padding-bottom: 20px;
+              padding-bottom: 10px;
               display: flex;
               flex-direction: row;
               justify-content: flex-start;
-              align-items: center;
+              align-items: flex-start;
 
               .column-right {
-                width: 180px;
+                width: 132.25px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-end;
                 align-items: center;
               }
-
               .column-left {
                 display: flex;
                 flex-direction: row;
@@ -202,9 +211,14 @@ export default {
                   justify-content: center;
                   align-items: center;
                 }
+
+                .ant-input-disabled {
+                  background-color: #fff;
+                  width: 500px !important;
+                  color: #2c3e50;
+                }
               }
             }
-
             .column-item:last-child {
               padding-bottom: 0;
             }
@@ -221,14 +235,10 @@ export default {
       }
     }
 
-    .act-award {
-      padding-bottom: 20px;
-
-      .common-row {
-        .common-column-wrapp {
-          margin-bottom: 20px !important;
-        }
-      }
+    // .coupons-base {
+    // }
+    .coupons-record {
+      padding-bottom: 100px;
     }
   }
 }
