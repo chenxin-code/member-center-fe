@@ -61,3 +61,9 @@ export const updateGrowth = data => fetchApi(URL.UPDATE_GROWTH, data, 'POST');
 export const reissueCoupon = data => fetchApi(URL.REISSUE_COUPON, data, 'POST');
 //系统异常处理接口修改异常是否处理
 export const editRecord = data => fetchApi(URL.EDIT_RECORD, data, 'POST');
+//创建行为
+export const createBehaviour = data => fetchApi(URL.createBehaviour, data, 'POST');
+//编辑行为
+export const editBehaviour = data => fetchApi(URL.editBehaviour, data, 'POST');
+//查看行为详情
+export const selectBehaviour = data => fetchApi(URL.selectBehaviour, data, 'GET');

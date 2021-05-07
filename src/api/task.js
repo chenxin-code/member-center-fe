@@ -5,4 +5,50 @@ export const getTaskList = data => fetchApi(URL.GET_TASKlIST, data, "GET")
 
 export const getTaskSource = () => fetchApi(URL.GET_TASKSOURCE, {}, 'GET')
 
-export const getTaskDetail = data => fetchApi(URL.GET_TASKDETAIL, data, 'GET')
+/**
+ * 新建/修改任务
+ * @param {object} params  入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {integer} params.id 任务ID  true  编辑必填，新建不需要填写
+ * @param {integer} params.afterTask	后置任务		false	integer(int64)
+ * @param {integer} params.attendFixedNum	抽奖固定参与次数		false	integer(int32)
+ * @param {string} params.attendRatio	抽奖参与次数比例		false	string
+ * @param {integer} params.awardGrow	任务奖励成长值		false	string
+ * @param {integer} params.awardGrowMax	任务奖励成长值最大值		false	integer(int32)
+ * @param {string} params.awardIntegral	任务奖励邦豆		false	string
+ * @param {integer} params.awardIntegralMax	任务奖励邦豆最大值		false	integer(int32)
+ * @param {integer} params.awardType	赠送类型（1:固定 2:比例 3:累计）		false	integer(int32)
+ * @param {integer} params.beforeTask	前置任务		false	integer(int64)
+ * @param {string} params.createTime			false	string(date-time)
+ * @param {integer} params.createUser			false	integer(int64)
+ * @param {string} params.createUserName			false	string
+ * @param {string} params.endTime	任务结束时间		false	string(date-time)
+ * @param {integer} params.executeNum	执行次数		false	integer(int32)
+ * @param {integer} params.executeType	执行方式 1提示；2网页跳转；3微应用跳转		false	integer(int32)
+ * @param {integer} params.id	id		false	integer(int64)
+ * @param {integer} params.isDefault	是否初始化 0否1是		false	integer(int32)
+ * @param {integer} params.isDeleted			false	integer(int32)
+ * @param {integer} params.isPeriodic	是否周期性,0:一次性；1:是；2：重复性		false	integer(int32)
+ * @param {integer} params.isShow	是否显示		false	integer(int32)
+ * @param {integer} params.isSystemAward	是否进行邦豆成长值奖励 0否1是		false	integer(int32)
+ * @param {string} params.jumpPath	跳转路径		false	string
+ * @param {integer} params.maxLevel	需求最大会员等级		false	integer(int64)
+ * @param {string} params.memo	备注		false	string
+ * @param {integer} params.minLevel	需求最小会员等级		false	integer(int64)
+ * @param {integer} params.otherAwardId	其他奖励ID		false	integer(int64)
+ * @param {integer} params.otherAwardType	其他奖励类型 1活动；2抽奖；3礼包		false	integer(int32)
+ * @param {string} params.periodic	周期		false	string
+ * @param {string} params.source	任务来源		false	string
+ * @param {string} params.sourceName	任务来源名称		false	string
+ * @param {string} params.startTime	任务开始时间		false	string(date-time)
+ * @param {integer} params.status	任务状态：0：禁用；1：启用		false	integer(int32)
+ * @param {string} params.taskCondition	任务条件		false	string
+ * @param {string} params.taskImage	图片		false	string
+ * @param {string} params.taskKey	任务键值		false	string
+ * @param {string} params.taskName	名称		false	string
+ * @param {string} params.updateTime			false	string(date-time)
+ * @param {integer} params.updateUser			false	integer(int64)
+ * @param {string} params.updateUserName			false	string
+ * @param {integer} params.validity	任务领取后的有效期		false	integer(int32)
+*/
+export const postAdd = data => fetchApi(`${API}/add`, data, 'POST')
+export const postUpdate = data => fetchApi(`${API}/update`, data, 'POST')

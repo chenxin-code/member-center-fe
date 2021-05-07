@@ -1,13 +1,3 @@
-<style>
-.form-body {
-  padding: 20px 0px;
-}
-.tc-textTarea {
-  height: 200px;
-  width: 100%;
-  resize: none;
-}
-</style>
 <template>
 <div class="detail">
 <div class="detail-header">
@@ -180,23 +170,17 @@
     </div>
 
     <!-- 弹框队列开始 -->
-    <a-modal title="选择活动" :visible="selectActivity" @ok="fn_selectedActive" @cancel="fn_cancelActivity" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
-      <a-table :style="{ marginTop: '20px' }" :columns="columns" :data-source="tableDataList" :pagination="false" :loading="tableLoading" :scroll="{ y: scrollY }" :row-selection="rowSelection">
-        <template slot="faceAmountSlot" slot-scope="rowData">
-          <div class="editable-row-operations">
-            <span v-html="faceAmountStr(rowData)"></span>
-          </div>
-        </template>
-        <span slot="action" slot-scope="record">
-          <a @click="onCheck(record)">查看</a>
-        </span>
-      </a-table>
-      <a-pagination :total="total" :show-total="total => `共 ${total} 条`" show-quick-jumper show-size-changer v-model="current" :current="current" :pageSize="pageSize"
-        :pageSizeOptions="['10', '20', '30', '40', '50', '100']" @change="change" @showSizeChange="showSizeChange" style="margin-top:30px;width:100%;text-align: right;" />
-    </a-modal>
+      <activity
+        :visible.sync="visibleActivity"
+        @selectedActive="selectedActivity"
+      >
+      </activity>
+      <affair
+        :visible.sync="visibleAffair"
+        @selectedActive="selectedAffair"
+      >
+      </affair>
     <!-- 弹框队列结束 -->
-
   </div>
 </template>
 
@@ -209,25 +193,22 @@ import {
   typeList,
   activityList
 } from '@/pages/coupons/release/createForms';
-import FilterForm from '@/components/FormList/index.jsx';
+import activity from './activity';
+import affair from './affair';
 import moment from 'moment';
 import api from '@/api';
 import { getTaskDetail, postAdd, postUpdate } from '@/api/task';
 export default {
   components: {
-    FilterForm
+    activity,
+    affair
   },
   data() {
     return {
-      //弹框变量--开始
-      scrollY: 300,
-      pageSize: 10,
-      current: 1,
-      total: null,
-      tableLoading: false,
-      tableDataList: [],
-      //弹框变量--结束
-      selectActivity: false,
+      type: 'add', //add:新增，edit:编辑
+      editId: '',
+      visibleActivity: false,
+      visibleAffair: false,
       selectGame: false,
       addLoading: false,
       form: {
@@ -260,100 +241,34 @@ export default {
       taskSourceOption: [],
       rules: {
         taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
-        cycleRange: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
-        taskMaxNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
-        gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
-        BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
-        GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
-        BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
-        BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
-        ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
-        giftBagName: [{ required: true, message: '请选择礼包', trigger: 'blur' }],
-        GrowthProportion: [{ required: true, message: '请输入成长值计算比例', trigger: 'blur' }],
-        GrowthMaxNumber: [{ required: true, message: '请输入成长值最大数量', trigger: 'blur' }],
-        gameMaxNumber: [{ required: true, message: '请输入最新数量', trigger: 'blur' }],
-        gameMaxNumberProportion: [{ required: true, message: '请输入计算比例', trigger: 'blur' }]
-      },
-      formList: [
-        {
-          label: '卡券ID',
-          type: 'input',
-          placeholder: '请输入',
-          name: 'newid'
-        },
-        {
-          label: '卡券类型',
-          name: 'type',
-          type: 'select',
-          placeholder: '全部',
-          selectOptions: typeList
-        },
-        {
-          label: '卡券标题',
-          type: 'input',
-          placeholder: '请输入',
-          name: 'title'
-        },
-        {
-          label: '卡券业务类型',
-          type: 'select',
-          placeholder: '全部',
-          name: 'activity',
-          selectOptions: activityList,
-          labelCol: { span: 9 },
-          wrapperCol: { span: 15 }
-        }
-      ],
-      columns: [
-        {
-          dataIndex: 'id',
-          key: 'id',
-          title: '卡券ID'
-        },
-        {
-          title: '卡券标题',
-          key: 'couponTitle',
-          dataIndex: 'couponTitle'
-        },
-        // {
-        //     title: '卡券副标题',
-        //     key: 'couponSubhead',
-        //     dataIndex: 'couponSubhead'
-        // },
-        {
-          title: '卡券类型',
-          key: 'couponType',
-          dataIndex: 'couponType',
-          customRender: text => typeList.filter(item => item.id == text)[0].name || ''
-        },
-        {
-          title: '卡券业务类',
-          key: 'activity',
-          dataIndex: 'activity',
-          customRender: text => activityList.filter(item => item.id == text)[0].name || ''
-        },
-        {
-          title: '卡券面值金额',
-          key: 'faceAmountSlot',
-          scopedSlots: { customRender: 'faceAmountSlot' }
-        },
-        {
-          title: '操作人员',
-          key: 'operator',
-          dataIndex: 'operator'
-        },
-        {
-          title: '创建时间',
-          key: 'createTime',
-          dataIndex: 'createTime',
-          customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
-        }
-      ]
+        periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
+        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }]
+        // gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
+        // BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
+        // GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
+        // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
+        // BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
+        //ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
+        //giftBagName: [{ required: true, message: '请选择礼包', trigger: 'blur' }],
+        //GrowthProportion: [{ required: true, message: '请输入成长值计算比例', trigger: 'blur' }],
+        //GrowthMaxNumber: [{ required: true, message: '请输入成长值最大数量', trigger: 'blur' }],
+        //gameMaxNumber: [{ required: true, message: '请输入最新数量', trigger: 'blur' }],
+        //gameMaxNumberProportion: [{ required: true, message: '请输入计算比例', trigger: 'blur' }]
+      }
     };
+  },
+  watch: {
+    'form.otherAwardType'(val) {
+      if (val === '0') {
+        this.form.otherAwardId = '';
+        this.form.otherAwardName = '';
+      }
+    }
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'register' });
   },
+
   created() {
     this.getTaskSource();
     this.type = this.$route.query.type;
@@ -362,90 +277,24 @@ export default {
       this.detial();
     }
   },
-  computed: {
-    faceAmountStr() {
-      return param => {
-        if (param.couponType === 10) {
-          return param.faceAmount;
-        } else if (param.couponType === 20) {
-          return param.faceAmount;
-        } else if (param.couponType === 40) {
-          return param.discountRatio * 10 + '折';
-        } else {
-          return '';
-        }
-      };
-    },
-    rowSelection() {
-      return {
-        onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.selectedRows = selectedRows;
-        },
-        type: 'radio'
-      };
-    }
-  },
   methods: {
-    // 打开弹窗
-    fn_selectActivity() {
-      this.selectActivity = true;
-      this.getCouponList();
+    // 打开活动弹窗
+    selectActivity() {
+      this.visibleActivity = true;
     },
-    fn_cancelActivity() {
-      this.selectActivity = false;
+    // 选择活动回调
+    selectedActivity(row) {
+      this.form.otherAwardId = row[0].id;
+      this.form.otherAwardName = row[0].activityName;
     },
-    fn_selectedActive() {
-      this.selectActivity = false;
+    // 打开关联任务
+    selectAffair() {
+      this.visibleAffair = true;
     },
-    // 查询卡券列表
-    onSearch(args) {
-      console.log(args);
-      const { newid, activity, title, type } = args;
-      this.newid = parseInt(newid) || null;
-      this.activity = activity || null;
-      this.title = title || null;
-      this.type = type || null;
-      this.current = 1;
-      this.getCouponList();
-    },
-    change(page) {
-      this.current = page;
-      this.getCouponList();
-    },
-    showSizeChange(current, size) {
-      this.current = 1;
-      this.pageSize = size;
-      this.getCouponList();
-    },
-    // 获取卡券列表
-    getCouponList() {
-      this.tableLoading = true;
-      let args = {
-        pageIndex: this.current,
-        pageSize: this.pageSize,
-        id: this.newid,
-        activity: this.activity,
-        type: this.type,
-        title: this.title,
-        status: 99
-      };
-      api
-        .getCouponList(args)
-        .then(res => {
-          console.log(res);
-          this.tableLoading = false;
-          this.tableDataList = res.data.records.map((item, index) => {
-            return {
-              ...item,
-              key: index
-            };
-          });
-          this.total = res.data.total;
-        })
-        .finally(() => {
-          this.tableLoading = false;
-        });
+    // 选择活动回调
+    selectedAffair(row) {
+      this.form.afterTask = row[0].id;
+      this.form.afterTaskName = row[0].taskName;
     },
     // 选择有效期回调
     onChange(time) {
@@ -511,3 +360,53 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+.form-body {
+  padding: 20px 0px;
+}
+.tc-textTarea {
+  height: 200px;
+  width: 100%;
+  resize: none;
+}
+.detail {
+  height: 100%;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    line-height: 56px;
+    border-bottom: 2px solid #dadada;
+    &-title,
+    &-btn {
+      margin: 0;
+      padding: 0 40px;
+    }
+    &-btn {
+      color: #4c79fa;
+      cursor: pointer;
+    }
+  }
+  &-main {
+    height: calc(100% - 58px);
+    overflow: auto;
+    padding: 20px;
+    &-title {
+      font-size: 16px;
+      color: #7f7f7f;
+      padding-left: 35px;
+      line-height: 50px;
+      margin: 0;
+    }
+    &-items {
+      color: #666;
+      margin-bottom: 20px;
+      &-label {
+        display: inline-block;
+        width: 120px;
+        text-align: right;
+        color: #333;
+      }
+    }
+  }
+}
+</style>

@@ -103,8 +103,8 @@ export default {
           name: 'afterTaskName'
         },
         {
-          label: '领取条件：',
-          name: 'taskCondition'
+          label: '已关联的行为：',
+          name: 'behaviourVoList'
         },
         {
           label: '任务结果：',
@@ -144,7 +144,7 @@ export default {
       this.bangdouAddVal = value;
     },
     initData(id) {
-      api.getTaskDetail({ taskId: id }).then(res => {
+      getTaskDetail({ taskId: id }).then(res => {
         this.dataObj = Object.assign(
           res.data,
           { createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss') },
@@ -163,7 +163,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push({ name: 'task-manager' });
+      this.$router.push({ name: 'taskCenter-task' });
     },
     handleOk() {
       if (!this.bangdouAddVal) {
@@ -247,6 +247,11 @@ export default {
         width: 120px;
         text-align: right;
         color: #333;
+      }
+      &-value {
+        &-tag {
+          margin: 0 10px;
+        }
       }
     }
   }

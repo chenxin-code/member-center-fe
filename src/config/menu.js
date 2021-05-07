@@ -36,6 +36,33 @@ export default [
     path: '/task-manager'
   },
   {
+    title: '任务管理-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-task',
+    group: 'hyzx',
+    path: '/taskCenter-task'
+  },
+  {
+    title: '任务派发-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-distribute',
+    group: 'hyzx',
+    path: '/taskCenter-distribute'
+  },
+  {
+    title: '行为管理-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-behavior',
+    group: 'hyzx',
+    path: '/taskCenter-behavior'
+  },
+  {
     title: '接入系统管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/client_show.png'),
@@ -142,5 +169,32 @@ export default [
     menuKey: 'systemRecord',
     group: 'hyzx',
     path: '/systemRecord'
+  },
+  {
+    title: '礼包',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'gift',
+    group: 'hyzx',
+    path: '/gift'
+  },
+  {
+    title: '节日礼包',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'giftH',
+    group: 'hyzx',
+    path: '/giftH'
+  },
+  {
+    title: '礼包派发',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-join-show.png'),
+    iconHide: require('@/assets/img/menu/act-join-hide.png'),
+    menuKey: 'giftDist',
+    group: 'hyzx',
+    path: '/giftDist'
   },
 ];

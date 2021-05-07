@@ -1,8 +1,8 @@
 <template>
   <div class="taskManager">
-    <div class="taskManager-header">任务管理</div>
+    <div class="taskManager-header">任务派发管理</div>
     <div class="taskManager-main" ref="contentMain">
-      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model ref="ruleForm" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
@@ -10,12 +10,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务key">
-              <a-input v-model="formList.taskKey" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-model-item label="任务状态">
+            <a-form-model-item label="派发类型">
               <a-select v-model="formList.status" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.statusOption"
@@ -26,25 +21,14 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务来源" style="width:300px">
-              <a-select v-model="formList.taskSource" placeholder="请选择">
-                <a-select-option
-                  v-for="(item,sindex) in formList.taskSourceOption"
-                  :key="sindex"
-                  :value="item.id"
-                >{{item.name}}</a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-model-item label="创建时间">
+            <a-form-model-item label="派发时间">
               <a-range-picker @change="onChange" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
               <a-button type="primary" @click="onSearch">查询</a-button>
-              <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建任务</a-button>
+              <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建派发</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -89,6 +73,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
+import { getTaskList, postUpdateStatus } from '@/api/task';
 export default {
   name: 'task-manager',
   data() {
@@ -138,11 +123,6 @@ export default {
           key: 'status',
           dataIndex: 'status',
           customRender: text => (text === 0 ? '禁用' : '启用')
-        },
-        {
-          title: '对应行为',
-          key: 'behaviourName',
-          dataIndex: 'behaviourName'
         },
         {
           title: '任务来源',
@@ -197,10 +177,10 @@ export default {
       this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
     },
     onEditTask(record) {
-      this.$router.push({ name: 'taskCenter-task-edit', query: { id: record.id } });
+      this.$router.push({ name: 'taskCenter-task-create', query: { id: record.id, type: 'edit' } });
     },
     onCreateTask() {
-      this.$router.push({ name: 'taskCenter-task-create' });
+      this.$router.push({ name: 'taskCenter-task-create', query: { type: 'add' } });
     },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -229,8 +209,7 @@ export default {
         taskName: this.taskName,
         taskSource: this.taskSource
       };
-      api
-        .getTaskList(args)
+      getTaskList(args)
         .then(res => {
           this.dataList = res.data.records.map((item, index) => {
             return {
@@ -258,8 +237,19 @@ export default {
         .then(() => {
           this.formList.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList);
         });
+    },
+
+    // 是否启用
+    onStatus(row) {
+      postUpdateStatus({
+        id: row.id,
+        status: row.status === 1 ? 0 : 1
+      }).then(res => {
+        this.getTaskList();
+      });
     }
   },
+
   activated() {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
@@ -274,7 +264,7 @@ export default {
       this.taskSource = '';
       this.status = null;
       //初始化加载数据
-      this.$refs.form.form.resetFields();
+      this.$refs.ruleForm.resetFields();
       this.getTaskList();
     }
 
@@ -309,7 +299,7 @@ export default {
 }
 .taskManager {
   height: 100%;
-  overflow: hide;
+  overflow: hidden;
   &-header {
     border-bottom: 1px solid #e8e8e8;
     line-height: 60px;

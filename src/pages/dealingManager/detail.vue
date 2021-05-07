@@ -6,7 +6,7 @@
         </div>
         <div class="detail-main">
             <div class="detail-main-base detail-main-items">
-                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基本信息</p>
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />基本信息</p>
                 <div class="detail-main-items-cont">
                     <div class="detail-main-items-cont-info">
                         <p class="detail-main-items-cont-info-box" v-for="item in baseList" :key="item.label">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="detail-main-lever detail-main-items">
-                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />行为日志</p>
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />行为日志</p>
                 <div class="detail-main-items-cont">
                     <FilterForm
                         rowCol="3"
