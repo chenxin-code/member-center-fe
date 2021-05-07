@@ -45,6 +45,15 @@ export default [
     path: '/taskCenter-task'
   },
   {
+    title: '任务派发-1.5',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/task_show.png'),
+    iconHide: require('@/assets/img/menu/task_hide.png'),
+    menuKey: 'taskCenter-distribute',
+    group: 'hyzx',
+    path: '/taskCenter-distribute'
+  },
+  {
     title: '行为管理-1.5',
     authKeys: [''],
     icon: require('@/assets/img/menu/task_show.png'),

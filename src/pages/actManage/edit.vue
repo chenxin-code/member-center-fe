@@ -424,6 +424,63 @@
                   </div>
                 </div>
 
+
+                <!--***********************************************************************-->
+                <!-- 会员日邦豆奖励规则 -->
+                <template v-if="typeId === 3">
+                  <div class="common-title">
+                    <div class="common-title-content">会员日邦豆奖励规则</div>
+                  </div>
+                  <div class="common-time">
+                    <a-form-item label="进行邦豆/成长值奖励">
+                      <a-radio-group
+                        style="padding-left:26px;"
+                        v-model="systemAwardFlag"
+                      >
+                        <a-radio :value="0">
+                          不是
+                        </a-radio>
+                        <a-radio :value="1">
+                          是
+                        </a-radio>
+                      </a-radio-group>
+                      <!-- <div>是否为周期性活动 isPeriodic:{{ isPeriodic }}</div> -->
+                    </a-form-item>
+                    <template v-if="systemAwardFlag === 1">
+                      <a-form-item label="奖励规则">
+                        <a-select
+                          v-model="isFixed"
+                        >
+                          <a-select-option :value="1">
+                            固定
+                          </a-select-option>
+                          <a-select-option :value="0">
+                            倍率
+                          </a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item :label="isFixed === 1 ? '赠送邦豆数量' : '邦豆倍数'">
+                        <a-input-number
+                          placeholder="1-999999999"
+                          :max="999999999"
+                          :min="1"
+                          v-decorator="['awardIntegral', { rules: [{ required: true, message: `请输入${isFixed === 1 ? '赠送邦豆数量' : '邦豆倍数'}` }] }]"
+                          @change="(value) => {awardIntegral = value}"
+                        />
+                      </a-form-item>
+                      <a-form-item :label="isFixed === 1 ? '赠送成长值数量' : '长值倍数'">
+                        <a-input-number
+                          placeholder="1-999999999"
+                          :max="999999999"
+                          :min="1"
+                          v-decorator="['awardGrow', { rules: [{ required: true, message: `请输入${isFixed === 1 ? '赠送成长值数量' : '长值倍数'}` }] }]"
+                          @change="(value) => {awardGrow = value}"
+                        />
+                      </a-form-item>
+                    </template>
+                  </div>
+                </template>
+
                 <!-- ********************************************************************* -->
 
                 <!-- ############ 奖品参数 ############ -->
@@ -782,7 +839,7 @@ const validatorFn0 = (rule, value, callback, message) => {
 };
 
 const validatorFn1 = (rule, value, callback, message) => {
-  console.log('validatorFn1 value :>> ', value);
+  // console.log('validatorFn1 value :>> ', value);
   if (!value) {
     callback(message);
   } else {
@@ -795,7 +852,7 @@ const validatorFn1 = (rule, value, callback, message) => {
 };
 
 const validatorDate = (rule, value, callback, message) => {
-  console.log('validatorDate value :>> ', value);
+  // console.log('validatorDate value :>> ', value);
   if (
     Number(value[0].format('YYYY-MM-DD').replace(/-/g, '')) <
     Number(
@@ -926,10 +983,7 @@ export default {
       file: null, //会员文件
       fileList1: [],
       checkboxValue: [],
-      plainOptions: [
-        { label: '周一', value: 1 },
-        { label: '周二', value: 2 }
-      ],
+      plainOptions: [{ label: '周一', value: 1 }, { label: '周二', value: 2 }],
       actRadioValue: 1,
       radioStyle: {
         display: 'block',
@@ -945,21 +999,14 @@ export default {
       memo: '', //活动描述
       activityCover: '', //活动封面
       typeId: 1, //活动类型id
-      typeIds: [
-        { name: '领券中心', id: 1 },
-        { name: '会员权益', id: 2 },
-        { name: '邦豆兑换', id: 3 }
-      ], //活动类型列表
+      typeIds: [{ name: '领券中心', id: 1 }, { name: '会员权益', id: 2 }, { name: '邦豆兑换', id: 3 }], //活动类型列表
       rightsType: 1,
       rightsTypes: [
         { name: '会员卡劵', id: 1 }
         // { name: '会员卡劵2', id: 2 } //需要注释
       ],
       clientId: [],
-      clientIds: [
-        { label: '邻里邦Pro', value: 'sys_linlibang' },
-        { label: '地产Pro', value: 'sys_dichan' }
-      ],
+      clientIds: [{ label: '邻里邦Pro', value: 'sys_linlibang' }, { label: '地产Pro', value: 'sys_dichan' }],
       startLevelId: 1,
       endLevelId: 1,
       levelIds: [
@@ -970,6 +1017,10 @@ export default {
         { name: '邻里会员V5', id: 5 }
       ],
       isPeriodic: 0,
+      systemAwardFlag: 0, // 是否奖励
+      isFixed: 1, // 是否固定值
+      awardGrow: '',
+      awardIntegral: '',
       isIncluded1: 1,
       isIncluded2: 1,
       isIncludeds: [
@@ -1113,7 +1164,7 @@ export default {
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           this.selectedRows = selectedRows;
         },
         type: 'radio'
@@ -1163,7 +1214,7 @@ export default {
     ////////// 新建活动:start ///////////
     // 查询卡券列表
     onSearch(args) {
-      console.log(args);
+      // console.log(args);
       const { activity, title, type } = args;
       this.activity = activity || null;
       this.title = title || null;
@@ -1177,7 +1228,7 @@ export default {
         return;
       }
       this.conponForm.validateFields((err, values) => {
-        console.log('monthlyDayModal validateFields err :>> ', err);
+        // console.log('monthlyDayModal validateFields err :>> ', err);
         //没有错误的情况下
       });
       this.actModalVisible = false;
@@ -1188,7 +1239,7 @@ export default {
         return;
       }
       this.conponForm.validateFields((err, values) => {
-        console.log('weeklyDayModal validateFields err :>> ', err);
+        // console.log('weeklyDayModal validateFields err :>> ', err);
         //没有错误的情况下
       });
       this.actModalVisible = false;
@@ -1201,7 +1252,7 @@ export default {
     },
     // 打开弹窗
     handleSelectCoupon(item) {
-      console.log('item :>> ', item);
+      // console.log('item :>> ', item);
       this.handleItem = item;
       this.modalVisible = true;
     },
@@ -1212,8 +1263,8 @@ export default {
     },
     // 点击弹窗确定
     handleModalOk() {
-      console.log('handleModalOk this.handleItem :>> ', this.handleItem);
-      console.log('this.selectedRows[0] :>> ', this.selectedRows[0]);
+      // console.log('handleModalOk this.handleItem :>> ', this.handleItem);
+      // console.log('this.selectedRows[0] :>> ', this.selectedRows[0]);
       if (this.selectedRows.length > 0) {
         this.modalVisible = false;
         this.handleItem.couponCode = this.selectedRows[0].couTypeCode;
@@ -1222,11 +1273,15 @@ export default {
         this.handleItem.expirationTime = this.selectedRows[0].validityEndTime;
         this.handleItem.showRedBorder = false;
         this.handleItem.couponName = this.selectedRows[0].couponTitle;
-        console.log('=======', this.selectedRows);
+        // console.log('=======', this.selectedRows);
         if (this.selectedRows[0].validityType == 1) {
-          this.handleItem.couponValid = `${this.selectedRows[0].validityStartTime} - ${this.selectedRows[0].validityEndTime}`;
+          this.handleItem.couponValid = `${this.selectedRows[0].validityStartTime} - ${
+            this.selectedRows[0].validityEndTime
+          }`;
         } else {
-          this.handleItem.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${this.selectedRows[0].takeEffectDayNums}天后生效`;
+          this.handleItem.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${
+            this.selectedRows[0].takeEffectDayNums
+          }天后生效`;
         }
       } else {
         this.$message.error('必须选择一个卡券!');
@@ -1240,27 +1295,27 @@ export default {
       this.file = file;
       this.$set(this.fileList1, 0, file);
       // this.fileList1[0] = file;
-      console.log('uploadBefor this.fileList1 :>> ', this.fileList1);
-      console.log('uploadBefor this.file :>> ', this.file);
+      // console.log('uploadBefor this.fileList1 :>> ', this.fileList1);
+      // console.log('uploadBefor this.file :>> ', this.file);
       return false;
     },
     handleRemove1(file) {
-      console.log('file :>> ', file);
+      // console.log('file :>> ', file);
       // return;
       const index = this.fileList1.indexOf(file);
       const newFileList = this.fileList1.slice();
       newFileList.splice(index, 1);
       this.fileList1 = newFileList;
       this.file = null;
-      console.log('newFileList :>> ', newFileList);
-      console.log('this.file :>> ', this.file);
+      // console.log('newFileList :>> ', newFileList);
+      // console.log('this.file :>> ', this.file);
     },
     // 下载会员信息
     getDownloadInfo() {
       const args = {
         activityId: this.$route.query.id
       };
-      // console.log('getDownloadInfo args :>> ', args);
+      // // console.log('getDownloadInfo args :>> ', args);
       // return;
       axios({
         method: 'get',
@@ -1272,7 +1327,7 @@ export default {
         },
         responseType: 'blob'
       }).then(res => {
-        console.log('getDownloadInfo res.data :>> ', res.data);
+        // console.log('getDownloadInfo res.data :>> ', res.data);
         // return;
         this.handleDownload(res.data);
       });
@@ -1285,7 +1340,7 @@ export default {
       eleLink.style.display = 'none';
       // 字符内容转变成blob地址
       var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
-      console.log('blob :>> ', blob);
+      // console.log('blob :>> ', blob);
       eleLink.href = URL.createObjectURL(blob);
       // 触发点击
       document.body.appendChild(eleLink);
@@ -1298,7 +1353,7 @@ export default {
     getTplDownload() {
       this.downLoadTplExist = false;
       return api.getTplDownload().then(res => {
-        console.log('getTplDownload res :>> ', res);
+        // console.log('getTplDownload res :>> ', res);
         this.downLoadTplExist = true;
         this.downLoadTplUrl = res.data;
       });
@@ -1326,7 +1381,7 @@ export default {
           isEnable: 0
         })
         .then(res => {
-          console.log('getActThemeList res :>> ', res);
+          // console.log('getActThemeList res :>> ', res);
           if (res.code === 200) {
             this.activityThemeIds.splice(1, this.activityThemeIds.length);
             res.data.records.forEach(element => {
@@ -1336,7 +1391,7 @@ export default {
               this.activityThemeIds.push(tempObj);
             });
             this.activityThemeId = this.activityThemeIds[0].code;
-            console.log('getActThemeList this.activityThemeIds :>> ', this.activityThemeIds);
+            // console.log('getActThemeList this.activityThemeIds :>> ', this.activityThemeIds);
           }
         });
     },
@@ -1348,7 +1403,7 @@ export default {
         pageSize: this.pageSize,
         activity: this.activity,
         type: this.type,
-        title: this.title,
+        title: this.title
         //status: 99
       };
       return api
@@ -1357,7 +1412,7 @@ export default {
           this.tableLoading = false;
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.tableLoading = false;
           this.tableDataList = res.data.records.map((item, index) => {
             return {
@@ -1376,7 +1431,7 @@ export default {
     //////////上传图片///////////
     //{ fileList = [] } = {}是解构赋至拿到参数中的fileList
     addPic({ fileList = [] } = {}) {
-      console.log('addPic fileList:>> ', fileList);
+      // console.log('addPic fileList:>> ', fileList);
       if (fileList.length > 0) {
         const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
         if (!isJpgOrPng) {
@@ -1388,13 +1443,13 @@ export default {
           } else {
             this.picUploading = true;
             const formData = new FormData();
-            console.log('fileList :>> ', fileList);
+            // console.log('fileList :>> ', fileList);
             fileList.forEach(file => {
               formData.append('file', file.originFileObj);
             });
             formData.append('programCode', 'sys-member-center');
-            console.log('formData.get(file) :>> ', formData.get('file'));
-            console.log('formData.get(programCode) :>> ', formData.get('programCode'));
+            // console.log('formData.get(file) :>> ', formData.get('file'));
+            // console.log('formData.get(programCode) :>> ', formData.get('programCode'));
 
             api
               .updateImage(formData)
@@ -1403,7 +1458,7 @@ export default {
               })
               .then(res => {
                 if (res.code === 200) {
-                  console.log(this.fileList);
+                  // console.log(this.fileList);
                   this.conponForm.setFieldsValue({
                     activityCover: res.data
                   });
@@ -1428,7 +1483,7 @@ export default {
       this.activityCover = '';
     },
     deleteOssImage() {
-      console.log('deleteOssImage');
+      // console.log('deleteOssImage');
       const that = this;
       that.$confirm({
         title: '删除图片',
@@ -1484,8 +1539,8 @@ export default {
       this.$router.replace({ path: '/actManage' });
     },
     handleRangePicker(dates, dateStrings) {
-      console.log('handleRangePicker dates :>> ', dates);
-      console.log('handleRangePicker dateStrings :>> ', dateStrings);
+      // console.log('handleRangePicker dates :>> ', dates);
+      // console.log('handleRangePicker dateStrings :>> ', dateStrings);
       this.rangePickerValue = dates;
       this.validityStartTime = dateStrings[0];
       this.validityEndTime = dateStrings[1];
@@ -1496,28 +1551,28 @@ export default {
       this.activityName = e.target.value;
     },
     perPersonDayLimitChange(value) {
-      console.log('perPersonDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
-      console.log('perPersonDayLimitChange valuevalue :>> ', value);
+      // console.log('perPersonDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('perPersonDayLimitChange valuevalue :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'perPersonDayLimit', value);
     },
     perDayLimitChange(value) {
-      console.log('perDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
-      console.log('perDayLimitChange value :>> ', value);
+      // console.log('perDayLimitChange this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('perDayLimitChange value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'perDayLimit', value);
     },
     perPersonLimitChange(value) {
-      console.log('perPersonLimitChange this.awardFormindex :>> ', this.awardFormindex);
-      console.log('perPersonLimitChange value :>> ', value);
+      // console.log('perPersonLimitChange this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('perPersonLimitChange value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'perPersonLimit', value);
     },
     integrealCountChange(value) {
-      console.log('integrealCountChange this.awardFormindex :>> ', this.awardFormindex);
-      console.log('integrealCountChange value :>> ', value);
+      // console.log('integrealCountChange this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('integrealCountChange value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'integrealCount', value);
     },
     issuedCountChange(value) {
-      console.log('issuedCountChange this.awardFormindex :>> ', this.awardFormindex);
-      console.log('issuedCountChange value :>> ', value);
+      // console.log('issuedCountChange this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('issuedCountChange value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'issuedCount', value);
     },
     memoChange(e) {
@@ -1530,28 +1585,28 @@ export default {
     },
     //多选
     checkboxChange(checkedValues) {
-      console.log('checkboxChange checkedValues :>> ', checkedValues);
+      // console.log('checkboxChange checkedValues :>> ', checkedValues);
       this.checkboxValue.splice(0, this.checkboxValue.length);
       checkedValues.forEach(element => {
         this.checkboxValue.push(element);
       });
     },
     monthlyDayChange(checkedValues) {
-      console.log('monthlyDayChange checkedValues :>> ', checkedValues);
+      // console.log('monthlyDayChange checkedValues :>> ', checkedValues);
       this.monthlyDay.splice(0, this.monthlyDay.length);
       checkedValues.forEach(element => {
         this.monthlyDay.push(element);
       });
     },
     weeklyDayChange(checkedValues) {
-      console.log('weeklyDayChange checkedValues :>> ', checkedValues);
+      // console.log('weeklyDayChange checkedValues :>> ', checkedValues);
       this.weeklyDay.splice(0, this.weeklyDay.length);
       checkedValues.forEach(element => {
         this.weeklyDay.push(element);
       });
     },
     clientIdChange(checkedValues) {
-      console.log('clientIdChange checkedValues :>> ', checkedValues);
+      // console.log('clientIdChange checkedValues :>> ', checkedValues);
       this.clientId.splice(0, this.clientId.length);
       checkedValues.forEach(element => {
         this.clientId.push(element);
@@ -1560,46 +1615,46 @@ export default {
 
     //下拉
     rightsTypeSelect(value) {
-      console.log('rightsTypeSelect');
+      // console.log('rightsTypeSelect');
       this.rightsType = value;
     },
     themeIdSelect(value) {
-      console.log('themeIdSelect value :>> ', value);
+      // console.log('themeIdSelect value :>> ', value);
       this.activityThemeId = value;
     },
     typeIdSelect(value) {
-      console.log('typeIdSelect value :>> ', value);
+      // console.log('typeIdSelect value :>> ', value);
       this.typeId = value;
     },
     startLevelIdSelect(value) {
-      console.log('startLevelIdSelect value :>> ', value);
+      // console.log('startLevelIdSelect value :>> ', value);
       this.startLevelId = value;
     },
     endLevelIdSelect(value) {
-      console.log('endLevelIdSelect value :>> ', value);
+      // console.log('endLevelIdSelect value :>> ', value);
       this.endLevelId = value;
     },
     isIncluded1Select(value) {
-      console.log('isIncluded1Select value :>> ', value);
+      // console.log('isIncluded1Select value :>> ', value);
       this.isIncluded1 = value;
     },
     isIncluded2Select(value) {
-      console.log('isIncluded2Select value :>> ', value);
+      // console.log('isIncluded2Select value :>> ', value);
       this.isIncluded2 = value;
     },
     conditionSelect(value) {
-      console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
-      console.log('conditionSelect value :>> ', value);
+      // console.log('conditionSelect this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('conditionSelect value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'condition', value);
     },
     monthGetDaySelect(value) {
-      console.log('monthGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
-      console.log('monthGetDaySelect value :>> ', value);
+      // console.log('monthGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('monthGetDaySelect value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'monthGetDay', value);
     },
     weekGetDaySelect(value) {
-      console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
-      console.log('weekGetDaySelect value :>> ', value);
+      // console.log('weekGetDaySelect this.awardFormindex :>> ', this.awardFormindex);
+      // console.log('weekGetDaySelect value :>> ', value);
       this.$set(this.activityAwards[this.awardFormindex], 'weekGetDay', value);
     },
 
@@ -1658,14 +1713,14 @@ export default {
         }
       }
 
-      console.log('handleSubmit showRedBorderNull :>> ', showRedBorderNull);
+      // console.log('handleSubmit showRedBorderNull :>> ', showRedBorderNull);
 
       this.conponForm.validateFields((err, values) => {
-        console.log('handleSubmit validateFields err :>> ', err);
-        console.log('handleSubmit validateFields values :>> ', values);
+        // console.log('handleSubmit validateFields err :>> ', err);
+        // console.log('handleSubmit validateFields values :>> ', values);
         //没有错误的情况下
         if (!err && showRedBorderNull) {
-          console.log('handleSubmit values :>> ', values);
+          // console.log('handleSubmit values :>> ', values);
           // return;
           this.getActUpdate(loadingType);
         }
@@ -1677,13 +1732,13 @@ export default {
         activityId: this.$route.query.id
       };
 
-      console.log('getActDetail param :>> ', param);
+      // console.log('getActDetail param :>> ', param);
 
       return api.getActDetail(param).then(res => {
-        console.log('getActDetail res :>> ', res);
+        // console.log('getActDetail res :>> ', res);
         if (res.code === 200) {
           this.actDetails = res.data;
-          console.log('this.actDetails :>> ', this.actDetails);
+          // console.log('this.actDetails :>> ', this.actDetails);
 
           this.activityThemeId = res.data.activityThemeId;
           this.activityName = res.data.activityName;
@@ -1706,6 +1761,11 @@ export default {
           this.startLevelId = res.data.startLevelId;
           this.endLevelId = res.data.endLevelId;
           this.isPeriodic = res.data.isPeriodic;
+
+          this.awardGrow = res.data.awardGrow;
+          this.awardIntegral = res.data.awardIntegral;
+          this.isFixed = res.data.isFixed;
+          this.systemAwardFlag = res.data.systemAwardFlag;
           // this.monthlyDay = [];
           // this.weeklyDay = [];
           if (res.data.monthlyDay) {
@@ -1759,10 +1819,12 @@ export default {
         isPeriodic: this.isPeriodic,
         monthlyDay: this.monthlyDay.join(),
         weeklyDay: this.weeklyDay.join(),
+        awardGrow: this.awardGrow,
+        awardIntegral: this.awardIntegral,
+        isFixed: this.isFixed,
+        systemAwardFlag: this.systemAwardFlag,
         activityAwards: JSON.stringify(this.activityAwards)
       };
-
-      console.log('getActUpdate param :>> ', param);
 
       const paramFormData = Object.keys(param).reduce((pre, key) => {
         pre.append([key], param[key]);
@@ -1771,7 +1833,7 @@ export default {
 
       //第二种
       for (let [a, b] of paramFormData.entries()) {
-        console.log('getActUpdate: ', a, ' || ', b);
+        // console.log('getActUpdate: ', a, ' || ', b);
       }
 
       this[loadingType] = true;
@@ -1782,9 +1844,9 @@ export default {
           this[loadingType] = false;
         })
         .then(res => {
-          console.log('getActUpdate res :>> ', res);
+          // console.log('getActUpdate res :>> ', res);
           if (res.code === 200) {
-            console.log('res.data :>> ', res.data);
+            // console.log('res.data :>> ', res.data);
             this.$router.replace({ path: '/actManage' });
           }
         });
@@ -1797,18 +1859,18 @@ export default {
     }
   },
   created() {
-    console.log('this.$route :>> ', this.$route);
+    // console.log('this.$route :>> ', this.$route);
     this.initData();
   },
   mounted() {},
   watch: {
     actRadioValue: {
       handler(newVal) {
-        console.log('watch actRadioValue newVal :>> ', newVal);
+        // console.log('watch actRadioValue newVal :>> ', newVal);
         if (newVal === 1) {
           this.weeklyDay = [];
           this.activityAwards.forEach(element => {
-            console.log('element :>> ', element);
+            // console.log('element :>> ', element);
             element.weekGetDay = '';
           });
         }
@@ -1824,19 +1886,16 @@ export default {
     },
     scopeType: {
       handler(newVal) {
-        console.log('watch scopeType newVal :>> ', newVal);
+        // console.log('watch scopeType newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
     typeId: {
       handler(newVal) {
-        console.log('watch typeId newVal :>> ', newVal);
+        // console.log('watch typeId newVal :>> ', newVal);
         if (newVal === 2) {
-          this.conditions = [
-            { name: '手动领取', id: 1 },
-            { name: '邦豆兑换', id: 3 }
-          ];
+          this.conditions = [{ name: '手动领取', id: 1 }, { name: '邦豆兑换', id: 3 }];
         } else if (newVal === 1) {
           this.conditions = [{ name: '手动领取', id: 1 }];
         } else if (newVal === 3) {
@@ -1870,7 +1929,7 @@ export default {
     },
     startLevelId: {
       handler(newVal) {
-        console.log('watch startLevelId newVal :>> ', newVal);
+        // console.log('watch startLevelId newVal :>> ', newVal);
         if (this.startLevelId > this.endLevelId) {
           this.endLevelId = this.startLevelId;
           this.conponForm.setFieldsValue({
@@ -1883,7 +1942,7 @@ export default {
     },
     endLevelId: {
       handler(newVal) {
-        console.log('watch endLevelId newVal :>> ', newVal);
+        // console.log('watch endLevelId newVal :>> ', newVal);
         if (this.endLevelId < this.startLevelId) {
           this.startLevelId = this.endLevelId;
           this.conponForm.setFieldsValue({
@@ -1901,28 +1960,28 @@ export default {
     },
     fileList: {
       handler(newVal) {
-        console.log('watch fileList newVal :>> ', newVal);
+        // console.log('watch fileList newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
     fileList1: {
       handler(newVal) {
-        console.log('watch fileList1 newVal :>> ', newVal);
+        // console.log('watch fileList1 newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
     activityAwards: {
       handler(newVal) {
-        console.log('watch activityAwards newVal :>> ', newVal);
+        // console.log('watch activityAwards newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
     },
     activityCover: {
       handler(newVal) {
-        console.log('watch activityCover newVal :>> ', newVal);
+        // console.log('watch activityCover newVal :>> ', newVal);
         this.activityCover = this.activityCover.replace(/\s+/g, ''); //去除image url空格
         if (newVal) {
           this.$set(this.fileList, 0, { uid: '-1', name: 'image.png', status: 'done', url: newVal });
@@ -1933,7 +1992,7 @@ export default {
     },
     rangePickerValue: {
       handler(newVal) {
-        console.log('watch rangePickerValue newVal :>> ', newVal);
+        // console.log('watch rangePickerValue newVal :>> ', newVal);
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
