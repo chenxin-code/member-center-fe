@@ -1,37 +1,82 @@
 <template>
   <div class="form-body">
-    <a-form :form="behaviorForm" :rules="rules" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
+    <a-form :form="behaviorForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
       <a-form-item label="行为名称">
-        <a-input v-decorator="rules.behaviorName"/>
+        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ name }}</div>
+        <a-input v-decorator="[
+          'name',
+          {
+            rules: [
+              {required: true, message: '请输入行为名称'}
+            ]
+          }
+        ]" @change="nameChange" v-else/>
+      </a-form-item>
+      <a-form-item label="行为代码">
+        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ code }}</div>
+        <a-input v-decorator="[
+          'code',
+          {
+            rules: [
+              {required: true, message: '请输入行为代码'}
+            ]
+          }
+        ]" @change="codeChange" v-else/>
       </a-form-item>
       <a-form-item label="行为来源">
-        <a-select v-decorator="rules.behaviorSource" placeholder="请选择">
-          <a-select-option value="0">一次性任务</a-select-option>
+        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ laiyuan }}</div>
+        <a-select v-decorator="[
+          'sysSource',
+          {
+            rules: [
+              {required: true, message: '请选择行为来源'}
+             ]
+          }
+        ]" @change="laiyuanChange" placeholder="请选择" v-else>
+          <a-select-option v-for="(v,k) in laiyuanArray" :key="k" :value="v.appCode">{{ v.appName }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="行为类型">
-        <a-select v-decorator="rules.behaviorType" placeholder="请选择">
-          <a-select-option value="0">一次性任务</a-select-option>
+        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ leixing }}</div>
+        <a-select v-decorator="[
+          'type',
+          {
+            rules: [
+              {required: true, message: '请选择行为类型'}
+              ]
+          }
+        ]" @change="leixingChange" placeholder="请选择" v-else>
+          <a-select-option v-for="(v,k) in leixingArray" :key="k" :value="v.id">{{ v.name }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="行为描述">
-        <a-textarea placeholder="行为描述限制250个字" v-decorator="rules.behaviorDescribe" :maxLength="250" :rows="4"/>
+        <a-textarea @change="memoChange" placeholder="" v-decorator="[
+          'memo',
+          {
+            initialValue: memo,
+            rules: [
+              {required: true, message: '请输入行为描述'},
+              { max: 100, message: '最多输入100个字符' }
+             ]
+          }
+        ]" :maxLength="250" :rows="4"/>
       </a-form-item>
       <a-form-item label="关联的任务">
         <a-button type="primary" @click="fn_selectTask()">添加任务</a-button>
-        <a-table v-if="taskData.length > 0" :columns="columns1" :bordered="true" :pagination="false" :data-source="taskData">
+        <a-table v-if="taskData.length > 0" :columns="columns1" :bordered="true" :pagination="false"
+                 :data-source="taskData">
           <a slot="action" slot-scope="rowdata" @click="deleteTask(rowdata)">删除</a>
         </a-table>
       </a-form-item>
-      <a-form-item label='行为状态'>
-        <a-radio-group v-decorator="rules.behaviorState">
-          <a-radio value="1">启用</a-radio>
-          <a-radio value="2">禁用</a-radio>
-        </a-radio-group>
+      <a-form-item label="行为状态">
+        <a-switch checked-children="启用" un-checked-children="禁用" v-model="isUsing" @change="isUsingChange"/>
       </a-form-item>
       <a-form-item :wrapper-col="{ span: 12, offset: 4 }">
-        <a-button type="primary" html-type="submit" @click="saveBehavior()" :loading="saveLoading" style="margin-right:10px">保存</a-button>
-        <a-button type="primary" html-type="submit" @click="$router.push({ path: '/taskCenter-behavior' })">取消</a-button>
+        <a-button type="primary" html-type="submit" @click="saveBehavior()" :loading="saveLoading"
+                  style="margin-right:10px">保存
+        </a-button>
+        <a-button type="primary" html-type="submit" @click="$router.push({ path: '/taskCenter-behavior' })">取消
+        </a-button>
       </a-form-item>
     </a-form>
     <a-modal title="添加任务" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
@@ -65,6 +110,7 @@
 import api from './../../../api';
 import FilterForm from './../../../components/FilterGroup/index.jsx';
 import moment from 'moment';
+
 export default {
   name: 'taskCenter-behavior-add-edit',
   components: {
@@ -72,7 +118,20 @@ export default {
   },
   data() {
     return {
-      id: null,//编辑用到id
+      memo: null,
+      type: null,
+      sysSource: null,
+      name: null,
+      code: null,
+      isUsing: true,
+      laiyuanArray: [],
+      leixingArray: [
+        {id: 1, name: '消费'},
+        {id: 2, name: '其他'}
+      ],
+      laiyuan: null,//编辑
+      leixing: null,//编辑
+      id: null,//编辑
       saveLoading: false,
       total: 0,
       pageSize: 10,
@@ -80,39 +139,6 @@ export default {
       tableLoading: false,
       tableDataList: [],
       behaviorForm: this.$form.createForm(this, {name: "behaviorForm"}),
-      rules: {
-        behaviorName: [
-          'behaviorName',
-          {
-            rules: [{required: true, message: '请输入行为名称'}]
-          }
-        ],
-        behaviorSource: [
-          'behaviorSource',
-          {
-            rules: [{required: true, message: '请选择行为来源'}]
-          }
-        ],
-        behaviorType: [
-          'behaviorType',
-          {
-            rules: [{required: true, message: '请选择行为类型'}]
-          }
-        ],
-        behaviorDescribe: [
-          'behaviorDescribe',
-          {
-            rules: [{required: true, message: '请输入行为描述'}]
-          }
-        ],
-        behaviorState: [
-          'behaviorState',
-          {
-            initialValue: '1',
-            rules: [{required: true, message: '请选择行为状态',}]
-          }
-        ],
-      },
       columns1: [
         {
           title: '任务名称',
@@ -237,28 +263,145 @@ export default {
       };
     }
   },
-  created() {},
-  mounted() {},
-  activated(){
-    this.getTaskSource();
-    this.getClientList();
-    if(this.$route.path === '/taskCenter-behavior/edit'){
-
-    }
+  created() {
+  },
+  mounted() {
+  },
+  activated() {
+    let sourceList = [];
+    api.getTaskSource().then(
+      res => (sourceList = res.data.map(item => {
+        return {id: item.appCode, name: item.appName};
+      }))
+    ).then(() => {
+      this.formList = this.formList.map(item => {
+        if (item.name === 'taskSource') {
+          return {
+            ...item,
+            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
+          };
+        } else {
+          return item;
+        }
+      });
+    });
+    ///////////////////////////////////
+    this.laiyuanArray = [];
+    api.getClientList().then(resp => {
+      if (resp.code === 200) {
+        resp.data.forEach((v, k) => {
+          this.laiyuanArray.push({
+            appCode: v.appCode,
+            appName: v.appName
+          });
+        });
+        if (this.$route.path === '/taskCenter-behavior/edit') {
+          api.selectBehaviour({
+            id: this.$route.query.id
+          }).then(resp2 => {
+            if (resp2.code === 200) {
+              this.id = resp2.data.id;
+              this.name = resp2.data.name;
+              this.code = resp2.data.code;
+              this.memo = resp2.data.memo;
+              this.isUsing = !!Number(resp2.data.isUsing);
+              this.laiyuanArray.forEach((v, k) => {
+                if (v.appCode === resp2.data.sysSource) {
+                  this.laiyuan = v.appName;
+                }
+              });
+              this.leixingArray.forEach((v, k) => {
+                if (v.id === resp2.data.type) {
+                  this.leixing = v.name;
+                }
+              });
+              resp2.data.taskList.forEach((v, k) => {
+                this.taskData.push({
+                  taskName: v.taskName,
+                  memo: v.memo,
+                  taskCondition: v.taskCondition
+                });
+              });
+            }
+          });
+        }
+      }
+    });
   },
   methods: {
-    getClientList(){
-      // api.getClientList().then(res => {
-      //   if (res.code === 200) {
-      //     this.formList[0].selectOptions.splice(1, this.formList[0].selectOptions.length);
-      //     res.data.forEach(element => {
-      //       let tempObj = {};
-      //       tempObj.id = element.appCode;
-      //       tempObj.name = element.appName;
-      //       this.formList[0].selectOptions.push(tempObj);
-      //     });
-      //   }
-      // });
+    saveBehavior() {
+      if (this.$route.path === '/taskCenter-behavior/edit') {
+        this.behaviorForm.validateFields((err) => {
+          if (!err) {
+            this.saveLoading = true;
+            let behaviourTask = [];
+            this.taskData.forEach((v, k) => {
+              behaviourTask.push({
+                taskId: v.id,
+                taskName: v.taskName
+              });
+            });
+            api.editBehaviour({
+              id: this.id,
+              memo: this.memo,
+              isUsing: this.isUsing ? 1 : 0,
+              behaviourTask: behaviourTask
+            }).then(res => {
+              if (res.code === 200) {
+                this.$router.replace({path: '/taskCenter-behavior'});
+              }
+            }).finally(() => {
+              this.saveLoading = false;
+            });
+          }
+        });
+      } else if (this.$route.path === '/taskCenter-behavior/add') {
+        this.behaviorForm.validateFields((err) => {
+          if (!err) {
+            this.saveLoading = true;
+            let behaviourTask = [];
+            this.taskData.forEach((v, k) => {
+              behaviourTask.push({
+                taskId: v.id,
+                taskName: v.taskName
+              });
+            });
+            api.createBehaviour({
+              name: this.name,
+              code: this.code,
+              sysSource: this.sysSource,
+              type: this.type,
+              memo: this.memo,
+              isUsing: this.isUsing ? 1 : 0,
+              behaviourTask: behaviourTask
+            }).then(res => {
+              if (res.code === 200) {
+                this.$router.replace({path: '/taskCenter-behavior'});
+              }
+            }).finally(() => {
+              this.saveLoading = false;
+            });
+          }
+        });
+      }
+    },
+    memoChange(e) {
+      this.memo = e.target.value;
+    },
+    laiyuanChange(val) {
+      this.sysSource = val;
+    },
+    leixingChange(val) {
+      this.type = val;
+    },
+    nameChange(e) {
+      this.name = e.target.value;
+    },
+    codeChange(e) {
+      this.code = e.target.value;
+    },
+    isUsingChange(checked) {
+      this.isUsing = checked;
     },
     onSearch(args) {
       const {taskName, taskKey, status} = args;
@@ -322,65 +465,13 @@ export default {
     handleCancel() {
       this.visible = false;
     },
-    saveBehavior() {
-      if(this.$route.path === '/taskCenter-behavior/edit'){
-        this.behaviorForm.validateFields((err) => {
-          if (!err) {
-            this.saveLoading = true;
-            api.editBehaviour({
-              id: this.id,
-            }).then(res => {
-              if (res.code === 200) {
-                this.$router.replace({ path: '/taskCenter-behavior' });
-              }
-            }).finally(() => {
-              this.saveLoading = false;
-            });
-          }
-        });
-      }else if(this.$route.path === '/taskCenter-behavior/add'){
-        this.behaviorForm.validateFields((err) => {
-          if (!err) {
-            this.saveLoading = true;
-            api.createBehaviour({
-
-            }).then(res => {
-              if (res.code === 200) {
-                this.$router.replace({ path: '/taskCenter-behavior' });
-              }
-            }).finally(() => {
-              this.saveLoading = false;
-            });
-          }
-        });
-      }
-    },
     deleteTask(resData) {
       this.taskData.forEach((item, index) => {
         if (resData.key === item.key) {
           this.taskData.splice(index, 1);
         }
       })
-    },
-    getTaskSource() {
-      let sourceList = [];
-      api.getTaskSource().then(
-        res => (sourceList = res.data.map(item => {
-          return {id: item.appCode, name: item.appName};
-        }))
-      ).then(() => {
-        this.formList = this.formList.map(item => {
-          if (item.name === 'taskSource') {
-            return {
-              ...item,
-              selectOptions: [].concat({id: '', name: '全部'}, sourceList)
-            };
-          } else {
-            return item;
-          }
-        });
-      });
-    },
+    }
   },
   watch: {}
 }
@@ -388,6 +479,6 @@ export default {
 
 <style lang="less">
 .form-body {
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 </style>
