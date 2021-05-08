@@ -85,6 +85,7 @@ export default {
         distType: '',
         distTypeOption: [{ id: '', name: '全部' }, { id: '0', name: '自动派发' }, { id: '1', name: '手动派发' }]
       },
+      dataList: [],
       columns: [
         {
           dataIndex: 'taskId',
