@@ -2,7 +2,7 @@
   <div class="taskManager">
     <div class="taskManager-header">任务管理</div>
     <div class="taskManager-main" ref="contentMain">
-      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model ref="ruleForm" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
@@ -89,6 +89,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
+import { getTaskList, postUpdateStatus } from '@/api/task';
 export default {
   name: 'task-manager',
   data() {
@@ -138,11 +139,6 @@ export default {
           key: 'status',
           dataIndex: 'status',
           customRender: text => (text === 0 ? '禁用' : '启用')
-        },
-        {
-          title: '对应行为',
-          key: 'behaviourName',
-          dataIndex: 'behaviourName'
         },
         {
           title: '任务来源',
@@ -197,10 +193,10 @@ export default {
       this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
     },
     onEditTask(record) {
-      this.$router.push({ name: 'taskCenter-task-edit', query: { id: record.id } });
+      this.$router.push({ name: 'taskCenter-task-create', query: { id: record.id, type: 'edit' } });
     },
     onCreateTask() {
-      this.$router.push({ name: 'taskCenter-task-create' });
+      this.$router.push({ name: 'taskCenter-task-create', query: { type: 'add' } });
     },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -229,8 +225,7 @@ export default {
         taskName: this.taskName,
         taskSource: this.taskSource
       };
-      api
-        .getTaskList(args)
+      getTaskList(args)
         .then(res => {
           this.dataList = res.data.records.map((item, index) => {
             return {
@@ -258,8 +253,19 @@ export default {
         .then(() => {
           this.formList.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList);
         });
+    },
+
+    // 是否启用
+    onStatus(row) {
+      postUpdateStatus({
+        id: row.id,
+        status: row.status === 1 ? 0 : 1
+      }).then(res => {
+        this.getTaskList();
+      });
     }
   },
+
   activated() {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
@@ -274,7 +280,7 @@ export default {
       this.taskSource = '';
       this.status = null;
       //初始化加载数据
-      this.$refs.form.form.resetFields();
+      this.$refs.ruleForm.resetFields();
       this.getTaskList();
     }
 
@@ -309,7 +315,7 @@ export default {
 }
 .taskManager {
   height: 100%;
-  overflow: hide;
+  overflow: hidden;
   &-header {
     border-bottom: 1px solid #e8e8e8;
     line-height: 60px;
