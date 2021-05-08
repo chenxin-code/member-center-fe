@@ -1,9 +1,38 @@
 import { fetchApi } from '@/utils/ajax'
 import URL from './urlConfig'
-
-export const getTaskList = data => fetchApi(URL.GET_TASKlIST, data, "GET")
+const API = '/times/member-center/task/api/v1'
 
 export const getTaskSource = () => fetchApi(URL.GET_TASKSOURCE, {}, 'GET')
+
+/**
+ * 获取任务列表
+ * @param {object} params 入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {object} params.createTimeEnd	结束时间	query	true	string
+ * @param {object} params.createTimeStart	开始时间	query	true	string
+ * @param {object} params.pageIndex	当前页面索引	query	true	ref
+ * @param {object} params.pageSize	页面数据大小	query	true	ref
+ * @param {object} params.status	任务状态（空：全部，0：禁用，1启用）	query	true	ref
+ * @param {object} params.taskKey	任务Key	query	true	string
+ * @param {object} params.taskName	任务名称	query	true	string
+ * @param {object} params.taskSource	任务来源	query	true	string
+*/
+export const getTaskList = data => fetchApi(`${API}/list`, data, "GET")
+
+/**
+ * 任务详情
+ * @param {object} params 入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {number} params.taskId 任务id
+*/
+export const getTaskDetail = data => fetchApi(`${API}/detail`, data, 'GET')
+
+/**
+ * 启用禁用任务
+ * @param {object} params 入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {number} params.id 任务id
+ * @param {number} params.status 任务状态  0=禁用  1=启用
+ * 
+*/
+export const postUpdateStatus = data => fetchApi(`${API}/update-status`, data, 'POST')
 
 /**
  * 新建/修改任务
