@@ -8,13 +8,13 @@
                     :onSubmit="onSearch"/>
           <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false"
                    :loading="tableLoading" :scroll="{y: scrollY}">
-            <span slot="action" slot-scope="scope">
+            <template slot="action" slot-scope="scope">
               <a @click="goDetail(scope.id)" style="padding-right: 10px;">查看详情</a>
               <a @click="goJournal(scope.id)" style="padding-right: 10px;">查看日志</a>
-              <a @click="goEdit(scope.id)" style="padding-right: 10px;">编辑</a>
-              <a @click="">启用</a>
-              <a @click="">禁用</a>
-            </span>
+              <a @click="goEdit(scope.id)">编辑</a>
+              <!--<a @click="">启用</a>
+              <a @click="">禁用</a>-->
+            </template>
           </a-table>
           <a-pagination
             :total="total"
@@ -131,7 +131,7 @@ export default {
           title: '操作',
           key: 'action',
           scopedSlots: {customRender: 'action'},
-          width: 200
+          width: 150
         }
       ],
       dataList: [],
