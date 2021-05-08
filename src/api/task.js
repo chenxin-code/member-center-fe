@@ -1,6 +1,8 @@
 import { fetchApi } from '@/utils/ajax'
 import URL from './urlConfig'
 const API = '/times/member-center/task/api/v1'
+const API_DIST = '/times/member-center/task-dist/api/v1'
+
 
 export const getTaskSource = () => fetchApi(URL.GET_TASKSOURCE, {}, 'GET')
 
@@ -81,3 +83,16 @@ export const postUpdateStatus = data => fetchApi(`${API}/update-status`, data, '
 */
 export const postAdd = data => fetchApi(`${API}/add`, data, 'POST')
 export const postUpdate = data => fetchApi(`${API}/update`, data, 'POST')
+
+
+/**
+ * 任务派发列表
+ * @param {object} params 入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {number} params.pageIndex	起始页	query	true	ref
+ * @param {number} params.pageSize	每页展示条数	query	true	ref
+ * @param {number} params.distType	派发类型（空：全部；0：自动；1：手动）	query	false	ref
+ * @param {string} params.endTime	结束时间	query	false	string
+ * @param {string} params.startTime	开始时间	query	false	string
+ * @param {string} params.taskName	任务名称	query	false	string
+*/
+export const getDistList = param => fetchApi(`${API_DIST}/dist-list`, param, 'get')

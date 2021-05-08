@@ -11,9 +11,9 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="派发类型">
-              <a-select v-model="formList.status" placeholder="请选择">
+              <a-select v-model="formList.distType" placeholder="请选择">
                 <a-select-option
-                  v-for="(item,sindex) in formList.statusOption"
+                  v-for="(item,sindex) in formList.distTypeOption"
                   :key="sindex"
                   :value="item.id"
                 >{{item.name}}</a-select-option>
@@ -22,7 +22,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="派发时间">
-              <a-range-picker @change="onChange" />
+              <a-range-picker @change="onChange" format="YYYY-MM-DD" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
@@ -43,11 +43,6 @@
             :loading="tableLoading"
             :scroll="{ y: scrollY }"
           >
-            <span slot="action" slot-scope="record" class="record">
-              <a @click="onCheck(record)">查看</a>
-              <a @click="onStatus(record)">{{record.status === 1 ? '禁用' : '启用'}}</a>
-              <a @click="onEditTask(record)">编辑</a>
-            </span>
           </a-table>
           <a-pagination
             :total="total"
@@ -73,7 +68,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
-import { getTaskList, postUpdateStatus } from '@/api/task';
+import { getDistList, postUpdateStatus } from '@/api/task';
 export default {
   name: 'task-manager',
   data() {
@@ -87,19 +82,13 @@ export default {
       tableLoading: false,
       formList: {
         taskName: '',
-        taskKey: '',
-        status: '',
-        taskDate: '',
-        taskSource: '',
-        createTimeStart: '',
-        createTimeEnd: '',
-        statusOption: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }],
-        taskSourceOption: []
+        distType: '',
+        distTypeOption: [{ id: '', name: '全部' }, { id: '0', name: '自动派发' }, { id: '1', name: '手动派发' }]
       },
       columns: [
         {
-          dataIndex: 'taskKey',
-          key: 'id',
+          dataIndex: 'taskId',
+          key: 'taskId',
           title: '任务ID'
         },
         {
@@ -109,31 +98,21 @@ export default {
         },
         {
           title: '派发类型',
-          key: 'validity',
-          dataIndex: 'validity'
+          key: 'distType',
+          dataIndex: 'distType'
         },
         {
           title: '操作人员',
-          key: 'isPeriodic',
-          dataIndex: 'isPeriodic'
+          key: 'createUserName',
+          dataIndex: 'createUserName'
         },
         {
           title: '派发时间',
-          key: 'status',
-          dataIndex: 'status'
-        },
-        {
-          title: '操作',
-          key: 'action',
-          scopedSlots: { customRender: 'action' }
+          key: 'createTime',
+          dataIndex: 'createTime'
         }
       ],
-      dataList: [],
-      taskKey: '',
-      taskDate: [],
-      taskName: '',
-      taskSource: '',
-      status: null
+      taskDate: []
     };
   },
   components: {
@@ -141,21 +120,15 @@ export default {
   },
   mounted() {
     this.getTaskSource();
-    this.getTaskList();
     setTimeout(() => {
       this.scrollY = this.$refs.contentMain.offsetHeight - 340 + 'px';
     }, 0);
   },
   methods: {
     onChange(time) {
-      this.formList.taskDate = time;
+      this.taskDate = time;
     },
     onSearch() {
-      this.taskKey = this.formList.taskKey || null;
-      this.taskName = this.formList.taskName || null;
-      this.taskSource = this.formList.taskSource || null;
-      this.status = this.formList.status || null;
-      this.taskDate = this.formList.taskDate || [];
       this.current = 1;
       this.getTaskList();
     },
@@ -186,19 +159,23 @@ export default {
 
     getTaskList() {
       this.tableLoading = true;
-      let args = {
-        pageIndex: this.current,
-        pageSize: this.pageSize,
-        createTimeStart: this.taskDate.length ? moment(this.taskDate[0]).format('YYYY-MM-DD') : null,
-        createTimeEnd: this.taskDate.length ? moment(this.taskDate[1]).format('YYYY-MM-DD') : null,
-        status: this.status,
-        taskKey: this.taskKey,
-        taskName: this.taskName,
-        taskSource: this.taskSource
-      };
-      getTaskList(args)
+      const { taskName, distType } = this.formList;
+      let args = Object.assign(
+        {},
+        {
+          pageIndex: this.current,
+          pageSize: this.pageSize,
+          startTime: this.taskDate.length ? moment(this.taskDate[0]).format('YYYY-MM-DD') : null,
+          endTime: this.taskDate.length ? moment(this.taskDate[1]).format('YYYY-MM-DD') : null,
+          distType,
+          taskName
+        }
+      );
+      getDistList(args)
         .then(res => {
           this.dataList = res.data.records.map((item, index) => {
+            item.distType = ['自动派发', '手动派发'][item.distType];
+            item.createTime = moment(item.createTime).format('YYYY-MM-DD');
             return {
               ...item,
               key: index
@@ -245,11 +222,11 @@ export default {
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
-      this.taskKey = '';
-      this.taskDate = [];
-      this.taskName = '';
-      this.taskSource = '';
-      this.status = null;
+      this.formList = {
+        taskName: '',
+        distType: '',
+        distTypeOption: [{ id: '', name: '全部' }, { id: '0', name: '自动派发' }, { id: '1', name: '手动派发' }]
+      };
       //初始化加载数据
       this.$refs.ruleForm.resetFields();
       this.getTaskList();
