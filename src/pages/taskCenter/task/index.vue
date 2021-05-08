@@ -265,6 +265,7 @@ export default {
       })
         .then(res => {
           this.getTaskList();
+          this.$message.success('状态已更改');
         })
         .finally(() => {
           this.tableLoading = false;
