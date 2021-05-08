@@ -511,3 +511,54 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.form-body {
+  padding: 20px 0px;
+}
+.tc-textTarea {
+  height: 200px;
+  width: 100%;
+  resize: none;
+}
+.detail {
+  height: 100%;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    line-height: 56px;
+    border-bottom: 2px solid #dadada;
+    &-title,
+    &-btn {
+      margin: 0;
+      padding: 0 40px;
+    }
+    &-btn {
+      color: #4c79fa;
+      cursor: pointer;
+    }
+  }
+  &-main {
+    height: calc(100% - 58px);
+    overflow: auto;
+    padding: 20px;
+    &-title {
+      font-size: 16px;
+      color: #7f7f7f;
+      padding-left: 35px;
+      line-height: 50px;
+      margin: 0;
+    }
+    &-items {
+      color: #666;
+      margin-bottom: 20px;
+      &-label {
+        display: inline-block;
+        width: 120px;
+        text-align: right;
+        color: #333;
+      }
+    }
+  }
+}
+</style>
