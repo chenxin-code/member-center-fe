@@ -313,6 +313,8 @@ export default {
           _http(this.form)
             .then(res => {
               this.$refs.ruleForm.resetFields();
+              this.$message.success('提交成功');
+              this.$router.go(-1);
             })
             .finally(i => {
               this.addLoading = false;
@@ -360,6 +362,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less" scoped>
 .form-body {
   padding: 20px 0px;

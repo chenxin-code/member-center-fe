@@ -59,10 +59,10 @@
             :loading="tableLoading"
             :scroll="{ y: scrollY }"
           >
-            <span slot="action" slot-scope="record" class="record">
-              <a @click="onCheck(record)">查看</a>
-              <a @click="onStatus(record)">{{record.status === 1 ? '禁用' : '启用'}}</a>
-              <a @click="onEditTask(record)">编辑</a>
+            <span slot="action" slot-scope="record">
+              <a-button type="link" class="record" @click="onCheck(record)">查看</a-button>
+              <a-button type="link" class="record" @click="onStatus(record)">{{record.status === 1 ? '禁用' : '启用'}}</a-button>
+              <a-button type="link" class="record" @click="onEditTask(record)">编辑</a-button>
             </span>
           </a-table>
           <a-pagination
@@ -154,6 +154,7 @@ export default {
         {
           title: '操作',
           key: 'action',
+          width: 200,
           scopedSlots: { customRender: 'action' }
         }
       ],
@@ -257,12 +258,18 @@ export default {
 
     // 是否启用
     onStatus(row) {
+      this.tableLoading = true;
       postUpdateStatus({
         id: row.id,
         status: row.status === 1 ? 0 : 1
-      }).then(res => {
-        this.getTaskList();
-      });
+      })
+        .then(res => {
+          this.getTaskList();
+          this.$message.success('状态已更改');
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
     }
   },
 
@@ -324,8 +331,8 @@ export default {
   &-main {
     height: 100%;
   }
-  .record a {
-    margin-right: 5px;
+  .record {
+    padding: 0 5px;
   }
 }
 </style>

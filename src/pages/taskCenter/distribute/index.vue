@@ -100,7 +100,7 @@ export default {
         {
           dataIndex: 'taskKey',
           key: 'id',
-          title: '任务key'
+          title: '任务ID'
         },
         {
           title: '任务名称',
@@ -108,32 +108,19 @@ export default {
           dataIndex: 'taskName'
         },
         {
-          title: '任务有效期(天)',
+          title: '派发类型',
           key: 'validity',
           dataIndex: 'validity'
         },
         {
-          title: '是否周期性',
+          title: '操作人员',
           key: 'isPeriodic',
-          dataIndex: 'isPeriodic',
-          customRender: text => (text === 1 ? '是' : '否')
+          dataIndex: 'isPeriodic'
         },
         {
-          title: '状态',
+          title: '派发时间',
           key: 'status',
-          dataIndex: 'status',
-          customRender: text => (text === 0 ? '禁用' : '启用')
-        },
-        {
-          title: '任务来源',
-          key: 'sourceName',
-          dataIndex: 'sourceName'
-        },
-        {
-          title: '创建时间',
-          key: 'createTime',
-          dataIndex: 'createTime',
-          customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
+          dataIndex: 'status'
         },
         {
           title: '操作',
