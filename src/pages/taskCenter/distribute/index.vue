@@ -141,7 +141,7 @@ export default {
       this.$router.push({ name: 'taskCenter-task-create', query: { id: record.id, type: 'edit' } });
     },
     onCreateTask() {
-      this.$router.push({ name: 'taskCenter-task-create', query: { type: 'add' } });
+      this.$router.push({ name: 'taskCenter-distribute-create', query: { type: 'add' } });
     },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;

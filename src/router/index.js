@@ -335,6 +335,24 @@ const routes = [
         component: () => import('@/pages/taskCenter/distribute/index.vue')
       },
       {
+        path: '/taskCenter-distribute/create',
+        name: 'taskCenter-distribute-create',
+        menuKey: 'taskCenter-distribute-create',
+        meta: {
+          menu: '/taskCenter-distribute',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribute',
+              name: '任务派发'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/taskCenter/distribute/create.vue')
+      },
+      {
         path: '/task-manager',
         name: 'task-manager',
         menuKey: 'task-manager',

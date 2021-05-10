@@ -1,180 +1,91 @@
 <template>
 <div class="detail">
 <div class="detail-header">
-      <p class="detail-header-title">{{type === "add" ? '新建任务' : '编辑任务'}}</p>
+      <p class="detail-header-title">新建任务派发</p>
       <p class="detail-header-btn" @click="goBack()">返回</p>
     </div>
     <div class="detail-main">
       <div class="form-body">
         <a-form-model ref="ruleForm" :rules="rules" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
-          <a-form-model-item ref="taskName" label="任务名称" prop="taskName">
-            <a-input v-model="form.taskName" />
-          </a-form-model-item>
-          <a-form-model-item label="有效期" prop="taskDate">
-            <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD" style="width: 100%" @change="onChange" />
-          </a-form-model-item>
-          <a-form-model-item label="任务周期性">
-            <a-select v-model="form.isPeriodic" placeholder="请选择">
-              <a-select-option value="0">
-                一次性任务
-              </a-select-option>
-              <a-select-option value="1">
-                周期性任务
-              </a-select-option>
-              <a-select-option value="2">
-                重复性任务
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isPeriodic==1" ref="periodic" label="任务周期" prop="periodic">
-            <a-input v-model="form.periodic" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isPeriodic==2" ref="executeNum" label="最大执行次数" prop="executeNum">
-            <a-input v-model="form.executeNum" />
-          </a-form-model-item>
-          <a-form-model-item ref="source" label="任务来源" prop="source">
-            <a-select v-model="form.sourceName" placeholder="请选择" @change="handleChange">
-              <a-select-option v-for="(tsItem,tsIdex) in taskSourceOption" :key="tsIdex" :value="tsItem.appCode" >
-                {{tsItem.appName}}
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
-          <a-form-model-item label="任务描述">
-            <a-textarea class="tc-textTarea" v-model="form.memo" />
-          </a-form-model-item>
-          <a-form-model-item label="关联任务">
+          <a-form-model-item label="任务名称" prop="afterTaskName">
             <a-input v-model="form.afterTaskName" @click="selectAffair" />
           </a-form-model-item>
-          <a-form-model-item label="邦豆成长值奖励" prop="isSystemAward">
-            <a-radio-group v-model="form.isSystemAward">
-              <a-radio value="1">
-                不是
-              </a-radio>
-              <a-radio value="2">
-                是
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2" label="邦豆成长值奖励计算方式" prop="awardType">
-            <a-radio-group v-model="form.awardType">
-              <a-radio value="1">
-                固定值
-              </a-radio>
-              <a-radio value="2">
-                非固定值
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
-            <a-input v-model="form.awardIntegral" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
-            <a-input v-model="form.awardGrow" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
-            <a-input v-model="form.awardIntegral" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
-            <a-input v-model="form.awardIntegralMax" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
-            <a-input v-model="form.awardGrow" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
-            <a-input v-model="form.awardGrowMax" />
-          </a-form-model-item>
-          <a-form-model-item label="其他奖励" prop="otherAwardType">
-            <a-radio-group v-model="form.otherAwardType">
-              <a-radio value="0">
-                无
-              </a-radio>
-              <a-radio value="1">
-                活动奖励
-              </a-radio>
-              <a-radio value="2">
-                礼包券
-              </a-radio>
-              <a-radio value="3">
-                抽奖
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==1" ref="otherAwardName" label="请选择活动" prop="otherAwardName">
-            <a-input v-model="form.otherAwardName" @click="selectActivity" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==2" ref="otherAwardName" label="请选择礼包" prop="otherAwardName">
-            <a-input v-model="form.otherAwardName" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==3" ref="otherAwardName" label="请选择游戏" prop="otherAwardName">
-            <a-input v-model="form.otherAwardName" @click="fn_selectGame" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==3" ref="gameMaxNumberType" label="抽奖次数计算方式" prop="gameMaxNumberType">
-            <a-radio-group v-model="form.gameMaxNumberType">
-              <a-radio value="0">
-                固定值
-              </a-radio>
-              <a-radio value="1">
-                相对值
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==3 && form.gameMaxNumberType==0" ref="gameMaxNumber" label="固定参与次数" prop="gameMaxNumber">
-            <a-input v-model="form.gameMaxNumber" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==3 && form.gameMaxNumberType==1" ref="gameMaxNumberProportion" label="计算比例" prop="gameMaxNumberProportion">
-            <a-input v-model="form.gameMaxNumberProportion" />
-          </a-form-model-item>
+          
+          <a-radio-group v-model="form.scopeType" style="padding-left: 50px;">
+            <a-radio :style="radioStyle" :value="0">
+              <span style="padding-right:40px;">选择来源</span>
+              <div style="margin:25px 0">
+                  <!-- 会员来源 -->
+                  <a-form-model-item label="会员来源" prop="clientId">
+                    <a-checkbox-group
+                      v-model="form.clientId"
+                      :options="clientIds"
+                      @change="(value) => {form.clientId = value}"
+                    />
+                  </a-form-model-item>
+                  <!-- 会员等级 -->
+                  <a-form-model-item label="会员等级" prop="startLevelId">
+                    <a-checkbox-group
+                      v-model="form.startLevelId"
+                      :options="startLevelIds"
+                      @change="(value) => {form.startLevelId = value}"
+                    />
+                  </a-form-model-item>
+              </div>
+            </a-radio>
+            <a-radio :style="radioStyle" :value="1">
+              <span style="padding-right:40px;">上传指定会员</span>
+              <!-- { required: true, message: '请选择文件上传!' }, -->
+              <!-- 上传指定会员 -->
+              <a-form-model-item style="display:inline-block;width:100%;">
+                <a-upload
+                  v-decorator="[
+                    'form.file',
+                    {
+                      initialValue: form.file,
+                      rules: [
+                        {
+                          validator: (rule, value, callback) =>
+                            validatorFn1(rule, value, callback, '请选择文件上传!')
+                        }
+                      ]
+                    }
+                  ]"
+                  :file-list="fileList1"
+                  :remove="handleRemove1"
+                  name="file"
+                  accept=".xls,.xlsx"
+                  :before-upload="uploadBefor"
+                >
+                  <a-button>
+                    <a-icon type="upload" />
+                    上传文件
+                  </a-button>
+                </a-upload>
+              </a-form-model-item>
+              <div style="padding:40px 0 0 148px;">
+                <p style="font-size: 12px;color: #c1c1c1;">
+                  支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
+                </p>
+                <p>
+                  <a-button type="link" :loading="loadingUrl" @click="getTplDownload">下载会员信息模板</a-button>
+                </p>
+              </div>
+            </a-radio>
+            
+          </a-radio-group>
 
-          <a-form-model-item label="任务状态" prop="status">
-            <a-radio-group v-model="form.status">
-              <a-radio value="1">
-                启用
-              </a-radio>
-              <a-radio value="0">
-                禁用
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item label="初始化任务" prop="isDefault">
-            <a-radio-group v-model="form.isDefault">
-              <a-radio value="1">
-                不是
-              </a-radio>
-              <a-radio value="2">
-                是
-              </a-radio>
-            </a-radio-group>
-          </a-form-model-item>
-          <a-form-model-item label="任务执行方式">
-            <a-select v-model="form.executeType" placeholder="请选择">
-              <a-select-option value="1">
-                提示
-              </a-select-option>
-              <a-select-option value="2">
-                普通链接
-              </a-select-option>
-              <a-select-option value="3">
-                微应用地址
-              </a-select-option>
-            </a-select>
-          </a-form-model-item>
-          <a-form-model-item ref="jumpPath" v-if="form.executeType!=1" label="任务执行地址" prop="jumpPath">
-            <a-input v-model="form.jumpPath" />
-          </a-form-model-item>
+          
+          
           <a-form-model-item :wrapper-col="{ span: 12, offset: 4 }">
             <a-button type="primary" html-type="submit" style="margin-right:10px" @click="goBack">取消</a-button>
-            <a-button type="primary" html-type="submit" @click="btnCreateTask" :loading="addLoading">{{type === 'add' ? '创建任务' : '编辑任务'}}</a-button>
+            <a-button type="primary" html-type="submit" @click="btnCreateTask" :loading="addLoading">派发任务</a-button>
           </a-form-model-item>
         </a-form-model>
       </div>
     </div>
 
     <!-- 弹框队列开始 -->
-      <activity
-        :visible.sync="visibleActivity"
-        @selectedActive="selectedActivity"
-      >
-      </activity>
       <affair
         :visible.sync="visibleAffair"
         @selectedActive="selectedAffair"
@@ -185,6 +96,18 @@
 </template>
 
 <script>
+const validatorFn1 = (rule, value, callback, message) => {
+  // // console.log('validatorFn1 value :>> ', value);
+  if (!value) {
+    callback(message);
+  } else {
+    if (value.fileList.length === 0) {
+      callback(message);
+    } else {
+      callback();
+    }
+  }
+};
 import {
   couponsCenterList,
   bangdouList,
@@ -193,18 +116,17 @@ import {
   typeList,
   activityList
 } from '@/pages/coupons/release/createForms';
-import activity from './activity';
 import affair from './affair';
 import moment from 'moment';
 import api from '@/api';
-import { getTaskDetail, postAdd, postUpdate } from '@/api/task';
+import { getAddDist } from '@/api/task';
 export default {
   components: {
-    activity,
     affair
   },
   data() {
     return {
+      loadingUrl: false,
       type: 'add', //add:新增，edit:编辑
       editId: '',
       visibleActivity: false,
@@ -212,49 +134,31 @@ export default {
       selectGame: false,
       addLoading: false,
       form: {
-        taskName: '', // 任务名称
-        taskDate: [],
-        startTime: '', // 任务开始时间
-        endTime: '', // 任务结束时间
-        isPeriodic: '0', // 任务周期性
-        periodic: '', // 任务周期
-        executeNum: '', //最大执行次数
-        source: '', // 任务来源
-        sourceName: '', // 任务来源名称
-        memo: '', // 任务描述
         afterTask: '', // 关联任务
         afterTaskName: '', // 关联任务名称
-        isSystemAward: '1', // 是否进行邦豆成长值奖励
-        awardType: '1', // 邦豆成长值奖励计算方式
-        awardIntegral: '', // 邦豆奖励数量=邦豆奖励比例
-        awardGrow: '', // 成长值奖励数量=成长值奖励比例
-        awardIntegralMax: '', // 邦豆奖励最大值
-        awardGrowMax: '', // 成长值奖励最大值
-        otherAwardType: '0', // 其他奖励
-        otherAwardId: '', // 活动奖励ID
-        otherAwardName: '', // 活动名称
-        status: '1', // 任务状态
-        isDefault: '1', // 初始化任务
-        executeType: '1', // 任务执行方式
-        jumpPath: '' // 跳转路径
+        scopeType: 0,
+        clientId: ['sys_dichan'],
+        startLevelId: [],
+        file: ''
       },
       taskSourceOption: [],
       rules: {
-        taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
-        periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
-        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }]
-        // gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
-        // BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
-        // GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
-        // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
-        // BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
-        //ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
-        //giftBagName: [{ required: true, message: '请选择礼包', trigger: 'blur' }],
-        //GrowthProportion: [{ required: true, message: '请输入成长值计算比例', trigger: 'blur' }],
-        //GrowthMaxNumber: [{ required: true, message: '请输入成长值最大数量', trigger: 'blur' }],
-        //gameMaxNumber: [{ required: true, message: '请输入最新数量', trigger: 'blur' }],
-        //gameMaxNumberProportion: [{ required: true, message: '请输入计算比例', trigger: 'blur' }]
-      }
+        afterTaskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
+        clientId: [{ required: true, message: '请选择会员来源', trigger: 'blur' }]
+      },
+      radioStyle: {
+        display: 'block',
+        height: '200px'
+      },
+      clientIds: [{ label: '地产Pro', value: 'sys_dichan' }, { label: '邻里邦Pro', value: 'sys_linlibang' }],
+      startLevelIds: [
+        { label: '邻里会员V1', value: 1 },
+        { label: '邻里会员V2', value: 2 },
+        { label: '邻里会员V3', value: 3 },
+        { label: '邻里会员V4', value: 4 },
+        { label: '邻里会员V5', value: 5 }
+      ],
+      fileList1: []
     };
   },
   watch: {
@@ -263,6 +167,13 @@ export default {
         this.form.otherAwardId = '';
         this.form.otherAwardName = '';
       }
+    },
+    fileList1: {
+      handler(newVal) {
+        // console.log('watch fileList1 newVal :>> ', newVal);
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
   },
   beforeCreate() {
@@ -270,23 +181,10 @@ export default {
   },
 
   created() {
-    this.getTaskSource();
     this.type = this.$route.query.type;
-    if (this.type === 'edit') {
-      this.editId = this.$route.query.id;
-      this.detial();
-    }
   },
   methods: {
-    // 打开活动弹窗
-    selectActivity() {
-      this.visibleActivity = true;
-    },
-    // 选择活动回调
-    selectedActivity(row) {
-      this.form.otherAwardId = row[0].id;
-      this.form.otherAwardName = row[0].activityName;
-    },
+    validatorFn1,
     // 打开关联任务
     selectAffair() {
       this.visibleAffair = true;
@@ -296,21 +194,34 @@ export default {
       this.form.afterTask = row[0].id;
       this.form.afterTaskName = row[0].taskName;
     },
-    // 选择有效期回调
-    onChange(time) {
-      this.form.startTime = time[0];
-      this.form.endTime = time[1];
-    },
     // 选择任务来源回调
     handleChange(value) {
       this.form.source = value;
     },
+    uploadBefor(file) {
+      this.form.file = file;
+      this.$set(this.fileList1, 0, file);
+      // this.fileList1[0] = file;
+      return false;
+    },
+    handleRemove1(file) {
+      // console.log('file :>> ', file);
+      // return;
+      const index = this.fileList1.indexOf(file);
+      const newFileList = this.fileList1.slice();
+      newFileList.splice(index, 1);
+      this.fileList1 = newFileList;
+      this.file = null;
+      // console.log('newFileList :>> ', newFileList);
+      // console.log('this.file :>> ', this.file);
+    },
     btnCreateTask(e) {
+      console.log(this.form);
+      const data = JSON.parse(JSON.stringify());
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          const _http = this.type === 'add' ? postAdd : postUpdate;
           this.addLoading = true;
-          _http(this.form)
+          getAddDist(this.form)
             .then(res => {
               this.$refs.ruleForm.resetFields();
             })
@@ -320,42 +231,21 @@ export default {
         }
       });
     },
-    getTaskSource() {
-      var self = this;
-      let sourceList = [];
-      api.getTaskSource().then(res => {
-        self.form.source = res.data[0].appCode;
-        self.form.sourceName = res.data[0].appName;
-        self.taskSourceOption = [].concat(res.data);
-      });
-    },
     goBack() {
-      this.$router.push({ name: 'taskCenter-task' });
+      this.$router.push({ name: 'taskCenter-distribute' });
     },
-    detial() {
-      getTaskDetail({ taskId: this.editId }).then(res => {
-        // console.log(res);
-        this.form = Object.assign(
-          res.data,
-          {
-            taskDate: [moment(res.data.startTime), moment(res.data.endTime)]
-          },
-          { endTime: moment(res.data.endTime) },
-          { startTime: moment(res.data.startTime) },
-          { isPeriodic: String(res.data.isPeriodic) },
-          { isSystemAward: String(res.data.isSystemAward) },
-          { awardType: String(res.data.awardType) },
-          { otherAwardType: String(res.data.otherAwardType) },
-          { status: String(res.data.status) },
-          { isDefault: String(res.data.isDefault) },
-          { executeType: String(res.data.executeType) }
-          // {
-          //   result: `奖励成长值${res.data.awardGrow}, 奖励邦豆: ${Math.floor(res.data.awardIntegral / 100)}邦豆/${
-          //     res.data.awardIntegral
-          //   }元（向下取整）`
-          // }
-        );
-      });
+    // 获取下载模版
+    getTplDownload() {
+      this.loadingUrl = true;
+      api
+        .getTplDownload()
+        .then(res => {
+          // console.log('getTplDownload res :>> ', res);
+          window.open(res.data);
+        })
+        .finally(() => {
+          this.loadingUrl = false;
+        });
     }
   }
 };
@@ -408,5 +298,9 @@ export default {
       }
     }
   }
+}
+.createflex {
+  display: flex;
+  align-items: center;
 }
 </style>
