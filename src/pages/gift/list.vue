@@ -1,6 +1,6 @@
 <template>
   <div id="act-list">
-    <div class="content-header">礼包</div>
+    <div class="content-header">礼包管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/gift/add" ref="thisForm" :rowCol="4" :formList="formList" :onSubmit="onQuery"/>
       <a-table
@@ -12,23 +12,23 @@
         style="width: 100%;margin-top: 8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidityStr(rowData)"></span>
+            <span v-html="parseValidityStr(scope)"></span>
           </div>
         </template>
-        <template slot="createTimeSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStr(rowData.createTime)"></span>
+            <span v-html="momentStr(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goGiftDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="updateGiftStatus(rowData.id, 0)">启用</a>
-            <!--<a style="padding-right: 10px;" @click="updateGiftStatus(rowData.id, 1)">禁用</a>-->
-            <a style="padding-right: 10px;" @click="goGiftEdit(rowData.id)">编辑</a>
-            <a style="padding-right: 10px;" @click="$router.push({name: 'giftContent',query: {id: rowData.id}})">礼包内容管理</a>
+            <a style="padding-right: 10px;" @click="goGiftDetail(scope.id)">查看</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 0)" v-if="scope.status === 1">启用</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 1)" v-else-if="scope.status === 0">禁用</a>
+            <a style="padding-right: 10px;" @click="goGiftEdit(scope.id)">编辑</a>
+            <a style="padding-right: 10px;" @click="$router.push({name: 'giftContent',query: {id: scope.id}})">礼包内容管理</a>
           </div>
         </template>
       </a-table>
@@ -60,7 +60,7 @@ export default {
         {
           label: '礼包名称',
           type: 'input',
-          name: 'lbmc',
+          name: 'name',
           placeholder: '请输入',
           labelCol: {span: 6},
           wrapperCol: {span: 18}
@@ -68,12 +68,12 @@ export default {
         {
           label: '状态',
           type: 'select',
-          name: 'zt',
+          name: 'status',
           placeholder: '请选择',
           selectOptions: [
             {name: '全部', id: ''},
             {name: '启用', id: 1},
-            {name: '禁用', id: 2}
+            {name: '禁用', id: 0}
           ],
           labelCol: {span: 6},
           wrapperCol: {span: 18}
@@ -111,14 +111,14 @@ export default {
       tableColumns: [
         {
           title: '礼包名称',
-          dataIndex: 'lbmc',
-          key: 'lbmc',
+          dataIndex: 'name',
+          key: 'name',
           width: 180
         },
         {
           title: '状态',
-          dataIndex: 'zt',
-          key: 'zt',
+          dataIndex: 'status',
+          key: 'status',
           width: 120
         },
         {
@@ -199,7 +199,7 @@ export default {
         }
       });
     },
-    updateGiftStatus(paramId, state) {
+    changeGiftBag(paramId, state) {
       let title;
       if (state === 0) {
         title = '确认启用当前礼包？';
@@ -215,7 +215,7 @@ export default {
         cancelText: '取消',
         onOk: () => {
           this.tableLoading = true;
-          api.updateGiftStatus({
+          api.changeGiftBag({
             id: paramId,
             isEnable: state
           }).then(res => {
@@ -243,13 +243,13 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let lbmc = '';
-        let zt = '';
-        if (this.$refs.thisForm.getFieldsValue().lbmc) {
-          lbmc = this.$refs.thisForm.getFieldsValue().lbmc;
+        let name = '';
+        let status = '';
+        if (this.$refs.thisForm.getFieldsValue().name) {
+          name = this.$refs.thisForm.getFieldsValue().name;
         }
-        if (this.$refs.thisForm.getFieldsValue().zt) {
-          zt = this.$refs.thisForm.getFieldsValue().zt;
+        if (this.$refs.thisForm.getFieldsValue().status) {
+          status = this.$refs.thisForm.getFieldsValue().status;
         }
         let jointimeStart = '';
         let jointimeEnd = '';
@@ -260,9 +260,9 @@ export default {
           jointimeStart = moment(this.$refs.thisForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
           jointimeEnd = moment(this.$refs.thisForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
         }
-        return api.dasdsadsadasdasd({
-          lbmc: lbmc,
-          zt: zt,
+        return api.selectGiftBagList({
+          name: name,
+          status: status,
           pageIndex: this.current,
           pageSize: this.pageSize,
           startTime: jointimeStart,
@@ -289,7 +289,7 @@ export default {
     if (!this.$route.meta.isUseCache) {
       this.$nextTick(() => {
         this.$refs.thisForm.setFieldsValue({
-          zt: this.formList[1].selectOptions[0].id
+          status: this.formList[1].selectOptions[0].id
         });
       });
       //重置data

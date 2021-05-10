@@ -6,7 +6,7 @@
         </div>
         <div class="detail-main">
             <div class="detail-main-base detail-main-items">
-                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />基本信息</p>
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />基本信息</p>
                 <div class="detail-main-items-cont">
                     <img :src="dataObj.memberCardImage" class="detail-main-items-cont-img" alt="">
                     <div class="detail-main-items-cont-info">
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="detail-main-lever detail-main-items">
-                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />等级信息</p>
+                <p class="detail-main-items-title"><a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />等级信息</p>
                 <div class="detail-main-items-cont">
                     <a-table
                         :columns="columns"

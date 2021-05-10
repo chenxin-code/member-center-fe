@@ -1,9 +1,18 @@
 <template>
-  <div class="form-body">
-    <a-form :form="behaviorForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
-      <a-form-item label="行为名称">
-        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ name }}</div>
-        <a-input v-decorator="[
+  <div id="coupons-detail">
+    <div class="content-header">
+      {{ $route.path === '/taskCenter-behavior/add' ? '创建' : '编辑' }}行为
+      <span class="fallback" @click="$router.go(-1)" style="cursor: pointer;">返回</span>
+    </div>
+    <div class="coupons-main">
+      <a-row style="height: 100%;">
+        <div class="coupons-common coupons-base">
+          <a-row class="common-row">
+            <a-col :span="24">
+              <a-form :form="behaviorForm" :label-col="{ span: 3 }" :wrapper-col="{ span: 12 }">
+                <a-form-item label="行为名称">
+                  <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ name }}</div>
+                  <a-input v-decorator="[
           'name',
           {
             rules: [
@@ -11,10 +20,10 @@
             ]
           }
         ]" @change="nameChange" v-else/>
-      </a-form-item>
-      <a-form-item label="行为代码">
-        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ code }}</div>
-        <a-input v-decorator="[
+                </a-form-item>
+                <a-form-item label="行为代码">
+                  <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ code }}</div>
+                  <a-input v-decorator="[
           'code',
           {
             rules: [
@@ -22,10 +31,10 @@
             ]
           }
         ]" @change="codeChange" v-else/>
-      </a-form-item>
-      <a-form-item label="行为来源">
-        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ laiyuan }}</div>
-        <a-select v-decorator="[
+                </a-form-item>
+                <a-form-item label="行为来源">
+                  <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ laiyuan }}</div>
+                  <a-select v-decorator="[
           'sysSource',
           {
             rules: [
@@ -33,12 +42,15 @@
              ]
           }
         ]" @change="laiyuanChange" placeholder="请选择" v-else>
-          <a-select-option v-for="(v,k) in laiyuanArray" :key="k" :value="v.appCode">{{ v.appName }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="行为类型">
-        <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ leixing }}</div>
-        <a-select v-decorator="[
+                    <a-select-option v-for="(v,k) in laiyuanArray" :key="k" :value="v.appCode">{{
+                        v.appName
+                      }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="行为类型">
+                  <div v-if="$route.path === '/taskCenter-behavior/edit'">{{ leixing }}</div>
+                  <a-select v-decorator="[
           'type',
           {
             rules: [
@@ -46,11 +58,11 @@
               ]
           }
         ]" @change="leixingChange" placeholder="请选择" v-else>
-          <a-select-option v-for="(v,k) in leixingArray" :key="k" :value="v.id">{{ v.name }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="行为描述">
-        <a-textarea @change="memoChange" placeholder="" v-decorator="[
+                    <a-select-option v-for="(v,k) in leixingArray" :key="k" :value="v.id">{{ v.name }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="行为描述">
+                  <a-textarea @change="memoChange" placeholder="" v-decorator="[
           'memo',
           {
             initialValue: memo,
@@ -59,29 +71,35 @@
               { max: 100, message: '最多输入100个字符' }
              ]
           }
-        ]" :maxLength="250" :rows="4"/>
-      </a-form-item>
-      <a-form-item label="关联的任务">
-        <a-button type="primary" @click="fn_selectTask()">添加任务</a-button>
-        <a-table v-if="taskData.length > 0" :columns="columns1" :bordered="true" :pagination="false"
-                 :data-source="taskData">
-          <a slot="action" slot-scope="rowdata" @click="deleteTask(rowdata)">删除</a>
-        </a-table>
-      </a-form-item>
-      <a-form-item label="行为状态">
-        <a-switch checked-children="启用" un-checked-children="禁用" v-model="isUsing" @change="isUsingChange"/>
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 12, offset: 4 }">
-        <a-button type="primary" html-type="submit" @click="saveBehavior()" :loading="saveLoading"
-                  style="margin-right:10px">保存
-        </a-button>
-        <a-button type="primary" html-type="submit" @click="$router.push({ path: '/taskCenter-behavior' })">取消
-        </a-button>
-      </a-form-item>
-    </a-form>
+        ]" :maxLength="250" :rows="4" allow-clear/>
+                </a-form-item>
+                <a-form-item label="关联的任务">
+                  <a-button type="primary" @click="fn_selectTask()">添加任务</a-button>
+                  <a-table v-if="taskData.length > 0" :columns="columns1" :bordered="true" :pagination="false"
+                           :data-source="taskData" :row-key="(r, i) => i">
+                    <a slot="action" slot-scope="scope" @click="deleteTask(scope)">删除</a>
+                  </a-table>
+                </a-form-item>
+                <a-form-item label="行为状态">
+                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="isUsing" @change="isUsingChange"/>
+                </a-form-item>
+                <a-form-item :wrapper-col="{ span: 12, offset: 3 }">
+                  <a-button type="primary" html-type="submit" @click="saveBehavior()" :loading="saveLoading"
+                            style="margin-right: 10px;">保存
+                  </a-button>
+                  <a-button html-type="submit" @click="$router.replace({ path: '/taskCenter-behavior' })">取消
+                  </a-button>
+                </a-form-item>
+              </a-form>
+            </a-col>
+          </a-row>
+        </div>
+      </a-row>
+    </div>
     <a-modal title="添加任务" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
       <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch"/>
       <a-table
+        :row-key="(r, i) => i"
         :style="{ marginTop: '20px' }"
         :columns="columns2"
         :data-source="tableDataList"
@@ -106,11 +124,11 @@
     </a-modal>
   </div>
 </template>
+
 <script>
 import api from './../../../api';
 import FilterForm from './../../../components/FilterGroup/index.jsx';
 import moment from 'moment';
-
 export default {
   name: 'taskCenter-behavior-add-edit',
   components: {
@@ -118,6 +136,8 @@ export default {
   },
   data() {
     return {
+      rangeTime: [],
+      sourceName: null,
       memo: null,
       type: null,
       sysSource: null,
@@ -211,7 +231,6 @@ export default {
       ],
       taskData: [],
       visible: false,
-      taskSourceOption: [],
       formList: [
         {
           label: '任务key',
@@ -235,7 +254,7 @@ export default {
         {
           label: '任务来源',
           type: 'select',
-          name: 'taskSource',
+          name: 'sourceName',
           placeholder: '全部',
           selectOptions: [],
           rules: [],
@@ -244,7 +263,7 @@ export default {
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'taskDate'
+          name: 'createTime'
         }
       ],
       selectedRows: [],
@@ -263,71 +282,6 @@ export default {
       };
     }
   },
-  created() {
-  },
-  mounted() {
-  },
-  activated() {
-    let sourceList = [];
-    api.getTaskSource().then(
-      res => (sourceList = res.data.map(item => {
-        return {id: item.appCode, name: item.appName};
-      }))
-    ).then(() => {
-      this.formList = this.formList.map(item => {
-        if (item.name === 'taskSource') {
-          return {
-            ...item,
-            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
-          };
-        } else {
-          return item;
-        }
-      });
-    });
-    ///////////////////////////////////
-    this.laiyuanArray = [];
-    api.getClientList().then(resp => {
-      if (resp.code === 200) {
-        resp.data.forEach((v, k) => {
-          this.laiyuanArray.push({
-            appCode: v.appCode,
-            appName: v.appName
-          });
-        });
-        if (this.$route.path === '/taskCenter-behavior/edit') {
-          api.selectBehaviour({
-            id: this.$route.query.id
-          }).then(resp2 => {
-            if (resp2.code === 200) {
-              this.id = resp2.data.id;
-              this.name = resp2.data.name;
-              this.code = resp2.data.code;
-              this.memo = resp2.data.memo;
-              this.isUsing = !!Number(resp2.data.isUsing);
-              this.laiyuanArray.forEach((v, k) => {
-                if (v.appCode === resp2.data.sysSource) {
-                  this.laiyuan = v.appName;
-                }
-              });
-              this.leixingArray.forEach((v, k) => {
-                if (v.id === resp2.data.type) {
-                  this.leixing = v.name;
-                }
-              });
-              resp2.data.taskList.forEach((v, k) => {
-                this.taskData.push({
-                  taskName: v.taskName,
-                  memo: v.memo,
-                  taskCondition: v.taskCondition
-                });
-              });
-            }
-          });
-        }
-      }
-    });
-  },
   methods: {
     saveBehavior() {
       if (this.$route.path === '/taskCenter-behavior/edit') {
@@ -335,6 +289,11 @@ export default {
           if (!err) {
             this.saveLoading = true;
             let behaviourTask = [];
+            if (this.taskData.length === 0) {
+              this.$message.error('必须选择关联的任务');
+              this.saveLoading = false;
+              return
+            }
             this.taskData.forEach((v, k) => {
               behaviourTask.push({
                 taskId: v.id,
@@ -360,6 +319,11 @@ export default {
           if (!err) {
             this.saveLoading = true;
             let behaviourTask = [];
+            if (this.taskData.length === 0) {
+              this.$message.error('必须选择关联的任务');
+              this.saveLoading = false;
+              return
+            }
             this.taskData.forEach((v, k) => {
               behaviourTask.push({
                 taskId: v.id,
@@ -404,10 +368,12 @@ export default {
       this.isUsing = checked;
     },
     onSearch(args) {
-      const {taskName, taskKey, status} = args;
+      const {taskName, taskKey, status, sourceName, createTime} = args;
       this.taskName = taskName || null;
       this.taskKey = taskKey || null;
       this.status = status || null;
+      this.sourceName = sourceName || null;
+      this.rangeTime = createTime || [];
       this.current = 1;
       this.getList();
     },
@@ -427,15 +393,18 @@ export default {
         pageSize: this.pageSize,
         status: this.status,
         taskKey: this.taskKey,
-        taskName: this.taskName
-      }).then(res => {
-        this.tableDataList = res.data.records.map((item, index) => {
+        taskName: this.taskName,
+        taskSource: this.sourceName,
+        createTimeStart: this.rangeTime.length > 0 ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
+        createTimeEnd: this.rangeTime.length > 0 ? moment(this.rangeTime[1]).format('YYYY-MM-DD') : null
+      }).then(resp => {
+        this.tableDataList = resp.data.records.map((v, k) => {
           return {
-            ...item,
-            key: index
+            ...v,
+            key: k
           };
         });
-        this.total = res.data.total;
+        this.total = resp.data.total;
       }).finally(() => {
         this.tableLoading = false;
       });
@@ -459,26 +428,163 @@ export default {
         })
         this.taskData = this.taskData.concat(this.selectedRows);
       } else {
-        this.$message.error('没有选择任务');
+        this.$message.error('至少选择1个任务');
       }
     },
     handleCancel() {
       this.visible = false;
     },
-    deleteTask(resData) {
-      this.taskData.forEach((item, index) => {
-        if (resData.key === item.key) {
-          this.taskData.splice(index, 1);
+    deleteTask(scope) {
+      this.taskData.forEach((v, k) => {
+        if (scope.key === v.key) {
+          this.taskData.splice(k, 1);
         }
       })
     }
   },
+  created() {
+    let sourceList = [];
+    api.getTaskSource().then(
+      res => (sourceList = res.data.map(item => {
+        return {id: item.appCode, name: item.appName};
+      }))
+    ).then(() => {
+      this.formList = this.formList.map(item => {
+        if (item.name === 'sourceName') {
+          return {
+            ...item,
+            selectOptions: [].concat({id: '', name: '全部'}, sourceList)
+          };
+        } else {
+          return item;
+        }
+      });
+    });
+    this.laiyuanArray = [];
+    this.taskData = [];
+    api.getClientList().then(resp => {
+      if (resp.code === 200) {
+        resp.data.forEach((v, k) => {
+          this.laiyuanArray.push({
+            appCode: v.appCode,
+            appName: v.appName
+          });
+        });
+      }
+    });
+    if (this.$route.path === '/taskCenter-behavior/edit') {
+      api.selectBehaviour({
+        id: this.$route.query.id
+      }).then(resp => {
+        if (resp.code === 200) {
+          this.id = resp.data.id;
+          this.name = resp.data.name;
+          this.code = resp.data.code;
+          this.memo = resp.data.memo;
+          this.isUsing = !!Number(resp.data.isUsing);
+          this.laiyuan = resp.data.sourceName;
+          this.leixingArray.forEach((v, k) => {
+            if (v.id === resp.data.type) {
+              this.leixing = v.name;
+            }
+          });
+          resp.data.taskList.forEach((v, k) => {
+            this.taskData.push({
+              id: v.id,
+              taskName: v.taskName,
+              memo: v.memo,
+              taskCondition: v.taskCondition
+            });
+          });
+        }
+      });
+    }
+  },
+  mounted() {},
+  activated() {},
   watch: {}
 }
 </script>
 
-<style lang="less">
-.form-body {
-  padding: 20px 0;
+<style lang="less" scoped>
+#coupons-detail {
+  height: 100%;
+
+  .content-header {
+    .fallback {
+      cursor: pointer;
+    }
+  }
+
+  .coupons-main {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+
+    .coupons-common {
+      background-color: #fff;
+
+      .common-title {
+        color: #666;
+        padding: 20px 0 0 30px;
+
+        .common-title-content {
+          font-size: 16px;
+          height: 16px;
+          line-height: 16px;
+          padding-left: 8px;
+          border-left: 3px solid rgba(33, 33, 206, 0.5);
+        }
+      }
+
+      .common-row {
+        padding: 20px 16px 0;
+        border-bottom: 1px dashed #ccc;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-items: center;
+
+        ::v-deep .ant-form .ant-input-number {
+          width: 100%;
+        }
+
+        .common-submit-cancle {
+          padding: 30px 0 0 150px;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+
+          .common-btn {
+            margin-right: 30px;
+
+            ::v-deep .ant-btn {
+              box-sizing: content-box;
+              padding: 2px 15px;
+              border-radius: 8px;
+              font-size: 18px;
+              font-weight: 500;
+            }
+          }
+
+          .common-cancle {
+            ::v-deep .ant-btn {
+              color: #666;
+              background-color: #fff;
+              border-color: #ccc;
+            }
+          }
+        }
+      }
+
+      .common-row:last-child {
+        border: none;
+      }
+    }
+
+    .coupons-base {
+      padding-bottom: 50px;
+    }
+  }
 }
 </style>
