@@ -7,7 +7,7 @@
           <FormList routePath="/taskCenter-behavior/add" ref="behaviorForm" rowCol="4" :formList="formList"
                     :onSubmit="onSearch"/>
           <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false"
-                   :loading="tableLoading" :scroll="{y: scrollY}">
+                   :loading="tableLoading" :scroll="{y: scrollY}" :row-key="(r, i) => i">
             <template slot="action" slot-scope="scope">
               <a @click="goDetail(scope.id)" style="padding-right: 10px;">查看详情</a>
               <a @click="goJournal(scope.id)" style="padding-right: 10px;">查看日志</a>
@@ -203,6 +203,11 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
+      this.$nextTick(() => {
+        this.$refs.behaviorForm.setFieldsValue({
+          type: this.formList[0].selectOptions[0].id
+        });
+      });
       //重置data
       this.total = 0;
       this.current = 1;

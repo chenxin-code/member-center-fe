@@ -8,7 +8,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         卡券基础信息
       </p>
       <div class="detail-main-items">
@@ -35,7 +35,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         卡券发放信息
       </p>
       <div class="detail-main-items">
@@ -92,7 +92,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         卡券记录信息
       </p>
       <div class="detail-main-items">
@@ -104,7 +104,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         卡券数据
       </p>
       <div class="detail-main-items" v-if="dataObj.condition === 4">

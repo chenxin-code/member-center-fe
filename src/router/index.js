@@ -470,9 +470,7 @@ const routes = [
               path: '/taskCenter-behavior/add',
               name: '创建行为'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
         component: () => import('@/pages/taskCenter/behavior/add-edit.vue')
       },
@@ -492,9 +490,7 @@ const routes = [
               path: '/taskCenter-behavior/edit',
               name: '编辑行为'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
         component: () => import('@/pages/taskCenter/behavior/add-edit.vue')
       },
@@ -514,9 +510,7 @@ const routes = [
               path: '/taskCenter-behavior/detial',
               name: '行为详情'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
         component: () => import('@/pages/taskCenter/behavior/detial.vue')
       },
@@ -536,9 +530,7 @@ const routes = [
               path: '/taskCenter-behavior/journal',
               name: '行为日志'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
         component: () => import('@/pages/taskCenter/behavior/journal.vue')
       },
@@ -749,10 +741,6 @@ const routes = [
         },
         component: () => import('@/pages/systemRecord/detail')
       },
-
-
-
-      ////////////////////////////////////////////////////////////
       {
         path: '/gift',
         name: 'gift',

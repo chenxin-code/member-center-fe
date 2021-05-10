@@ -9,7 +9,7 @@
     <div class="create-main">
       <a-form :form="formBasic" :label-col="{ span: 4 }" :wrapper-col="{ span: 9 }">
         <p class="create-main-title">
-          <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+          <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
           卡券信息
         </p>
         <a-form-item label="选择卡券：">

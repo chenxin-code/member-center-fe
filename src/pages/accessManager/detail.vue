@@ -8,7 +8,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         基础信息
       </p>
       <div class="detail-main-items" v-for="item in dataList1" :key="item.label">
@@ -21,7 +21,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         会员信息
       </p>
       <div class="detail-main-items" v-for="item in dataList2" :key="item.label">
@@ -34,7 +34,7 @@
     </div>
     <div class="detail-main detail-table-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         会员来源
       </p>
       <div class="detail-main-items">

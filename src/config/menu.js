@@ -71,15 +71,15 @@ export default [
     group: 'hyzx',
     path: '/access-manager'
   },
-  {
-    title: '行为管理',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/dealing_show.png'),
-    iconHide: require('@/assets/img/menu/dealing_hide.png'),
-    menuKey: 'dealing',
-    group: 'hyzx',
-    path: '/dealing'
-  },
+  // {
+  //   title: '行为管理',
+  //   authKeys: [''],
+  //   icon: require('@/assets/img/menu/dealing_show.png'),
+  //   iconHide: require('@/assets/img/menu/dealing_hide.png'),
+  //   menuKey: 'dealing',
+  //   group: 'hyzx',
+  //   path: '/dealing'
+  // },
   {
     title: '积分管理',
     authKeys: [''],

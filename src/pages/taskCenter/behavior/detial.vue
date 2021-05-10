@@ -2,7 +2,7 @@
   <div id="act-detail">
     <div class="content-header">
       行为详情
-      <span class="fallback" @click="$router.go(-1)" style="cursor: pointer">返回</span>
+      <span class="fallback" @click="$router.go(-1)" style="cursor: pointer;">返回</span>
     </div>
     <div class="act-main">
       <a-row style="height: 100%">
@@ -13,7 +13,15 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">行为名称:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{name}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="common-column-wrapp">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">行为代码:</div>
+                    <div class="column-left">{{code}}</div>
                   </div>
                 </div>
               </div>
@@ -21,7 +29,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">行为来源:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{laiyuan}}</div>
                   </div>
                 </div>
               </div>
@@ -29,7 +37,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">行为类型:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{leixing}}</div>
                   </div>
                 </div>
               </div>
@@ -37,7 +45,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">行为描述:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{memo}}</div>
                   </div>
                 </div>
               </div>
@@ -46,7 +54,14 @@
                   <div class="column-item">
                     <div class="column-right">关联的任务:</div>
                     <div class="column-left">
-                      <a-table :columns="columns" :bordered="true" :pagination="false" :data-source="taskData"></a-table>
+                      <a-table
+                        :columns="columns"
+                        :bordered="true"
+                        :pagination="false"
+                        :data-source="taskData"
+                        v-if="taskData.length > 0"
+                        :row-key="(r, i) => i">
+                      </a-table>
                     </div>
                   </div>
                 </div>
@@ -55,7 +70,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">行为状态:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{isUsingStr}}</div>
                   </div>
                 </div>
               </div>
@@ -74,6 +89,13 @@ export default {
   components: {},
   data() {
     return {
+      name: null,
+      code: null,
+      memo: null,
+      isUsingStr: null,
+      laiyuan: null,
+      leixing: null,
+      taskData: [],
       columns: [
         {
           title: '任务名称',
@@ -93,27 +115,39 @@ export default {
           key: 'taskCondition',
           align: "center",
         }
-      ],
-      taskData: [],
+      ]
     };
   },
   computed: {
 
   },
   methods: {
-    selectBehaviour(){
-      api.selectBehaviour({
-        id: this.$route.query.id
-      }).then(resp => {
-        if (resp.code === 200) {
-
-        }
-      });
-    },
 
   },
   created() {
-    this.selectBehaviour();
+    api.selectBehaviour({
+      id: this.$route.query.id
+    }).then(resp => {
+      if (resp.code === 200) {
+        this.name = resp.data.name;
+        this.code = resp.data.code;
+        this.memo = resp.data.memo;
+        this.isUsingStr = Number(resp.data.isUsing)?'启用':'禁用';
+        this.laiyuan = resp.data.sourceName;
+        [{id: 1, name: '消费'},{id: 2, name: '其他'}].forEach((v, k) => {
+          if (v.id === resp.data.type) {
+            this.leixing = v.name;
+          }
+        });
+        resp.data.taskList.forEach((v, k) => {
+          this.taskData.push({
+            taskName: v.taskName,
+            memo: v.memo,
+            taskCondition: v.taskCondition
+          });
+        });
+      }
+    });
   },
   mounted() {
   },
@@ -177,7 +211,7 @@ export default {
               align-items: center;
 
               .column-right {
-                width: 180px;
+                width: 132.25px;
                 padding-right: 5px;
                 display: flex;
                 flex-direction: row;
