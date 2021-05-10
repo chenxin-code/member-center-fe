@@ -67,3 +67,5 @@ export const createBehaviour = data => fetchApi(URL.createBehaviour, data, 'POST
 export const editBehaviour = data => fetchApi(URL.editBehaviour, data, 'POST');
 //查看行为详情
 export const selectBehaviour = data => fetchApi(URL.selectBehaviour, data, 'GET');
+//礼包列表
+export const selectGiftBagList = data => fetchApi(URL.selectGiftBagList, data, 'GET');
