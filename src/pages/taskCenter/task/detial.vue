@@ -6,7 +6,7 @@
     </div>
     <div class="detail-main">
       <p class="detail-main-title">
-        <a-divider type="vertical" style="width: 3px; backgroundColor: #4c7afb" />
+        <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         基础信息
       </p>
       <div class="detail-main-items" v-for="item in dataList" :key="item.label">

@@ -113,4 +113,6 @@ export default {
   editBehaviour: '/times/member-center/behaviour/api/v1/editBehaviour',
   //查看行为详情
   selectBehaviour: '/times/member-center/behaviour/api/v1/selectBehaviour',
+  //礼包列表
+  selectGiftBagList: '/times/member-center/giftBag/api/v1/selectGiftBagList',
 };

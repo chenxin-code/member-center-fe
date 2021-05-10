@@ -96,3 +96,24 @@ export const postUpdate = data => fetchApi(`${API}/update`, data, 'POST')
  * @param {string} params.taskName	任务名称	query	false	string
 */
 export const getDistList = param => fetchApi(`${API_DIST}/dist-list`, param, 'get')
+
+/**
+ * 任务派发新增
+ * @param {object} params 入参 参数名称 参数说明 请求类型 是否必须 数据类型
+ * @param {string} params.clientId	来源code	query	false	string
+ * @param {string} params.createTime		query	false	string(date-time)
+ * @param {number} params.createUser		query	false	integer(int64)
+ * @param {string} params.createUserName		query	false	string
+ * @param {number} params.endLevelId	结束会员等级	query	false	integer(int64)
+ * @param {object} params.file	会员文件	formData	false	ref
+ * @param {number} params.id	ID	query	false	integer(int64)
+ * @param {number} params.isDeleted		query	false	integer(int32)
+ * @param {number} params.scopeType	指定类型 0不指定，1指定	query	false	integer(int32)
+ * @param {number} params.startLevelId	开始会员等级	query	false	integer(int64)
+ * @param {number} params.status	保存状态 0保存草稿，1提交保存	query	false	integer(int32)
+ * @param {number} params.taskId	任务ID	query	false	integer(int64)
+ * @param {string} params.updateTime		query	false	string(date-time)
+ * @param {number} params.updateUser		query	false	integer(int64)
+ * @param {string} params.updateUserName		query	false	string
+*/
+export const getAddDist = param => fetchApi(`${API_DIST}/add-dist`, param, 'get')
