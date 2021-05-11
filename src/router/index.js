@@ -330,7 +330,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/index.vue')
       },
@@ -348,7 +348,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/distribute/index.vue')
       },
@@ -366,7 +366,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/distribute/create.vue')
       },
@@ -402,7 +402,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/index.vue')
       },
@@ -424,7 +424,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/detial.vue')
       },
@@ -446,7 +446,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/create.vue')
       },
@@ -468,7 +468,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/Edit.vue')
       },

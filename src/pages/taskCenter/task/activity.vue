@@ -234,7 +234,7 @@ export default {
       };
     }
   },
-  activated() {
+  created() {
     this.getCouponList();
   },
   methods: {

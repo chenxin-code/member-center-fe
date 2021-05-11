@@ -159,7 +159,7 @@ export default {
         clientId: ['sys_dichan'],
         startLevelId: 1,
         endLevelId: 1,
-        file: '',
+        file: null,
         status: 1
       },
       taskSourceOption: [],
@@ -217,14 +217,22 @@ export default {
       deep: true
     }
   },
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'register' });
-  },
-
   created() {
     this.type = this.$route.query.type;
   },
   methods: {
+    init() {
+      this.form = {
+        taskId: '', // 关联任务
+        taskName: '', // 关联任务名称
+        scopeType: 0,
+        clientId: ['sys_dichan'],
+        startLevelId: 1,
+        endLevelId: 1,
+        file: null,
+        status: 1
+      };
+    },
     validatorFn1,
     // 打开关联任务
     selectAffair() {
@@ -252,32 +260,32 @@ export default {
       const newFileList = this.fileList1.slice();
       newFileList.splice(index, 1);
       this.fileList1 = newFileList;
-      this.file = null;
+      this.form.file = null;
       // console.log('newFileList :>> ', newFileList);
       // console.log('this.file :>> ', this.file);
     },
     btnCreateTask(e) {
       const data = JSON.parse(JSON.stringify(this.form));
       Object.assign(data, {
-        clientId: data.clientId.join()
+        clientId: data.clientId.join(),
+        file: this.form.file
       });
       const paramFormData = Object.keys(data).reduce((pre, key) => {
         pre.append([key], data[key]);
         return pre;
       }, new FormData());
 
-      //第二种
-      for (let [a, b] of paramFormData.entries()) {
-        // console.log('getActCreate: ', a, ' || ', b);
-      }
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.addLoading = true;
           getAddDist(paramFormData)
             .then(res => {
-              this.$refs.ruleForm.resetFields();
-              this.$message.success('提交成功');
-              this.goBack();
+              if (res.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.init();
+                this.$message.success('提交成功');
+                this.goBack();
+              }
             })
             .finally(i => {
               this.addLoading = false;
@@ -295,7 +303,9 @@ export default {
         .getTplDownload()
         .then(res => {
           // console.log('getTplDownload res :>> ', res);
-          window.open(res.data);
+          if (res.code === 200) {
+            window.open(res.data);
+          }
         })
         .finally(() => {
           this.loadingUrl = false;
