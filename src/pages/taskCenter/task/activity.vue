@@ -94,23 +94,6 @@ export default {
           wrapperCol: { span: 18 }
         },
         {
-          label: '活动状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请选择',
-          selectOptions: [
-            { name: '全部', id: '' },
-            { name: '已创建', id: 0 },
-            { name: '未开始', id: 1 },
-            { name: '进行中', id: 2 },
-            { name: '已结束', id: 3 },
-            { name: '已停用', id: 4 }
-            // { name: '已删除', id: 5 }
-          ],
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
           label: '活动有效期',
           type: 'rangePicker',
           name: 'jointime',
@@ -266,7 +249,8 @@ export default {
       const para = {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
-        ...this.searchVal
+        ...this.searchVal,
+        status: 2
       };
 
       api
