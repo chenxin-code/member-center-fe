@@ -1,7 +1,7 @@
 <template>
   <div id="coupons-detail">
     <div class="content-header">
-      {{$route.path === '/gift/add'?'新建':'编辑'}}礼包
+      {{ $route.path === '/gift/add' ? '创建' : '编辑' }}礼包
       <span class="fallback" @click="$router.go(-1)" style="cursor: pointer">返回</span>
     </div>
     <div class="coupons-main">
@@ -16,13 +16,13 @@
                 style="height: 100%;overflow: auto"
                 autoComplete="off">
                 <a-form-item label="礼包名称">
-                  <div v-if="$route.path === '/gift/edit'">{{giftName}}</div>
+                  <div v-if="$route.path === '/gift/edit'">{{ name }}</div>
                   <a-input
-                    @change="giftNameChange"
+                    @change="nameChange"
                     v-decorator="[
-                      'giftName',
+                      'name',
                       {
-                        initialValue: giftName,
+                        initialValue: name,
                         rules: [
                           { required: true, message: '礼包名称不能为空' },
                           { whitespace: true, message: '礼包名称不能为空' },
@@ -31,12 +31,11 @@
                       }
                     ]"
                     placeholder="请输入礼包名称"
-                    allow-clear v-else />
+                    allow-clear v-else/>
                 </a-form-item>
                 <a-form-item label="礼包状态">
-                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="isEnable" @change="isEnableChange" />
+                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="status" @change="statusChange"/>
                 </a-form-item>
-
                 <a-form-item label="有效期">
                   <a-range-picker
                     v-decorator="[
@@ -54,10 +53,7 @@
                       }"
                     :disabled-date="disabledDate"
                   />
-                  <!-- <div>validityStartTime:{{ validityStartTime }}</div> -->
-                  <!-- <div>validityEndTime:{{ validityEndTime }}</div> -->
                 </a-form-item>
-
                 <a-form-item label="礼包描述">
                   <a-textarea
                     @change="memoChange"
@@ -70,11 +66,8 @@
                     ]"
                     :auto-size="{minRows: 1}"
                     placeholder="请输入礼包描述信息"
-                    allow-clear />
+                    allow-clear/>
                 </a-form-item>
-
-
-
                 <a-form-item label="礼包背景">
                   <a-spin :spinning="picUploading">
                     <a-upload
@@ -92,19 +85,19 @@
                       @change="addPic"
                     >
                       <template v-if="fileList.length < 1">
-                        <a-icon type="plus" />
+                        <a-icon type="plus"/>
                         <div class="ant-upload-text">
                           上传图片
                         </div>
                       </template>
                     </a-upload>
                     <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                      <img class="img" alt="example" style="width: 100%" :src="previewImage" />
+                      <img class="img" alt="example" style="width: 100%" :src="previewImage"/>
                     </a-modal>
                   </a-spin>
-                  <span style="margin-top:-20px;color:#999999;font-size:12px;">
+                  <!--<span style="margin-top:-20px;color:#999999;font-size:12px;">
                       建议上传尺寸为：1080*2338，格式为jpg、png，大小不超过5MB。
-                    </span>
+                  </span>-->
                 </a-form-item>
               </a-form>
               <div class="common-submit-cancle">
@@ -132,88 +125,219 @@
 <script>
 import api from './../../api';
 import moment from 'moment';
+import {debounce} from './../../utils/util';
+
 export default {
   name: 'giftAddEdit',
   components: {},
   data() {
     return {
       saveLoading: false,
-      giftForm: this.$form.createForm(this, { name: 'giftForm' }),
+      giftForm: this.$form.createForm(this, {name: 'giftForm'}),
       id: null,//编辑用到id
-      giftName: null,
+      name: null,
       memo: null,
-      isEnable: true,
-
-
+      status: true,
+      rangePickerValue: [], //日期对象清空日期用
+      validityStartTime: '', //有效期开始时间
+      validityEndTime: '', //	有效期结束时间
       picUploading: false,
       fileList: [],
       couponImage: '',
+      previewVisible: false,
+      previewImage: '',
     };
   },
   computed: {
-
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
   },
   methods: {
     moment,
-    giftNameChange(e) {
-      this.giftName = e.target.value;
+    disabledDate(current) {
+      return current && current < Date.now() - 86400000;
+    },
+    handleCancel() {
+      debounce(() => {
+        this.previewVisible = false;
+      });
+    },
+    //判断日期格式为yyyy-mm-dd和正确的日期
+    isDateString(str) {
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+      if (str === '' || str === undefined || str === null) return false;
+      return reg.test(str);
+    },
+    handleRangePicker(dates, dateStrings) {
+      this.rangePickerValue = dates;
+      this.validityStartTime = dateStrings[0];
+      this.validityEndTime = dateStrings[1];
+    },
+    nameChange(e) {
+      this.name = e.target.value;
     },
     memoChange(e) {
       this.memo = e.target.value;
     },
-    isEnableChange(checked){
-      this.isEnable = checked;
+    statusChange(checked) {
+      this.status = checked;
     },
     addGift() {
-      if(this.$route.path === '/gift/edit'){
+      if (this.$route.path === '/gift/edit') {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
             api.editGift({
               id: this.id,
               memo: this.memo,
-              isEnable: this.isEnable?0:1
+              status: this.status ? 1 : 0,
+              picture: this.couponImage,
+            }).then(resp => {
+              this.saveLoading = false;
+              if (resp.code === 200) {
+                this.$router.replace({path: '/gift'});
+              }
             }).finally(() => {
               this.saveLoading = false;
-            }).then(res => {
-              this.saveLoading = false;
-              if (res.code === 200) {
-                this.$router.replace({ path: '/gift' });
-              }
             });
           }
         });
-      }else if(this.$route.path === '/gift/add'){
+      } else if (this.$route.path === '/gift/add') {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
             api.addGift({
-              giftName: this.giftName,
+              name: this.name,
               memo: this.memo,
-              isEnable: this.isEnable?0:1
+              status: this.status ? 1 : 0,
+              picture: this.couponImage,
+            }).then(resp => {
+              this.saveLoading = false;
+              if (resp.code === 200) {
+                this.$router.replace({path: '/gift'});
+              }
             }).finally(() => {
               this.saveLoading = false;
-            }).then(res => {
-              this.saveLoading = false;
-              if (res.code === 200) {
-                this.$router.replace({ path: '/gift' });
-              }
             });
           }
         });
       }
-    }
+    },
+    addPic({fileList = []} = {}) {
+      console.log('addPic fileList:>> ', fileList);
+      if (fileList.length > 0) {
+        const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+        if (!isJpgOrPng) {
+          this.$message.error('图片格式错误，请重新上传');
+        } else {
+          const imgSize = fileList[0].size / 1024 / 1024 < 5;
+          if (!imgSize) {
+            this.$message.error('图片过大，请重新上传');
+          } else {
+            this.picUploading = true;
+            const formData = new FormData();
+            console.log('fileList :>> ', fileList);
+            fileList.forEach(file => {
+              formData.append('file', file.originFileObj);
+            });
+            formData.append('programCode', 'sys-member-center');
+            console.log('formData.get(file) :>> ', formData.get('file'));
+            console.log('formData.get(programCode) :>> ', formData.get('programCode'));
+            api.updateImage(formData).then(resp => {
+              if (resp.code === 200) {
+                console.log(this.fileList);
+                this.giftForm.setFieldsValue({
+                  couponImage: resp.data
+                });
+                this.$set(this.fileList, 0, {
+                  uid: '-1',
+                  name: 'image.png',
+                  status: 'done',
+                  url: resp.data ? resp.data : ''
+                });
+                this.couponImage = resp.data ? resp.data : '';
+              }
+            }).finally(() => {
+              this.picUploading = false;
+            });
+          }
+        }
+      }
+    },
+    deleteOssImage() {
+      this.$confirm({
+        title: '删除图片',
+        content: '确定删除图片吗？',
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: () => {
+          this.picUploading = true;
+          api.deleteImage({
+            filePath: this.fileList[0].url,
+            type: 1
+          }).then(resp => {
+            if (resp.code === 200) {
+              this.fileList = [];
+              this.couponImage = '';
+              this.giftForm.setFieldsValue({
+                couponImage: ''
+              });
+            }
+          }).finally(() => {
+            this.picUploading = false;
+          });
+        }
+      });
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await this.getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
   },
   created() {
-    if(this.$route.path === '/gift/edit'){
-      api.editGiftShowDetail({
+    if (this.$route.path === '/gift/edit') {
+      api.selectGiftBag({
         id: this.$route.query.id
-      }).then(res => {
-        if (res.code === 200) {
-          this.id = res.data.id;
-          this.giftName = res.data.giftName;
-          this.memo = res.data.memo;
-          this.isEnable = !Number(res.data.isEnable);
+      }).then(resp => {
+        if (resp.code === 200) {
+          this.id = resp.data.id;
+          this.name = resp.data.name;
+          this.memo = resp.data.memo;
+          this.status = !!Number(resp.data.status);
+          this.couponImage = resp.data.picture;
+          ///////////日期开始//////////
+          this.validityStartTime = this.isDateString(this.momentStrHms(resp.data.validityStartTime))
+            ? this.momentStrHms(resp.data.validityStartTime)
+            : ''; //有效期开始时间
+          this.validityEndTime = this.isDateString(this.momentStrHms(resp.data.validityEndTime))
+            ? this.momentStrHms(resp.data.validityEndTime)
+            : ''; //有效期结束时间
+          if (
+            this.isDateString(this.validityStartTime) &&
+            this.isDateString(this.validityEndTime) &&
+            resp.data.validityStartTime > Date.now() &&
+            resp.data.validityEndTime > Date.now()
+          ) {
+            this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
+          } else {
+            this.rangePickerValue = [];
+            this.validityStartTime = '';
+            this.validityEndTime = '';
+          }
+          ///////////日期结束//////////
+
+
         }
       });
     }
@@ -222,7 +346,17 @@ export default {
 
   },
   watch: {
-
+    couponImage: {
+      handler(newVal) {
+        console.log('watch couponImage newVal :>> ', newVal);
+        this.couponImage = this.couponImage.replace(/\s+/g, ''); //去除image url空格
+        if (newVal) {
+          this.$set(this.fileList, 0, {uid: '-1', name: 'image.png', status: 'done', url: newVal});
+        }
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
   }
 };
 </script>
@@ -236,14 +370,18 @@ export default {
       cursor: pointer;
     }
   }
+
   .coupons-main {
     height: calc(100% - 50px);
     overflow-y: auto;
+
     .coupons-common {
       background-color: #fff;
+
       .common-title {
         color: #666;
         padding: 20px 0 0 30px;
+
         .common-title-content {
           font-size: 16px;
           height: 16px;
@@ -252,6 +390,7 @@ export default {
           border-left: 3px solid rgba(33, 33, 206, 0.5);
         }
       }
+
       .common-row {
         padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;

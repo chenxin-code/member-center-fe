@@ -69,3 +69,17 @@ export const editBehaviour = data => fetchApi(URL.editBehaviour, data, 'POST');
 export const selectBehaviour = data => fetchApi(URL.selectBehaviour, data, 'GET');
 //礼包列表
 export const selectGiftBagList = data => fetchApi(URL.selectGiftBagList, data, 'GET');
+//启用禁用礼包
+export const changeGiftBag = data => fetchApi(URL.changeGiftBag, data, 'POST');
+//创建礼包
+export const createGiftBag = data => fetchApi(URL.createGiftBag, data, 'POST');
+//删除卡卷
+export const delCoupon = data => fetchApi(URL.delCoupon, data, 'POST');
+//编辑礼包
+export const editGiftBag = data => fetchApi(URL.editGiftBag, data, 'POST');
+//添加卡券
+export const giftBagManagement = data => fetchApi(URL.giftBagManagement, data, 'POST');
+//礼包卡卷列表
+export const selectCoupon = data => fetchApi(URL.selectCoupon, data, 'GET');
+//礼包详情
+export const selectGiftBag = data => fetchApi(URL.selectGiftBag, data, 'GET');

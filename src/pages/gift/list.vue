@@ -25,10 +25,10 @@
         <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goGiftDetail(scope.id)">查看</a>
-            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 0)" v-if="scope.status === 1">启用</a>
-            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 1)" v-else-if="scope.status === 0">禁用</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 0)" v-if="scope.status === 1">禁用</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 1)" v-else-if="scope.status === 0">启用</a>
             <a style="padding-right: 10px;" @click="goGiftEdit(scope.id)">编辑</a>
-            <a style="padding-right: 10px;" @click="$router.push({name: 'giftContent',query: {id: scope.id}})">礼包内容管理</a>
+            <a style="padding-right: 10px;" @click="$router.push({path: '/gift/content',query: {id: scope.id}})">礼包内容管理</a>
           </div>
         </template>
       </a-table>
@@ -72,8 +72,8 @@ export default {
           placeholder: '请选择',
           selectOptions: [
             {name: '全部', id: ''},
-            {name: '启用', id: 1},
-            {name: '禁用', id: 0}
+            {name: '启用', id: '1'},
+            {name: '禁用', id: '0'}
           ],
           labelCol: {span: 6},
           wrapperCol: {span: 18}
@@ -81,7 +81,7 @@ export default {
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'cjsj',
+          name: 'createTime',
           labelCol: {span: 6},
           wrapperCol: {span: 18}
         },
@@ -131,7 +131,6 @@ export default {
           title: '操作',
           key: 'detailsSlot',
           scopedSlots: {customRender: 'detailsSlot'},
-          fixed: 'right',
           width: 180
         }
       ],
@@ -185,7 +184,7 @@ export default {
     },
     goGiftDetail(id) {
       this.$router.push({
-        name: 'actManageDetail',
+        path: '/gift/detail',
         query: {
           id: id
         }
@@ -193,13 +192,13 @@ export default {
     },
     goGiftEdit(id) {
       this.$router.push({
-        name: 'actManageEdit',
+        path: '/gift/edit',
         query: {
           id: id
         }
       });
     },
-    changeGiftBag(paramId, state) {
+    changeGiftBag(id, state) {
       let title;
       if (state === 0) {
         title = '确认启用当前礼包？';
@@ -216,10 +215,10 @@ export default {
         onOk: () => {
           this.tableLoading = true;
           api.changeGiftBag({
-            id: paramId,
-            isEnable: state
-          }).then(res => {
-            if (res.code === 200) {
+            id: id,
+            status: state
+          }).then(resp => {
+            if (resp.code === 200) {
               this.getList();
             }
           }).finally(() => {
@@ -251,28 +250,28 @@ export default {
         if (this.$refs.thisForm.getFieldsValue().status) {
           status = this.$refs.thisForm.getFieldsValue().status;
         }
-        let jointimeStart = '';
-        let jointimeEnd = '';
+        let startTime = '';
+        let endTime = '';
         if (
-          Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().jointime) === '[object Array]' &&
-          this.$refs.thisForm.getFieldsValue().jointime.length > 1
+          Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().createTime) === '[object Array]' &&
+          this.$refs.thisForm.getFieldsValue().createTime.length > 1
         ) {
-          jointimeStart = moment(this.$refs.thisForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
-          jointimeEnd = moment(this.$refs.thisForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
+          startTime = moment(this.$refs.thisForm.getFieldsValue().createTime[0]).format('YYYY-MM-DD');
+          endTime = moment(this.$refs.thisForm.getFieldsValue().createTime[1]).format('YYYY-MM-DD');
         }
         return api.selectGiftBagList({
           name: name,
           status: status,
           pageIndex: this.current,
           pageSize: this.pageSize,
-          startTime: jointimeStart,
-          endTime: jointimeEnd
-        }).then(res => {
-          if (res.code === 200) {
-            this.total = res.data.total;
+          startTime: startTime,
+          endTime: endTime
+        }).then(resp => {
+          if (resp.code === 200) {
+            this.total = resp.data.total;
             this.tableData.splice(0, this.tableData.length);
-            res.data.records.forEach((element, index) => {
-              this.tableData.push(element);
+            resp.data.records.forEach((v, k) => {
+              this.tableData.push(v);
             });
           }
         }).finally(() => {
