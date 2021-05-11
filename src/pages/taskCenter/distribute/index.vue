@@ -26,17 +26,20 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
+            <a-form-model-item :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
               <a-button type="primary" @click="onSearch">查询</a-button>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-model-item :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
               <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建派发</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
-        <a-col flex="auto" style="padding:20px 10px;height:100%;">
+        <a-col flex="auto" style="padding:10px 10px;height:100%;">
           <a-table
-            :style="{ marginTop: '20px' }"
             :columns="columns"
             :data-source="dataList"
             :pagination="false"
@@ -101,6 +104,21 @@ export default {
           title: '派发类型',
           key: 'distType',
           dataIndex: 'distType'
+        },
+        {
+          title: '会员ID',
+          key: 'memberId',
+          dataIndex: 'memberId'
+        },
+        {
+          title: '会员名称',
+          key: 'memberName',
+          dataIndex: 'memberName'
+        },
+        {
+          title: '会员手机号',
+          key: 'phone',
+          dataIndex: 'phone'
         },
         {
           title: '操作人员',
@@ -215,7 +233,7 @@ export default {
     }
   },
 
-  activated() {
+  created() {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
@@ -229,7 +247,7 @@ export default {
         distTypeOption: [{ id: '', name: '全部' }, { id: '0', name: '自动派发' }, { id: '1', name: '手动派发' }]
       };
       //初始化加载数据
-      this.$refs.ruleForm.resetFields();
+      // this.$refs.ruleForm.resetFields();
       this.getTaskList();
     }
 
@@ -261,6 +279,8 @@ export default {
 <style lang="less" scoped>
 .searchContent {
   margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .taskManager {
   height: 100%;
@@ -276,5 +296,15 @@ export default {
   .record a {
     margin-right: 5px;
   }
+}
+.table-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.search-btn ::v-deep .ant-form-item-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>

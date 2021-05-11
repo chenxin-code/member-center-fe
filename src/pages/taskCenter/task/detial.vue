@@ -16,11 +16,11 @@
           <!-- 奖励成长值{{awardGrow}}, 奖励邦豆: {{Math.floor(awardIntegral / 100)}}邦豆/{{awardIntegral}}元（向下取整） -->
           <a-button type="primary" @click="bangdouHandle()">修改邦豆</a-button>
         </span>
-        <span :class="{'detail-main-items-value':true, 'detail-main-items-value-tag':dataObj[item.name] && dataObj[item.name].length > 0}" v-else-if="item.name === 'behaviourVoList'">
-          <template v-if="dataObj[item.name] && dataObj[item.name].length > 0">
-            <a-tag color="blue" v-for="behavior in dataObj[item.name]" :key="behavior.id">{{behavior}}</a-tag>
+        <span v-else-if="item.name === 'behaviourVoList'" :class="{'detail-main-items-value':true, 'detail-main-items-value-tag':dataObj.behaviourVoList && dataObj.behaviourVoList.length > 0}">
+          <template v-if="dataObj.behaviourVoList && dataObj.behaviourVoList.length > 0">
+            <a-tag color="blue" v-for="behavior in dataObj.behaviourVoList" :key="behavior.id">{{behavior.name}}</a-tag>
           </template>
-          <template v-else>--</template>
+          <template v-else><span>--</span></template>
         </span>
         <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '--' }}</span>
       </div>
@@ -145,19 +145,14 @@ export default {
     },
     initData(id) {
       getTaskDetail({ taskId: id }).then(res => {
-        this.dataObj = Object.assign(
-          res.data,
-          { createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss') },
-          { isPeriodic: res.data.isPeriodic === 0 ? '否' : '是' },
-          { status: res.data.status === 0 ? '禁用' : '启用' },
-          { isDefault: res.data.isDefault === 0 ? '否' : '是' },
-          { executeType: ['提示', '网页跳转', '微应用跳转'][res.data.executeType - 1] }
-          // {
-          //   result: `奖励成长值${res.data.awardGrow}, 奖励邦豆: ${Math.floor(res.data.awardIntegral / 100)}邦豆/${
-          //     res.data.awardIntegral
-          //   }元（向下取整）`
-          // }
-        );
+        this.dataObj = {
+          ...res.data,
+          createTime: moment(res.data.createTime).format('YYYY-MM-DD'),
+          isPeriodic: res.data.isPeriodic === 0 ? '否' : '是',
+          status: res.data.status === 0 ? '禁用' : '启用',
+          isDefault: res.data.isDefault === 0 ? '否' : '是',
+          executeType: ['提示', '网页跳转', '微应用跳转'][res.data.executeType - 1]
+        };
         this.awardGrow = res.data.awardGrow;
         this.awardIntegral = res.data.awardIntegral;
       });

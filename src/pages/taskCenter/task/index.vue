@@ -26,7 +26,12 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务来源" style="width:300px">
+            <a-form-model-item label :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
+              <a-button type="primary" @click="onSearch">查询</a-button>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="任务来源">
               <a-select v-model="formList.taskSource" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.taskSourceOption"
@@ -41,18 +46,17 @@
               <a-range-picker @change="onChange" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="6">
-            <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
-              <a-button type="primary" @click="onSearch">查询</a-button>
+          <a-col :span="12">
+            <a-form-model-item label :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
               <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建任务</a-button>
             </a-form-model-item>
           </a-col>
+         
         </a-row>
       </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
-        <a-col flex="auto" style="padding:20px 10px;height:100%;">
+        <a-col flex="auto" style="padding:10px 10px;height:100%;">
           <a-table
-            :style="{ marginTop: '20px' }"
             :columns="columns"
             :data-source="dataList"
             :pagination="false"
@@ -319,6 +323,8 @@ export default {
 <style lang="less" scoped>
 .searchContent {
   margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .taskManager {
   height: 100%;
@@ -334,5 +340,15 @@ export default {
   .record {
     padding: 0 5px;
   }
+}
+.table-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.search-btn ::v-deep .ant-form-item-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
