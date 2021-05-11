@@ -16,6 +16,11 @@
         <span v-html="parseValidityStr(scope)"></span>
       </div>
     </template>
+    <template slot="status" slot-scope="scope">
+      <div class="editable-row-operations">
+        <span>{{['禁用','启用'][scope.status || 0]}}</span>
+      </div>
+    </template>
     </a-table>
     <a-pagination 
       :total="total" 
@@ -55,15 +60,6 @@ export default {
           wrapperCol: { span: 18 }
         },
         {
-          label: '状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请选择',
-          selectOptions: [{ name: '全部', id: '' }, { name: '启用', id: 1 }, { name: '禁用', id: 0 }],
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
           label: '创建时间',
           type: 'rangePicker',
           name: 'cjsj',
@@ -88,8 +84,8 @@ export default {
         },
         {
           title: '状态',
-          dataIndex: 'status',
           key: 'status',
+          scopedSlots: { customRender: 'status' },
           width: 120
         },
         {
@@ -169,7 +165,8 @@ export default {
       const para = {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
-        ...this.searchVal
+        ...this.searchVal,
+        status: 1
       };
 
       api

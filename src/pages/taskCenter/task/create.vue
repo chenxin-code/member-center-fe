@@ -247,10 +247,10 @@ export default {
       rules: {
         taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
         periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
-        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }]
+        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
         // gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
-        // BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
-        // GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
+        awardIntegral: [{ required: true, message: '请输入邦豆奖励', trigger: 'blur' }],
+        awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }]
         // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
         // BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
         //ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
@@ -326,9 +326,11 @@ export default {
           this.addLoading = true;
           _http(this.form)
             .then(res => {
-              this.$refs.ruleForm.resetFields();
-              this.$message.success('提交成功');
-              this.$router.go(-1);
+              if (res.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.$message.success('提交成功');
+                this.$router.go(-1);
+              }
             })
             .finally(i => {
               this.addLoading = false;
