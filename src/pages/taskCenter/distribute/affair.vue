@@ -57,15 +57,15 @@ export default {
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
-        {
-          label: '任务状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 },
-          selectOptions: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }]
-        },
+        // {
+        //   label: '任务状态',
+        //   type: 'select',
+        //   name: 'status',
+        //   placeholder: '请输入',
+        //   labelCol: { span: 6 },
+        //   wrapperCol: { span: 18 },
+        //   selectOptions: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }]
+        // },
         {
           label: '任务来源',
           type: 'select',
@@ -147,7 +147,7 @@ export default {
       };
     }
   },
-  activated() {
+  created() {
     this.getTaskSource();
     this.getCouponList();
   },
@@ -180,7 +180,8 @@ export default {
       const para = {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
-        ...this.searchVal
+        ...this.searchVal,
+        status: 1
       };
 
       getTaskList(para)

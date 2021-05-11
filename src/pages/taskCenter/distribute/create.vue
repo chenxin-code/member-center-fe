@@ -7,34 +7,53 @@
     <div class="detail-main">
       <div class="form-body">
         <a-form-model ref="ruleForm" :rules="rules" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
-          <a-form-model-item label="任务名称" prop="afterTaskName">
-            <a-input v-model="form.afterTaskName" @click="selectAffair" />
+          <a-form-model-item label="任务名称" prop="taskName">
+            <a-input v-model="form.taskName" @click="selectAffair" />
           </a-form-model-item>
           
-          <a-radio-group v-model="form.scopeType" style="padding-left: 50px;">
+          <a-radio-group v-model="form.scopeType" class="scopeTypeData">
             <a-radio :style="radioStyle" :value="0">
-              <span style="padding-right:40px;">选择来源</span>
-              <div style="margin:25px 0">
+              <div class="scopeTypeRadio">
+              <span style="padding-right:40px; line-height:40px;">选择来源</span>
+              <div>
                   <!-- 会员来源 -->
                   <a-form-model-item label="会员来源" prop="clientId">
                     <a-checkbox-group
                       v-model="form.clientId"
                       :options="clientIds"
                       @change="(value) => {form.clientId = value}"
+                      class="scopeGroup"
                     />
                   </a-form-model-item>
                   <!-- 会员等级 -->
                   <a-form-model-item label="会员等级" prop="startLevelId">
-                    <a-checkbox-group
-                      v-model="form.startLevelId"
-                      :options="startLevelIds"
-                      @change="(value) => {form.startLevelId = value}"
-                    />
+                    <div class="scopeGroup">
+                      <a-select
+                        style="width:150px;"
+                        v-model="form.startLevelId"
+                        @change="startLevelIdSelect"
+                      >
+                        <a-select-option :value="item.value" v-for="(item, index) in startLevelIds" :key="index">
+                          {{ item.label }}
+                        </a-select-option>
+                      </a-select>
+                    <span style="padding: 0 20px;color:#ccc;">------</span>
+                      <a-select
+                        style="width:150px;"
+                        v-model="form.endLevelId"
+                        @change="endLevelIdSelect"
+                      >
+                        <a-select-option :value="item.value" v-for="(item, index) in startLevelIds" :key="index">
+                          {{ item.label }}
+                        </a-select-option>
+                      </a-select>
+                    </div>
                   </a-form-model-item>
+                  </div>
               </div>
             </a-radio>
             <a-radio :style="radioStyle" :value="1">
-              <span style="padding-right:40px;">上传指定会员</span>
+              <span style="padding-right:40px;">指定会员</span>
               <!-- { required: true, message: '请选择文件上传!' }, -->
               <!-- 上传指定会员 -->
               <a-form-model-item style="display:inline-block;width:100%;">
@@ -134,21 +153,23 @@ export default {
       selectGame: false,
       addLoading: false,
       form: {
-        afterTask: '', // 关联任务
-        afterTaskName: '', // 关联任务名称
+        taskId: '', // 关联任务
+        taskName: '', // 关联任务名称
         scopeType: 0,
         clientId: ['sys_dichan'],
-        startLevelId: [],
-        file: ''
+        startLevelId: 1,
+        endLevelId: 1,
+        file: null,
+        status: 1
       },
       taskSourceOption: [],
       rules: {
-        afterTaskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
-        clientId: [{ required: true, message: '请选择会员来源', trigger: 'blur' }]
+        taskName: [{ required: true, message: '请输入任务名称', trigger: 'change' }],
+        clientId: [{ required: true, message: '请选择会员来源', trigger: 'change' }]
       },
       radioStyle: {
         display: 'block',
-        height: '200px'
+        height: '130px'
       },
       clientIds: [{ label: '地产Pro', value: 'sys_dichan' }, { label: '邻里邦Pro', value: 'sys_linlibang' }],
       startLevelIds: [
@@ -174,16 +195,44 @@ export default {
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
+    },
+    'form.startLevelId': {
+      handler(newVal) {
+        // console.log('watch startLevelId newVal :>> ', newVal);
+        if (this.form.startLevelId > this.form.endLevelId) {
+          this.$set(this.form, 'endLevelId', this.form.startLevelId);
+        }
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
+    },
+    'form.endLevelId': {
+      handler(newVal) {
+        // console.log('watch endLevelId newVal :>> ', newVal);
+        if (this.form.endLevelId < this.form.startLevelId) {
+          this.$set(this.form, 'startLevelId', this.form.endLevelId);
+        }
+      },
+      immediate: true, //刷新加载立马触发一次handler
+      deep: true
     }
   },
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'register' });
-  },
-
   created() {
     this.type = this.$route.query.type;
   },
   methods: {
+    init() {
+      this.form = {
+        taskId: '', // 关联任务
+        taskName: '', // 关联任务名称
+        scopeType: 0,
+        clientId: ['sys_dichan'],
+        startLevelId: 1,
+        endLevelId: 1,
+        file: null,
+        status: 1
+      };
+    },
     validatorFn1,
     // 打开关联任务
     selectAffair() {
@@ -191,8 +240,8 @@ export default {
     },
     // 选择活动回调
     selectedAffair(row) {
-      this.form.afterTask = row[0].id;
-      this.form.afterTaskName = row[0].taskName;
+      this.form.taskId = row[0].id;
+      this.form.taskName = row[0].taskName;
     },
     // 选择任务来源回调
     handleChange(value) {
@@ -211,19 +260,32 @@ export default {
       const newFileList = this.fileList1.slice();
       newFileList.splice(index, 1);
       this.fileList1 = newFileList;
-      this.file = null;
+      this.form.file = null;
       // console.log('newFileList :>> ', newFileList);
       // console.log('this.file :>> ', this.file);
     },
     btnCreateTask(e) {
-      console.log(this.form);
-      const data = JSON.parse(JSON.stringify());
+      const data = JSON.parse(JSON.stringify(this.form));
+      Object.assign(data, {
+        clientId: data.clientId.join(),
+        file: this.form.file
+      });
+      const paramFormData = Object.keys(data).reduce((pre, key) => {
+        pre.append([key], data[key]);
+        return pre;
+      }, new FormData());
+
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.addLoading = true;
-          getAddDist(this.form)
+          getAddDist(paramFormData)
             .then(res => {
-              this.$refs.ruleForm.resetFields();
+              if (res.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.init();
+                this.$message.success('提交成功');
+                this.goBack();
+              }
             })
             .finally(i => {
               this.addLoading = false;
@@ -241,11 +303,21 @@ export default {
         .getTplDownload()
         .then(res => {
           // console.log('getTplDownload res :>> ', res);
-          window.open(res.data);
+          if (res.code === 200) {
+            window.open(res.data);
+          }
         })
         .finally(() => {
           this.loadingUrl = false;
         });
+    },
+    startLevelIdSelect(value) {
+      // console.log('startLevelIdSelect value :>> ', value);
+      this.form.startLevelId = value;
+    },
+    endLevelIdSelect(value) {
+      // console.log('endLevelIdSelect value :>> ', value);
+      this.form.endLevelId = value;
     }
   }
 };
@@ -302,5 +374,14 @@ export default {
 .createflex {
   display: flex;
   align-items: center;
+}
+.scopeTypeData {
+  padding-left: calc(16.66666667% - 90px);
+}
+.scopeTypeRadio {
+  display: inline-flex;
+}
+.scopeGroup {
+  margin-left: 15px;
 }
 </style>

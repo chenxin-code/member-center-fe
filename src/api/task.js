@@ -116,4 +116,6 @@ export const getDistList = param => fetchApi(`${API_DIST}/dist-list`, param, 'ge
  * @param {number} params.updateUser		query	false	integer(int64)
  * @param {string} params.updateUserName		query	false	string
 */
-export const getAddDist = param => fetchApi(`${API_DIST}/add-dist`, param, 'get')
+export const getAddDist = data => fetchApi(`${API_DIST}/add-dist`, data, 'post', {
+  'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>'
+})

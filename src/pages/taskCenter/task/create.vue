@@ -94,16 +94,13 @@
               <a-radio value="2">
                 礼包券
               </a-radio>
-              <a-radio value="3">
+              <!-- <a-radio value="3">
                 抽奖
-              </a-radio>
+              </a-radio> -->
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==1" ref="otherAwardName" label="请选择活动" prop="otherAwardName">
+          <a-form-model-item v-if="['1','2'].includes(form.otherAwardType)" ref="otherAwardName" :label="['请选择活动','请选择礼包'][form.otherAwardType-1]" prop="otherAwardName">
             <a-input v-model="form.otherAwardName" @click="selectActivity" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.otherAwardType==2" ref="otherAwardName" label="请选择礼包" prop="otherAwardName">
-            <a-input v-model="form.otherAwardName" />
           </a-form-model-item>
           <a-form-model-item v-if="form.otherAwardType==3" ref="otherAwardName" label="请选择游戏" prop="otherAwardName">
             <a-input v-model="form.otherAwardName" @click="fn_selectGame" />
@@ -175,6 +172,11 @@
         @selectedActive="selectedActivity"
       >
       </activity>
+      <gift
+        :visible.sync="visibleGift"
+        @selectedActive="selectedActivity"
+      >
+      </gift>
       <affair
         :visible.sync="visibleAffair"
         @selectedActive="selectedAffair"
@@ -195,13 +197,15 @@ import {
 } from '@/pages/coupons/release/createForms';
 import activity from './activity';
 import affair from './affair';
+import gift from './gift';
 import moment from 'moment';
 import api from '@/api';
 import { getTaskDetail, postAdd, postUpdate } from '@/api/task';
 export default {
   components: {
     activity,
-    affair
+    affair,
+    gift
   },
   data() {
     return {
@@ -209,6 +213,7 @@ export default {
       editId: '',
       visibleActivity: false,
       visibleAffair: false,
+      visibleGift: false,
       selectGame: false,
       addLoading: false,
       form: {
@@ -242,10 +247,10 @@ export default {
       rules: {
         taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
         periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
-        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }]
+        executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
         // gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
-        // BangDouNumber: [{ required: true, message: '请输入邦豆奖励数量', trigger: 'blur' }],
-        // GrowthNumber: [{ required: true, message: '请输入成长值奖励数量', trigger: 'blur' }],
+        awardIntegral: [{ required: true, message: '请输入邦豆奖励', trigger: 'blur' }],
+        awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }]
         // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
         // BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
         //ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
@@ -278,14 +283,23 @@ export default {
     }
   },
   methods: {
-    // 打开活动弹窗
+    // 打开活动/礼包弹窗
     selectActivity() {
-      this.visibleActivity = true;
+      if (this.form.otherAwardType === '1') {
+        this.visibleActivity = true;
+      } else {
+        this.visibleGift = true;
+      }
     },
     // 选择活动回调
     selectedActivity(row) {
-      this.form.otherAwardId = row[0].id;
-      this.form.otherAwardName = row[0].activityName;
+      if (this.form.otherAwardType === '1') {
+        this.form.otherAwardId = row[0].id;
+        this.form.otherAwardName = row[0].activityName;
+      } else {
+        this.form.otherAwardId = row[0].id;
+        this.form.otherAwardName = row[0].name;
+      }
     },
     // 打开关联任务
     selectAffair() {
@@ -312,9 +326,11 @@ export default {
           this.addLoading = true;
           _http(this.form)
             .then(res => {
-              this.$refs.ruleForm.resetFields();
-              this.$message.success('提交成功');
-              this.$router.go(-1);
+              if (res.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.$message.success('提交成功');
+                this.$router.go(-1);
+              }
             })
             .finally(i => {
               this.addLoading = false;

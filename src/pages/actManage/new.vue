@@ -105,7 +105,7 @@
                       :file-list="fileList"
                       v-decorator="[
                         'activityCover',
-                        { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
+                        { initialValue: activityCover, rules: [{ required: false, message: '图片不能为空' }] }
                       ]"
                       :before-upload="() => false"
                       :remove="deleteOssImage"
@@ -1682,9 +1682,6 @@ export default {
         systemAwardFlag: this.systemAwardFlag,
         activityAwards: JSON.stringify(this.activityAwards)
       };
-
-      // console.log('getActCreate param :>> ', param);
-      // return;
 
       const paramFormData = Object.keys(param).reduce((pre, key) => {
         pre.append([key], param[key]);

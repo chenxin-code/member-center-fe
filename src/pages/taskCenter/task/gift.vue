@@ -1,5 +1,5 @@
 <template>
-  <a-modal title="选择任务" :visible="visible" @ok="selectedActive" @cancel="cancelActivity" width="80%">
+  <a-modal title="选择礼包" :visible="visible" @ok="selectedActive" @cancel="cancelActivity" width="80%">
     <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
     <a-table 
       :style="{ marginTop: '20px' }" 
@@ -11,6 +11,16 @@
       :rowKey="(r, i) => i"
       :row-selection="rowSelection"
     >
+    <template slot="validitySlot" slot-scope="scope">
+      <div class="editable-row-operations">
+        <span v-html="parseValidityStr(scope)"></span>
+      </div>
+    </template>
+    <template slot="status" slot-scope="scope">
+      <div class="editable-row-operations">
+        <span>{{['禁用','启用'][scope.status || 0]}}</span>
+      </div>
+    </template>
     </a-table>
     <a-pagination 
       :total="total" 
@@ -42,85 +52,47 @@ export default {
       selectedRows: [],
       formList: [
         {
-          label: '任务名称',
+          label: '礼包名称',
           type: 'input',
-          name: 'taskName',
+          name: 'name',
           placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
-          label: '任务键',
-          type: 'input',
-          name: 'taskKey',
-          placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 }
-        },
-        {
-          label: '任务状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 },
-          selectOptions: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }]
-        },
-        {
-          label: '任务来源',
-          type: 'select',
-          name: 'taskSource',
-          placeholder: '请选择',
-          selectOptions: [],
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'jointime',
+          name: 'cjsj',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
+        },
+        {
+          type: 'button',
+          buttonName: '查询',
+          htmlType: 'submit',
+          align: 'right',
+          labelCol: { span: 0 },
+          wrapperCol: { span: 24 }
         }
       ],
       columns: [
         {
-          dataIndex: 'taskKey',
-          key: 'id',
-          title: '任务key'
-        },
-        {
-          title: '任务名称',
-          key: 'taskName',
-          dataIndex: 'taskName'
-        },
-        {
-          title: '任务有效期(天)',
-          key: 'validity',
-          dataIndex: 'validity'
-        },
-        {
-          title: '是否周期性',
-          key: 'isPeriodic',
-          dataIndex: 'isPeriodic',
-          customRender: text => (text === 1 ? '是' : '否')
+          title: '礼包名称',
+          dataIndex: 'name',
+          key: 'name',
+          width: 180
         },
         {
           title: '状态',
           key: 'status',
-          dataIndex: 'status',
-          customRender: text => (text === 0 ? '禁用' : '启用')
+          scopedSlots: { customRender: 'status' },
+          width: 120
         },
         {
-          title: '任务来源',
-          key: 'sourceName',
-          dataIndex: 'sourceName'
-        },
-        {
-          title: '创建时间',
-          key: 'createTime',
-          dataIndex: 'createTime',
-          customRender: text => moment(text).format('YYYY-MM-DD HH:mm')
+          title: '有效期',
+          key: 'validitySlot',
+          scopedSlots: { customRender: 'validitySlot' },
+          width: 250
         }
       ],
       total: 0,
@@ -138,6 +110,15 @@ export default {
     }
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -145,10 +126,14 @@ export default {
         },
         type: 'radio'
       };
+    },
+    parseValidityStr() {
+      return param => {
+        return `${this.momentStr(param.startTime)} ～ ${this.momentStr(param.endTime)}`;
+      };
     }
   },
   created() {
-    this.getTaskSource();
     this.getCouponList();
   },
   methods: {
@@ -180,10 +165,12 @@ export default {
       const para = {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
-        ...this.searchVal
+        ...this.searchVal,
+        status: 1
       };
 
-      getTaskList(para)
+      api
+        .selectGiftBagList(para)
         .finally(() => {
           this.tableLoading = false;
         })
@@ -191,24 +178,6 @@ export default {
           this.tableLoading = false;
           this.tableDataList = res.data.records;
           this.total = res.data.total;
-        });
-    },
-    getTaskSource() {
-      let sourceList = [];
-      api
-        .getTaskSource()
-        .then(
-          res =>
-            (sourceList = res.data.map(item => {
-              return { id: item.appCode, name: item.appName };
-            }))
-        )
-        .then(() => {
-          this.$set(
-            this.formList,
-            3,
-            Object.assign(this.formList[3], { selectOptions: [].concat({ id: '', name: '全部' }, sourceList) })
-          );
         });
     }
   }
