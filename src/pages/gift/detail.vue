@@ -13,7 +13,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">礼包名称:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{name}}</div>
                   </div>
                 </div>
               </div>
@@ -21,7 +21,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">礼包状态:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{statusStr}}</div>
                   </div>
                 </div>
               </div>
@@ -37,7 +37,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">礼包描述:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{memo}}</div>
                   </div>
                 </div>
               </div>
@@ -45,7 +45,9 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">礼包背景:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">
+                      <img :src="couponImage.replace(/\s+/g, '')" width="85" height="85" alt="" v-if="couponImage" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -76,6 +78,10 @@ export default {
   components: {},
   data() {
     return {
+      name: null,
+      memo: null,
+      statusStr: null,
+      couponImage: null,
       columns: [
         {
           dataIndex: 'id',
@@ -121,16 +127,51 @@ export default {
 
   },
   methods: {
-    getDetail() {
-      api.getDetail({}).then(resp => {
-        if (resp.code === 200) {
 
-        }
-      });
-    }
   },
   created() {
-    this.getDetail();
+    api.selectGiftBag({
+      id: this.$route.query.id
+    }).then(resp => {
+      if (resp.code === 200) {
+        this.id = resp.data.id;
+        this.name = resp.data.name;
+        this.memo = resp.data.memo;
+        this.statusStr = Number(resp.data.status)?'启用':'禁用';
+        this.couponImage = resp.data.picture;
+        ///////////日期开始//////////
+        this.validityStartTime = this.isDateString(this.momentStrHms(resp.data.validityStartTime))
+          ? this.momentStrHms(resp.data.validityStartTime)
+          : ''; //有效期开始时间
+        this.validityEndTime = this.isDateString(this.momentStrHms(resp.data.validityEndTime))
+          ? this.momentStrHms(resp.data.validityEndTime)
+          : ''; //有效期结束时间
+        if (
+          this.isDateString(this.validityStartTime) &&
+          this.isDateString(this.validityEndTime) &&
+          resp.data.validityStartTime > Date.now() &&
+          resp.data.validityEndTime > Date.now()
+        ) {
+          this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
+        } else {
+          this.rangePickerValue = [];
+          this.validityStartTime = '';
+          this.validityEndTime = '';
+        }
+        ///////////日期结束//////////
+
+
+      }
+    });
+    api.selectCoupon({
+      giftBagId: this.$route.query.id,
+      pageIndex: 1,
+      pageSize: 999
+    }).then(resp => {
+      if (resp.code === 200) {
+
+      }
+    });
   },
   mounted() {},
   watch: {}
