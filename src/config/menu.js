@@ -153,6 +153,15 @@ export default [
     path: '/actManage'
   },
   {
+    title: '游戏管理',
+    authKeys: [''],
+    icon: require('@/assets/img/menu/act-manage-show.png'),
+    iconHide: require('@/assets/img/menu/act-manage-hide.png'),
+    menuKey: 'gameManage',
+    group: 'hyzx',
+    path: '/gameManage'
+  },
+  {
     title: '活动参与数据',
     authKeys: [''],
     icon: require('@/assets/img/menu/act-join-show.png'),

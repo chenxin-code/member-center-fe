@@ -43,6 +43,9 @@ const CouponsReleaseDetail = () => import('@/pages/coupons/release/detail');
 const CouponsReleaseCreate = () => import('@/pages/coupons/release/create');
 const CouponsReleaseStatus = () => import('@/pages/coupons/release/status');
 
+// 游戏
+const gameManage = () => import('@/pages/game/index');
+
 const routes = [
   //首页:home
   {
@@ -171,6 +174,21 @@ const routes = [
           ]
         },
         component: CouponsManageDetail
+      },
+
+      // 游戏管理
+      {
+        path: '/gameManage',
+        name: 'gameManage',
+        menuKey: 'gameManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: gameManage
       },
       //// 活动管理 start
       {
@@ -923,7 +941,7 @@ const routes = [
           ]
         },
         component: () => import('@/pages/giftDist/detail')
-      },
+      }
     ]
   },
   {
