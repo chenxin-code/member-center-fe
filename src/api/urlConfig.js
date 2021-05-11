@@ -115,4 +115,18 @@ export default {
   selectBehaviour: '/times/member-center/behaviour/api/v1/selectBehaviour',
   //礼包列表
   selectGiftBagList: '/times/member-center/giftBag/api/v1/selectGiftBagList',
+  //启用禁用礼包
+  changeGiftBag: '/times/member-center/giftBag/api/v1/changeGiftBag',
+  //创建礼包
+  createGiftBag: '/times/member-center/giftBag/api/v1/createGiftBag',
+  //删除卡卷
+  delCoupon: '/times/member-center/giftBag/api/v1/delCoupon',
+  //编辑礼包
+  editGiftBag: '/times/member-center/giftBag/api/v1/editGiftBag',
+  //添加卡券
+  giftBagManagement: '/times/member-center/giftBag/api/v1/giftBagManagement',
+  //礼包卡卷列表
+  selectCoupon: '/times/member-center/giftBag/api/v1/selectCoupon',
+  //礼包详情
+  selectGiftBag: '/times/member-center/giftBag/api/v1/selectGiftBag',
 };

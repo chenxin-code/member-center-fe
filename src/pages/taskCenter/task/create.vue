@@ -47,10 +47,10 @@
           </a-form-model-item>
           <a-form-model-item label="邦豆成长值奖励" prop="isSystemAward">
             <a-radio-group v-model="form.isSystemAward">
-              <a-radio value="1">
+              <a-radio value="0">
                 不是
               </a-radio>
-              <a-radio value="2">
+              <a-radio value="1">
                 是
               </a-radio>
             </a-radio-group>
@@ -65,22 +65,22 @@
               </a-radio>
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
             <a-input v-model="form.awardIntegral" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
             <a-input v-model="form.awardGrow" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
             <a-input v-model="form.awardIntegral" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
             <a-input v-model="form.awardIntegralMax" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
             <a-input v-model="form.awardGrow" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
+          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
             <a-input v-model="form.awardGrowMax" />
           </a-form-model-item>
           <a-form-model-item label="其他奖励" prop="otherAwardType">
@@ -134,10 +134,10 @@
           </a-form-model-item>
           <a-form-model-item label="初始化任务" prop="isDefault">
             <a-radio-group v-model="form.isDefault">
-              <a-radio value="1">
+              <a-radio value="0">
                 不是
               </a-radio>
-              <a-radio value="2">
+              <a-radio value="1">
                 是
               </a-radio>
             </a-radio-group>
@@ -264,10 +264,8 @@ export default {
   },
   watch: {
     'form.otherAwardType'(val) {
-      if (val === '0') {
-        this.form.otherAwardId = '';
-        this.form.otherAwardName = '';
-      }
+      this.form.otherAwardId = '';
+      this.form.otherAwardName = '';
     }
   },
   beforeCreate() {

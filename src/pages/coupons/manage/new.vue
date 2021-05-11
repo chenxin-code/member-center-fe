@@ -511,6 +511,7 @@ import moment from 'moment';
 import { debounce } from '@/utils/util';
 import { mapActions } from 'vuex';
 import { CARD_TYPE_MAP } from '@/constance';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'couponsManageNew',
@@ -531,11 +532,7 @@ export default {
       couponTitle: '',
       couponSubhead: '',
       couponType: 10,
-      couponTypes: [
-        { name: '代金券', code: 10 },
-        { name: '满减券', code: 20 },
-        { name: '折扣券', code: 40 }
-      ],
+      couponTypes: [{ name: '代金券', code: 10 }, { name: '满减券', code: 20 }, { name: '折扣券', code: 40 }],
 
       voucherAmount: '', //代金券抵扣金额
       satisfyAmount: '', //	折扣券/满减券 满减金额
@@ -543,10 +540,7 @@ export default {
       discountMaxDeduction: '', //	折扣券 最高抵扣金额
       discountRatio: '0.9', //折扣券 折扣比例
       validityType: 1,
-      validityTypes: [
-        { name: '固定有效期', code: 1 },
-        { name: '相对有效期', code: 3 }
-      ],
+      validityTypes: [{ name: '固定有效期', code: 1 }, { name: '相对有效期', code: 3 }],
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //固定有效期-卡券有效期开始时间
       validityEndTime: '', //	固定有效期-卡券有效期结束时间
@@ -631,7 +625,11 @@ export default {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
         }
-        if(this.satisfyAmount && this.fullReductionDiscountAmount && Number(this.satisfyAmount) < Number(this.fullReductionDiscountAmount)){
+        if (
+          this.satisfyAmount &&
+          this.fullReductionDiscountAmount &&
+          Number(this.satisfyAmount) < Number(this.fullReductionDiscountAmount)
+        ) {
           callback(new Error('满减金额不能小于抵扣金额'));
         }
         callback();
@@ -644,7 +642,11 @@ export default {
         if (value && value == 0) {
           callback(new Error('金额不能为0'));
         }
-        if(this.satisfyAmount && this.discountMaxDeduction && Number(this.satisfyAmount) < Number(this.discountMaxDeduction)){
+        if (
+          this.satisfyAmount &&
+          this.discountMaxDeduction &&
+          Number(this.satisfyAmount) < Number(this.discountMaxDeduction)
+        ) {
           callback(new Error('满减金额不能小于最高抵扣金额'));
         }
         callback();
@@ -807,6 +809,10 @@ export default {
     },
     satisfyAmountChange(e) {
       this.satisfyAmount = e.target.value;
+      const _this = this;
+      setTimeout(function() {
+        _this.conponForm.validateFields(['fullReductionDiscountAmount']);
+      }, 10);
     },
     discountMaxDeductionChange(e) {
       this.discountMaxDeduction = e.target.value;
@@ -817,6 +823,10 @@ export default {
     },
     fullReductionDiscountAmountChange(e) {
       this.fullReductionDiscountAmount = e.target.value;
+      const _this = this;
+      setTimeout(function() {
+        _this.conponForm.validateFields(['satisfyAmount']);
+      }, 10);
     },
     validityDayNumsChange(newVal) {
       this.validityDayNums = newVal;
@@ -986,7 +996,7 @@ export default {
         validityStartTime: this.validityStartTime,
         validityType: this.validityType,
         voucherAmount: this.voucherAmount,
-        referrer:0
+        referrer: 0
       };
 
       console.log('getCouponCreate param :>> ', param);
