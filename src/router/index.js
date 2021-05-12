@@ -45,6 +45,9 @@ const CouponsReleaseStatus = () => import('@/pages/coupons/release/status');
 
 // 游戏
 const gameManage = () => import('@/pages/game/index');
+const addGame = () => import('@/pages/game/addGame');
+const prizeManage = () => import('@/pages/game/prizeManage'); //奖品管理
+const peopleManage = () => import('@/pages/game/peopleManageList'); //奖品管理
 
 const routes = [
   //首页:home
@@ -190,6 +193,46 @@ const routes = [
         },
         component: gameManage
       },
+      {
+        path: '/gameManage/addGame',
+        name: 'addGame',
+        menuKey: 'addGame',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: addGame
+      },
+      {
+        path: '/gameManage/prizeManage',
+        name: 'prizeManage',
+        menuKey: 'prizeManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: prizeManage
+      },
+      {
+        path: '/gameManage/peopleManage',
+        name: 'peopleManage',
+        menuKey: 'peopleManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: peopleManage
+      },
+
       //// 活动管理 start
       {
         path: '/actManage',
