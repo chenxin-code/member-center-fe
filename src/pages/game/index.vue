@@ -136,10 +136,21 @@ export default {
     addGame() {
       this.$router.push({
         path: '/gameManage/addGame'
-      })
+      });
     },
-    turnOn(target) {
+    turnOn(target, type) {
       console.log('>>>>>>>turn on>>>>>>>>>', target);
+      if (type == 'manage') {
+        this.$router.push({
+          path: '/gameManage/prizeManage',
+          query: target
+        });
+      } else if (type == 'check') {
+        this.$router.push({
+          path: '/gameManage/peopleManage',
+          query: target
+        });
+      }
     },
     //  分页
     changePage(val) {
