@@ -27,10 +27,10 @@
             </a-select>
           </a-form-model-item>
           <a-form-model-item v-if="form.isPeriodic==1" ref="periodic" label="任务周期" prop="periodic">
-            <a-input v-model="form.periodic" />
+            <a-input-number v-model="form.periodic" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isPeriodic==2" ref="executeNum" label="最大执行次数" prop="executeNum">
-            <a-input v-model="form.executeNum" />
+            <a-input-number v-model="form.executeNum" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item ref="source" label="任务来源" prop="source">
             <a-select v-model="form.sourceName" placeholder="请选择" @change="handleChange">
@@ -55,7 +55,7 @@
               </a-radio>
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==2" label="邦豆成长值奖励计算方式" prop="awardType">
+          <a-form-model-item v-if="form.isSystemAward==1" label="邦豆成长值奖励计算方式" prop="awardType">
             <a-radio-group v-model="form.awardType">
               <a-radio value="1">
                 固定值
@@ -66,22 +66,22 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
-            <a-input v-model="form.awardIntegral" />
+            <a-input-number v-model="form.awardIntegral" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
-            <a-input v-model="form.awardGrow" />
+            <a-input-number v-model="form.awardGrow" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
-            <a-input v-model="form.awardIntegral" />
+            <a-input-number v-model="form.awardIntegral" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
-            <a-input v-model="form.awardIntegralMax" />
+            <a-input-number v-model="form.awardIntegralMax" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
-            <a-input v-model="form.awardGrow" />
+            <a-input-number v-model="form.awardGrow" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
-            <a-input v-model="form.awardGrowMax" />
+            <a-input-number v-model="form.awardGrowMax" :min="0" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item label="其他奖励" prop="otherAwardType">
             <a-radio-group v-model="form.otherAwardType">
@@ -425,5 +425,8 @@ export default {
       }
     }
   }
+}
+.number-input {
+  width: 100%;
 }
 </style>

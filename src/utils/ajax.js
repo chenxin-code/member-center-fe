@@ -130,6 +130,7 @@ let isRefresh = false;
 async function refreshToken() {
   isRefresh = true;
 
+<<<<<<< HEAD
   Modal.warning({
     title: 'Token过期提示',
     content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
@@ -139,6 +140,17 @@ async function refreshToken() {
       window.location.href = localStorage.getItem('SD_LOGIN_URL');
     }
   });
+=======
+  // Modal.warning({
+  //   title: 'Token过期提示',
+  //   content: '您的登录Token已过期，点击确认之后将会跳转到登录页',
+  //   okText: '确认',
+  //   onOk() {
+  //     //console.log('Modal warning OK');
+  //     window.location.href = localStorage.getItem('SD_LOGIN_URL');
+  //   }
+  // });
+>>>>>>> dev
 
   // const para = QS.stringify({
   //   grant_type: 'refresh_token',
