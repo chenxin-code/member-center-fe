@@ -146,7 +146,12 @@ const vueConfig = {
         // target: 'http://member-prod-members-linli.timesgroup.cn:50000/', //生产:master
         ws: true, //是否支持WebSocket
         changeOrigin: true //是否开启跨域
+      },
+      '/times/member-game-centert/': {
+        target: 'http://47.112.249.207:12345',
+        changeOrigin: true //是否开启跨域
       }
+
       //oss是图片预览的时候才使用
       // '/oss-backend': {
       //   target: 'https://times-oss-dev.oss-cn-shenzhen.aliyuncs.com',
