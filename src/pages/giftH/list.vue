@@ -12,22 +12,25 @@
         style="width: 100%;margin-top: 8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="generalSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidityStr(rowData)"></span>
+            <span v-html="parseGeneral(scope.general)"></span>
           </div>
         </template>
-        <template slot="createTimeSlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStr(rowData.createTime)"></span>
+            <span v-html="parseDeliveryTime(scope.deliveryTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goActDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="updateActStatus(rowData.id, 0)">启用</a>
-            <!--<a style="padding-right: 10px;" @click="updateActStatus(rowData.id, 1)">禁用</a>-->
-            <a style="padding-right: 10px;" @click="goActEdit(rowData.id)">编辑</a>
+            <span v-html="momentStr(scope.createTime)"></span>
+          </div>
+        </template>
+        <template slot="detailsSlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <a style="padding-right: 10px;" @click="goDetail(scope.id)">查看</a>
+            <a style="padding-right: 10px;" @click="goEdit(scope.id)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -41,7 +44,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"/>
+        style="margin-top: 30px;width: 100%;text-align: right;"/>
     </div>
   </div>
 </template>
@@ -59,20 +62,20 @@ export default {
         {
           label: '节日礼包名称',
           type: 'input',
-          name: 'lbmc',
+          name: 'giftBagName',
           placeholder: '请输入',
-          labelCol: {span: 6},
-          wrapperCol: {span: 18}
+          labelCol: {span: 8},
+          wrapperCol: {span: 16}
         },
         {
           label: '状态',
           type: 'select',
-          name: 'zt',
+          name: 'status',
           placeholder: '请选择',
           selectOptions: [
             {name: '全部', id: ''},
-            {name: '启用', id: 1},
-            {name: '禁用', id: 2}
+            {name: '启用', id: '1'},
+            {name: '禁用', id: '0'}
           ],
           labelCol: {span: 6},
           wrapperCol: {span: 18}
@@ -80,7 +83,7 @@ export default {
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'cjsj',
+          name: 'createTime',
           labelCol: {span: 6},
           wrapperCol: {span: 18}
         },
@@ -110,14 +113,14 @@ export default {
       tableColumns: [
         {
           title: '节日礼包名称',
-          dataIndex: 'lbmc',
-          key: 'lbmc',
+          dataIndex: 'name',
+          key: 'name',
           width: 180
         },
         {
           title: '状态',
-          dataIndex: 'zt',
-          key: 'zt',
+          key: 'generalSlot',
+          scopedSlots: { customRender: 'generalSlot' },
           width: 120
         },
         {
@@ -131,7 +134,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: {customRender: 'detailsSlot'},
           fixed: 'right',
-          width: 180
+          width: 200
         }
       ],
       tableData: [],
@@ -161,9 +164,22 @@ export default {
         }
       };
     },
-    parseValidityStr() {
+    parseDeliveryTime() {
       return param => {
-        return `${this.momentStr(param.startTime)} ～ ${this.momentStr(param.endTime)}`;
+        return `${this.momentStr(param)}`;
+      };
+    },
+    parseGeneral() {
+      return param => {
+        if (param === 0) {
+          return '禁用';
+        } else if (param === 1) {
+          return '启用';
+        } else if (param === 2) {
+          return '已保存';
+        } else {
+          return '';
+        }
       };
     }
   },
@@ -182,53 +198,19 @@ export default {
       this.current = 1;
       this.getList(true);
     },
-    goActDetail(id) {
+    goDetail(id) {
       this.$router.push({
-        name: 'actManageDetail',
+        path: '/giftH/detail',
         query: {
           id: id
         }
       });
     },
-    goActEdit(id) {
+    goEdit(id) {
       this.$router.push({
-        name: 'actManageEdit',
+        path: '/giftH/edit',
         query: {
           id: id
-        }
-      });
-    },
-    updateActStatus(paramId, state) {
-      let title;
-      let content;
-      if (state === 0) {
-        title = '确认启用当前活动？';
-        content = '';
-      } else if (state === 1) {
-        title = '确认禁用当前活动？';
-        content = '活动禁用后用户无法继续参加';
-      } else {
-        title = '';
-        content = '';
-      }
-      this.$confirm({
-        title: title,
-        content: content,
-        centered: true,
-        okText: '确定',
-        cancelText: '取消',
-        onOk: () => {
-          this.tableLoading = true;
-          api.updateActStatus({
-            id: paramId,
-            isEnable: state
-          }).then(res => {
-            if (res.code === 200) {
-              this.getList();
-            }
-          }).finally(() => {
-            this.tableLoading = false;
-          });
         }
       });
     },
@@ -247,30 +229,28 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let lbmc = '';
-        let zt = '';
-        if (this.$refs.thisForm.getFieldsValue().lbmc) {
-          lbmc = this.$refs.thisForm.getFieldsValue().lbmc;
+        let giftBagName = '';
+        let status = '';
+        if (this.$refs.thisForm.getFieldsValue().giftBagName) {
+          giftBagName = this.$refs.thisForm.getFieldsValue().giftBagName;
         }
-        if (this.$refs.thisForm.getFieldsValue().zt) {
-          zt = this.$refs.thisForm.getFieldsValue().zt;
+        if (this.$refs.thisForm.getFieldsValue().status) {
+          status = this.$refs.thisForm.getFieldsValue().status;
         }
-        let jointimeStart = '';
-        let jointimeEnd = '';
-        if (
-          Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().jointime) === '[object Array]' &&
-          this.$refs.thisForm.getFieldsValue().jointime.length > 1
-        ) {
-          jointimeStart = moment(this.$refs.thisForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
-          jointimeEnd = moment(this.$refs.thisForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
+        let createTimeStart = '';
+        let createTimeEnd = '';
+        if (Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().createTime) === '[object Array]' &&
+          this.$refs.thisForm.getFieldsValue().createTime.length > 1) {
+          createTimeStart = moment(this.$refs.thisForm.getFieldsValue().createTime[0]).format('YYYY-MM-DD');
+          createTimeEnd = moment(this.$refs.thisForm.getFieldsValue().createTime[1]).format('YYYY-MM-DD');
         }
-        return api.dasdsadsadasdasd({
-          lbmc: lbmc,
-          zt: zt,
+        return api.selectGiftBagHoliday({
+          giftBagName: giftBagName,
+          status: status,
           pageIndex: this.current,
           pageSize: this.pageSize,
-          startTime: jointimeStart,
-          endTime: jointimeEnd
+          createTimeStart: createTimeStart,
+          createTimeEnd: createTimeEnd
         }).then(res => {
           if (res.code === 200) {
             this.total = res.data.total;
@@ -293,7 +273,7 @@ export default {
     if (!this.$route.meta.isUseCache) {
       this.$nextTick(() => {
         this.$refs.thisForm.setFieldsValue({
-          zt: this.formList[1].selectOptions[0].id
+          status: this.formList[1].selectOptions[0].id
         });
       });
       //重置data

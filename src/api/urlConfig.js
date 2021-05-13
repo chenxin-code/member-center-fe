@@ -129,4 +129,14 @@ export default {
   selectCoupon: '/times/member-center/giftBag/api/v1/selectCoupon',
   //礼包详情
   selectGiftBag: '/times/member-center/giftBag/api/v1/selectGiftBag',
+  //节日礼包列表
+  selectGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHoliday',
+  //创建节日礼包
+  createGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/createGiftBagHoliday',
+  //编辑节日礼包
+  updateGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/updateGiftBagHoliday',
+  //直接派发节日礼包
+  directGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/directGiftBagHoliday',
+  //节日礼包详情
+  selectGiftBagHolidayId: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHolidayId',
 };

@@ -29,7 +29,7 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">有效期:</div>
-                    <div class="column-left"></div>
+                    <div class="column-left">{{startTime}} ~ {{endTime}}</div>
                   </div>
                 </div>
               </div>
@@ -55,8 +55,26 @@
                 <div class="common-column">
                   <div class="column-item">
                     <div class="column-right">内容列表:</div>
-                    <div class="column-left">
-                      <a-table :columns="columns" :data-source="[]" :pagination="false"></a-table>
+                    <div>
+                      <a-table
+                        :columns="columns"
+                        :data-source="tableData"
+                        :pagination="false"
+                        :loading="tableLoading"
+                        :rowKey="(r, i) => i"
+                        :scroll="{ x: 1000, y: 400 }"
+                      ></a-table>
+                      <a-pagination
+                        :total="total"
+                        :show-total="total => `共 ${total} 条`"
+                        show-quick-jumper
+                        show-size-changer
+                        :current="current"
+                        :pageSize="pageSize"
+                        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+                        @change="change"
+                        @showSizeChange="showSizeChange"
+                        style="margin-top: 30px;width: 100%;text-align: right;"/>
                     </div>
                   </div>
                 </div>
@@ -82,6 +100,8 @@ export default {
       memo: null,
       statusStr: null,
       couponImage: null,
+      startTime: '',
+      endTime: '',
       columns: [
         {
           dataIndex: 'id',
@@ -104,12 +124,12 @@ export default {
           dataIndex: 'couponType',
           customRender: text => typeList.filter(item => item.id == text)[0].name || ''
         },
-        {
-          title: '卡券业务类型',
-          key: 'activity',
-          dataIndex: 'activity',
-          customRender: text => activityList.filter(item => item.id == text)[0].name || ''
-        },
+        // {
+        //   title: '卡券业务类型',
+        //   key: 'activity',
+        //   dataIndex: 'activity',
+        //   customRender: text => activityList.filter(item => item.id == text)[0].name || ''
+        // },
         {
           title: '卡券面值金额',
           key: 'faceAmountSlot',
@@ -120,14 +140,62 @@ export default {
           key: 'operator',
           dataIndex: 'operator'
         }
-      ]
+      ],
+      tableData: [],
+      tableLoading: false,
+      //分页
+      total: 0,
+      current: 1,
+      pageSize: 10
     };
   },
   computed: {
-
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
   },
   methods: {
-
+    //判断日期格式为yyyy-mm-dd和正确的日期
+    isDateString(str) {
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+      if (str === '' || str === undefined || str === null) return false;
+      return reg.test(str);
+    },
+    change(page) {
+      this.current = page;
+      this.getList();
+    },
+    showSizeChange(current, size) {
+      this.current = 1;
+      this.pageSize = size;
+      this.getList();
+    },
+    getList() {
+      this.tableLoading = true;
+      this.$nextTick(() => {
+        return api.selectCoupon({
+          giftBagId: this.$route.query.id,
+          pageIndex: this.current,
+          pageSize: this.pageSize
+        }).then(resp => {
+          if (resp.code === 200) {
+            this.total = resp.data.total;
+            this.tableData.splice(0, this.tableData.length);
+            resp.data.records.forEach((v, k) => {
+              this.tableData.push(v);
+            });
+          }
+        }).finally(() => {
+          this.tableLoading = false;
+        });
+      });
+    }
   },
   created() {
     api.selectGiftBag({
@@ -139,39 +207,11 @@ export default {
         this.memo = resp.data.memo;
         this.statusStr = Number(resp.data.status)?'启用':'禁用';
         this.couponImage = resp.data.picture;
-        ///////////日期开始//////////
-        this.validityStartTime = this.isDateString(this.momentStrHms(resp.data.validityStartTime))
-          ? this.momentStrHms(resp.data.validityStartTime)
-          : ''; //有效期开始时间
-        this.validityEndTime = this.isDateString(this.momentStrHms(resp.data.validityEndTime))
-          ? this.momentStrHms(resp.data.validityEndTime)
-          : ''; //有效期结束时间
-        if (
-          this.isDateString(this.validityStartTime) &&
-          this.isDateString(this.validityEndTime) &&
-          resp.data.validityStartTime > Date.now() &&
-          resp.data.validityEndTime > Date.now()
-        ) {
-          this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
-        } else {
-          this.rangePickerValue = [];
-          this.validityStartTime = '';
-          this.validityEndTime = '';
-        }
-        ///////////日期结束//////////
-
-
+        this.startTime = this.isDateString(this.momentStrHms(resp.data.startTime)) ? this.momentStrHms(resp.data.startTime) : '';
+        this.endTime = this.isDateString(this.momentStrHms(resp.data.endTime)) ? this.momentStrHms(resp.data.endTime) : '';
       }
     });
-    api.selectCoupon({
-      giftBagId: this.$route.query.id,
-      pageIndex: 1,
-      pageSize: 999
-    }).then(resp => {
-      if (resp.code === 200) {
-
-      }
-    });
+    this.getList();
   },
   mounted() {},
   watch: {}
@@ -229,7 +269,7 @@ export default {
 
               .column-right {
                 width: 132.25px;
-                padding-right: 5px;
+                padding-right: 10px;
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-end;
