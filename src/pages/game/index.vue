@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { GAME_LIST } from '@/api/game.js';
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
@@ -128,7 +129,17 @@ export default {
       console.log('>>>>>>>>>', val);
     }
   },
+  created() {},
+  activated() {
+    this.getGameList({
+      pageNum: 1,
+      pageSize: 10
+    });
+  },
   methods: {
+    getGameList(params) {
+      return GAME_LIST(params);
+    },
     selectGame(value) {
       console.log('value', value);
     },

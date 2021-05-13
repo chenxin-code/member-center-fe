@@ -19,7 +19,7 @@
         <timesInput v-model="prizeName"></timesInput>
       </div>
       <div class="game-prizeManage-label">
-        <div class="prizeManage-label-title" style="width: 120px">奖品类型：</div>
+        <div class="prizeManage-label-title" style="width: 120px">奖品类型</div>
         <timesSelect
           :optionObj="prizeTypeOption"
           @select-option="seleceType"
@@ -34,19 +34,18 @@
         <div class="prizeManage-label-title" style="width: 120px">奖品数量</div>
         <timesInput v-model="prizeNum"></timesInput>
       </div>
-      <div class="game-prizeManage-label" style="align-items:flex-start">
+      <div class="game-prizeManage-label">
         <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
+        <timesInput v-model="heightNum"></timesInput>
+      </div>
+      <div class="game-prizeManage-label" style="align-items:flex-start">
+        <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
         <a-upload style="margin-left: 15px" name="file" :multiple="true" action="" :headers="{}" @change="handleExcel">
           <a-button>
             <a-icon type="upload" />
             上传
           </a-button>
         </a-upload>
-      </div>
-
-      <div class="game-prizeManage-label">
-        <div class="prizeManage-label-title" style="width: 120px">制定中奖人</div>
-        <timesInput v-model="heightNum"></timesInput>
       </div>
 
       <div class="game-prizeManage-label">
