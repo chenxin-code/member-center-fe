@@ -125,7 +125,7 @@
 <script>
 import api from './../../api';
 import moment from 'moment';
-import {debounce} from './../../utils/util';
+import {debounce} from '../../utils/util';
 
 export default {
   name: 'giftAddEdit',
@@ -194,7 +194,7 @@ export default {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
-            api.editGift({
+            api.editGiftBag({
               id: this.id,
               memo: this.memo,
               status: this.status ? 1 : 0,
@@ -213,7 +213,7 @@ export default {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
-            api.addGift({
+            api.createGiftBag({
               name: this.name,
               memo: this.memo,
               status: this.status ? 1 : 0,
