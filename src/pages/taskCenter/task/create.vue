@@ -27,10 +27,10 @@
             </a-select>
           </a-form-model-item>
           <a-form-model-item v-if="form.isPeriodic==1" ref="periodic" label="任务周期" prop="periodic">
-            <a-input-number v-model="form.periodic" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.periodic" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isPeriodic==2" ref="executeNum" label="最大执行次数" prop="executeNum">
-            <a-input-number v-model="form.executeNum" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.executeNum" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item ref="source" label="任务来源" prop="source">
             <a-select v-model="form.sourceName" placeholder="请选择" @change="handleChange">
@@ -66,22 +66,22 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
-            <a-input-number v-model="form.awardIntegral" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardIntegral" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
-            <a-input-number v-model="form.awardGrow" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardGrow" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
-            <a-input-number v-model="form.awardIntegral" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardIntegral" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
-            <a-input-number v-model="form.awardIntegralMax" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardIntegralMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
-            <a-input-number v-model="form.awardGrow" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardGrow" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
-            <a-input-number v-model="form.awardGrowMax" :min="0" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardGrowMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item label="其他奖励" prop="otherAwardType">
             <a-radio-group v-model="form.otherAwardType">
@@ -248,7 +248,7 @@ export default {
         taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
         periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
         executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
-        // gameName: [{ required: true, message: '请选择游戏', trigger: 'blur' }],
+        taskDate: [{ required: true, message: '请输入选择有效期', trigger: 'blur' }],
         awardIntegral: [{ required: true, message: '请输入邦豆奖励', trigger: 'blur' }],
         awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }]
         // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
@@ -340,8 +340,11 @@ export default {
       var self = this;
       let sourceList = [];
       api.getTaskSource().then(res => {
-        self.form.source = res.data[0].appCode;
-        self.form.sourceName = res.data[0].appName;
+        if (this.type === 'add') {
+          self.form.source = res.data[0].appCode;
+          self.form.sourceName = res.data[0].appName;
+        }
+
         self.taskSourceOption = [].concat(res.data);
       });
     },
@@ -354,10 +357,13 @@ export default {
         this.form = Object.assign(
           res.data,
           {
-            taskDate: [moment(res.data.startTime), moment(res.data.endTime)]
+            taskDate: [
+              res.data.endTime ? moment(res.data.startTime) : null,
+              res.data.endTime ? moment(res.data.endTime) : null
+            ]
           },
-          { endTime: moment(res.data.endTime) },
-          { startTime: moment(res.data.startTime) },
+          { endTime: res.data.endTime ? moment(res.data.endTime) : null },
+          { startTime: res.data.endTime ? moment(res.data.startTime) : null },
           { isPeriodic: String(res.data.isPeriodic) },
           { isSystemAward: String(res.data.isSystemAward) },
           { awardType: String(res.data.awardType) },
