@@ -83,3 +83,13 @@ export const giftBagManagement = data => fetchApi(URL.giftBagManagement, data, '
 export const selectCoupon = data => fetchApi(URL.selectCoupon, data, 'GET');
 //礼包详情
 export const selectGiftBag = data => fetchApi(URL.selectGiftBag, data, 'GET');
+//节日礼包列表
+export const selectGiftBagHoliday = data => fetchApi(URL.selectGiftBagHoliday, data, 'GET');
+//创建节日礼包
+export const createGiftBagHoliday = data => fetchApi(URL.createGiftBagHoliday, data, 'POST');
+//编辑节日礼包
+export const updateGiftBagHoliday = data => fetchApi(URL.updateGiftBagHoliday, data, 'POST');
+//直接派发节日礼包
+export const directGiftBagHoliday = data => fetchApi(URL.directGiftBagHoliday, data, 'POST');
+//节日礼包详情
+export const selectGiftBagHolidayId = data => fetchApi(URL.selectGiftBagHolidayId, data, 'GET');

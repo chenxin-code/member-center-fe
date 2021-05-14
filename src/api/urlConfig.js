@@ -129,4 +129,26 @@ export default {
   selectCoupon: '/times/member-center/giftBag/api/v1/selectCoupon',
   //礼包详情
   selectGiftBag: '/times/member-center/giftBag/api/v1/selectGiftBag',
+  //节日礼包列表
+  selectGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHoliday',
+  //创建节日礼包
+  createGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/createGiftBagHoliday',
+  //编辑节日礼包
+  updateGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/updateGiftBagHoliday',
+  //直接派发节日礼包
+  directGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/directGiftBagHoliday',
+  //节日礼包详情
+  selectGiftBagHolidayId: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHolidayId',
+
+  GAME_LIST: '/times/member-game-center/admin/api/v1/game/activitygameList', // 获取活动游戏列表
+  GANE_TAKEPARTINLIST: '/times/member-game-center/admin/api/v1/game/activitygameMemberList', // 获取游戏人员管理列表
+  GANE_PRIZE_MANAGE_LIST: '/times/member-game-center/admin/api/v1/game/activitygamePrizeList', // 获取活动奖品管理列表
+  GANE_DEL_PRIZE_PEOPLE: '/times/member-game-center/admin/api/v1/game/delActivityPerson', // 删除指定中奖人
+  GANE_DETAIL: '/times/member-game-center/admin/api/v1/game/getActivityGameInfo', // 获取活动游戏详情
+  GANE_CHECK_RESULT: '/times/member-game-center/admin/api/v1/game/getMemberLotteryResult', // 查看中奖结果
+  GANE_MANAGE_GAME:  '/times/member-game-center/admin/api/v1/game/manageActivityGame', // 管理活动游戏(启用、禁用、删除)
+  GANE_SAVE_GAME: '/times/member-game-center/admin/api/v1/game/saveOrUpdate', // 保存活动游戏
+  GANE_UPDATE_PRIZE: '/times/member-game-center/admin/api/v1/game/updateActivityPrize', // 更新活动游戏奖品
+  GANE_MANAGE_TIMES: '/times/member-game-center/admin/api/v1/game/updateDrawLotteryNum', // 管理抽奖次数
+  GANE_UPLOAD_PEOPLE: '/times/member-game-center/admin/api/v1/game/uploadActivityPerson', // 上传指定中奖人  
 };

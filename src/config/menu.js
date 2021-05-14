@@ -180,7 +180,7 @@ export default [
     path: '/systemRecord'
   },
   {
-    title: '礼包',
+    title: '礼包管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/act-join-show.png'),
     iconHide: require('@/assets/img/menu/act-join-hide.png'),
@@ -189,7 +189,7 @@ export default [
     path: '/gift'
   },
   {
-    title: '节日礼包',
+    title: '节日礼包管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/act-join-show.png'),
     iconHide: require('@/assets/img/menu/act-join-hide.png'),

@@ -12,6 +12,11 @@
         style="width: 100%;margin-top: 8px;"
         :selectable="false"
         :loading="tableLoading">
+        <template slot="statusSlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <span v-html="parseStatus(scope.status)"></span>
+          </div>
+        </template>
         <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
             <span v-html="parseValidityStr(scope)"></span>
@@ -42,7 +47,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"/>
+        style="margin-top: 30px;width: 100%;text-align: right;"/>
     </div>
   </div>
 </template>
@@ -117,8 +122,8 @@ export default {
         },
         {
           title: '状态',
-          dataIndex: 'status',
-          key: 'status',
+          key: 'statusSlot',
+          scopedSlots: { customRender: 'statusSlot' },
           width: 120
         },
         {
@@ -143,6 +148,17 @@ export default {
     };
   },
   computed: {
+    parseStatus() {
+      return param => {
+        if (param === 0) {
+          return '禁用';
+        } else if (param === 1) {
+          return '启用';
+        } else {
+          return '';
+        }
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -163,7 +179,7 @@ export default {
     },
     parseValidityStr() {
       return param => {
-        return `${this.momentStr(param.startTime)} ～ ${this.momentStr(param.endTime)}`;
+        return `${this.momentStrHms(param.startTime)} ～ ${this.momentStrHms(param.endTime)}`;
       };
     }
   },
@@ -214,10 +230,10 @@ export default {
         cancelText: '取消',
         onOk: () => {
           this.tableLoading = true;
-          api.changeGiftBag({
-            id: id,
-            status: state
-          }).then(resp => {
+          const formData = new FormData();
+          formData.append('id', id);
+          formData.append('status', state);
+          api.changeGiftBag(formData).then(resp => {
             if (resp.code === 200) {
               this.getList();
             }

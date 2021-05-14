@@ -1,7 +1,7 @@
 <template>
   <div class="times-form-main">
     <div calss="times-form-title">
-      {{ title }}:
+      {{ title }}
       <slot name="title"></slot>
     </div>
     <div class="times-form-content">

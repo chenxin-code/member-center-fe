@@ -52,7 +52,6 @@
 <script>
 import moment from 'moment';
 import api from './../../api';
-import {activityList, typeList} from "../coupons/release/createForms";
 export default {
   name: 'giftDistDetail',
   components: {},
@@ -65,16 +64,10 @@ export default {
 
   },
   methods: {
-    getDetail() {
-      api.getDetail({}).then(resp => {
-        if (resp.code === 200) {
 
-        }
-      });
-    }
   },
   created() {
-    this.getDetail();
+
   },
   mounted() {},
   watch: {}
