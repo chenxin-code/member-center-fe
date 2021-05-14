@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div class="detail-header">
-      <p class="detail-header-title">{{$route.path === '/giftH/add'?'新建':'编辑'}}节日礼包</p>
+      <p class="detail-header-title">{{ $route.path === '/giftH/add' ? '新建' : '编辑' }}节日礼包</p>
       <p class="detail-header-btn" @click="goBack()">返回</p>
     </div>
     <div class="detail-main">
@@ -14,12 +14,12 @@
             <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包！</p>
           </a-form-model-item>
           <a-form-model-item label="派发时间" prop="deliveryTime">
-            <a-date-picker v-model="form.deliveryTime" />
+            <a-date-picker v-model="form.deliveryTime" showTime style="width: 100%;"/>
           </a-form-model-item>
-          <a-radio-group v-model="form.scopeType" class="scopeTypeData">
-            <a-radio :style="radioStyle" :value="0">
+          <a-radio-group v-model="form.issuedRang" class="scopeTypeData">
+            <a-radio style="display: block; height: 130px;" :value="1">
               <div class="scopeTypeRadio">
-                <span style="padding-right:40px; line-height:40px;">选择来源</span>
+                <span style="padding-right: 40px; line-height: 40px;">选择来源</span>
                 <div>
                   <a-form-model-item label="会员来源" prop="memberSource">
                     <a-checkbox-group
@@ -32,22 +32,22 @@
                   <a-form-model-item label="会员等级" prop="startLevelId">
                     <div class="scopeGroup">
                       <a-select
-                        style="width:150px;"
+                        style="width: 150px;"
                         v-model="form.startLevelId"
                         @change="startLevelIdSelect"
                       >
-                        <a-select-option :value="item.value" v-for="(item, index) in startLevelIds" :key="index">
-                          {{ item.label }}
+                        <a-select-option :value="v.value" v-for="(v, k) in levelIdArray" :key="k">
+                          {{ v.label }}
                         </a-select-option>
                       </a-select>
-                      <span style="padding: 0 20px;color:#ccc;">------</span>
+                      <span style="padding: 0 20px; color: #ccc;">------</span>
                       <a-select
-                        style="width:150px;"
+                        style="width: 150px;"
                         v-model="form.endLevelId"
                         @change="endLevelIdSelect"
                       >
-                        <a-select-option :value="item.value" v-for="(item, index) in startLevelIds" :key="index">
-                          {{ item.label }}
+                        <a-select-option :value="v.value" v-for="(v, k) in levelIdArray" :key="k">
+                          {{ v.label }}
                         </a-select-option>
                       </a-select>
                     </div>
@@ -55,9 +55,9 @@
                 </div>
               </div>
             </a-radio>
-            <a-radio :style="radioStyle" :value="1">
-              <span style="padding-right:40px;">指定会员</span>
-              <a-form-model-item style="display:inline-block;width:100%;">
+            <a-radio style="display: block; height: 130px;" :value="2">
+              <span style="padding-right: 40px;">指定会员</span>
+              <a-form-model-item style="display: inline-block; width: 100%;">
                 <a-upload
                   v-decorator="[
                     'form.file',
@@ -78,13 +78,13 @@
                   :before-upload="uploadBefor"
                 >
                   <a-button>
-                    <a-icon type="upload"/>
+                    <a-icon type="upload" />
                     上传文件
                   </a-button>
                 </a-upload>
               </a-form-model-item>
-              <div style="padding:40px 0 0 148px;">
-                <p style="font-size: 12px;color: #c1c1c1;">
+              <div style="padding: 40px 0 0 148px;">
+                <p style="font-size: 12px; color: #c1c1c1;">
                   支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                 </p>
                 <p>
@@ -94,8 +94,8 @@
             </a-radio>
           </a-radio-group>
           <a-form-model-item :wrapper-col="{ span: 12, offset: 4 }">
-            <a-button type="primary" html-type="submit" style="margin-right:10px" @click="goBack()">取消</a-button>
-            <a-button type="primary" html-type="submit" style="margin-right:10px"
+            <a-button type="primary" html-type="submit" style="margin-right: 10px" @click="goBack()">取消</a-button>
+            <a-button type="primary" html-type="submit" style="margin-right: 10px"
                       @click="handleSubmit(2, 'saveLoading')" :loading="saveLoading">保存
             </a-button>
             <a-button type="primary" html-type="submit" @click="handleSubmit(1, 'submitLoading')"
@@ -149,11 +149,11 @@ const validatorFn1 = (rule, value, callback, message) => {
 import api from './../../api';
 import moment from 'moment';
 import FilterForm from './../../components/FilterGroup/index.jsx';
+
 export default {
   components: {FilterForm},
   data() {
     return {
-      selectedRows: [],
       formList: [
         {
           label: '礼包名称',
@@ -191,12 +191,6 @@ export default {
           width: 180
         },
         {
-          title: '状态',
-          key: 'statusSlot',
-          scopedSlots: { customRender: 'statusSlot' },
-          width: 120
-        },
-        {
           title: '有效期',
           key: 'validitySlot',
           scopedSlots: {customRender: 'validitySlot'},
@@ -209,6 +203,7 @@ export default {
           width: 180
         }
       ],
+      selectedRows: [],
       selectGiftId: null,//选中礼包id
       selectGiftName: null,//选中礼包名称
       searchGiftName: null,//搜索礼包名称
@@ -222,32 +217,23 @@ export default {
       submitLoading: false,
       saveLoading: false,
       loadingUrl: false,
-      editId: '',
-      visibleActivity: false,
-      selectGame: false,
       form: {
-        giftBagId: '',
-        giftBagName: '',
-        deliveryTime: '',
-        scopeType: 0,
+        giftBagId: null,
+        giftBagName: null,
+        deliveryTime: null,
+        issuedRang: 1,
         memberSource: ['sys_dichan'],
         startLevelId: 1,
         endLevelId: 1,
-        file: null,
-        status: 1
+        file: null
       },
-      taskSourceOption: [],
       rules: {
         giftBagName: [{required: true, message: '请选择礼包', trigger: 'change'}],
         deliveryTime: [{required: true, message: '请选择派发时间', trigger: 'change'}],
         memberSource: [{required: true, message: '请选择会员来源', trigger: 'change'}]
       },
-      radioStyle: {
-        display: 'block',
-        height: '130px'
-      },
       memberSourceArray: [{label: '地产Pro', value: 'sys_dichan'}, {label: '邻里邦Pro', value: 'sys_linlibang'}],
-      startLevelIds: [
+      levelIdArray: [
         {label: '邻里会员V1', value: 1},
         {label: '邻里会员V2', value: 2},
         {label: '邻里会员V3', value: 3},
@@ -295,9 +281,32 @@ export default {
     }
   },
   created() {
-
+    if (this.$route.path === '/giftH/edit') {
+      api.selectGiftBagHolidayId({
+        id: this.$route.query.id
+      }).then(resp => {
+        if (resp.code === 200) {
+          this.selectGiftId = resp.data.giftBagId;
+          this.selectGiftName = resp.data.giftBagName;
+          this.form.deliveryTime = moment(this.momentStrHms(resp.data.deliveryTime));
+          this.form.issuedRang = resp.data.issuedRang;
+          this.form.memberSource = resp.data.memberSource.split(',');
+          this.form.startLevelId = resp.data.startLevelId;
+          this.form.endLevelId = resp.data.endLevelId;
+        }
+      });
+    }
   },
   computed: {
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -346,7 +355,6 @@ export default {
       });
     },
     handleOk() {
-      this.confirmLoading = true;
       if (this.selectedRows.length > 0) {
         this.visible = false;
         this.selectGiftId = this.selectedRows[0].id;
@@ -355,20 +363,11 @@ export default {
       } else {
         this.$message.error('必须选择一个礼包!');
       }
-      this.confirmLoading = false;
     },
-    init() {
-      this.form = {
-        giftBagId: '',
-        giftBagName: '',
-        deliveryTime: '',
-        scopeType: 0,
-        memberSource: ['sys_dichan'],
-        startLevelId: 1,
-        endLevelId: 1,
-        file: null,
-        status: 1
-      };
+    isDateString(str) {
+      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+      if (str === '' || str === undefined || str === null) return false;
+      return reg.test(str);
     },
     validatorFn1,
     uploadBefor(file) {
@@ -387,9 +386,17 @@ export default {
       if (!this.selectGiftId) {
         this.showRedBorder = true;
       }
+      this.form.giftBagId = this.selectGiftId;
+      this.form.giftBagName = this.selectGiftName;
+      let deliveryTime;
+      deliveryTime = this.momentStrHms(this.form.deliveryTime);
+      this.form.deliveryTime = this.isDateString(deliveryTime) ? deliveryTime : '';
+      if (this.$route.path === '/giftH/edit') {
+        this.form = Object.assign(this.form,{id: this.$route.query.id});
+      }
       const data = JSON.parse(JSON.stringify(this.form));
       Object.assign(data, {
-        memberSource: data.memberSource.join(),
+        memberSource: data.memberSource.join(','),
         file: this.form.file,
         saveStatus: saveStatus
       });
@@ -400,16 +407,27 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid && !this.showRedBorder) {
           this[loadingType] = true;
-          api.createGiftBagHoliday(paramFormData).then(resp => {
-            if (resp.code === 200) {
-              this.$refs.ruleForm.resetFields();
-              this.init();
-              this.$message.success('提交成功');
-              this.goBack();
-            }
-          }).finally(() => {
-            this[loadingType] = false;
-          });
+          if (this.$route.path === '/giftH/edit') {
+            api.updateGiftBagHoliday(paramFormData).then(resp => {
+              if (resp.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.$message.success('提交成功');
+                this.goBack();
+              }
+            }).finally(() => {
+              this[loadingType] = false;
+            });
+          } else if (this.$route.path === '/giftH/add') {
+            api.createGiftBagHoliday(paramFormData).then(resp => {
+              if (resp.code === 200) {
+                this.$refs.ruleForm.resetFields();
+                this.$message.success('提交成功');
+                this.goBack();
+              }
+            }).finally(() => {
+              this[loadingType] = false;
+            });
+          }
         }
       });
     },
@@ -501,13 +519,16 @@ export default {
       color: #bfbfbf;
       padding-left: 10px;
       border-radius: 3px;
+      cursor: pointer;
     }
+
     .create-main-couponSelectTip {
       color: #f5222d;
       margin: 0;
       line-height: 1.5;
       padding-top: 3px;
     }
+
     .border-red {
       border-color: #f5222d;
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="act-list">
-    <div class="content-header">节日礼包</div>
+    <div class="content-header">节日礼包管理</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/giftH/add" ref="thisForm" :rowCol="4" :formList="formList" :onSubmit="onQuery"/>
       <a-table
@@ -29,8 +29,8 @@
         </template>
         <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goDetail(scope.id)">查看</a>
-            <a style="padding-right: 10px;" @click="goEdit(scope.id)">编辑</a>
+            <!--<a style="padding-right: 10px;" @click="goDetail(scope.gBid)">查看</a>-->
+            <a style="padding-right: 10px;" @click="goEdit(scope.gBid)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -60,7 +60,7 @@ export default {
     return {
       formList: [
         {
-          label: '节日礼包名称',
+          label: '礼包名称',
           type: 'input',
           name: 'giftBagName',
           placeholder: '请输入',
@@ -112,7 +112,7 @@ export default {
       //表头数据
       tableColumns: [
         {
-          title: '节日礼包名称',
+          title: '礼包名称',
           dataIndex: 'name',
           key: 'name',
           width: 180
@@ -198,19 +198,19 @@ export default {
       this.current = 1;
       this.getList(true);
     },
-    goDetail(id) {
+    goDetail(gBid) {
       this.$router.push({
         path: '/giftH/detail',
         query: {
-          id: id
+          id: gBid
         }
       });
     },
-    goEdit(id) {
+    goEdit(gBid) {
       this.$router.push({
         path: '/giftH/edit',
         query: {
-          id: id
+          id: gBid
         }
       });
     },
@@ -251,12 +251,12 @@ export default {
           pageSize: this.pageSize,
           createTimeStart: createTimeStart,
           createTimeEnd: createTimeEnd
-        }).then(res => {
-          if (res.code === 200) {
-            this.total = res.data.total;
+        }).then(resp => {
+          if (resp.code === 200) {
+            this.total = resp.data.total;
             this.tableData.splice(0, this.tableData.length);
-            res.data.records.forEach((element, index) => {
-              this.tableData.push(element);
+            resp.data.records.forEach((v, k) => {
+              this.tableData.push(v);
             });
           }
         }).finally(() => {

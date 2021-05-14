@@ -1,6 +1,6 @@
 <template>
   <div id="act-list">
-    <div class="content-header">礼包</div>
+    <div class="content-header">礼包派发</div>
     <div class="content-main" ref="contentMain" style="padding: 20px;">
       <FormList routePath="/giftDist/add" ref="thisForm" :rowCol="4" :formList="formList" :onSubmit="onQuery"/>
       <a-table
@@ -12,24 +12,26 @@
         style="width: 100%;margin-top: 8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="distributedWaySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidityStr(rowData)"></span>
+            <span v-html="parseDistributedWay(scope.distributedWay)"></span>
           </div>
         </template>
-        <template slot="createTimeSlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStr(rowData.createTime)"></span>
+            <span v-html="parseDeliveryTime(scope.deliveryTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goActDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="updateActStatus(rowData.id, 0)">启用</a>
-            <!--<a style="padding-right: 10px;" @click="updateActStatus(rowData.id, 1)">禁用</a>-->
-            <a style="padding-right: 10px;" @click="goActEdit(rowData.id)">编辑</a>
+            <span v-html="momentStr(scope.createTime)"></span>
           </div>
         </template>
+        <!--<template slot="detailsSlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <a style="padding-right: 10px;" @click="goDetail(scope.gBid)">查看</a>
+          </div>
+        </template>-->
       </a-table>
       <a-pagination
         :total="total"
@@ -41,7 +43,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"/>
+        style="margin-top: 30px;width: 100%;text-align: right;" />
     </div>
   </div>
 </template>
@@ -59,29 +61,15 @@ export default {
         {
           label: '礼包名称',
           type: 'input',
-          name: 'lbmc',
+          name: 'giftBagName',
           placeholder: '请输入',
-          labelCol: {span: 6},
-          wrapperCol: {span: 18}
-        },
-        {
-          label: '派发方式',
-          type: 'select',
-          name: 'zt',
-          placeholder: '请选择',
-          selectOptions: [
-            {name: '全部', id: ''},
-            {name: '直接派发', id: 1},
-            {name: '行为触发', id: 2},
-            {name: '节日派发', id: 3}
-          ],
           labelCol: {span: 6},
           wrapperCol: {span: 18}
         },
         {
           label: '创建时间',
           type: 'rangePicker',
-          name: 'cjsj',
+          name: 'createTime',
           labelCol: {span: 6},
           wrapperCol: {span: 18}
         },
@@ -93,9 +81,6 @@ export default {
           labelCol: {span: 0},
           wrapperCol: {span: 24}
         },
-        {},
-        {},
-        {},
         {
           type: 'btn-default',
           buttonName: '新建派发',
@@ -105,20 +90,18 @@ export default {
           wrapperCol: {span: 24}
         }
       ],
-      //表格高度
       scrollY: 100,
-      //表头数据
       tableColumns: [
         {
           title: '礼包名称',
-          dataIndex: 'lbmc',
-          key: 'lbmc',
+          dataIndex: 'name',
+          key: 'name',
           width: 180
         },
         {
           title: '派发方式',
-          dataIndex: 'zt',
-          key: 'zt',
+          key: 'distributedWaySlot',
+          scopedSlots: { customRender: 'distributedWaySlot' },
           width: 120
         },
         {
@@ -127,13 +110,13 @@ export default {
           scopedSlots: {customRender: 'validitySlot'},
           width: 250
         },
-        {
-          title: '操作',
-          key: 'detailsSlot',
-          scopedSlots: {customRender: 'detailsSlot'},
-          fixed: 'right',
-          width: 180
-        }
+        // {
+        //   title: '操作',
+        //   key: 'detailsSlot',
+        //   scopedSlots: {customRender: 'detailsSlot'},
+        //   fixed: 'right',
+        //   width: 180
+        // },
       ],
       tableData: [],
       tableLoading: false,
@@ -144,6 +127,19 @@ export default {
     };
   },
   computed: {
+    parseDistributedWay() {
+      return param => {
+        if (param === 0) {
+          return '节日派发';
+        } else if (param === 1) {
+          return '直接派发';
+        } else if (param === 2) {
+          return '已保存';
+        } else {
+          return '';
+        }
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
@@ -162,11 +158,11 @@ export default {
         }
       };
     },
-    parseValidityStr() {
+    parseDeliveryTime() {
       return param => {
-        return `${this.momentStr(param.startTime)} ～ ${this.momentStr(param.endTime)}`;
+        return `${this.momentStr(param)}`;
       };
-    }
+    },
   },
   created() {
   },
@@ -183,53 +179,11 @@ export default {
       this.current = 1;
       this.getList(true);
     },
-    goActDetail(id) {
+    goDetail(gBid) {
       this.$router.push({
-        name: 'actManageDetail',
+        path: '/giftDist/detail',
         query: {
-          id: id
-        }
-      });
-    },
-    goActEdit(id) {
-      this.$router.push({
-        name: 'actManageEdit',
-        query: {
-          id: id
-        }
-      });
-    },
-    updateActStatus(paramId, state) {
-      let title;
-      let content;
-      if (state === 0) {
-        title = '确认启用当前活动？';
-        content = '';
-      } else if (state === 1) {
-        title = '确认禁用当前活动？';
-        content = '活动禁用后用户无法继续参加';
-      } else {
-        title = '';
-        content = '';
-      }
-      this.$confirm({
-        title: title,
-        content: content,
-        centered: true,
-        okText: '确定',
-        cancelText: '取消',
-        onOk: () => {
-          this.tableLoading = true;
-          api.updateActStatus({
-            id: paramId,
-            isEnable: state
-          }).then(res => {
-            if (res.code === 200) {
-              this.getList();
-            }
-          }).finally(() => {
-            this.tableLoading = false;
-          });
+          id: gBid
         }
       });
     },
@@ -248,36 +202,29 @@ export default {
       }
       this.tableLoading = true;
       this.$nextTick(() => {
-        let lbmc = '';
-        let zt = '';
-        if (this.$refs.thisForm.getFieldsValue().lbmc) {
-          lbmc = this.$refs.thisForm.getFieldsValue().lbmc;
+        let giftBagName = '';
+        if (this.$refs.thisForm.getFieldsValue().giftBagName) {
+          giftBagName = this.$refs.thisForm.getFieldsValue().giftBagName;
         }
-        if (this.$refs.thisForm.getFieldsValue().zt) {
-          zt = this.$refs.thisForm.getFieldsValue().zt;
+        let createTimeStart = '';
+        let createTimeEnd = '';
+        if (Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().createTime) === '[object Array]' &&
+          this.$refs.thisForm.getFieldsValue().createTime.length > 1) {
+          createTimeStart = moment(this.$refs.thisForm.getFieldsValue().createTime[0]).format('YYYY-MM-DD');
+          createTimeEnd = moment(this.$refs.thisForm.getFieldsValue().createTime[1]).format('YYYY-MM-DD');
         }
-        let jointimeStart = '';
-        let jointimeEnd = '';
-        if (
-          Object.prototype.toString.call(this.$refs.thisForm.getFieldsValue().jointime) === '[object Array]' &&
-          this.$refs.thisForm.getFieldsValue().jointime.length > 1
-        ) {
-          jointimeStart = moment(this.$refs.thisForm.getFieldsValue().jointime[0]).format('YYYY-MM-DD');
-          jointimeEnd = moment(this.$refs.thisForm.getFieldsValue().jointime[1]).format('YYYY-MM-DD');
-        }
-        return api.dasdsadsadasdasd({
-          lbmc: lbmc,
-          zt: zt,
+        return api.selectGiftBagHoliday({
+          giftBagName: giftBagName,
           pageIndex: this.current,
           pageSize: this.pageSize,
-          startTime: jointimeStart,
-          endTime: jointimeEnd
-        }).then(res => {
-          if (res.code === 200) {
-            this.total = res.data.total;
+          createTimeStart: createTimeStart,
+          createTimeEnd: createTimeEnd
+        }).then(resp => {
+          if (resp.code === 200) {
+            this.total = resp.data.total;
             this.tableData.splice(0, this.tableData.length);
-            res.data.records.forEach((element, index) => {
-              this.tableData.push(element);
+            resp.data.records.forEach((v, k) => {
+              this.tableData.push(v);
             });
           }
         }).finally(() => {
@@ -292,11 +239,6 @@ export default {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
     if (!this.$route.meta.isUseCache) {
-      this.$nextTick(() => {
-        this.$refs.thisForm.setFieldsValue({
-          zt: this.formList[1].selectOptions[0].id
-        });
-      });
       //重置data
       this.total = 0;
       this.current = 1;
