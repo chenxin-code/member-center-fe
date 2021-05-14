@@ -140,7 +140,7 @@ export default {
       status: true,
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: '', //有效期开始时间
-      validityEndTime: '', //	有效期结束时间
+      validityEndTime: '', //有效期结束时间
       picUploading: false,
       fileList: [],
       couponImage: '',

@@ -10,7 +10,7 @@
           <a-form-model-item label="任务名称" prop="taskName">
             <a-input v-model="form.taskName" @click="selectAffair" />
           </a-form-model-item>
-          
+
           <a-radio-group v-model="form.scopeType" class="scopeTypeData">
             <a-radio :style="radioStyle" :value="0">
               <div class="scopeTypeRadio">
@@ -91,11 +91,11 @@
                 </p>
               </div>
             </a-radio>
-            
+
           </a-radio-group>
 
-          
-          
+
+
           <a-form-model-item :wrapper-col="{ span: 12, offset: 4 }">
             <a-button type="primary" html-type="submit" style="margin-right:10px" @click="goBack">取消</a-button>
             <a-button type="primary" html-type="submit" @click="btnCreateTask" :loading="addLoading">派发任务</a-button>
