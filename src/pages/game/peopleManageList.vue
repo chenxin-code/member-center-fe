@@ -6,27 +6,27 @@
       <div class="game-message-explain">
         <div class="game-prize-label">
           <div class="prize-label-title">游戏主题</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.gameTitle }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">游戏名称</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.activityTypeName }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">开始时间</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.validityStartTime }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">结束时间</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.validityEndTime }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">活动最高参与人数</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.partakeNum }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">开奖方式</div>
-          <div class="prize-label-text">xxxxxxxxxxx</div>
+          <div class="prize-label-text">{{ paramsPage.lotteryTypeName }}</div>
         </div>
       </div>
 
@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { GANE_TAKEPARTINLIST } from '@/api/game';
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
@@ -130,36 +131,6 @@ const columns = [
     scopedSlots: { customRender: 'operate' }
   }
 ];
-const contentData = [
-  {
-    key: '1',
-    name: 'John Brown',
-    theme: 32,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    theme: 42,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    theme: 32,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  }
-];
-
 const rusultColumns = [
   {
     title: '会员手机号',
@@ -190,6 +161,7 @@ export default {
   },
   data() {
     return {
+      data: [],
       resultVisible: false,
       changeVisible: false,
       paramsPage: {},
@@ -198,17 +170,35 @@ export default {
       vipId: '',
       vipPhone: '',
       columns,
-      contentData,
+      contentData: [],
       pagination: {
-        total: 50
+        total: 10
       },
       rusultColumns
     };
   },
   created() {
     this.paramsPage = this.$route.query;
+    this.getList({
+      gameId: '',
+      memberId: '',
+      memberPhone: '',
+      pageNum: 1,
+      pageSize: 10,
+      prizeFlag: '',
+      prizeId: ''
+    });
   },
   methods: {
+    getList(params) {
+      GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
+        if (code == 200) {
+          console.log('data', );
+          this.contentData = data.activityMemberRespVoIPage.records;
+          this.pagination.total = data.activityMemberRespVoIPage.total * 1;
+        }
+      });
+    },
     seleceLevel(val) {
       this.prizeLevel = val;
     },
