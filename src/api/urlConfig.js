@@ -150,5 +150,7 @@ export default {
   GANE_SAVE_GAME: '/times/member-game-center/admin/api/v1/game/saveOrUpdate', // 保存活动游戏
   GANE_UPDATE_PRIZE: '/times/member-game-center/admin/api/v1/game/updateActivityPrize', // 更新活动游戏奖品
   GANE_MANAGE_TIMES: '/times/member-game-center/admin/api/v1/game/updateDrawLotteryNum', // 管理抽奖次数
-  GANE_UPLOAD_PEOPLE: '/times/member-game-center/admin/api/v1/game/uploadActivityPerson', // 上传指定中奖人  
+  GANE_UPLOAD_PEOPLE: '/times/member-game-center/admin/api/v1/game/uploadActivityPerson', // 上传指定中奖人
+
+  GAME_UPLOAD_IMG: '/times/member-game-center/oss/file/upload'
 };
