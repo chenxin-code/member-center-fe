@@ -14,7 +14,7 @@
             <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包！</p>
           </a-form-model-item>
           <a-form-model-item label="派发时间" prop="deliveryTime">
-            <a-date-picker v-model="form.deliveryTime" showTime style="width: 100%;"/>
+            <a-date-picker v-model="form.deliveryTime" style="width: 100%;" />
           </a-form-model-item>
           <a-radio-group v-model="form.issuedRang" class="scopeTypeData">
             <a-radio style="display: block; height: 130px;" :value="1">
@@ -288,7 +288,7 @@ export default {
         if (resp.code === 200) {
           this.selectGiftId = resp.data.giftBagId;
           this.selectGiftName = resp.data.giftBagName;
-          this.form.deliveryTime = moment(this.momentStrHms(resp.data.deliveryTime));
+          this.form.deliveryTime = moment(this.momentStr(resp.data.deliveryTime));
           this.form.issuedRang = resp.data.issuedRang;
           this.form.memberSource = resp.data.memberSource.split(',');
           this.form.startLevelId = resp.data.startLevelId;
@@ -298,12 +298,12 @@ export default {
     }
   },
   computed: {
-    momentStrHms() {
+    momentStr() {
       return param => {
         if (!param) {
           return '';
         } else {
-          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+          return moment(param).format('YYYY-MM-DD');
         }
       };
     },
@@ -389,7 +389,7 @@ export default {
       this.form.giftBagId = this.selectGiftId;
       this.form.giftBagName = this.selectGiftName;
       let deliveryTime;
-      deliveryTime = this.momentStrHms(this.form.deliveryTime);
+      deliveryTime = this.momentStr(this.form.deliveryTime);
       this.form.deliveryTime = this.isDateString(deliveryTime) ? deliveryTime : '';
       if (this.$route.path === '/giftH/edit') {
         this.form = Object.assign(this.form,{id: this.$route.query.id});

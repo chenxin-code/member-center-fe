@@ -427,7 +427,7 @@
 
                 <!--***********************************************************************-->
                 <!-- 会员日邦豆奖励规则 -->
-                <template v-if="typeId === 3">
+                <template v-if="typeId === 4">
                   <div class="common-title">
                     <div class="common-title-content">会员日邦豆奖励规则</div>
                   </div>
@@ -999,7 +999,12 @@ export default {
       memo: '', //活动描述
       activityCover: '', //活动封面
       typeId: 1, //活动类型id
-      typeIds: [{ name: '领券中心', id: 1 }, { name: '会员权益', id: 2 }, { name: '邦豆兑换', id: 3 }], //活动类型列表
+      typeIds: [
+        { name: '领券中心', id: 1 },
+        { name: '会员权益', id: 2 },
+        { name: '邦豆兑换', id: 3 },
+        { name: '会员日', id: 4 }
+      ], //活动类型列表
       rightsType: 1,
       rightsTypes: [
         { name: '会员卡劵', id: 1 }

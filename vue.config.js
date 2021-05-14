@@ -141,8 +141,8 @@ const vueConfig = {
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
       '/times/member-game-center/': {
-        // target: 'http://47.112.249.207:12345',
-        target: 'http://10.71.12.238:7000',
+        target: 'http://47.112.249.207:12345',
+        // target: 'http://10.71.12.238:7000',
         changeOrigin: true //是否开启跨域
       },
       // target: 'http://47.112.249.207:12345',

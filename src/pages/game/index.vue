@@ -17,10 +17,11 @@
     <div class="game-content">
       <a-table :columns="columns" :data-source="records" @change="changePage" :pagination="pagination">
         <span slot="operate" slot-scope="text, record">
-          <span @click="turnOn(record, 1)" class="operate">启用</span>
-          <span @click="turnOn(record, 2)" class="operate">禁用</span>
+          <!-- 0禁用、1启用 -->
+          <span @click="turnOn(record, 1)" class="operate" v-if="record.availableFlage == 0">启用</span>
+          <span @click="turnOn(record, 2)" class="operate" v-if="record.availableFlage == 1">禁用</span>
           <span @click="turnOn(record, 3)" class="operate">删除</span>
-          <span @click="turnOn(record, 'editor')" class="operate">编辑</span>
+          <span @click="turnOn(record, 'editor')" class="operate" >编辑</span>
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
@@ -39,15 +40,10 @@ import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
 const columns = [
-  // {
-  //   title: '游戏主题',
-  //   dataIndex: 'gameTitle',
-  //   key: 'gameTitle'
-  // },
   {
     title: '游戏名称',
-    dataIndex: 'activityTypeName',
-    key: 'activityTypeName'
+    dataIndex: 'gameTitle',
+    key: 'gameTitle'
   },
   {
     title: '开奖方式',
@@ -76,6 +72,15 @@ const columns = [
     scopedSlots: { customRender: 'operate' }
   }
 ];
+let prizeDict = {
+  1: '立即开奖',
+  2: '非立即开奖'
+}
+let gameTypeDict = {
+  1: '幸运转盘',
+  2: '砸金蛋',
+  3: '九宫格'
+}
 // 内容
 export default {
   components: {
@@ -100,11 +105,6 @@ export default {
       pageNum: 1,
       pageSize: 10
     };
-  },
-  watch: {
-    gameName(val) {
-      console.log('>>>>>>>>>', val);
-    }
   },
   mounted() {
     const that = this;
@@ -133,6 +133,10 @@ export default {
         if (code) {
           this.pagination.total = Number(data.total);
           this.records = data.records;
+          this.records.forEach(item => {
+            item.lotteryType = prizeDict[item.lotteryType]
+            item.activityType = gameTypeDict[item.activityType]
+          })
         }
       });
     },
