@@ -110,9 +110,7 @@ export default {
           wrapperCol: {span: 24}
         }
       ],
-      //表格高度
       scrollY: 100,
-      //表头数据
       tableColumns: [
         {
           title: '礼包名称',
