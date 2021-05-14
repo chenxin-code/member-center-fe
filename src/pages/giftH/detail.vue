@@ -12,7 +12,7 @@
               <div class="common-column-wrapp">
                 <div class="common-column">
                   <div class="column-item">
-                    <div class="column-right">节日礼包名称:</div>
+                    <div class="column-right">礼包名称:</div>
                     <div class="column-left"></div>
                   </div>
                 </div>
@@ -52,31 +52,26 @@
 <script>
 import moment from 'moment';
 import api from './../../api';
-import {activityList, typeList} from "../coupons/release/createForms";
+
 export default {
   name: 'giftHDetail',
   components: {},
   data() {
-    return {
-
-    };
+    return {};
   },
-  computed: {
-
-  },
-  methods: {
-    getDetail() {
-      api.getDetail({}).then(resp => {
-        if (resp.code === 200) {
-
-        }
-      });
-    }
-  },
+  computed: {},
+  methods: {},
   created() {
-    this.getDetail();
+    api.selectGiftBagHolidayId({
+      id: this.$route.query.id
+    }).then(resp => {
+      if (resp.code === 200) {
+
+      }
+    });
   },
-  mounted() {},
+  mounted() {
+  },
   watch: {}
 };
 </script>
@@ -90,14 +85,18 @@ export default {
       cursor: pointer;
     }
   }
+
   .coupons-main {
     height: calc(100% - 50px);
     overflow-y: auto;
+
     .coupons-common {
       background-color: #fff;
+
       .common-title {
         color: #666;
         padding: 20px 0 0 30px;
+
         .common-title-content {
           font-size: 16px;
           height: 16px;
@@ -106,6 +105,7 @@ export default {
           border-left: 3px solid rgba(33, 33, 206, 0.5);
         }
       }
+
       .common-row {
         padding: 20px 16px 0;
         border-bottom: 1px dashed #ccc;
@@ -121,8 +121,10 @@ export default {
           flex-direction: row;
           justify-content: flex-start;
           align-items: flex-start;
+
           .common-column {
             padding-right: 50px;
+
             .column-item {
               padding-bottom: 10px;
               display: flex;
@@ -138,6 +140,7 @@ export default {
                 justify-content: flex-end;
                 align-items: center;
               }
+
               .column-left {
                 display: flex;
                 flex-direction: row;
@@ -163,6 +166,7 @@ export default {
                 }
               }
             }
+
             .column-item:last-child {
               padding-bottom: 0;
             }

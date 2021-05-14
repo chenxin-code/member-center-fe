@@ -125,7 +125,7 @@
 <script>
 import api from './../../api';
 import moment from 'moment';
-import {debounce} from './../../utils/util';
+import {debounce} from '../../utils/util';
 
 export default {
   name: 'giftAddEdit',
@@ -139,8 +139,8 @@ export default {
       memo: null,
       status: true,
       rangePickerValue: [], //日期对象清空日期用
-      validityStartTime: '', //有效期开始时间
-      validityEndTime: '', //	有效期结束时间
+      startTime: null, //有效期开始时间
+      endTime: null, //有效期结束时间
       picUploading: false,
       fileList: [],
       couponImage: '',
@@ -177,8 +177,8 @@ export default {
     },
     handleRangePicker(dates, dateStrings) {
       this.rangePickerValue = dates;
-      this.validityStartTime = dateStrings[0];
-      this.validityEndTime = dateStrings[1];
+      this.startTime = dateStrings[0];
+      this.endTime = dateStrings[1];
     },
     nameChange(e) {
       this.name = e.target.value;
@@ -194,11 +194,13 @@ export default {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
-            api.editGift({
+            api.editGiftBag({
               id: this.id,
               memo: this.memo,
               status: this.status ? 1 : 0,
               picture: this.couponImage,
+              startTime: this.startTime,
+              endTime: this.endTime,
             }).then(resp => {
               this.saveLoading = false;
               if (resp.code === 200) {
@@ -213,11 +215,13 @@ export default {
         this.giftForm.validateFields((err) => {
           if (!err) {
             this.saveLoading = true;
-            api.addGift({
+            api.createGiftBag({
               name: this.name,
               memo: this.memo,
               status: this.status ? 1 : 0,
               picture: this.couponImage,
+              startTime: this.startTime,
+              endTime: this.endTime,
             }).then(resp => {
               this.saveLoading = false;
               if (resp.code === 200) {
@@ -316,28 +320,24 @@ export default {
           this.memo = resp.data.memo;
           this.status = !!Number(resp.data.status);
           this.couponImage = resp.data.picture;
-          ///////////日期开始//////////
-          this.validityStartTime = this.isDateString(this.momentStrHms(resp.data.validityStartTime))
-            ? this.momentStrHms(resp.data.validityStartTime)
+          this.startTime = this.isDateString(this.momentStrHms(resp.data.startTime))
+            ? this.momentStrHms(resp.data.startTime)
             : ''; //有效期开始时间
-          this.validityEndTime = this.isDateString(this.momentStrHms(resp.data.validityEndTime))
-            ? this.momentStrHms(resp.data.validityEndTime)
+          this.endTime = this.isDateString(this.momentStrHms(resp.data.endTime))
+            ? this.momentStrHms(resp.data.endTime)
             : ''; //有效期结束时间
           if (
-            this.isDateString(this.validityStartTime) &&
-            this.isDateString(this.validityEndTime) &&
-            resp.data.validityStartTime > Date.now() &&
-            resp.data.validityEndTime > Date.now()
+            this.isDateString(this.startTime) &&
+            this.isDateString(this.endTime) &&
+            resp.data.startTime > Date.now() &&
+            resp.data.endTime > Date.now()
           ) {
-            this.rangePickerValue = [moment(this.validityStartTime), moment(this.validityEndTime)];
+            this.rangePickerValue = [moment(this.startTime), moment(this.endTime)];
           } else {
             this.rangePickerValue = [];
-            this.validityStartTime = '';
-            this.validityEndTime = '';
+            this.startTime = '';
+            this.endTime = '';
           }
-          ///////////日期结束//////////
-
-
         }
       });
     }
