@@ -8,6 +8,11 @@
                     :onSubmit="onSearch"/>
           <a-table :style="{marginTop: '20px'}" :columns="columns" :data-source="dataList" :pagination="false"
                    :loading="tableLoading" :scroll="{y: scrollY}" :row-key="(r, i) => i">
+            <template slot="isUsingSlot" slot-scope="scope">
+              <div class="editable-row-operations">
+                <span v-html="parseIsUsing(scope.isUsing)"></span>
+              </div>
+            </template>
             <template slot="action" slot-scope="scope">
               <a @click="goDetail(scope.id)" style="padding-right: 10px;">查看详情</a>
               <a @click="goJournal(scope.id)" style="padding-right: 10px;">查看日志</a>
@@ -121,6 +126,12 @@ export default {
           width: 150
         },
         {
+          title: '状态',
+          key: 'isUsingSlot',
+          scopedSlots: { customRender: 'isUsingSlot' },
+          width: 120
+        },
+        {
           title: '创建时间',
           key: 'createTime',
           dataIndex: 'createTime',
@@ -140,6 +151,19 @@ export default {
       type: '',
       scrollY: 100,
     }
+  },
+  computed: {
+    parseIsUsing() {
+      return param => {
+        if (param === 0) {
+          return '禁用';
+        } else if (param === 1) {
+          return '启用';
+        } else {
+          return '';
+        }
+      };
+    },
   },
   created() {
     this.getList();
