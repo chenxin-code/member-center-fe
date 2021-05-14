@@ -13,7 +13,7 @@
           <a-radio :value="1">
             启用
           </a-radio>
-          <a-radio :value="2">
+          <a-radio :value="0">
             禁用
           </a-radio>
         </a-radio-group>
@@ -181,7 +181,13 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
-    submit() {}
+    submit() {
+      let params = {
+        gameTitle: this.gameTheme,
+        availableFlage: this.radio,
+        validityStartTime: ''
+      };
+    }
   }
 };
 </script>

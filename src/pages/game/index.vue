@@ -15,15 +15,16 @@
       </div>
     </div>
     <div class="game-content">
-      <a-table :columns="columns" :data-source="contentData" @change="changePage" :pagination="pagination">
+      <a-table :columns="columns" :data-source="records" @change="changePage" :pagination="pagination">
         <span slot="operate" slot-scope="text, record">
-          <span @click="turnOn(record, 'on')" class="operate">启用</span>
-          <span @click="turnOn(record, 'off')" class="operate">禁用</span>
-          <span @click="turnOn(record, 'del')" class="operate">删除</span>
+          <span @click="turnOn(record, 1)" class="operate">启用</span>
+          <span @click="turnOn(record, 2)" class="operate">禁用</span>
+          <span @click="turnOn(record, 3)" class="operate">删除</span>
           <span @click="turnOn(record, 'editor')" class="operate">编辑</span>
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
-          <span @click="turnOn(record, 'copy')" class="operate">复制链接</span>
+          <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
+          <span class="operate" data-clipboard-action="copy">复制</span>
         </span>
       </a-table>
     </div>
@@ -31,40 +32,42 @@
 </template>
 
 <script>
-import { GAME_LIST } from '@/api/game.js';
+// TODO 复制功能未完成
+import Clipboard from 'clipboard';
+import { GAME_LIST, GANE_MANAGE_GAME } from '@/api/game.js';
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
 const columns = [
-  {
-    title: '游戏主题',
-    dataIndex: 'theme',
-    key: 'theme'
-  },
+  // {
+  //   title: '游戏主题',
+  //   dataIndex: 'gameTitle',
+  //   key: 'gameTitle'
+  // },
   {
     title: '游戏名称',
-    dataIndex: 'name',
-    key: 'name'
+    dataIndex: 'activityTypeName',
+    key: 'activityTypeName'
   },
   {
     title: '开奖方式',
-    key: 'type',
-    dataIndex: 'type'
+    key: 'lotteryType',
+    dataIndex: 'lotteryType'
   },
   {
     title: '游戏方式',
-    key: 'gameType',
-    dataIndex: 'gameType'
+    key: 'activityType',
+    dataIndex: 'activityType'
   },
   {
     title: '开始时间',
-    key: 'startTime',
-    dataIndex: 'startTime'
+    key: 'validityStartTime',
+    dataIndex: 'validityStartTime'
   },
   {
     title: '结束时间',
-    key: 'endTime',
-    dataIndex: 'endTime'
+    key: 'validityEndTime',
+    dataIndex: 'validityEndTime'
   },
   {
     dataIndex: 'operate',
@@ -74,35 +77,6 @@ const columns = [
   }
 ];
 // 内容
-const contentData = [
-  {
-    key: '1',
-    name: 'John Brown',
-    theme: 32,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    theme: 42,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    theme: 32,
-    type: '随机开奖',
-    gameType: 'gameType',
-    startTime: 'startTime',
-    endTime: 'endTime'
-  }
-];
 export default {
   components: {
     timesInput,
@@ -111,17 +85,20 @@ export default {
   data() {
     return {
       gameOption: [
-        { name: '九宫格', value: 'sudoku' },
-        { name: '大转盘', value: 'turntable' },
-        { name: '砸金蛋', value: 'egg' }
+        { name: '九宫格', value: '3' },
+        { name: '大转盘', value: '1' },
+        { name: '砸金蛋', value: '2' }
       ],
+      chooseGame: '', // 选择游戏
       gameObj: {},
       gameName: '',
       columns,
-      contentData,
+      records: [],
       pagination: {
-        total: 50
-      }
+        total: 0
+      },
+      pageNum: 1,
+      pageSize: 10
     };
   },
   watch: {
@@ -129,28 +106,74 @@ export default {
       console.log('>>>>>>>>>', val);
     }
   },
-  created() {},
+  mounted() {
+    const that = this;
+    const btnCopy = new Clipboard('.copy', {
+      target: function() {
+        return that.$refs.tradeNo;
+      }
+    });
+    btnCopy.on('success', target => {
+      that.copyText = target.text;
+      that.$toast('复制成功');
+    });
+  },
   activated() {
     this.getGameList({
       pageNum: 1,
-      pageSize: 10
+      pageSize: 10,
+      chooseGame: '',
+      gameName: ''
     });
   },
   methods: {
+    // 获取游戏列表
     getGameList(params) {
-      return GAME_LIST(params);
+      GAME_LIST(params).then(({ code, data }) => {
+        if (code) {
+          this.pagination.total = Number(data.total);
+          this.records = data.records;
+        }
+      });
+    },
+    /**
+     * @description 管理活动游戏，
+     *  启动 1 删除 3 禁用 2
+     *  操作后更新
+     */
+
+    operateGame(params) {
+      console.log('GANE_MANAGE_GAME', params);
+      GANE_MANAGE_GAME(params).then(res => {
+        console.log('>>>>>>>>', res);
+        if (res.code == 200) {
+          this.getGameList({
+            gameTitle: this.gameName,
+            activityType: this.chooseGame,
+            pageNum: 1,
+            pageSize: 10
+          });
+        }
+      });
     },
     selectGame(value) {
-      console.log('value', value);
+      this.chooseGame = value;
     },
-    searchGame() {},
+    searchGame() {
+      let params = {
+        gameTitle: this.gameName,
+        activityType: this.chooseGame,
+        pageNum: 1,
+        pageSize: 10
+      };
+      this.getGameList(params);
+    },
     addGame() {
       this.$router.push({
         path: '/gameManage/addGame'
       });
     },
     turnOn(target, type) {
-      console.log('>>>>>>>turn on>>>>>>>>>', target);
       if (type == 'manage') {
         this.$router.push({
           path: '/gameManage/prizeManage',
@@ -160,6 +183,12 @@ export default {
         this.$router.push({
           path: '/gameManage/peopleManage',
           query: target
+        });
+      } else if (type == 1 || type == 2 || type == 3) {
+        //启动 1  禁用 2  删除 3
+        this.operateGame({
+          gameId: target.id,
+          operatorType: String(type)
         });
       }
     },

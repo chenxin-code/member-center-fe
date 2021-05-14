@@ -1,5 +1,6 @@
 import { fetchApi } from '@/utils/ajax';
 import URL from './urlConfig';
+let tokenStr = localStorage.getItem('SD_ACCESS_TOKEN');
 
 export const updateImage = data => fetchApi(URL.IMAGE_UPDATE, data, 'POST'); //图片上传(单张)
 export const deleteImage = data => fetchApi(URL.IMAGE_DELETE, data, 'POST'); //图片上传(单张)
