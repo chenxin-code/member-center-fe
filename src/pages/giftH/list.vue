@@ -29,8 +29,8 @@
         </template>
         <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <!--<a style="padding-right: 10px;" @click="goDetail(scope.gBid)">查看</a>-->
-            <a style="padding-right: 10px;" @click="goEdit(scope.gBid)">编辑</a>
+            <!--<a style="padding-right: 10px;" @click="goDetail(scope.gBHid)">查看</a>-->
+            <a style="padding-right: 10px;" @click="goEdit(scope.gBHid)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -100,16 +100,14 @@ export default {
         {},
         {
           type: 'btn-default',
-          buttonName: '创建节日礼包',
+          buttonName: '创建礼包',
           htmlType: 'button',
           align: 'right',
           labelCol: {span: 0},
           wrapperCol: {span: 24}
         }
       ],
-      //表格高度
       scrollY: 100,
-      //表头数据
       tableColumns: [
         {
           title: '礼包名称',
@@ -127,14 +125,14 @@ export default {
           title: '派发时间',
           key: 'validitySlot',
           scopedSlots: {customRender: 'validitySlot'},
-          width: 250
+          width: 180
         },
         {
           title: '操作',
           key: 'detailsSlot',
           scopedSlots: {customRender: 'detailsSlot'},
           fixed: 'right',
-          width: 200
+          width: 150
         }
       ],
       tableData: [],
@@ -198,19 +196,19 @@ export default {
       this.current = 1;
       this.getList(true);
     },
-    goDetail(gBid) {
+    goDetail(gBHid) {
       this.$router.push({
         path: '/giftH/detail',
         query: {
-          id: gBid
+          id: gBHid
         }
       });
     },
-    goEdit(gBid) {
+    goEdit(gBHid) {
       this.$router.push({
         path: '/giftH/edit',
         query: {
-          id: gBid
+          id: gBHid
         }
       });
     },

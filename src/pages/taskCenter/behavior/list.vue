@@ -111,13 +111,13 @@ export default {
           key: 'type',
           title: '行为类型',
           customRender: text => text === 1 ? '消费' : '其他',
-          width: 150
+          width: 120
         },
         {
           title: '行为名称',
           key: 'name',
           dataIndex: 'name',
-          width: 150
+          width: 180
         },
         {
           title: '行为来源',
@@ -136,7 +136,7 @@ export default {
           key: 'createTime',
           dataIndex: 'createTime',
           customRender: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
-          width: 150
+          width: 200
         },
         {
           title: '操作',

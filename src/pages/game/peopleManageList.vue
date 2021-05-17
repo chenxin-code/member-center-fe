@@ -32,10 +32,10 @@
 
       <div class="game-message-search">
         <div style="display: flex;margin-left: 40px;">
-          <timesInput title="会员ID" v-model="vipId" placeholder="请输入会员ID"></timesInput>
+          <timesInput title="会员ID" v-model="memberId" placeholder="请输入会员ID"></timesInput>
           <timesInput
             title="会员手机号"
-            v-model="vipPhone"
+            v-model="memberPhone"
             placeholder="请输入会员手机号"
             style="margin-left: 20px;"
           ></timesInput>
@@ -99,30 +99,30 @@
 </template>
 
 <script>
-import { GANE_TAKEPARTINLIST } from '@/api/game';
+import { GANE_TAKEPARTINLIST, GANE_PRIZE_MANAGE_LIST } from '@/api/game';
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
 const columns = [
   {
     title: '会员手机号',
-    dataIndex: 'theme',
-    key: 'theme'
+    dataIndex: 'memberPhone',
+    key: 'memberPhone'
   },
   {
     title: '会员ID',
-    dataIndex: 'name',
-    key: 'name'
+    dataIndex: 'memberId',
+    key: 'memberId'
   },
   {
     title: '最高参与次数',
-    key: 'type',
-    dataIndex: 'type'
+    key: 'maxPartakeNum',
+    dataIndex: 'maxPartakeNum'
   },
   {
     title: '已参与次数',
-    key: 'gameType',
-    dataIndex: 'gameType'
+    key: 'alreadyPartakeNum',
+    dataIndex: 'alreadyPartakeNum'
   },
   {
     dataIndex: 'operate',
@@ -174,13 +174,31 @@ export default {
       pagination: {
         total: 10
       },
-      rusultColumns
+      rusultColumns,
+
+      gameId: '', // 活动游戏表ID
+      memberId: '', // 会员ID
+      memberPhone: '', // 会员手机号码
+      prizeFlag: '', // 是否中奖(0否，1中奖)
+      prizeId: '' // 奖品表管理
     };
   },
   created() {
     this.paramsPage = this.$route.query;
+    console.log('paramsPage', this.paramsPage);
+    GANE_PRIZE_MANAGE_LIST({
+      gameId: this.paramsPage.id,
+      pageNum: 1,
+      pageSize: 10
+    }).then(({ code, data }) => {
+      if (code == 200) {
+        console.log('data', data);
+      }
+    });
+  },
+  activated() {
     this.getList({
-      gameId: '',
+      gameId: this.paramsPage.id,
       memberId: '',
       memberPhone: '',
       pageNum: 1,
@@ -193,14 +211,14 @@ export default {
     getList(params) {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
         if (code == 200) {
-          console.log('data', );
+          console.log('data');
           this.contentData = data.activityMemberRespVoIPage.records;
           this.pagination.total = data.activityMemberRespVoIPage.total * 1;
         }
       });
     },
     seleceLevel(val) {
-      this.prizeLevel = val;
+      this.prizeFlag = val;
     },
     changePage() {},
     submit() {},

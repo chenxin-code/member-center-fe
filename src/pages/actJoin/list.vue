@@ -13,14 +13,14 @@
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="typeId" slot-scope="rowData">
+        <template slot="typeId" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseTypeId(rowData.typeId)"></span>
+            <span v-html="parseTypeId(scope.typeId)"></span>
           </div>
         </template>
-        <template slot="status" slot-scope="rowData">
+        <template slot="status" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseStatus(rowData.status)"></span>
+            <span v-html="parseStatus(scope.status)"></span>
           </div>
         </template>
       </a-table>

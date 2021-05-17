@@ -14,35 +14,35 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="statusSlot" slot-scope="rowData">
+        <template slot="statusSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="actStatusStr(rowData.status)"></span>
+            <span v-html="actStatusStr(scope.status)"></span>
           </div>
         </template>
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidityStr(rowData)"></span>
+            <span v-html="parseValidityStr(scope)"></span>
           </div>
         </template>
-        <template slot="createTimeSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStr(rowData.createTime)"></span>
+            <span v-html="momentStr(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a-button type="link" class="record" @click="goActDetail(rowData.id)">查看</a-button>
-            <a-button type="link" class="record" v-show="rowData.status === 0" @click="updateActStatus(rowData.id, 0)">
+            <a-button type="link" class="record" @click="goActDetail(scope.id)">查看</a-button>
+            <a-button type="link" class="record" v-show="scope.status === 0" @click="updateActStatus(scope.id, 0)">
               启用
             </a-button>
             <a-button type="link" class="record"
-              v-show="rowData.status === 1 || rowData.status === 2"
-              @click="updateActStatus(rowData.id, 1)"
+              v-show="scope.status === 1 || scope.status === 2"
+              @click="updateActStatus(scope.id, 1)"
             >
               停用
             </a-button>
-            <a-button type="link" class="record" :disabled="rowData.status !== 0" @click="goActEdit(rowData.id)">编辑</a-button>
-            <a-button type="link" class="record" :disabled="rowData.status !== 0" @click="deleteAct(rowData.id)">删除</a-button>
+            <a-button type="link" class="record" :disabled="scope.status !== 0" @click="goActEdit(scope.id)">编辑</a-button>
+            <a-button type="link" class="record" :disabled="scope.status !== 0" @click="deleteAct(scope.id)">删除</a-button>
           </div>
         </template>
       </a-table>

@@ -11,7 +11,7 @@
             <div :class="`create-main-couponSelect ${showRedBorder && 'border-red'}`" @click="visible = true">
               {{ selectGiftName }}
             </div>
-            <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包！</p>
+            <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包</p>
           </a-form-model-item>
           <a-radio-group v-model="form.issuedRang" class="scopeTypeData">
             <a-radio style="display: block; height: 130px;" :value="1">
@@ -75,7 +75,7 @@
                   :before-upload="uploadBefor"
                 >
                   <a-button>
-                    <a-icon type="upload" />
+                    <a-icon type="upload"/>
                     上传文件
                   </a-button>
                 </a-upload>
@@ -99,7 +99,7 @@
       </div>
     </div>
     <a-modal title="礼包选择" :visible="visible" @ok="handleOk" @cancel="visible = false" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
+      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch"/>
       <a-table
         :style="{ marginTop: '20px' }"
         :columns="tableColumns"
@@ -274,6 +274,15 @@ export default {
 
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
     momentStrHms() {
       return param => {
         if (!param) {
@@ -315,6 +324,7 @@ export default {
         return api.selectGiftBagList({
           name: this.searchGiftName,
           status: '1',//只要启用的
+          nowTime: this.momentStr(new Date()),
           pageIndex: this.current,
           pageSize: this.pageSize,
         }).then(resp => {
@@ -339,11 +349,6 @@ export default {
       } else {
         this.$message.error('必须选择一个礼包!');
       }
-    },
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      return reg.test(str);
     },
     validatorFn1,
     uploadBefor(file) {
@@ -380,7 +385,7 @@ export default {
           api.directGiftBagHoliday(paramFormData).then(resp => {
             if (resp.code === 200) {
               this.$refs.ruleForm.resetFields();
-              this.$message.success('提交成功');
+              this.$message.success(resp.message);
               this.goBack();
             }
           }).finally(() => {
