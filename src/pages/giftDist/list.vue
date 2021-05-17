@@ -29,7 +29,7 @@
         </template>
         <!--<template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goDetail(scope.gBid)">查看</a>
+            <a style="padding-right: 10px;" @click="goDetail(scope.gBHid)">查看</a>
           </div>
         </template>-->
       </a-table>
@@ -102,20 +102,20 @@ export default {
           title: '派发方式',
           key: 'distributedWaySlot',
           scopedSlots: { customRender: 'distributedWaySlot' },
-          width: 120
+          width: 150
         },
         {
           title: '派发时间',
           key: 'validitySlot',
           scopedSlots: {customRender: 'validitySlot'},
-          width: 250
+          width: 180
         },
         // {
         //   title: '操作',
         //   key: 'detailsSlot',
         //   scopedSlots: {customRender: 'detailsSlot'},
         //   fixed: 'right',
-        //   width: 180
+        //   width: 150
         // },
       ],
       tableData: [],
@@ -179,11 +179,11 @@ export default {
       this.current = 1;
       this.getList(true);
     },
-    goDetail(gBid) {
+    goDetail(gBHid) {
       this.$router.push({
         path: '/giftDist/detail',
         query: {
-          id: gBid
+          id: gBHid
         }
       });
     },
