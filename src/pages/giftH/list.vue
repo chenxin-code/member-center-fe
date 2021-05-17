@@ -100,7 +100,7 @@ export default {
         {},
         {
           type: 'btn-default',
-          buttonName: '创建节日礼包',
+          buttonName: '创建礼包',
           htmlType: 'button',
           align: 'right',
           labelCol: {span: 0},

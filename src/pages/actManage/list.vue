@@ -14,36 +14,36 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="statusSlot" slot-scope="rowData">
+        <template slot="statusSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="actStatusStr(rowData.status)"></span>
+            <span v-html="actStatusStr(scope.status)"></span>
           </div>
         </template>
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidityStr(rowData)"></span>
+            <span v-html="parseValidityStr(scope)"></span>
           </div>
         </template>
-        <template slot="createTimeSlot" slot-scope="rowData">
+        <template slot="createTimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStr(rowData.createTime)"></span>
+            <span v-html="momentStr(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 5px;" @click="goActDetail(rowData.id)">查看</a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="updateActStatus(rowData.id, 0)">
+            <a style="padding-right: 5px;" @click="goActDetail(scope.id)">查看</a>
+            <a v-show="scope.status === 0" style="padding-right: 5px;" @click="updateActStatus(scope.id, 0)">
               启用
             </a>
             <a
-              v-show="rowData.status === 1 || rowData.status === 2"
+              v-show="scope.status === 1 || scope.status === 2"
               style="padding-right: 5px;"
-              @click="updateActStatus(rowData.id, 1)"
+              @click="updateActStatus(scope.id, 1)"
             >
               停用
             </a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="goActEdit(rowData.id)">编辑</a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="deleteAct(rowData.id)">删除</a>
+            <a v-show="scope.status === 0" style="padding-right: 5px;" @click="goActEdit(scope.id)">编辑</a>
+            <a v-show="scope.status === 0" style="padding-right: 5px;" @click="deleteAct(scope.id)">删除</a>
           </div>
         </template>
       </a-table>

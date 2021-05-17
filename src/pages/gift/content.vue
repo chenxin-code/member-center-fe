@@ -256,7 +256,7 @@ export default {
     }
   },
   methods: {
-    goDel(id){
+    goDel(id) {
       this.$confirm({
         title: `删除卡券`,
         content: `您确定要删除该卡券吗？`,
