@@ -31,19 +31,18 @@
         </template>
         <template slot="detailsSlot" slot-scope="rowData">
           <div class="editable-row-operations">
-            <a style="padding-right: 5px;" @click="goActDetail(rowData.id)">查看</a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="updateActStatus(rowData.id, 0)">
+            <a-button type="link" class="record" @click="goActDetail(rowData.id)">查看</a-button>
+            <a-button type="link" class="record" v-show="rowData.status === 0" @click="updateActStatus(rowData.id, 0)">
               启用
-            </a>
-            <a
+            </a-button>
+            <a-button type="link" class="record"
               v-show="rowData.status === 1 || rowData.status === 2"
-              style="padding-right: 5px;"
               @click="updateActStatus(rowData.id, 1)"
             >
               停用
-            </a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="goActEdit(rowData.id)">编辑</a>
-            <a v-show="rowData.status === 0" style="padding-right: 5px;" @click="deleteAct(rowData.id)">删除</a>
+            </a-button>
+            <a-button type="link" class="record" :disabled="rowData.status !== 0" @click="goActEdit(rowData.id)">编辑</a-button>
+            <a-button type="link" class="record" :disabled="rowData.status !== 0" @click="deleteAct(rowData.id)">删除</a-button>
           </div>
         </template>
       </a-table>
@@ -130,7 +129,7 @@ export default {
             { name: '未开始', id: 1 },
             { name: '进行中', id: 2 },
             { name: '已结束', id: 3 },
-            { name: '已停用', id: 4 },
+            { name: '已停用', id: 4 }
             // { name: '已删除', id: 5 }
           ],
           labelCol: { span: 6 },
@@ -209,7 +208,7 @@ export default {
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' },
           fixed: 'right',
-          width: 180
+          width: 220
         }
       ],
       tableData: [],
@@ -343,14 +342,17 @@ export default {
           };
           console.log('deleteAct para :>> ', para);
           this.tableLoading = true;
-          api.deleteAct(para).then(res => {
-            console.log('deleteAct res :>> ', res);
-            if (res.code === 200) {
-              this.getActList();
-            }
-          }).finally(() => {
-            this.tableLoading = false;
-          });
+          api
+            .deleteAct(para)
+            .then(res => {
+              console.log('deleteAct res :>> ', res);
+              if (res.code === 200) {
+                this.getActList();
+              }
+            })
+            .finally(() => {
+              this.tableLoading = false;
+            });
         }
       });
     },
@@ -385,14 +387,17 @@ export default {
           };
           console.log('updateActStatus para :>> ', para);
           this.tableLoading = true;
-          api.updateActStatus(para).then(res => {
-            console.log('updateActStatus res :>> ', res);
-            if (res.code === 200) {
-              this.getActList();
-            }
-          }).finally(() => {
-            this.tableLoading = false;
-          });
+          api
+            .updateActStatus(para)
+            .then(res => {
+              console.log('updateActStatus res :>> ', res);
+              if (res.code === 200) {
+                this.getActList();
+              }
+            })
+            .finally(() => {
+              this.tableLoading = false;
+            });
         }
       });
     },
@@ -579,6 +584,10 @@ export default {
       width: 35% !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
+    }
+    .record {
+      padding: 0 5px;
+      width: auto !important;
     }
   }
 }

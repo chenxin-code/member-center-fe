@@ -26,15 +26,15 @@ export default [
     group: 'hyzx',
     path: '/card'
   },
-  {
-    title: '任务管理',
-    authKeys: [''],
-    icon: require('@/assets/img/menu/task_show.png'),
-    iconHide: require('@/assets/img/menu/task_hide.png'),
-    menuKey: 'task-manager',
-    group: 'hyzx',
-    path: '/task-manager'
-  },
+  // {
+  //   title: '任务管理',
+  //   authKeys: [''],
+  //   icon: require('@/assets/img/menu/task_show.png'),
+  //   iconHide: require('@/assets/img/menu/task_hide.png'),
+  //   menuKey: 'task-manager',
+  //   group: 'hyzx',
+  //   path: '/task-manager'
+  // },
   {
     title: '任务管理-1.5',
     authKeys: [''],
