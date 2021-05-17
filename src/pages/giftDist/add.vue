@@ -341,11 +341,6 @@ export default {
         this.$message.error('必须选择一个礼包!');
       }
     },
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      return reg.test(str);
-    },
     validatorFn1,
     uploadBefor(file) {
       this.form.file = file;
@@ -381,7 +376,7 @@ export default {
           api.directGiftBagHoliday(paramFormData).then(resp => {
             if (resp.code === 200) {
               this.$refs.ruleForm.resetFields();
-              this.$message.success('提交成功');
+              this.$message.success(resp.message);
               this.goBack();
             }
           }).finally(() => {

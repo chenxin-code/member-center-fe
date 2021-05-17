@@ -134,7 +134,7 @@ export default {
           title: '操作',
           key: 'detailsSlot',
           scopedSlots: {customRender: 'detailsSlot'},
-          width: 180
+          width: 200
         }
       ],
       tableData: [],

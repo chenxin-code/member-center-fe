@@ -365,11 +365,6 @@ export default {
         this.$message.error('必须选择一个礼包!');
       }
     },
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      return reg.test(str);
-    },
     validatorFn1,
     uploadBefor(file) {
       this.form.file = file;
@@ -389,14 +384,12 @@ export default {
       }
       this.form.giftBagId = this.selectGiftId;
       this.form.giftBagName = this.selectGiftName;
-      let deliveryTime;
-      deliveryTime = this.momentStr(this.form.deliveryTime);
       if (this.$route.path === '/giftH/edit') {
         this.form = Object.assign(this.form, {id: this.$route.query.id});
       }
       const data = JSON.parse(JSON.stringify(this.form));
       Object.assign(data, {
-        deliveryTime: this.isDateString(deliveryTime) ? deliveryTime : '',//覆盖
+        deliveryTime: this.momentStr(this.form.deliveryTime),//覆盖
         memberSource: data.memberSource.join(','),
         file: this.form.file,
         saveStatus: saveStatus
@@ -412,7 +405,7 @@ export default {
             api.updateGiftBagHoliday(paramFormData).then(resp => {
               if (resp.code === 200) {
                 this.$refs.ruleForm.resetFields();
-                this.$message.success('提交成功');
+                this.$message.success(resp.message);
                 this.goBack();
               }
             }).finally(() => {
@@ -422,7 +415,7 @@ export default {
             api.createGiftBagHoliday(paramFormData).then(resp => {
               if (resp.code === 200) {
                 this.$refs.ruleForm.resetFields();
-                this.$message.success('提交成功');
+                this.$message.success(resp.message);
                 this.goBack();
               }
             }).finally(() => {
