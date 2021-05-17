@@ -454,7 +454,7 @@
                           @change="(value) => {awardIntegral = value}"
                         />
                       </a-form-item>
-                      <a-form-item :label="isFixed === 1 ? '赠送成长值数量' : '长值倍数'">
+                      <a-form-item :label="isFixed === 1 ? '赠送成长值数量' : '长值值倍数'">
                         <a-input-number
                           placeholder="1-999999999"
                           :max="999999999"
@@ -1197,10 +1197,7 @@ export default {
         this.$message.error('每月活动日不能为空!');
         return;
       }
-      this.conponForm.validateFields((err, values) => {
-        // console.log('monthlyDayModal validateFields err :>> ', err);
-        //没有错误的情况下
-      });
+
       this.actModalVisible = false;
     },
     weeklyDayModal() {
@@ -1208,10 +1205,7 @@ export default {
         this.$message.error('每周活动日不能为空!');
         return;
       }
-      this.conponForm.validateFields((err, values) => {
-        // console.log('weeklyDayModal validateFields err :>> ', err);
-        //没有错误的情况下
-      });
+
       this.actModalVisible = false;
     },
     showMonthlyDayModal() {
@@ -1757,27 +1751,27 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        // this.$nextTick(() => {
-        this.activityAwards.forEach((element, index) => {
-          const tempKey = `condition-${index}`;
-          if (newVal === 2) {
-            element.condition = 1;
-            this.conponForm.setFieldsValue({
-              [tempKey]: 1
-            });
-          } else if (newVal === 1) {
-            element.condition = 1;
-            this.conponForm.setFieldsValue({
-              [tempKey]: 1
-            });
-          } else if (newVal === 3) {
-            element.condition = 3;
-            this.conponForm.setFieldsValue({
-              [tempKey]: 3
-            });
-          }
+        this.$nextTick(() => {
+          this.activityAwards.forEach((element, index) => {
+            const tempKey = `condition-${index}`;
+            if (newVal === 2) {
+              element.condition = 1;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 1
+              });
+            } else if (newVal === 1) {
+              element.condition = 1;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 1
+              });
+            } else if (newVal === 3) {
+              element.condition = 3;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 3
+              });
+            }
+          });
         });
-        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

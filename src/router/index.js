@@ -494,28 +494,6 @@ const routes = [
         component: () => import('@/pages/taskCenter/task/create.vue')
       },
       {
-        path: '/taskCenter-task/edit',
-        name: 'taskCenter-task-edit',
-        menuKey: 'taskCenter-task-edit',
-        meta: {
-          menu: '/taskCenter-task-edit',
-          authKeys: [''],
-          bread: [
-            {
-              path: '/task-manager',
-              name: '任务管理'
-            },
-            {
-              path: '/taskCenter-task-edit',
-              name: '编辑任务'
-            }
-          ],
-          isUseCache: false,
-          keepAlive: false
-        },
-        component: () => import('@/pages/taskCenter/task/Edit.vue')
-      },
-      {
         path: '/taskCenter-behavior',
         name: 'taskCenter-behavior',
         menuKey: 'taskCenter-behavior',

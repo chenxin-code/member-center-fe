@@ -8,7 +8,7 @@
       :pagination="false" 
       :loading="tableLoading" 
       :scroll="{ y: scrollY }" 
-      :rowKey="(r, i) => i"
+      :rowKey="(r, i) => r.id"
       :row-selection="rowSelection"
     >
     </a-table>

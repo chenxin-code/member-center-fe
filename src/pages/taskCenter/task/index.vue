@@ -66,7 +66,7 @@
             <span slot="action" slot-scope="record">
               <a-button type="link" class="record" @click="onCheck(record)">查看</a-button>
               <a-button type="link" class="record" @click="onStatus(record)">{{record.status === 1 ? '禁用' : '启用'}}</a-button>
-              <a-button type="link" class="record" @click="onEditTask(record)">编辑</a-button>
+              <a-button type="link" class="record" @click="onEditTask(record)" :disabled="record.status === 1">编辑</a-button>
             </span>
           </a-table>
           <a-pagination
