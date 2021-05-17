@@ -274,6 +274,15 @@ export default {
 
   },
   computed: {
+    momentStr() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD');
+        }
+      };
+    },
     momentStrHms() {
       return param => {
         if (!param) {
