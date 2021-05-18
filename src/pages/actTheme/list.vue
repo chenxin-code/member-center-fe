@@ -13,24 +13,24 @@
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="isEnable" slot-scope="rowData">
+        <template slot="isEnable" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="isEnableParse(rowData.isEnable)"></span>
+            <span v-html="isEnableParse(scope.isEnable)"></span>
           </div>
         </template>
-        <template slot="createTime" slot-scope="rowData">
+        <template slot="createTime" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStrHms(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a @click="$router.push({path: '/actTheme/edit', query: {id: rowData.id}})" style="padding-right: 10px;">编辑</a>
-            <!-- <a @click="goDel(rowData.id)" style="padding-right: 10px;">删除</a> -->
-            <a @click="OnOff(rowData.id, 0)" v-if="rowData.isEnable === 1">
+            <a @click="$router.push({path: '/actTheme/edit', query: {id: scope.id}})" style="padding-right: 10px;">编辑</a>
+            <!-- <a @click="goDel(scope.id)" style="padding-right: 10px;">删除</a> -->
+            <a @click="OnOff(scope.id, 0)" v-if="scope.isEnable === 1">
               启用
             </a>
-            <a @click="OnOff(rowData.id, 1)" v-else-if="rowData.isEnable === 0">
+            <a @click="OnOff(scope.id, 1)" v-else-if="scope.isEnable === 0">
               禁用
             </a>
           </div>

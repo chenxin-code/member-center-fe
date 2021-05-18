@@ -11,10 +11,10 @@
             <div :class="`create-main-couponSelect ${showRedBorder && 'border-red'}`" @click="visible = true">
               {{ selectGiftName }}
             </div>
-            <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包！</p>
+            <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包</p>
           </a-form-model-item>
           <a-form-model-item label="派发时间" prop="deliveryTime">
-            <a-date-picker v-model="form.deliveryTime" showTime style="width: 100%;"/>
+            <a-date-picker v-model="form.deliveryTime" style="width: 100%;"/>
           </a-form-model-item>
           <a-radio-group v-model="form.issuedRang" class="scopeTypeData">
             <a-radio style="display: block; height: 130px;" :value="1">
@@ -78,7 +78,7 @@
                   :before-upload="uploadBefor"
                 >
                   <a-button>
-                    <a-icon type="upload" />
+                    <a-icon type="upload"/>
                     上传文件
                   </a-button>
                 </a-upload>
@@ -106,7 +106,7 @@
       </div>
     </div>
     <a-modal title="礼包选择" :visible="visible" @ok="handleOk" @cancel="visible = false" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
+      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch"/>
       <a-table
         :style="{ marginTop: '20px' }"
         :columns="tableColumns"
@@ -288,7 +288,7 @@ export default {
         if (resp.code === 200) {
           this.selectGiftId = resp.data.giftBagId;
           this.selectGiftName = resp.data.giftBagName;
-          this.form.deliveryTime = moment(this.momentStrHms(resp.data.deliveryTime));
+          this.form.deliveryTime = moment(this.momentStr(resp.data.deliveryTime));
           this.form.issuedRang = resp.data.issuedRang;
           this.form.memberSource = resp.data.memberSource.split(',');
           this.form.startLevelId = resp.data.startLevelId;
@@ -298,12 +298,12 @@ export default {
     }
   },
   computed: {
-    momentStrHms() {
+    momentStr() {
       return param => {
         if (!param) {
           return '';
         } else {
-          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+          return moment(param).format('YYYY-MM-DD');
         }
       };
     },
@@ -339,6 +339,7 @@ export default {
         return api.selectGiftBagList({
           name: this.searchGiftName,
           status: '1',//只要启用的
+          nowTime: this.momentStr(new Date()),
           pageIndex: this.current,
           pageSize: this.pageSize,
         }).then(resp => {
@@ -364,11 +365,6 @@ export default {
         this.$message.error('必须选择一个礼包!');
       }
     },
-    isDateString(str) {
-      const reg = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      if (str === '' || str === undefined || str === null) return false;
-      return reg.test(str);
-    },
     validatorFn1,
     uploadBefor(file) {
       this.form.file = file;
@@ -388,14 +384,12 @@ export default {
       }
       this.form.giftBagId = this.selectGiftId;
       this.form.giftBagName = this.selectGiftName;
-      let deliveryTime;
-      deliveryTime = this.momentStrHms(this.form.deliveryTime);
-      this.form.deliveryTime = this.isDateString(deliveryTime) ? deliveryTime : '';
       if (this.$route.path === '/giftH/edit') {
-        this.form = Object.assign(this.form,{id: this.$route.query.id});
+        this.form = Object.assign(this.form, {id: this.$route.query.id});
       }
       const data = JSON.parse(JSON.stringify(this.form));
       Object.assign(data, {
+        deliveryTime: this.momentStr(this.form.deliveryTime),//覆盖
         memberSource: data.memberSource.join(','),
         file: this.form.file,
         saveStatus: saveStatus
@@ -411,7 +405,7 @@ export default {
             api.updateGiftBagHoliday(paramFormData).then(resp => {
               if (resp.code === 200) {
                 this.$refs.ruleForm.resetFields();
-                this.$message.success('提交成功');
+                this.$message.success(resp.message);
                 this.goBack();
               }
             }).finally(() => {
@@ -421,7 +415,7 @@ export default {
             api.createGiftBagHoliday(paramFormData).then(resp => {
               if (resp.code === 200) {
                 this.$refs.ruleForm.resetFields();
-                this.$message.success('提交成功');
+                this.$message.success(resp.message);
                 this.goBack();
               }
             }).finally(() => {

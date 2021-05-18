@@ -160,7 +160,7 @@
           </a-form-model-item>
           <a-form-model-item :wrapper-col="{ span: 12, offset: 4 }">
             <a-button type="primary" html-type="submit" style="margin-right:10px" @click="goBack">取消</a-button>
-            <a-button type="primary" html-type="submit" @click="btnCreateTask" :loading="addLoading">{{type === 'add' ? '创建任务' : '编辑任务'}}</a-button>
+            <a-button type="primary" html-type="submit" @click="btnCreateTask" :loading="addLoading">提交</a-button>
           </a-form-model-item>
         </a-form-model>
       </div>
@@ -195,9 +195,9 @@ import {
   typeList,
   activityList
 } from '@/pages/coupons/release/createForms';
-import activity from './activity';
-import affair from './affair';
-import gift from './gift';
+import activity from '@/components/activity';
+import affair from '@/components/affair';
+import gift from '@/components/gift';
 import moment from 'moment';
 import api from '@/api';
 import { getTaskDetail, postAdd, postUpdate } from '@/api/task';
@@ -229,7 +229,7 @@ export default {
         memo: '', // 任务描述
         afterTask: '', // 关联任务
         afterTaskName: '', // 关联任务名称
-        isSystemAward: '1', // 是否进行邦豆成长值奖励
+        isSystemAward: '0', // 是否进行邦豆成长值奖励
         awardType: '1', // 邦豆成长值奖励计算方式
         awardIntegral: '', // 邦豆奖励数量=邦豆奖励比例
         awardGrow: '', // 成长值奖励数量=成长值奖励比例
@@ -238,8 +238,8 @@ export default {
         otherAwardType: '0', // 其他奖励
         otherAwardId: '', // 活动奖励ID
         otherAwardName: '', // 活动名称
-        status: '1', // 任务状态
-        isDefault: '1', // 初始化任务
+        status: '0', // 任务状态
+        isDefault: '0', // 初始化任务
         executeType: '1', // 任务执行方式
         jumpPath: '' // 跳转路径
       },

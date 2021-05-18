@@ -135,7 +135,7 @@ import {
   typeList,
   activityList
 } from '@/pages/coupons/release/createForms';
-import affair from './affair';
+import affair from '@/components/affair';
 import moment from 'moment';
 import api from '@/api';
 import { getAddDist } from '@/api/task';

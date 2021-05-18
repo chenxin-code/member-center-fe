@@ -1,7 +1,7 @@
 <template>
   <div id="coupons-detail">
     <div class="content-header">
-      新建活动
+      编辑活动
       <span class="fallback" @click="FALLBACK" style="cursor: pointer">返回</span>
     </div>
     <div class="coupons-main">
@@ -1769,6 +1769,12 @@ export default {
 
           this.awardGrow = res.data.awardGrow;
           this.awardIntegral = res.data.awardIntegral;
+          this.$nextTick(function() {
+            this.conponForm.setFieldsValue({
+              awardGrow: res.data.awardGrow,
+              awardIntegral: res.data.awardIntegral
+            });
+          });
           this.isFixed = res.data.isFixed;
           this.systemAwardFlag = res.data.systemAwardFlag;
           // this.monthlyDay = [];
@@ -1907,27 +1913,27 @@ export default {
           this.conditions = [{ name: '邦豆兑换', id: 3 }];
         }
         //重置遍历中的condition
-        // this.$nextTick(() => {
-        this.activityAwards.forEach((element, index) => {
-          let tempKey = `condition-${index}`;
-          if (newVal === 2) {
-            // element.condition = 1;
-            this.conponForm.setFieldsValue({
-              [tempKey]: element.condition
-            });
-          } else if (newVal === 1) {
-            element.condition = 1;
-            this.conponForm.setFieldsValue({
-              [tempKey]: 1
-            });
-          } else if (newVal === 3) {
-            element.condition = 3;
-            this.conponForm.setFieldsValue({
-              [tempKey]: 3
-            });
-          }
+        this.$nextTick(() => {
+          this.activityAwards.forEach((element, index) => {
+            let tempKey = `condition-${index}`;
+            if (newVal === 2) {
+              // element.condition = 1;
+              this.conponForm.setFieldsValue({
+                [tempKey]: element.condition
+              });
+            } else if (newVal === 1) {
+              element.condition = 1;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 1
+              });
+            } else if (newVal === 3) {
+              element.condition = 3;
+              this.conponForm.setFieldsValue({
+                [tempKey]: 3
+              });
+            }
+          });
         });
-        // });
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true

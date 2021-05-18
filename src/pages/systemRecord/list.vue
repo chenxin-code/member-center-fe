@@ -13,19 +13,19 @@
         style="width:100%;margin-top:8px;"
         :selectable="false"
         :loading="tableLoading">
-        <template slot="behavior" slot-scope="rowData">
+        <template slot="behavior" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="behaviorParse(rowData.behavior)"></span>
+            <span v-html="behaviorParse(scope.behavior)"></span>
           </div>
         </template>
-        <template slot="date" slot-scope="rowData">
+        <template slot="date" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.date)"></span>
+            <span v-html="momentStrHms(scope.date)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a @click="$router.push({path: '/systemRecord/detail', query: {id: rowData.id}})">查看详情</a>
+            <a @click="$router.push({path: '/systemRecord/detail', query: {id: scope.id}})">查看详情</a>
           </div>
         </template>
       </a-table>

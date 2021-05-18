@@ -27,7 +27,8 @@
           'code',
           {
             rules: [
-              {required: true, message: '请输入行为代码'}
+              {required: true, message: '请输入行为代码'},
+              {validator: this.checkBehaviorCode, trigger: ['blur']}
             ]
           }
         ]" @change="codeChange" v-else/>
@@ -77,11 +78,16 @@
                   <a-button type="primary" @click="fn_selectTask()">添加任务</a-button>
                   <a-table v-if="taskData.length > 0" :columns="columns1" :bordered="true" :pagination="false"
                            :data-source="taskData" :row-key="(r, i) => i">
+                    <template slot="jianglileixing" slot-scope="scope">
+                      <div class="editable-row-operations">
+                        <span v-html="parseJianglileixing(scope)"></span>
+                      </div>
+                    </template>
                     <a slot="action" slot-scope="scope" @click="deleteTask(scope)">删除</a>
                   </a-table>
                 </a-form-item>
                 <a-form-item label="行为状态">
-                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="isUsing" @change="isUsingChange"/>
+                  <a-switch checked-children="启用" un-checked-children="禁用" v-model="isUsing" @change="isUsingChange" />
                 </a-form-item>
                 <a-form-item :wrapper-col="{ span: 12, offset: 3 }">
                   <a-button type="primary" html-type="submit" @click="saveBehavior()" :loading="saveLoading"
@@ -97,7 +103,7 @@
       </a-row>
     </div>
     <a-modal title="添加任务" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch"/>
+      <FilterForm ref="form" rowCol="4" :formList="formList" :onSubmit="onSearch" />
       <a-table
         :row-key="(r, i) => i"
         :style="{ marginTop: '20px' }"
@@ -119,7 +125,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
+        style="margin-top: 30px;width: 100%;text-align: right;"
       />
     </a-modal>
   </div>
@@ -174,8 +180,8 @@ export default {
         },
         {
           title: '奖励类型',
-          dataIndex: 'taskCondition',
-          key: 'taskCondition',
+          key: 'jianglileixing',
+          scopedSlots: { customRender: 'jianglileixing' },
           align: "center",
         },
         {
@@ -207,17 +213,6 @@ export default {
           customRender: text => (text === 1 ? '是' : '否')
         },
         {
-          title: '任务状态',
-          dataIndex: 'status',
-          key: 'status',
-          customRender: text => (text === 0 ? '禁用' : '启用')
-        },
-        {
-          title: '对应行为',
-          dataIndex: 'behaviourName',
-          key: 'behaviourName',
-        },
-        {
           title: '任务来源',
           dataIndex: 'sourceName',
           key: 'sourceName',
@@ -245,13 +240,6 @@ export default {
           name: 'taskName'
         },
         {
-          label: '任务状态',
-          name: 'status',
-          type: 'select',
-          placeholder: '全部',
-          selectOptions: [{id: '', name: '全部'}, {id: '0', name: '禁用'}, {id: '1', name: '启用'}]
-        },
-        {
           label: '任务来源',
           type: 'select',
           name: 'sourceName',
@@ -271,6 +259,21 @@ export default {
     }
   },
   computed: {
+    parseJianglileixing() {
+      return param => {
+        if (param.awardIntegral && !param.awardGrow) {
+          return '邦豆';
+        } else if (!param.awardIntegral && param.awardGrow) {
+          return '成长值';
+        } else if (param.awardIntegral && param.awardGrow) {
+          return '邦豆，成长值';
+        } else if (!param.awardIntegral && !param.awardGrow) {
+          return '其它';
+        } else {
+          return '';
+        }
+      };
+    },
     rowSelection() {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -283,6 +286,13 @@ export default {
     }
   },
   methods: {
+    checkBehaviorCode(rule, value, callback) {
+      if (value && !/^[a-z_]+$/.test(value)) {
+        callback(new Error('行为代码格式不正确'));
+      } else {
+        callback();
+      }
+    },
     saveBehavior() {
       if (this.$route.path === '/taskCenter-behavior/edit') {
         this.behaviorForm.validateFields((err) => {
@@ -368,10 +378,9 @@ export default {
       this.isUsing = checked;
     },
     onSearch(args) {
-      const {taskName, taskKey, status, sourceName, createTime} = args;
+      const {taskName, taskKey, sourceName, createTime} = args;
       this.taskName = taskName || null;
       this.taskKey = taskKey || null;
-      this.status = status || null;
       this.sourceName = sourceName || null;
       this.rangeTime = createTime || [];
       this.current = 1;
@@ -391,7 +400,7 @@ export default {
       api.getTaskList({
         pageIndex: this.current,
         pageSize: this.pageSize,
-        status: this.status,
+        status: '1',//启用
         taskKey: this.taskKey,
         taskName: this.taskName,
         taskSource: this.sourceName,
@@ -493,7 +502,8 @@ export default {
               id: v.id,
               taskName: v.taskName,
               memo: v.memo,
-              taskCondition: v.taskCondition
+              awardIntegral: v.awardIntegral,
+              awardGrow: v.awardGrow
             });
           });
         }

@@ -61,6 +61,11 @@
                         :data-source="taskData"
                         v-if="taskData.length > 0"
                         :row-key="(r, i) => i">
+                        <template slot="jianglileixing" slot-scope="scope">
+                          <div class="editable-row-operations">
+                            <span v-html="parseJianglileixing(scope)"></span>
+                          </div>
+                        </template>
                       </a-table>
                     </div>
                   </div>
@@ -111,15 +116,29 @@ export default {
         },
         {
           title: '奖励类型',
-          dataIndex: 'taskCondition',
-          key: 'taskCondition',
+          key: 'jianglileixing',
+          scopedSlots: { customRender: 'jianglileixing' },
           align: "center",
-        }
+        },
       ]
     };
   },
   computed: {
-
+    parseJianglileixing() {
+      return param => {
+        if (param.awardIntegral && !param.awardGrow) {
+          return '邦豆';
+        } else if (!param.awardIntegral && param.awardGrow) {
+          return '成长值';
+        } else if (param.awardIntegral && param.awardGrow) {
+          return '邦豆，成长值';
+        } else if (!param.awardIntegral && !param.awardGrow) {
+          return '其它';
+        } else {
+          return '';
+        }
+      };
+    }
   },
   methods: {
 
@@ -143,7 +162,8 @@ export default {
           this.taskData.push({
             taskName: v.taskName,
             memo: v.memo,
-            taskCondition: v.taskCondition
+            awardIntegral: v.awardIntegral,
+            awardGrow: v.awardGrow
           });
         });
       }
