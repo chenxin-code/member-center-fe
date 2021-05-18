@@ -109,6 +109,11 @@
         :scroll="{ y: 300 }"
         :rowKey="(r, i) => i"
         :row-selection="rowSelection">
+        <template slot="validitySlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <span v-html="parseValidityStr(scope)"></span>
+          </div>
+        </template>
       </a-table>
       <a-pagination
         :total="total"
@@ -188,12 +193,6 @@ export default {
           key: 'validitySlot',
           scopedSlots: {customRender: 'validitySlot'},
           width: 250
-        },
-        {
-          title: '操作',
-          key: 'detailsSlot',
-          scopedSlots: {customRender: 'detailsSlot'},
-          width: 180
         }
       ],
       selectedRows: [],
@@ -274,6 +273,11 @@ export default {
 
   },
   computed: {
+    parseValidityStr() {
+      return param => {
+        return `${this.momentStrHms(param.startTime)} ～ ${this.momentStrHms(param.endTime)}`;
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
