@@ -30,7 +30,7 @@
         <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
             <!--<a style="padding-right: 10px;" @click="goDetail(scope.gBHid)">查看</a>-->
-            <a style="padding-right: 10px;" @click="goEdit(scope.gBHid)">编辑</a>
+            <a style="padding-right: 10px;" @click="goEdit(scope.gBHid,scope.general)">编辑</a>
           </div>
         </template>
       </a-table>
@@ -204,11 +204,12 @@ export default {
         }
       });
     },
-    goEdit(gBHid) {
+    goEdit(gBHid,general) {
       this.$router.push({
         path: '/giftH/edit',
         query: {
-          id: gBHid
+          id: gBHid,
+          general: general
         }
       });
     },

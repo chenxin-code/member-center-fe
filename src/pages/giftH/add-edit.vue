@@ -96,7 +96,8 @@
           <a-form-model-item :wrapper-col="{ span: 12, offset: 4 }">
             <a-button type="primary" html-type="submit" style="margin-right: 10px" @click="goBack()">取消</a-button>
             <a-button type="primary" html-type="submit" style="margin-right: 10px"
-                      @click="handleSubmit(2, 'saveLoading')" :loading="saveLoading">保存
+                      @click="handleSubmit(2, 'saveLoading')" :loading="saveLoading"
+                      v-if="!($route.path === '/giftH/edit' && ['0','1'].includes($route.query.general))">保存
             </a-button>
             <a-button type="primary" html-type="submit" @click="handleSubmit(1, 'submitLoading')"
                       :loading="submitLoading">提交
