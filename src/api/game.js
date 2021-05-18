@@ -30,6 +30,7 @@ export const GANE_SAVE_GAME = data => fetchApi(URL.GANE_SAVE_GAME, data, 'POST')
 export const GANE_UPDATE_PRIZE = data => fetchApi(URL.GANE_UPDATE_PRIZE, data, 'POST');
 export const GANE_MANAGE_TIMES = data => fetchApi(URL.GANE_MANAGE_TIMES, data, 'POST');
 export const GANE_UPLOAD_PEOPLE = data => fetchApi(URL.GANE_UPLOAD_PEOPLE, data, 'POST');
+export const PRIZE_NAME_LIST = data => fetchApi(URL.PRIZE_NAME_LIST, data, 'POST');
 
 // 图片上传
 // export const GAME_UPLOAD_IMG = data => fetchApi(URL.GAME_UPLOAD_IMG, data, 'POST');
