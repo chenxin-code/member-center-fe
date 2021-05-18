@@ -15,13 +15,19 @@
       </div>
     </div>
     <div class="game-content">
-      <a-table :columns="columns" :data-source="records" @change="changePage" :pagination="pagination">
+      <a-table
+        :columns="columns"
+        :data-source="records"
+        :rowKey="record => record.id"
+        @change="changePage"
+        :pagination="pagination"
+      >
         <span slot="operate" slot-scope="text, record">
           <!-- 0禁用、1启用 -->
           <span @click="turnOn(record, 1)" class="operate" v-if="record.availableFlage == 0">启用</span>
           <span @click="turnOn(record, 2)" class="operate" v-if="record.availableFlage == 1">禁用</span>
           <span @click="turnOn(record, 3)" class="operate">删除</span>
-          <span @click="turnOn(record, 'editor')" class="operate" >编辑</span>
+          <span @click="turnOn(record, 'editor')" class="operate">编辑</span>
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
@@ -75,12 +81,12 @@ const columns = [
 let prizeDict = {
   1: '立即开奖',
   2: '非立即开奖'
-}
+};
 let gameTypeDict = {
   1: '幸运转盘',
   2: '砸金蛋',
   3: '九宫格'
-}
+};
 // 内容
 export default {
   components: {
@@ -130,13 +136,15 @@ export default {
     // 获取游戏列表
     getGameList(params) {
       GAME_LIST(params).then(({ code, data }) => {
-        if (code) {
+        console.log('code', code);
+        if (code == 200) {
           this.pagination.total = Number(data.total);
+          this.pageNum++;
           this.records = data.records;
           this.records.forEach(item => {
-            item.lotteryType = prizeDict[item.lotteryType]
-            item.activityType = gameTypeDict[item.activityType]
-          })
+            item.lotteryType = prizeDict[item.lotteryType];
+            item.activityType = gameTypeDict[item.activityType];
+          });
         }
       });
     },
@@ -147,10 +155,10 @@ export default {
      */
 
     operateGame(params) {
-      console.log('GANE_MANAGE_GAME', params);
       GANE_MANAGE_GAME(params).then(res => {
         console.log('>>>>>>>>', res);
         if (res.code == 200) {
+          this.$message.info('操作成功');
           this.getGameList({
             gameTitle: this.gameName,
             activityType: this.chooseGame,
@@ -199,6 +207,12 @@ export default {
     //  分页
     changePage(val) {
       console.log('------------', val);
+      this.getGameList({
+        gameTitle: this.gameName,
+        activityType: this.chooseGame,
+        pageNum: val.current,
+        pageSize: 10
+      });
     }
   }
 };

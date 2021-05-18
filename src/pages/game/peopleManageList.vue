@@ -32,22 +32,22 @@
 
       <div class="game-message-search">
         <div style="display: flex;margin-left: 40px;">
-          <timesInput title="会员ID" v-model="memberId" placeholder="请输入会员ID"></timesInput>
+          <timesInput title="会员手机号" v-model="memberPhone" placeholder="请输入会员手机号"></timesInput>
           <timesInput
-            title="会员手机号"
-            v-model="memberPhone"
-            placeholder="请输入会员手机号"
+            title="会员ID"
+            v-model="memberId"
+            placeholder="请输入会员ID"
             style="margin-left: 20px;"
           ></timesInput>
           <timesSelect
-            title="已抽取奖品等级"
-            :optionObj="prizeLevelOption"
+            title="已抽取奖品"
+            :optionObj="activityLotteryVoListLevel"
             @select-option="seleceLevel"
-            placeholder="请选择奖品等级"
+            placeholder="请选择奖品"
             style="margin-left: 20px"
           ></timesSelect>
         </div>
-        <a-button @click="submit" style="width: 150px;margin-left: 10px" type="primary">查询</a-button>
+        <a-button @click="search" style="width: 150px;margin-left: 10px" type="primary">查询</a-button>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
     </div>
 
     <a-modal title="查看抽奖结果" :visible="resultVisible" @cancel="resultVisible = false">
-      <a-table :columns="rusultColumns" :data-source="data" bordered></a-table>
+      <a-table :columns="rusultColumns" :data-source="activityLotteryVoList" bordered></a-table>
       <div slot="footer" style="display: flex;justify-content: center;">
         <a-button type="primary" @click="resultVisible = false">关闭</a-button>
       </div>
@@ -70,24 +70,24 @@
     <a-modal title="修改抽奖次数" :visible="changeVisible" @cancel="changeVisible = false">
       <div class="game-prize-label">
         <div class="prize-label-title" style="width: 100px">会员手机号</div>
-        <div class="prize-label-text">xxxxxxxxxxx</div>
+        <div class="prize-label-text">{{ operateTarget.memberPhone }}</div>
       </div>
       <div class="game-prize-label">
         <div class="prize-label-title" style="width: 100px">会员ID</div>
-        <div class="prize-label-text">xxxxxxxxxxx</div>
+        <div class="prize-label-text">{{ operateTarget.memberId }}</div>
       </div>
       <div class="game-prize-label">
         <div class="prize-label-title">会员应参与次数</div>
-        <div class="prize-label-text">xxxxxxxxxxx</div>
+        <div class="prize-label-text">{{ operateTarget.maxPartakeNum }}</div>
       </div>
       <div class="game-prize-label">
         <div class="prize-label-title">会员已参与次数</div>
-        <div class="prize-label-text">xxxxxxxxxxx</div>
+        <div class="prize-label-text">{{ operateTarget.alreadyPartakeNum }}</div>
       </div>
       <timesInput
         title="重置会员参与次数"
-        v-model="vipPhone"
-        placeholder="请输入会员手机号"
+        v-model="resetAttendNum"
+        placeholder="请输入重置会员参与次数"
         style="margin-left: 20px;"
       ></timesInput>
       <div slot="footer" style="display: flex;justify-content: center;">
@@ -99,7 +99,13 @@
 </template>
 
 <script>
-import { GANE_TAKEPARTINLIST, GANE_PRIZE_MANAGE_LIST } from '@/api/game';
+import {
+  GANE_TAKEPARTINLIST,
+  GANE_PRIZE_MANAGE_LIST,
+  GANE_MANAGE_TIMES,
+  GANE_CHECK_RESULT,
+  PRIZE_NAME_LIST
+} from '@/api/game';
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 // 头部标题
@@ -116,16 +122,15 @@ const columns = [
   },
   {
     title: '最高参与次数',
-    key: 'maxPartakeNum',
-    dataIndex: 'maxPartakeNum'
+    dataIndex: 'maxPartakeNum',
+    key: 'maxPartakeNum'
   },
   {
     title: '已参与次数',
-    key: 'alreadyPartakeNum',
-    dataIndex: 'alreadyPartakeNum'
+    dataIndex: 'alreadyPartakeNum',
+    key: 'alreadyPartakeNum'
   },
   {
-    dataIndex: 'operate',
     key: 'operate',
     slots: { title: 'operate' },
     scopedSlots: { customRender: 'operate' }
@@ -134,23 +139,23 @@ const columns = [
 const rusultColumns = [
   {
     title: '会员手机号',
-    dataIndex: 'theme',
-    key: 'theme'
+    dataIndex: 'memberPhone',
+    key: 'memberPhone'
   },
   {
     title: '会员ID',
-    dataIndex: 'name',
-    key: 'name'
+    dataIndex: 'memberId',
+    key: 'memberId'
   },
   {
     title: '参与时间',
-    key: 'type',
-    dataIndex: 'type'
+    key: 'partakeTime',
+    dataIndex: 'partakeTime'
   },
   {
     title: '奖品名称',
-    key: 'gameType',
-    dataIndex: 'gameType'
+    key: 'prizeName',
+    dataIndex: 'prizeName'
   }
 ];
 
@@ -168,14 +173,18 @@ export default {
       prizeLevelOption: [],
       prizeLevel: '',
       vipId: '',
-      vipPhone: '',
       columns,
       contentData: [],
       pagination: {
         total: 10
       },
       rusultColumns,
+      operateTarget: {}, //每次命中的对象
+      activityLotteryVoList: [], // 抽奖结果列表
 
+      resetAttendNum: '', // 重置抽奖次数
+      activityLotteryVoListLevel: [], //中奖结果列表
+      prizeName: '',
       gameId: '', // 活动游戏表ID
       memberId: '', // 会员ID
       memberPhone: '', // 会员手机号码
@@ -185,28 +194,34 @@ export default {
   },
   created() {
     this.paramsPage = this.$route.query;
-    console.log('paramsPage', this.paramsPage);
-    GANE_PRIZE_MANAGE_LIST({
+    let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+    // 获取活动奖品名称列表
+    PRIZE_NAME_LIST({
       gameId: this.paramsPage.id,
       pageNum: 1,
       pageSize: 10
     }).then(({ code, data }) => {
       if (code == 200) {
-        console.log('data', data);
+        data.forEach(item => {
+          this.activityLotteryVoListLevel.push({
+            name: item,
+            value: item
+          });
+        });
       }
     });
-  },
-  activated() {
+    // 游戏人员列表
     this.getList({
       gameId: this.paramsPage.id,
-      memberId: '',
-      memberPhone: '',
+      memberId,
+      memberPhone,
       pageNum: 1,
       pageSize: 10,
-      prizeFlag: '',
-      prizeId: ''
+      prizeFlag,
+      prizeId
     });
   },
+  activated() {},
   methods: {
     getList(params) {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
@@ -221,15 +236,52 @@ export default {
       this.prizeFlag = val;
     },
     changePage() {},
-    submit() {},
+    search() {
+      let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+      this.getList({
+        gameId: this.paramsPage.id,
+        memberId,
+        memberPhone,
+        pageNum: 1,
+        pageSize: 10,
+        prizeFlag,
+        prizeId,
+        prizeName: this.prizeName
+      });
+    },
     turnOn(data, flag) {
+      this.operateTarget = data;
+      console.log('........', data);
       if (flag == 'times') {
         this.changeVisible = true;
       } else {
         this.resultVisible = true;
+        GANE_CHECK_RESULT({
+          gameId: data.gameId,
+          memberId: data.memberId
+        }).then(({ data, code }) => {
+          if (code == 200) {
+            console.log('----data----', data);
+            this.activityLotteryVoList = data.activityLotteryVoList;
+          }
+        });
       }
     },
-    save() {}
+    /* 
+      管理游戏抽奖次数
+    */
+    save() {
+      GANE_MANAGE_TIMES({
+        id: this.operateTarget.id,
+        memberId: this.operateTarget.memberId,
+        resetAttendNum: this.resetAttendNum
+      }).then(({ data, code }) => {
+        if (code == 200) {
+          this.$message.info('游戏次数重置成功');
+          this.changeVisible = false;
+        }
+      });
+    }
   }
 };
 </script>

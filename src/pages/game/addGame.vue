@@ -90,9 +90,6 @@
                   上传
                 </div>
               </template>
-              <!-- <template v-else>
-                <img :src="activityBackgroundUrl" alt="" style="width: 80px;height: 80px;" />
-              </template> -->
             </a-upload>
           </div>
 
@@ -251,9 +248,6 @@ export default {
     },
     selectActivity(value) {
       this.activityType = value;
-    },
-    stairBefore(info) {
-      console.log('>>>stairBefore>>>', info);
     },
     handleImgRemoveBg() {
       this.activityBackgroundUrl = '';
