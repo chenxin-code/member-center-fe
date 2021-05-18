@@ -4,7 +4,7 @@
       <p class="detail-header-title">{{type === "add" ? '新建任务' : '编辑任务'}}</p>
       <p class="detail-header-btn" @click="goBack()">返回</p>
     </div>
-    <div class="detail-main">
+    <div class="detail-main" :loading="true">
       <div class="form-body">
         <a-form-model ref="ruleForm" :rules="rules" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
           <a-form-model-item ref="taskName" label="任务名称" prop="taskName">
@@ -13,7 +13,7 @@
           <a-form-model-item label="有效期" prop="taskDate">
             <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD" style="width: 100%" @change="onChange" />
           </a-form-model-item>
-          <a-form-model-item label="任务周期性">
+          <a-form-model-item label="任务周期性" prop="isPeriodic">
             <a-select v-model="form.isPeriodic" placeholder="请选择">
               <a-select-option value="0">
                 一次性任务
@@ -39,10 +39,10 @@
               </a-select-option>
             </a-select>
           </a-form-model-item>
-          <a-form-model-item label="任务描述">
+          <a-form-model-item label="任务描述" prop="memo">
             <a-textarea class="tc-textTarea" v-model="form.memo" />
           </a-form-model-item>
-          <a-form-model-item label="关联任务">
+          <a-form-model-item label="关联任务" prop="afterTaskName">
             <a-input v-model="form.afterTaskName" @click="selectAffair" />
           </a-form-model-item>
           <a-form-model-item label="邦豆成长值奖励" prop="isSystemAward">
@@ -84,7 +84,7 @@
             <a-input-number v-model="form.awardGrowMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item label="其他奖励" prop="otherAwardType">
-            <a-radio-group v-model="form.otherAwardType">
+            <a-radio-group v-model="form.otherAwardType" @change="changeOtherAwardType">
               <a-radio value="0">
                 无
               </a-radio>
@@ -142,7 +142,7 @@
               </a-radio>
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item label="任务执行方式">
+          <a-form-model-item label="任务执行方式" prop="executeType">
             <a-select v-model="form.executeType" placeholder="请选择">
               <a-select-option value="1">
                 提示
@@ -262,12 +262,6 @@ export default {
       }
     };
   },
-  watch: {
-    'form.otherAwardType'(val) {
-      this.form.otherAwardId = '';
-      this.form.otherAwardName = '';
-    }
-  },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'register' });
   },
@@ -378,6 +372,10 @@ export default {
           // }
         );
       });
+    },
+    changeOtherAwardType(e) {
+      this.form.otherAwardId = '';
+      this.form.otherAwardName = '';
     }
   }
 };
