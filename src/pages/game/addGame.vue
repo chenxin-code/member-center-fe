@@ -25,12 +25,12 @@
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">参与人数</div>
-        <timesInput v-model="partakeNum"></timesInput>
+        <timesInput v-model="partakeNum" type="number"></timesInput>
       </div>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">每人可参与次数</div>
-        <timesInput v-model="luckyDrawLimits"></timesInput>
+        <timesInput v-model="luckyDrawLimits" type="number"></timesInput>
       </div>
 
       <div class="label-content">
@@ -50,12 +50,19 @@
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">开奖方式</div>
-        <timesSelect
-          :optionObj="prizeOption"
-          @select-option="selectPrize"
-          placeholder="请选择开奖方式"
-        ></timesSelect>
+        <timesSelect :optionObj="prizeOption" @select-option="selectPrize" placeholder="请选择开奖方式"></timesSelect>
       </div>
+
+      <template v-if="lotteryType == 2">
+        <div class="label-content">
+          <div class="label-title">开奖时间</div>
+          <a-date-picker @change="openPrize" />
+        </div>
+        <div class="label-content">
+          <div class="label-title" style="margin: 0;">开奖人数</div>
+          <timesInput v-model="drawLotteryNum" type="number"></timesInput>
+        </div>
+      </template>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">活动方式</div>
@@ -93,7 +100,7 @@
             </a-upload>
           </div>
 
-          <div class="stair">
+          <div class="stair" v-if="activityType == 1 || activityType == 3">
             <div style="margin-bottom: 15px;">消息层背景</div>
             <a-upload
               name="avatar"
@@ -117,7 +124,7 @@
             </a-upload>
           </div>
 
-          <div class="stair">
+          <div class="stair" v-if="activityType == 1">
             <div style="margin-bottom: 15px;">游戏层背景</div>
             <a-upload
               name="avatar"
@@ -209,6 +216,8 @@ export default {
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
       popFrameUrl: '', // 弹窗背景Url
+      drawLotteryTime: '', // 开奖时间
+      drawLotteryNum: '', // 开奖人数
 
       gamePeopleNum: '',
       gamePeopleTimes: '',
@@ -220,7 +229,7 @@ export default {
       activityOption: [
         { name: '幸运转盘', value: 1 },
         { name: '砸金蛋', value: 2 },
-        { name: '九宫格', value: 3 },
+        { name: '九宫格', value: 3 }
       ],
       prizeType: '', //开奖方式
       prizeOption: [
@@ -234,6 +243,10 @@ export default {
   methods: {
     radioChange(e) {
       this.availableFlage = e.target.value;
+    },
+    // 开奖时间
+    openPrize(val) {
+      this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
     // 日期选择
     changeDate(val) {
@@ -307,29 +320,106 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
-    submit() {
-      let params = {
-        gameTitle: this.gameTitle,
-        availableFlage: this.availableFlage,
-        validityStartTime: this.validityStartTime,
-        validityEndTime: this.validityEndTime,
-        partakeNum: this.partakeNum,
-        luckyDrawLimits: this.luckyDrawLimits,
-        activityDesc: this.activityDesc,
-        noticeType: this.noticeType,
-        lotteryType: this.lotteryType,
-        activityType: this.activityType,
-        activityBackgroundUrl: this.activityBackgroundUrl,
-        popFrameUrl: this.popFrameUrl,
-        gameUrl: this.gameUrl,
-        msgUrl: this.msgUrl
-      };
-      console.log('>>>>>>>>>', params);
-      GANE_SAVE_GAME(params).then(res => {
-        if (res.code == 200) {
-          console.log('res', res);
+    verify() {
+      let {
+        gameTitle,
+        validityStartTime, //活动开始时间
+        validityEndTime, // 活动结束时间
+        partakeNum, // 参与人数
+        luckyDrawLimits, // 每人可参与次数
+        activityDesc, //activityDesc
+        noticeType, //通知方式
+        lotteryType, //开奖方式
+        activityType, // 活动方式
+        activityBackgroundUrl, // 背景图片
+        msgUrl, // 消息层背景
+        gameUrl, //游戏层背景
+        popFrameUrl, //弹框图片url
+        drawLotteryTime, //开奖时间
+        drawLotteryNum //开奖人数
+      } = this;
+      let messageText = '';
+      let flag = false;
+      if (!gameTitle) {
+        messageText = '游戏主题不能为空';
+        flag = true;
+      } else if (!validityStartTime || !validityEndTime) {
+        messageText = '请选择活动时间';
+        flag = true;
+      } else if (!partakeNum) {
+        messageText = '请输入参与人数';
+        flag = true;
+      } else if (!luckyDrawLimits) {
+        messageText = '请输入每人可参与次数';
+        flag = true;
+      } else if (!activityDesc) {
+        messageText = '请输入活动说明';
+        flag = true;
+      } else if (!noticeType) {
+        messageText = '请选择通知方式';
+        flag = true;
+      } else if (!lotteryType) {
+        messageText = '请选择开奖方式';
+        flag = true;
+      } else if (!activityType) {
+        flag = true;
+        messageText = '请选择活动方式';
+      } else if (lotteryType == 2) {
+        if (!drawLotteryTime) {
+          flag = true;
+          messageText = '非立即开奖请选择开奖时间';
+        } else if (!drawLotteryNum) {
+          flag = true;
+          messageText = '请选择开奖人数';
         }
-      });
+      } else if (!activityBackgroundUrl) {
+        messageText = '请上传背景图片';
+        flag = true;
+      } else if ((this.activityType == 1 || this.activityType == 3) && !msgUrl) {
+        flag = true;
+        messageText = '请上传消息层背景';
+      } else if (this.activityType == 1 && !gameUrl) {
+        flag = true;
+        messageText = '请上传游戏层背景';
+      } else if (!popFrameUrl) {
+        flag = true;
+        messageText = '请上传弹框图片';
+      }
+      if (flag) {
+        this.$message.error(messageText);
+      }
+    },
+    submit() {
+      this.verify();
+      // let params = {
+      //   gameTitle: this.gameTitle,
+      //   availableFlage: this.availableFlage,
+      //   validityStartTime: this.validityStartTime,
+      //   validityEndTime: this.validityEndTime,
+      //   partakeNum: this.partakeNum,
+      //   luckyDrawLimits: this.luckyDrawLimits,
+      //   activityDesc: this.activityDesc,
+      //   noticeType: this.noticeType,
+      //   lotteryType: this.lotteryType,
+      //   activityType: this.activityType,
+      //   activityBackgroundUrl: this.activityBackgroundUrl,
+      //   popFrameUrl: this.popFrameUrl,
+      //   gameUrl: this.gameUrl,
+      //   msgUrl: this.msgUrl
+      // };
+      // if (this.lotteryType == 2) {
+      //   params.drawLotteryNum = this.drawLotteryNum;
+      //   params.drawLotteryTime = this.drawLotteryTime;
+      // }
+      // console.log('>>>>>>>>>', params);
+      // GANE_SAVE_GAME(params).then(res => {
+      //   if (res.code == 200) {
+      //     console.log('res', res);
+      //     this.$router.push({
+      //       path: '/gameManage'
+      //     });
+      //   }
+      // });
     }
   }
 };
