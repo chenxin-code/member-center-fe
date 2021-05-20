@@ -14,13 +14,13 @@
             <p v-show="showRedBorder" class="create-main-couponSelectTip">请选择礼包</p>
           </a-form-model-item>
           <a-form-model-item label="派发时间" prop="deliveryTime">
-            <a-date-picker v-model="form.deliveryTime" style="width: 100%;"/>
+            <a-date-picker v-model="form.deliveryTime" :disabled-date="disabledDate" :showToday="false" style="width: 100%;" />
           </a-form-model-item>
           <a-radio-group v-model="form.issuedRang" class="scopeTypeData">
             <a-radio style="display: block; height: 130px;" :value="1">
               <div class="scopeTypeRadio">
                 <span style="padding-right: 40px; line-height: 40px;">选择来源</span>
-                <div>
+                <div v-if="form.issuedRang === 1">
                   <a-form-model-item label="会员来源" prop="memberSource">
                     <a-checkbox-group
                       v-model="form.memberSource"
@@ -57,7 +57,7 @@
             </a-radio>
             <a-radio style="display: block; height: 130px;" :value="2">
               <span style="padding-right: 40px;">指定会员</span>
-              <a-form-model-item style="display: inline-block; width: 100%;">
+              <a-form-model-item style="display: inline-block; width: 100%;" v-if="form.issuedRang === 2">
                 <a-upload
                   v-decorator="[
                     'form.file',
@@ -83,7 +83,7 @@
                   </a-button>
                 </a-upload>
               </a-form-model-item>
-              <div style="padding: 40px 0 0 148px;">
+              <div style="padding: 40px 0 0 148px;" v-if="form.issuedRang === 2">
                 <p style="font-size: 12px; color: #c1c1c1;">
                   支持扩展名：.xlsx，支持批量上传会员手机号或会员UUID，重复会员计算一次
                 </p>
@@ -332,6 +332,9 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      return current && current < Date.now();
+    },
     onSearch(args) {
       const {name} = args;
       this.searchGiftName = name || null;
