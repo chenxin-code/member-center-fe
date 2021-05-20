@@ -147,9 +147,17 @@ export default {
       };
     }
   },
-  created() {
-    this.getTaskSource();
-    this.getCouponList();
+  watch: {
+    visible(e) {
+      if (e) {
+        this.$nextTick(function() {
+          this.$refs.form.form.resetFields();
+        });
+        this.searchVal = {};
+        this.getTaskSource();
+        this.getCouponList();
+      }
+    }
   },
   methods: {
     cancelActivity() {

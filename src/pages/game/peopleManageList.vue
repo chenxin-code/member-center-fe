@@ -140,11 +140,11 @@ const columns = [
     dataIndex: 'alreadyPartakeNum',
     key: 'alreadyPartakeNum'
   },
-  {
-    key: 'operate',
-    slots: { title: 'operate' },
-    scopedSlots: { customRender: 'operate' }
-  }
+  // {
+  //   key: 'operate',
+  //   slots: { title: 'operate' },
+  //   scopedSlots: { customRender: 'operate' }
+  // }
 ];
 const rusultColumns = [
   {
@@ -205,6 +205,13 @@ export default {
   created() {
     this.paramsPage = this.$route.query;
     let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+    if (!this.paramsPage.drawLotteryTime) {
+      columns.push({
+        key: 'operate',
+        slots: { title: 'operate' },
+        scopedSlots: { customRender: 'operate' }
+      });
+    }
     // 获取活动奖品名称列表
     PRIZE_NAME_LIST({
       gameId: this.paramsPage.id,
