@@ -97,12 +97,9 @@
               :remove="handleImgRemoveBg"
               @preview="handlePreview"
               @change="uploadBg"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileBgList"
             >
-              <template v-if="!activityBackgroundUrl">
+              <template v-if="!activityBackgroundUrl && !fileBgList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -206,6 +203,7 @@ export default {
   },
   data() {
     return {
+      fileBgList: [],
       picUploading: false,
       activityCover: '',
 
@@ -268,6 +266,14 @@ export default {
     this.noticeType = this.paramsPage.noticeType;
     this.lotteryType = this.paramsPage.lotteryType;
     this.activityType = this.paramsPage.activityType;
+    this.fileBgList = [
+      {
+        uid: '-1',
+        status: 'done',
+        url: this.paramsPage.activityBackgroundUrl,
+        thumbUrl: this.paramsPage.activityBackgroundUrl
+      }
+    ];
   },
   methods: {
     radioChange(e) {
@@ -292,6 +298,7 @@ export default {
       this.activityType = value;
     },
     handleImgRemoveBg() {
+      this.fileBgList = [];
       this.activityBackgroundUrl = '';
     },
     handleImgRemoveMessage() {
@@ -441,8 +448,8 @@ export default {
         params.drawLotteryNum = this.drawLotteryNum;
         params.drawLotteryTime = this.drawLotteryTime;
       }
-      if(this.paramsPage.update) {
-        params.id = this.paramsPage.id
+      if (this.paramsPage.update) {
+        params.id = this.paramsPage.id;
       }
       console.log('>>>>>>>>>', params);
       GANE_SAVE_GAME(params).then(res => {
