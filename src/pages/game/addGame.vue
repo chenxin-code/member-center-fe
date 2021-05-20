@@ -10,17 +10,22 @@
       <div class="choose-isActive">
         <div class="label-title">是否可用</div>
         <a-radio-group v-model="availableFlage" @change="radioChange">
-          <a-radio :value="1">
+          <a-radio value="1">
             启用
           </a-radio>
-          <a-radio :value="0">
+          <a-radio value="0">
             禁用
           </a-radio>
         </a-radio-group>
       </div>
       <div class="label-content">
         <div class="label-title">有效期</div>
-        <a-range-picker @change="changeDate" />
+        <a-range-picker
+          v-model="rangeDate"
+          format="YYYY-MM-DD hh:mm:ss"
+          valueFormat="YYYY-MM-DD hh:mm:ss"
+          @change="changeDate"
+        />
       </div>
 
       <div class="label-content">
@@ -66,7 +71,7 @@
       <template v-if="lotteryType == 2">
         <div class="label-content">
           <div class="label-title">开奖时间</div>
-          <a-date-picker @change="openPrize" />
+          <a-date-picker format="YYYY-MM-DD hh:mm:ss" valueFormat="YYYY-MM-DD hh:mm:ss" @change="openPrize" />
         </div>
         <div class="label-content">
           <div class="label-title" style="margin: 0;">开奖人数</div>
@@ -118,12 +123,9 @@
               :remove="handleImgRemoveMessage"
               @preview="handlePreview"
               @change="uploadMessage"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileMessageList"
             >
-              <template v-if="!msgUrl">
+              <template v-if="!msgUrl && !fileMessageList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -142,12 +144,9 @@
               :remove="handleImgRemoveGame"
               @preview="handlePreview"
               @change="uploadGame"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileGameList"
             >
-              <template v-if="!gameUrl">
+              <template v-if="!gameUrl && !fileGameList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -166,12 +165,9 @@
               :remove="handleImgRemoveAlert"
               @preview="handlePreview"
               @change="uploadAlert"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileAlertList"
             >
-              <template v-if="!popFrameUrl">
+              <template v-if="!popFrameUrl && !fileAlertList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -191,7 +187,6 @@
 </template>
 
 <script>
-import { getFormatDate } from '@/utils/util';
 import { GANE_SAVE_GAME } from '@/api/game';
 import { updateImage } from '@/api/member';
 import timesInput from './component/form-input';
@@ -204,8 +199,13 @@ export default {
   data() {
     return {
       fileBgList: [],
+      fileAlertList: [],
+      fileMessageList: [],
+      fileGameList: [],
+
       picUploading: false,
       activityCover: '',
+      rangeDate: '',
 
       gameTitle: '',
       availableFlage: 1,
@@ -217,10 +217,12 @@ export default {
       noticeType: '', // 通知方式
       lotteryType: '', // 开奖方式
       activityType: '', // 活动方式
+
       msgUrl: '', //消息层底图
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
       popFrameUrl: '', // 弹窗背景Url
+
       drawLotteryTime: '', // 开奖时间
       drawLotteryNum: '', // 开奖人数
 
@@ -266,14 +268,48 @@ export default {
     this.noticeType = this.paramsPage.noticeType;
     this.lotteryType = this.paramsPage.lotteryType;
     this.activityType = this.paramsPage.activityType;
-    this.fileBgList = [
-      {
-        uid: '-1',
-        status: 'done',
-        url: this.paramsPage.activityBackgroundUrl,
-        thumbUrl: this.paramsPage.activityBackgroundUrl
-      }
-    ];
+    if (this.activityType) {
+      this.msgUrl = this.paramsPage.msgUrl;
+      this.activityBackgroundUrl = this.paramsPage.activityBackgroundUrl;
+      this.gameUrl = this.paramsPage.gameUrl
+      this.popFrameUrl = this.paramsPage.popFrameUrl
+
+      this.fileBgList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.activityBackgroundUrl,
+          thumbUrl: this.paramsPage.activityBackgroundUrl
+        }
+      ];
+      this.fileAlertList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.popFrameUrl,
+          thumbUrl: this.paramsPage.popFrameUrl
+        }
+      ];
+      this.fileMessageList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.msgUrl,
+          thumbUrl: this.paramsPage.msgUrl
+        }
+      ];
+      this.fileGameList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.gameUrl,
+          thumbUrl: this.paramsPage.gameUrl
+        }
+      ];
+    }
+
+    this.rangeDate = [this.paramsPage.validityStartTime, this.paramsPage.validityEndTime];
+    this.changeDate(this.rangeDate);
   },
   methods: {
     radioChange(e) {
@@ -281,12 +317,15 @@ export default {
     },
     // 开奖时间
     openPrize(val) {
-      this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
+      this.drawLotteryTime = val;
+      //this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
     // 日期选择
     changeDate(val) {
-      this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
-      this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
+      this.validityStartTime = val[0];
+      this.validityEndTime = val[1];
+      // this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
+      // this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
     },
     selectInform(value) {
       this.noticeType = value;
@@ -302,12 +341,15 @@ export default {
       this.activityBackgroundUrl = '';
     },
     handleImgRemoveMessage() {
+      this.fileMessageList = [];
       this.msgUrl = '';
     },
     handleImgRemoveGame() {
+      this.fileGameList = [];
       this.gameUrl = '';
     },
     handleImgRemoveAlert() {
+      this.fileAlertList = [];
       this.popFrameUrl = '';
     },
     // 上传背景图片
