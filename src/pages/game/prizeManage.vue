@@ -2,7 +2,13 @@
   <div class="game-prizeManage">
     <div class="game-prizeManage-title">活动奖品管理</div>
     <div style="margin: 30px">
-      <a-table :columns="columns" :data-source="prizeList" @change="changePage" :pagination="pagination" :rowKey="record => record.positionIndex">
+      <a-table
+        :columns="columns"
+        :data-source="prizeList"
+        @change="changePage"
+        :pagination="pagination"
+        :rowKey="record => record.positionIndex"
+      >
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record)" class="operate">编辑</span>
         </span>
@@ -49,15 +55,14 @@
           <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
           <timesInput v-model="dayMaxLotteryNum"></timesInput>
         </div>
-        <div class="game-prizeManage-label" style="align-items:flex-start">
+        <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
           <a-upload
             style="margin-left: 15px"
             name="file"
-            :multiple="true"
-            action=""
-            :headers="{}"
+            :before-upload="() => false"
             @change="handleExcel"
+            :remove="handRemoveExcel"
           >
             <a-button>
               <a-icon type="upload" />
@@ -68,10 +73,10 @@
 
         <div class="game-prizeManage-label">
           <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
-          <timesInput v-model="lotteryWeight"></timesInput>
+          <timesInput v-model="lotteryWeight" type="number"></timesInput>
         </div>
 
-        <div class="game-prizeManage-label">
+        <div class="game-prizeManage-label" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">奖品缩略图</div>
           <div class="stair">
             <a-upload
@@ -82,6 +87,10 @@
               :remove="handleImgRemove"
               @preview="handlePreview"
               @change="uploadPic"
+              v-decorator="[
+                'activityCover',
+                { initialValue: '', rules: [{ required: true, message: '图片不能为空' }] }
+              ]"
             >
               <template v-if="!prizeUrl">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -168,7 +177,7 @@ const PRIZE_TYPE_DICT = [
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 
-import { GANE_PRIZE_MANAGE_LIST, GANE_UPDATE_PRIZE } from '@/api/game';
+import { GANE_PRIZE_MANAGE_LIST, GANE_UPDATE_PRIZE, GANE_DEL_PRIZE_PEOPLE, GANE_UPLOAD_PEOPLE } from '@/api/game';
 import { updateImage } from '@/api/member';
 import api from '@/api';
 
@@ -203,43 +212,47 @@ export default {
   created() {
     this.paramsPage = this.$route.query;
     console.log('paramsPage', this.paramsPage);
-    GANE_PRIZE_MANAGE_LIST({
-      gameId: this.paramsPage.id,
-      pageNum: 1,
-      pageSize: 10
-    }).then(({ code, data }) => {
-      if (code == 200) {
-        this.prizeList = data.records;
-        this.pagination.total = data.total * 1;
-      }
-    });
+    this.init();
   },
   methods: {
+    init() {
+      GANE_PRIZE_MANAGE_LIST({
+        gameId: this.paramsPage.id,
+        pageNum: 1,
+        pageSize: 10
+      }).then(({ code, data }) => {
+        if (code == 200) {
+          this.prizeList = data.records;
+          this.pagination.total = data.total * 1;
+        }
+      });
+    },
     // 修改奖品信息
     submit() {
       console.log('target', this.prizeTarget);
       let params = {
-        appointPersonUrl: '', //指定中奖人
+        appointPersonUrl: this.appointPersonUrl, //指定中奖人
         dayMaxLotteryNum: this.dayMaxLotteryNum, // 单日最高中奖数量
         gameId: this.prizeTarget.gameId,
         id: this.prizeTarget.id,
         lotteryWeight: this.lotteryWeight, //中奖权重
-        position: this.prizeTarget.positionIndex,
+        positionIndex: this.prizeTarget.positionIndex,
         prizeName: this.prizeName,
         prizeNum: this.prizeNum,
         prizeType: this.prizeType,
-        prizeUrl: this.prizeUrl,
+        prizeUrl: this.prizeUrl
       };
-      if(this.prizeType == 1 || this.prizeType == 2) {
-        params.rewardNum = this.rewardNum
-      }else {
-        params.ticketCode= this.ticketCode;
-        params.ticketName= this.prizeTarget.ticketName
+      if (this.prizeType == 1 || this.prizeType == 2) {
+        params.rewardNum = this.rewardNum;
+      } else {
+        params.ticketCode = this.ticketCode;
+        params.ticketName = this.prizeTarget.ticketName;
       }
       GANE_UPDATE_PRIZE(params).then(res => {
         if (res.code == 200) {
           this.ticketVisible = false;
           this.$message.info('修改成功');
+          this.init();
         }
       });
     },
@@ -251,7 +264,9 @@ export default {
       this.dayMaxLotteryNum = '';
     },
     changePage() {},
-    handleImgRemove() {},
+    handleImgRemove() {
+      this.prizeUrl = '';
+    },
     handlePreview() {},
     uploadPic({ fileList = [] } = {}) {
       if (fileList.length > 0) {
@@ -286,6 +301,8 @@ export default {
       this.prizeNum = val.prizeNum + '';
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
+      this.prizeUrl = '';
+      console.log('remove', this.prizeTarget);
     },
     // 选择卡券类型
     selectCoupon(val) {
@@ -320,8 +337,32 @@ export default {
           });
       }
     },
-    handleExcel() {
-      console.log('handleExcel');
+    handRemoveExcel() {
+      GANE_DEL_PRIZE_PEOPLE({
+        gameId: this.prizeTarget.gameId,
+        positionIndex: this.prizeTarget.positionIndex,
+        prizeId: this.prizeTarget.id
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message.info('删除成功');
+        }
+      });
+    },
+    handleExcel({ fileList = [] } = {}) {
+      if (fileList.length > 0) {
+        const formData = new FormData();
+        fileList.forEach(file => {
+          formData.append('file', file.originFileObj);
+        });
+        formData.append('gameId', this.prizeTarget.gameId);
+        formData.append('positionIndex', this.prizeTarget.positionIndex);
+        formData.append('prizeId', this.prizeTarget.id);
+        GANE_UPLOAD_PEOPLE(formData).then(res => {
+          if (res.code === 200) {
+            this.appointPersonUrl = res.data;
+          }
+        });
+      }
     }
   }
 };

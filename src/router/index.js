@@ -202,7 +202,6 @@ const routes = [
           authKeys: [''],
           bread: [{ path: '/gameManage', name: '游戏管理' }],
           isUseCache: false,
-          keepAlive: true
         },
         component: addGame
       },
