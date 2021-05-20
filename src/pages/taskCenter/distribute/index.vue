@@ -6,12 +6,12 @@
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
-              <a-input v-model="formList.taskName" />
+              <a-input v-model.trim="formList.taskName" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="派发类型">
-              <a-select v-model="formList.distType" placeholder="请选择">
+              <a-select v-model.trim="formList.distType" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.distTypeOption"
                   :key="sindex"

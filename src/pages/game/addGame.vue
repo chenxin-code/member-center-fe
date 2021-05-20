@@ -10,17 +10,22 @@
       <div class="choose-isActive">
         <div class="label-title">是否可用</div>
         <a-radio-group v-model="availableFlage" @change="radioChange">
-          <a-radio :value="1">
+          <a-radio value="1">
             启用
           </a-radio>
-          <a-radio :value="0">
+          <a-radio value="0">
             禁用
           </a-radio>
         </a-radio-group>
       </div>
       <div class="label-content">
         <div class="label-title">有效期</div>
-        <a-range-picker @change="changeDate" />
+        <a-range-picker
+          v-model="rangeDate"
+          format="YYYY-MM-DD hh:mm:ss"
+          valueFormat="YYYY-MM-DD hh:mm:ss"
+          @change="changeDate"
+        />
       </div>
 
       <div class="label-content">
@@ -66,7 +71,7 @@
       <template v-if="lotteryType == 2">
         <div class="label-content">
           <div class="label-title">开奖时间</div>
-          <a-date-picker @change="openPrize" />
+          <a-date-picker format="YYYY-MM-DD hh:mm:ss" valueFormat="YYYY-MM-DD hh:mm:ss" @change="openPrize" />
         </div>
         <div class="label-content">
           <div class="label-title" style="margin: 0;">开奖人数</div>
@@ -208,6 +213,7 @@ export default {
     return {
       picUploading: false,
       activityCover: '',
+      rangeDate: '',
 
       gameTitle: '',
       availableFlage: 1,
@@ -219,10 +225,12 @@ export default {
       noticeType: '', // 通知方式
       lotteryType: '', // 开奖方式
       activityType: '', // 活动方式
+
       msgUrl: '', //消息层底图
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
       popFrameUrl: '', // 弹窗背景Url
+
       drawLotteryTime: '', // 开奖时间
       drawLotteryNum: '', // 开奖人数
 
@@ -268,6 +276,9 @@ export default {
     this.noticeType = this.paramsPage.noticeType;
     this.lotteryType = this.paramsPage.lotteryType;
     this.activityType = this.paramsPage.activityType;
+
+    this.rangeDate = [this.paramsPage.validityStartTime, this.paramsPage.validityEndTime];
+    this.changeDate(this.rangeDate);
   },
   methods: {
     radioChange(e) {
@@ -275,12 +286,15 @@ export default {
     },
     // 开奖时间
     openPrize(val) {
-      this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
+      this.drawLotteryTime = val;
+      //this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
     // 日期选择
     changeDate(val) {
-      this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
-      this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
+      this.validityStartTime = val[0];
+      this.validityEndTime = val[1];
+      // this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
+      // this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
     },
     selectInform(value) {
       this.noticeType = value;
@@ -441,8 +455,8 @@ export default {
         params.drawLotteryNum = this.drawLotteryNum;
         params.drawLotteryTime = this.drawLotteryTime;
       }
-      if(this.paramsPage.update) {
-        params.id = this.paramsPage.id
+      if (this.paramsPage.update) {
+        params.id = this.paramsPage.id;
       }
       console.log('>>>>>>>>>', params);
       GANE_SAVE_GAME(params).then(res => {

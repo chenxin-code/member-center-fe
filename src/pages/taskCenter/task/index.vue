@@ -6,17 +6,17 @@
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
-              <a-input v-model="formList.taskName" />
+              <a-input v-model.trim="formList.taskName" whitespace />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="任务key">
-              <a-input v-model="formList.taskKey" />
+              <a-input v-model.trim="formList.taskKey" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="任务状态">
-              <a-select v-model="formList.status" placeholder="请选择">
+              <a-select v-model.trim="formList.status" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.statusOption"
                   :key="sindex"
@@ -32,7 +32,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="任务来源">
-              <a-select v-model="formList.taskSource" placeholder="请选择">
+              <a-select v-model.trim="formList.taskSource" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.taskSourceOption"
                   :key="sindex"

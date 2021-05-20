@@ -133,8 +133,16 @@ export default {
       };
     }
   },
-  created() {
-    this.getCouponList();
+  watch: {
+    visible(e) {
+      if (e) {
+        this.$nextTick(function() {
+          this.$refs.form.form.resetFields();
+        });
+        this.searchVal = {};
+        this.getCouponList();
+      }
+    }
   },
   methods: {
     cancelActivity() {
