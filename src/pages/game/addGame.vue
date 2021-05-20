@@ -25,12 +25,12 @@
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">参与人数</div>
-        <timesInput v-model="partakeNum"></timesInput>
+        <timesInput v-model="partakeNum" type="number"></timesInput>
       </div>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">每人可参与次数</div>
-        <timesInput v-model="luckyDrawLimits"></timesInput>
+        <timesInput v-model="luckyDrawLimits" type="number"></timesInput>
       </div>
 
       <div class="label-content">
@@ -45,7 +45,12 @@
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">通知方式</div>
-        <timesSelect :optionObj="informOption" @select-option="selectInform" placeholder="请选择通知方式"></timesSelect>
+        <timesSelect
+          :optionObj="informOption"
+          @select-option="selectInform"
+          defaultValue="消息通知"
+          placeholder="请选择通知方式"
+        ></timesSelect>
       </div>
 
       <div class="label-content">
@@ -53,9 +58,21 @@
         <timesSelect
           :optionObj="prizeOption"
           @select-option="selectPrize"
+          :defaultValue="prizeDict[lotteryType]"
           placeholder="请选择开奖方式"
         ></timesSelect>
       </div>
+
+      <template v-if="lotteryType == 2">
+        <div class="label-content">
+          <div class="label-title">开奖时间</div>
+          <a-date-picker @change="openPrize" />
+        </div>
+        <div class="label-content">
+          <div class="label-title" style="margin: 0;">开奖人数</div>
+          <timesInput v-model="drawLotteryNum" type="number"></timesInput>
+        </div>
+      </template>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">活动方式</div>
@@ -63,6 +80,7 @@
           :optionObj="activityOption"
           @select-option="selectActivity"
           placeholder="请选择活动方式"
+          :defaultValue="activityDict[activityType]"
         ></timesSelect>
       </div>
 
@@ -93,7 +111,7 @@
             </a-upload>
           </div>
 
-          <div class="stair">
+          <div class="stair" v-if="activityType != 2">
             <div style="margin-bottom: 15px;">消息层背景</div>
             <a-upload
               name="avatar"
@@ -117,7 +135,7 @@
             </a-upload>
           </div>
 
-          <div class="stair">
+          <div class="stair" v-if="activityType != 2">
             <div style="margin-bottom: 15px;">游戏层背景</div>
             <a-upload
               name="avatar"
@@ -169,7 +187,7 @@
 
       <div class="game-button">
         <a-button @click="cancel" style="width: 150px;margin-left: 20px;">取消</a-button>
-        <a-button @click="submit" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
+        <a-button @click="verify" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
       </div>
     </div>
   </div>
@@ -188,10 +206,6 @@ export default {
   },
   data() {
     return {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
       picUploading: false,
       activityCover: '',
 
@@ -209,6 +223,8 @@ export default {
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
       popFrameUrl: '', // 弹窗背景Url
+      drawLotteryTime: '', // 开奖时间
+      drawLotteryNum: '', // 开奖人数
 
       gamePeopleNum: '',
       gamePeopleTimes: '',
@@ -220,20 +236,46 @@ export default {
       activityOption: [
         { name: '幸运转盘', value: 1 },
         { name: '砸金蛋', value: 2 },
-        { name: '九宫格', value: 3 },
+        { name: '九宫格', value: 3 }
       ],
+      activityDict: {
+        1: '幸运转盘',
+        2: '砸金蛋',
+        3: '九宫格'
+      },
       prizeType: '', //开奖方式
       prizeOption: [
         { name: '立即开奖', value: 1 },
         { name: '非立即开奖', value: 2 }
       ],
+      prizeDict: {
+        1: '立即开奖',
+        2: '非立即开奖'
+      },
       loading: false,
-      imageUrl: ''
+      imageUrl: '',
+      paramsPage: {}
     };
+  },
+  created() {
+    this.paramsPage = this.$route.query;
+    console.log('--------', this.paramsPage);
+    this.gameTitle = this.paramsPage.gameTitle;
+    this.availableFlage = this.paramsPage.availableFlage;
+    this.partakeNum = this.paramsPage.partakeNum;
+    this.luckyDrawLimits = this.paramsPage.luckyDrawLimits;
+    this.activityDesc = this.paramsPage.activityDesc;
+    this.noticeType = this.paramsPage.noticeType;
+    this.lotteryType = this.paramsPage.lotteryType;
+    this.activityType = this.paramsPage.activityType;
   },
   methods: {
     radioChange(e) {
       this.availableFlage = e.target.value;
+    },
+    // 开奖时间
+    openPrize(val) {
+      this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
     // 日期选择
     changeDate(val) {
@@ -307,6 +349,77 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
+    verify() {
+      let {
+        gameTitle,
+        validityStartTime, //活动开始时间
+        validityEndTime, // 活动结束时间
+        partakeNum, // 参与人数
+        luckyDrawLimits, // 每人可参与次数
+        activityDesc, //activityDesc
+        noticeType, //通知方式
+        lotteryType, //开奖方式
+        activityType, // 活动方式
+        activityBackgroundUrl, // 背景图片
+        msgUrl, // 消息层背景
+        gameUrl, //游戏层背景
+        popFrameUrl, //弹框图片url
+        drawLotteryTime, //开奖时间
+        drawLotteryNum //开奖人数
+      } = this;
+      let messageText = '';
+      let flag = false;
+      if (!gameTitle) {
+        messageText = '游戏主题不能为空';
+        flag = true;
+      } else if (!validityStartTime || !validityEndTime) {
+        messageText = '请选择活动时间';
+        flag = true;
+      } else if (!partakeNum) {
+        messageText = '请输入参与人数';
+        flag = true;
+      } else if (!luckyDrawLimits) {
+        messageText = '请输入每人可参与次数';
+        flag = true;
+      } else if (!activityDesc) {
+        messageText = '请输入活动说明';
+        flag = true;
+      } else if (!noticeType) {
+        messageText = '请选择通知方式';
+        flag = true;
+      } else if (!lotteryType) {
+        messageText = '请选择开奖方式';
+        flag = true;
+      } else if (!activityType) {
+        flag = true;
+        messageText = '请选择活动方式';
+      } else if (lotteryType == 2) {
+        if (!drawLotteryTime) {
+          flag = true;
+          messageText = '非立即开奖请选择开奖时间';
+        } else if (!drawLotteryNum) {
+          flag = true;
+          messageText = '请选择开奖人数';
+        }
+      } else if (!activityBackgroundUrl) {
+        messageText = '请上传背景图片';
+        flag = true;
+      } else if (this.activityType == 3 && !msgUrl) {
+        flag = true;
+        messageText = '请上传消息层背景';
+      } else if (this.activityType == 1 && !gameUrl) {
+        flag = true;
+        messageText = '请上传游戏层背景';
+      } else if (!popFrameUrl) {
+        flag = true;
+        messageText = '请上传弹框图片';
+      }
+      if (flag) {
+        this.$message.error(messageText);
+      } else {
+        this.submit();
+      }
+    },
     submit() {
       let params = {
         gameTitle: this.gameTitle,
@@ -324,10 +437,20 @@ export default {
         gameUrl: this.gameUrl,
         msgUrl: this.msgUrl
       };
+      if (this.lotteryType == 2) {
+        params.drawLotteryNum = this.drawLotteryNum;
+        params.drawLotteryTime = this.drawLotteryTime;
+      }
+      if(this.paramsPage.update) {
+        params.id = this.paramsPage.id
+      }
       console.log('>>>>>>>>>', params);
       GANE_SAVE_GAME(params).then(res => {
         if (res.code == 200) {
           console.log('res', res);
+          this.$router.push({
+            path: '/gameManage'
+          });
         }
       });
     }

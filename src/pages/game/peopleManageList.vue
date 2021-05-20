@@ -28,6 +28,16 @@
           <div class="prize-label-title">开奖方式</div>
           <div class="prize-label-text">{{ paramsPage.lotteryTypeName }}</div>
         </div>
+
+        <div class="game-prize-label" v-if="paramsPage.drawLotteryNum">
+          <div class="prize-label-title">开奖人数</div>
+          <div class="prize-label-text">{{ paramsPage.drawLotteryNum }}</div>
+        </div>
+
+        <div class="game-prize-label" v-if="paramsPage.drawLotteryTime">
+          <div class="prize-label-title">开奖时间</div>
+          <div class="prize-label-text">{{ paramsPage.drawLotteryTime }}</div>
+        </div>
       </div>
 
       <div class="game-message-search">

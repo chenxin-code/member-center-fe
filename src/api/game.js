@@ -9,10 +9,10 @@ export const GAME_UPLOAD_IMG = file => {
   let config = {
     headers: {
       'Content-Type': 'multipart/form-data',
-      Authorization: "Bearer " + localStorage.getItem('SD_ACCESS_TOKEN')
+      Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN')
     }
   };
-  return axios.post(URL.IMAGE_UPDATE, {param, programCode: 'sys-member-center'}, config);
+  return axios.post(URL.IMAGE_UPDATE, { param, programCode: 'sys-member-center' }, config);
 };
 
 export const updateImage = data => fetchApi(URL.IMAGE_UPDATE, data, 'POST'); //图片上传(单张)
