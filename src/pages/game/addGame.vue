@@ -102,12 +102,9 @@
               :remove="handleImgRemoveBg"
               @preview="handlePreview"
               @change="uploadBg"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileBgList"
             >
-              <template v-if="!activityBackgroundUrl">
+              <template v-if="!activityBackgroundUrl && !fileBgList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -126,12 +123,9 @@
               :remove="handleImgRemoveMessage"
               @preview="handlePreview"
               @change="uploadMessage"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileMessageList"
             >
-              <template v-if="!msgUrl">
+              <template v-if="!msgUrl && !fileMessageList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -150,12 +144,9 @@
               :remove="handleImgRemoveGame"
               @preview="handlePreview"
               @change="uploadGame"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileGameList"
             >
-              <template v-if="!gameUrl">
+              <template v-if="!gameUrl && !fileGameList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -174,12 +165,9 @@
               :remove="handleImgRemoveAlert"
               @preview="handlePreview"
               @change="uploadAlert"
-              v-decorator="[
-                'activityCover',
-                { initialValue: activityCover, rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileAlertList"
             >
-              <template v-if="!popFrameUrl">
+              <template v-if="!popFrameUrl && !fileAlertList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -199,7 +187,6 @@
 </template>
 
 <script>
-import { getFormatDate } from '@/utils/util';
 import { GANE_SAVE_GAME } from '@/api/game';
 import { updateImage } from '@/api/member';
 import timesInput from './component/form-input';
@@ -211,6 +198,11 @@ export default {
   },
   data() {
     return {
+      fileBgList: [],
+      fileAlertList: [],
+      fileMessageList: [],
+      fileGameList: [],
+
       picUploading: false,
       activityCover: '',
       rangeDate: '',
@@ -276,6 +268,45 @@ export default {
     this.noticeType = this.paramsPage.noticeType;
     this.lotteryType = this.paramsPage.lotteryType;
     this.activityType = this.paramsPage.activityType;
+    if (this.activityType) {
+      this.msgUrl = this.paramsPage.msgUrl;
+      this.activityBackgroundUrl = this.paramsPage.activityBackgroundUrl;
+      this.gameUrl = this.paramsPage.gameUrl
+      this.popFrameUrl = this.paramsPage.popFrameUrl
+
+      this.fileBgList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.activityBackgroundUrl,
+          thumbUrl: this.paramsPage.activityBackgroundUrl
+        }
+      ];
+      this.fileAlertList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.popFrameUrl,
+          thumbUrl: this.paramsPage.popFrameUrl
+        }
+      ];
+      this.fileMessageList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.msgUrl,
+          thumbUrl: this.paramsPage.msgUrl
+        }
+      ];
+      this.fileGameList = [
+        {
+          uid: '-1',
+          status: 'done',
+          url: this.paramsPage.gameUrl,
+          thumbUrl: this.paramsPage.gameUrl
+        }
+      ];
+    }
 
     this.rangeDate = [this.paramsPage.validityStartTime, this.paramsPage.validityEndTime];
     this.changeDate(this.rangeDate);
@@ -306,15 +337,19 @@ export default {
       this.activityType = value;
     },
     handleImgRemoveBg() {
+      this.fileBgList = [];
       this.activityBackgroundUrl = '';
     },
     handleImgRemoveMessage() {
+      this.fileMessageList = [];
       this.msgUrl = '';
     },
     handleImgRemoveGame() {
+      this.fileGameList = [];
       this.gameUrl = '';
     },
     handleImgRemoveAlert() {
+      this.fileAlertList = [];
       this.popFrameUrl = '';
     },
     // 上传背景图片

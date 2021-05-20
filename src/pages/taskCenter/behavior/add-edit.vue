@@ -402,7 +402,7 @@ export default {
         pageSize: this.pageSize,
         status: '1',//启用
         taskKey: this.taskKey,
-        taskName: this.taskName,
+        taskName: this.taskName ? this.taskName : '',
         taskSource: this.sourceName,
         createTimeStart: this.rangeTime.length > 0 ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
         createTimeEnd: this.rangeTime.length > 0 ? moment(this.rangeTime[1]).format('YYYY-MM-DD') : null
