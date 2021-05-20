@@ -401,7 +401,7 @@ export default {
         pageIndex: this.current,
         pageSize: this.pageSize,
         status: '1',//启用
-        taskKey: this.taskKey,
+        taskKey: this.taskKey ? this.taskKey : '',
         taskName: this.taskName ? this.taskName : '',
         taskSource: this.sourceName,
         createTimeStart: this.rangeTime.length > 0 ? moment(this.rangeTime[0]).format('YYYY-MM-DD') : null,
