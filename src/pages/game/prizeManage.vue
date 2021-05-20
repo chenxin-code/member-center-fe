@@ -55,7 +55,7 @@
           <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
           <timesInput v-model="dayMaxLotteryNum"></timesInput>
         </div>
-        <div class="game-prizeManage-label" style="align-items:flex-start">
+        <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
           <a-upload
             style="margin-left: 15px"
@@ -73,7 +73,7 @@
 
         <div class="game-prizeManage-label">
           <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
-          <timesInput v-model="lotteryWeight"></timesInput>
+          <timesInput v-model="lotteryWeight" type="number"></timesInput>
         </div>
 
         <div class="game-prizeManage-label" v-if="ticketVisible">

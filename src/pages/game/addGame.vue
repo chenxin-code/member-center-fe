@@ -45,12 +45,22 @@
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">通知方式</div>
-        <timesSelect :optionObj="informOption" @select-option="selectInform" placeholder="请选择通知方式"></timesSelect>
+        <timesSelect
+          :optionObj="informOption"
+          @select-option="selectInform"
+          defaultValue="消息通知"
+          placeholder="请选择通知方式"
+        ></timesSelect>
       </div>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">开奖方式</div>
-        <timesSelect :optionObj="prizeOption" @select-option="selectPrize" placeholder="请选择开奖方式"></timesSelect>
+        <timesSelect
+          :optionObj="prizeOption"
+          @select-option="selectPrize"
+          :defaultValue="prizeDict[lotteryType]"
+          placeholder="请选择开奖方式"
+        ></timesSelect>
       </div>
 
       <template v-if="lotteryType == 2">
@@ -70,6 +80,7 @@
           :optionObj="activityOption"
           @select-option="selectActivity"
           placeholder="请选择活动方式"
+          :defaultValue="activityDict[activityType]"
         ></timesSelect>
       </div>
 
@@ -100,7 +111,7 @@
             </a-upload>
           </div>
 
-          <div class="stair" v-if="activityType == 1 || activityType == 3">
+          <div class="stair" v-if="activityType != 2">
             <div style="margin-bottom: 15px;">消息层背景</div>
             <a-upload
               name="avatar"
@@ -124,7 +135,7 @@
             </a-upload>
           </div>
 
-          <div class="stair" v-if="activityType == 1">
+          <div class="stair" v-if="activityType != 2">
             <div style="margin-bottom: 15px;">游戏层背景</div>
             <a-upload
               name="avatar"
@@ -176,7 +187,7 @@
 
       <div class="game-button">
         <a-button @click="cancel" style="width: 150px;margin-left: 20px;">取消</a-button>
-        <a-button @click="submit" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
+        <a-button @click="verify" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
       </div>
     </div>
   </div>
@@ -195,10 +206,6 @@ export default {
   },
   data() {
     return {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN'),
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
       picUploading: false,
       activityCover: '',
 
@@ -231,14 +238,36 @@ export default {
         { name: '砸金蛋', value: 2 },
         { name: '九宫格', value: 3 }
       ],
+      activityDict: {
+        1: '幸运转盘',
+        2: '砸金蛋',
+        3: '九宫格'
+      },
       prizeType: '', //开奖方式
       prizeOption: [
         { name: '立即开奖', value: 1 },
         { name: '非立即开奖', value: 2 }
       ],
+      prizeDict: {
+        1: '立即开奖',
+        2: '非立即开奖'
+      },
       loading: false,
-      imageUrl: ''
+      imageUrl: '',
+      paramsPage: {}
     };
+  },
+  created() {
+    this.paramsPage = this.$route.query;
+    console.log('--------', this.paramsPage);
+    this.gameTitle = this.paramsPage.gameTitle;
+    this.availableFlage = this.paramsPage.availableFlage;
+    this.partakeNum = this.paramsPage.partakeNum;
+    this.luckyDrawLimits = this.paramsPage.luckyDrawLimits;
+    this.activityDesc = this.paramsPage.activityDesc;
+    this.noticeType = this.paramsPage.noticeType;
+    this.lotteryType = this.paramsPage.lotteryType;
+    this.activityType = this.paramsPage.activityType;
   },
   methods: {
     radioChange(e) {
@@ -375,7 +404,7 @@ export default {
       } else if (!activityBackgroundUrl) {
         messageText = '请上传背景图片';
         flag = true;
-      } else if ((this.activityType == 1 || this.activityType == 3) && !msgUrl) {
+      } else if (this.activityType == 3 && !msgUrl) {
         flag = true;
         messageText = '请上传消息层背景';
       } else if (this.activityType == 1 && !gameUrl) {
@@ -387,39 +416,43 @@ export default {
       }
       if (flag) {
         this.$message.error(messageText);
+      } else {
+        this.submit();
       }
     },
     submit() {
-      this.verify();
-      // let params = {
-      //   gameTitle: this.gameTitle,
-      //   availableFlage: this.availableFlage,
-      //   validityStartTime: this.validityStartTime,
-      //   validityEndTime: this.validityEndTime,
-      //   partakeNum: this.partakeNum,
-      //   luckyDrawLimits: this.luckyDrawLimits,
-      //   activityDesc: this.activityDesc,
-      //   noticeType: this.noticeType,
-      //   lotteryType: this.lotteryType,
-      //   activityType: this.activityType,
-      //   activityBackgroundUrl: this.activityBackgroundUrl,
-      //   popFrameUrl: this.popFrameUrl,
-      //   gameUrl: this.gameUrl,
-      //   msgUrl: this.msgUrl
-      // };
-      // if (this.lotteryType == 2) {
-      //   params.drawLotteryNum = this.drawLotteryNum;
-      //   params.drawLotteryTime = this.drawLotteryTime;
-      // }
-      // console.log('>>>>>>>>>', params);
-      // GANE_SAVE_GAME(params).then(res => {
-      //   if (res.code == 200) {
-      //     console.log('res', res);
-      //     this.$router.push({
-      //       path: '/gameManage'
-      //     });
-      //   }
-      // });
+      let params = {
+        gameTitle: this.gameTitle,
+        availableFlage: this.availableFlage,
+        validityStartTime: this.validityStartTime,
+        validityEndTime: this.validityEndTime,
+        partakeNum: this.partakeNum,
+        luckyDrawLimits: this.luckyDrawLimits,
+        activityDesc: this.activityDesc,
+        noticeType: this.noticeType,
+        lotteryType: this.lotteryType,
+        activityType: this.activityType,
+        activityBackgroundUrl: this.activityBackgroundUrl,
+        popFrameUrl: this.popFrameUrl,
+        gameUrl: this.gameUrl,
+        msgUrl: this.msgUrl
+      };
+      if (this.lotteryType == 2) {
+        params.drawLotteryNum = this.drawLotteryNum;
+        params.drawLotteryTime = this.drawLotteryTime;
+      }
+      if(this.paramsPage.update) {
+        params.id = this.paramsPage.id
+      }
+      console.log('>>>>>>>>>', params);
+      GANE_SAVE_GAME(params).then(res => {
+        if (res.code == 200) {
+          console.log('res', res);
+          this.$router.push({
+            path: '/gameManage'
+          });
+        }
+      });
     }
   }
 };
