@@ -11,7 +11,7 @@
             <a-input v-model="form.taskName" />
           </a-form-model-item>
           <a-form-model-item label="有效期" prop="taskDate">
-            <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD" style="width: 100%" @change="onChange" />
+            <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD" style="width: 100%" @change="onChange" :disabled-date="disabledDate" />
           </a-form-model-item>
           <a-form-model-item label="任务周期性" prop="isPeriodic">
             <a-select v-model="form.isPeriodic" placeholder="请选择">
@@ -40,7 +40,7 @@
             </a-select>
           </a-form-model-item>
           <a-form-model-item label="任务描述" prop="memo">
-            <a-textarea class="tc-textTarea" v-model="form.memo" />
+            <a-textarea class="tc-textTarea" v-model="form.memo" :maxLength="200"/>
           </a-form-model-item>
           <a-form-model-item label="关联任务" prop="afterTaskName">
             <a-input v-model="form.afterTaskName" @click="selectAffair" />
@@ -72,13 +72,13 @@
             <a-input-number v-model="form.awardGrow" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
-            <a-input-number v-model="form.awardIntegral" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardIntegral" :min="0" :max="1" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
             <a-input-number v-model="form.awardIntegralMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
-            <a-input-number v-model="form.awardGrow" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
+            <a-input-number v-model="form.awardGrow" :min="0" :max="1" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
             <a-input-number v-model="form.awardGrowMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
@@ -170,18 +170,15 @@
       <activity
         :visible.sync="visibleActivity"
         @selectedActive="selectedActivity"
-      >
-      </activity>
+      />
       <gift
         :visible.sync="visibleGift"
         @selectedActive="selectedActivity"
-      >
-      </gift>
+      />
       <affair
         :visible.sync="visibleAffair"
         @selectedActive="selectedAffair"
-      >
-      </affair>
+      />
     <!-- 弹框队列结束 -->
   </div>
 </template>
@@ -250,7 +247,9 @@ export default {
         executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
         taskDate: [{ required: true, message: '请输入选择有效期', trigger: 'blur' }],
         awardIntegral: [{ required: true, message: '请输入邦豆奖励', trigger: 'blur' }],
-        awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }]
+        awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }],
+        otherAwardName: [{ required: true, message: '请选择奖励', trigger: 'blur' }],
+        jumpPath: [{ required: true, message: '请输入地址', trigger: 'blur' }]
         // BangDouProportion: [{ required: true, message: '请输入邦豆计算比例', trigger: 'blur' }],
         // BangDouMaxNumber: [{ required: true, message: '请输入邦豆奖励最大值', trigger: 'blur' }],
         //ActivityName: [{ required: true, message: '请选择活动', trigger: 'blur' }],
@@ -265,7 +264,6 @@ export default {
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'register' });
   },
-
   created() {
     this.getTaskSource();
     this.type = this.$route.query.type;
@@ -275,6 +273,10 @@ export default {
     }
   },
   methods: {
+    disabledDate(current) {
+      // Can not select days before today and today
+      return current && current < moment().startOf('day');
+    },
     // 打开活动/礼包弹窗
     selectActivity() {
       if (this.form.otherAwardType === '1') {
