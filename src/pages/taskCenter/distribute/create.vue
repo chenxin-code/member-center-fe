@@ -56,20 +56,9 @@
               <span style="padding-right:40px;">指定会员</span>
               <!-- { required: true, message: '请选择文件上传!' }, -->
               <!-- 上传指定会员 -->
-              <a-form-model-item style="display:inline-block;width:100%;">
+              <a-form-model-item style="display:inline-block;width:100%;" prop="file">
                 <a-upload
-                  v-decorator="[
-                    'form.file',
-                    {
-                      initialValue: form.file,
-                      rules: [
-                        {
-                          validator: (rule, value, callback) =>
-                            validatorFn1(rule, value, callback, '请选择文件上传!')
-                        }
-                      ]
-                    }
-                  ]"
+                  v-model="form.file"
                   :file-list="fileList1"
                   :remove="handleRemove1"
                   name="file"
@@ -115,18 +104,6 @@
 </template>
 
 <script>
-const validatorFn1 = (rule, value, callback, message) => {
-  // // console.log('validatorFn1 value :>> ', value);
-  if (!value) {
-    callback(message);
-  } else {
-    if (value.fileList.length === 0) {
-      callback(message);
-    } else {
-      callback();
-    }
-  }
-};
 import {
   couponsCenterList,
   bangdouList,
@@ -144,6 +121,15 @@ export default {
     affair
   },
   data() {
+    let validator = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input the password again'));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("Two inputs don't match!"));
+      } else {
+        callback();
+      }
+    };
     return {
       loadingUrl: false,
       type: 'add', //add:新增，edit:编辑
@@ -215,6 +201,15 @@ export default {
       },
       immediate: true, //刷新加载立马触发一次handler
       deep: true
+    },
+    'form.scopeType'(val) {
+      this.$refs.ruleForm.resetFields();
+      if (val) {
+        this.rules = { ...this.rules, file: [{ required: true, message: '请选择会员来源', trigger: 'change' }] };
+      } else {
+        const { taskName, clientId } = this.rules;
+        this.rules = { taskName, clientId };
+      }
     }
   },
   created() {
@@ -233,7 +228,18 @@ export default {
         status: 1
       };
     },
-    validatorFn1,
+    validator(rule, value, callback, message) {
+      console.log(value);
+      if (!value) {
+        callback(message);
+      } else {
+        if (value.fileList.length === 0) {
+          callback(message);
+        } else {
+          callback();
+        }
+      }
+    },
     // 打开关联任务
     selectAffair() {
       this.visibleAffair = true;

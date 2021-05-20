@@ -24,6 +24,9 @@
         </span>
         <span class="detail-main-items-value" v-else>{{ dataObj[item.name] || '--' }}</span>
       </div>
+      <!-- <div class="detail-main-btn">
+         <a-button type="primary" html-type="submit" style="margin-right:10px" @click="goBack">返回</a-button>
+      </div> -->
     </div>
     <!-- modal对话框 -->
     <a-modal
@@ -248,6 +251,9 @@ export default {
           margin: 0 10px;
         }
       }
+    }
+    &-btn {
+      padding-left: 120px;
     }
   }
 }
