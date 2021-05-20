@@ -53,13 +53,13 @@ const columns = [
   },
   {
     title: '开奖方式',
-    key: 'lotteryType',
-    dataIndex: 'lotteryType'
+    key: 'lotteryTypeText',
+    dataIndex: 'lotteryTypeText'
   },
   {
     title: '游戏方式',
-    key: 'activityType',
-    dataIndex: 'activityType'
+    key: 'activityTypeText',
+    dataIndex: 'activityTypeText'
   },
   {
     title: '开始时间',
@@ -142,8 +142,8 @@ export default {
           this.pageNum++;
           this.records = data.records;
           this.records.forEach(item => {
-            item.lotteryType = prizeDict[item.lotteryType];
-            item.activityType = gameTypeDict[item.activityType];
+            item.lotteryTypeText = prizeDict[item.lotteryType];
+            item.activityTypeText = gameTypeDict[item.activityType];
           });
         }
       });
@@ -201,6 +201,12 @@ export default {
         this.operateGame({
           gameId: target.id,
           operatorType: String(type)
+        });
+      } else if (type == 'editor') {
+        target.update = true;
+        this.$router.push({
+          path: '/gameManage/addGame',
+          query: target
         });
       }
     },
