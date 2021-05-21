@@ -203,7 +203,7 @@ export default {
       deep: true
     },
     'form.scopeType'(val) {
-      this.$refs.ruleForm.resetFields();
+      this.$refs.ruleForm.clearValidate();
       if (val) {
         this.rules = { ...this.rules, file: [{ required: true, message: '请选择会员来源', trigger: 'change' }] };
       } else {
