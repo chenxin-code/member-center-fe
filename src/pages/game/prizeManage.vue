@@ -306,8 +306,8 @@ export default {
           {
             uid: '-1',
             status: 'done',
-            url: val.gameUrl,
-            thumbUrl: val.gameUrl
+            url: val.prizeUrl,
+            thumbUrl: val.prizeUrl
           }
         ];
       }
