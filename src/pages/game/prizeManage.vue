@@ -300,8 +300,8 @@ export default {
       this.prizeNum = val.prizeNum + '';
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
-      this.prizeUrl = '';
       if (val.prizeUrl) {
+        this.prizeUrl = val.prizeUrl;
         this.fileList = [
           {
             uid: '-1',
