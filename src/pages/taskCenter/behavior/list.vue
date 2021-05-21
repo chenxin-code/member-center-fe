@@ -107,6 +107,12 @@ export default {
       ],
       columns: [
         {
+          title: '行为ID',
+          key: 'id',
+          dataIndex: 'id',
+          width: 190
+        },
+        {
           dataIndex: 'type',
           key: 'type',
           title: '行为类型',
@@ -123,7 +129,7 @@ export default {
           title: '行为来源',
           key: 'sourceName',
           dataIndex: 'sourceName',
-          width: 150
+          width: 130
         },
         {
           title: '状态',
@@ -142,7 +148,7 @@ export default {
           title: '操作',
           key: 'action',
           scopedSlots: {customRender: 'action'},
-          width: 150
+          width: 230
         }
       ],
       dataList: [],
