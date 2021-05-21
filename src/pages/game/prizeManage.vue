@@ -301,14 +301,16 @@ export default {
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
       this.prizeUrl = '';
-      this.fileList = [
-        {
-          uid: '-1',
-          status: 'done',
-          url: val.gameUrl,
-          thumbUrl: val.gameUrl
-        }
-      ];
+      if (val.prizeUrl) {
+        this.fileList = [
+          {
+            uid: '-1',
+            status: 'done',
+            url: val.prizeUrl,
+            thumbUrl: val.prizeUrl
+          }
+        ];
+      }
       console.log('remove', this.prizeTarget);
     },
     // 选择卡券类型

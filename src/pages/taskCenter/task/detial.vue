@@ -150,7 +150,7 @@ export default {
       getTaskDetail({ taskId: id }).then(res => {
         this.dataObj = {
           ...res.data,
-          createTime: moment(res.data.createTime).format('YYYY-MM-DD'),
+          createTime: moment(res.data.createTime).format('YYYY-MM-DD HH:mm:ss'),
           isPeriodic: res.data.isPeriodic === 0 ? '否' : '是',
           status: res.data.status === 0 ? '禁用' : '启用',
           isDefault: res.data.isDefault === 0 ? '否' : '是',

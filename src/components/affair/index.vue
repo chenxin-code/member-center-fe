@@ -57,15 +57,15 @@ export default {
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
         },
-        {
-          label: '任务状态',
-          type: 'select',
-          name: 'status',
-          placeholder: '请输入',
-          labelCol: { span: 6 },
-          wrapperCol: { span: 18 },
-          selectOptions: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }]
-        },
+        // {
+        //   label: '任务状态',
+        //   type: 'select',
+        //   name: 'status',
+        //   placeholder: '请输入',
+        //   labelCol: { span: 6 },
+        //   wrapperCol: { span: 18 },
+        //   selectOptions: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }]
+        // },
         {
           label: '任务来源',
           type: 'select',
@@ -153,6 +153,8 @@ export default {
         this.$nextTick(function() {
           this.$refs.form.form.resetFields();
         });
+        this.current = 1;
+        this.pageSize = 10;
         this.searchVal = {};
         this.getTaskSource();
         this.getCouponList();
@@ -177,9 +179,9 @@ export default {
       this.current = page;
       this.getCouponList();
     },
-    showSizeChange(size) {
+    showSizeChange(current, pageSize) {
       this.current = 1;
-      this.pageSize = size;
+      this.pageSize = pageSize;
       this.getCouponList();
     },
     // 获取活动列表api
@@ -188,7 +190,17 @@ export default {
       const para = {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
-        ...this.searchVal
+        ...this.searchVal,
+        createTimeStart:
+          this.searchVal.jointime && this.searchVal.jointime.length
+            ? moment(this.searchVal.jointime[0]).format('YYYY-MM-DD')
+            : null,
+        createTimeEnd:
+          this.searchVal.jointime && this.searchVal.jointime.length
+            ? moment(this.searchVal.jointime[1]).format('YYYY-MM-DD')
+            : null,
+        jointime: '',
+        status: 1
       };
 
       getTaskList(para)
