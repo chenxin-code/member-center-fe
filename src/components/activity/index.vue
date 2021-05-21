@@ -223,6 +223,8 @@ export default {
         this.$nextTick(function() {
           this.$refs.form.form.resetFields();
         });
+        this.current = 1;
+        this.pageSize = 10;
         this.searchVal = {};
         this.getCouponList();
       }
@@ -246,7 +248,7 @@ export default {
       this.current = page;
       this.getCouponList();
     },
-    showSizeChange(size) {
+    showSizeChange(current,size) {
       this.current = 1;
       this.pageSize = size;
       this.getCouponList();
@@ -258,6 +260,15 @@ export default {
         pageIndex: this.current, //起始页
         pageSize: this.pageSize, //每页展示条数
         ...this.searchVal,
+        startTime:
+          this.searchVal.jointime && this.searchVal.jointime.length
+            ? moment(this.searchVal.jointime[0]).format('YYYY-MM-DD')
+            : null,
+        endTime:
+          this.searchVal.jointime && this.searchVal.jointime.length
+            ? moment(this.searchVal.jointime[1]).format('YYYY-MM-DD')
+            : null,
+        jointime: '',
         status: 2
       };
 
