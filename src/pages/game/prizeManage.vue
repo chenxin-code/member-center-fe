@@ -87,12 +87,9 @@
               :remove="handleImgRemove"
               @preview="handlePreview"
               @change="uploadPic"
-              v-decorator="[
-                'activityCover',
-                { initialValue: '', rules: [{ required: true, message: '图片不能为空' }] }
-              ]"
+              :default-file-list="fileList"
             >
-              <template v-if="!prizeUrl">
+              <template v-if="!prizeUrl && !fileList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
@@ -186,6 +183,8 @@ export default {
   data() {
     return {
       paramsPage: {}, //页面传递参数
+
+      fileList: [], // 奖品缩略图
 
       columns,
       PRIZE_TYPE_DICT, // 奖品类型
@@ -302,6 +301,16 @@ export default {
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
       this.prizeUrl = '';
+      if (val.prizeUrl) {
+        this.fileList = [
+          {
+            uid: '-1',
+            status: 'done',
+            url: val.gameUrl,
+            thumbUrl: val.gameUrl
+          }
+        ];
+      }
       console.log('remove', this.prizeTarget);
     },
     // 选择卡券类型
