@@ -29,7 +29,7 @@
       </template>
       <template slot="detailsSlot" slot-scope="scope">
         <div class="editable-row-operations">
-          <a @click="goDel(scope.couponId)">删除</a>
+          <a @click="goDel(scope.id)">删除</a>
         </div>
       </template>
     </a-table>
@@ -304,7 +304,7 @@ export default {
     }
   },
   methods: {
-    goDel(couponId) {
+    goDel(id) {
       this.$confirm({
         title: `删除卡券`,
         content: `您确定要删除该卡券吗？`,
@@ -314,7 +314,7 @@ export default {
         onOk: () => {
           this.tableLoading2 = true;
           const formData = new FormData();
-          formData.append('id', couponId);
+          formData.append('id', id);
           api.delCoupon(formData).then(resp => {
             if (resp.code === 200) {
               this.getList2();
