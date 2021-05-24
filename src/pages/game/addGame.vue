@@ -2,31 +2,36 @@
   <div class="game-add">
     <div class="game-add-title">新建游戏</div>
     <div class="game-add-content">
-      <div class="label-content">
-        <div class="label-title" style="margin: 0">游戏主题</div>
-        <timesInput v-model="gameTitle"></timesInput>
-      </div>
+      <a-form :form="addForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        
+        
+     
+        <div class="label-content">
+          <div class="label-title" style="margin: 0">游戏主题</div>
+          <timesInput v-model="gameTitle"></timesInput>
+        </div>
 
-      <div class="choose-isActive">
-        <div class="label-title">是否可用</div>
-        <a-radio-group v-model="availableFlage" @change="radioChange">
-          <a-radio value="1">
-            启用
-          </a-radio>
-          <a-radio value="0">
-            禁用
-          </a-radio>
-        </a-radio-group>
-      </div>
-      <div class="label-content">
-        <div class="label-title">有效期</div>
-        <a-range-picker
-          v-model="rangeDate"
-          format="YYYY-MM-DD hh:mm:ss"
-          valueFormat="YYYY-MM-DD hh:mm:ss"
-          @change="changeDate"
-        />
-      </div>
+        <div class="choose-isActive">
+          <div class="label-title">是否可用</div>
+          <a-radio-group v-model="availableFlage" @change="radioChange">
+            <a-radio value="1">
+              启用
+            </a-radio>
+            <a-radio value="0">
+              禁用
+            </a-radio>
+          </a-radio-group>
+        </div>
+        <div class="label-content">
+          <div class="label-title">有效期</div>
+          <a-range-picker
+            v-model="rangeDate"
+            format="YYYY-MM-DD hh:mm:ss"
+            valueFormat="YYYY-MM-DD hh:mm:ss"
+            @change="changeDate"
+          />
+        </div>
+      </a-form>
 
       <div class="label-content">
         <div class="label-title" style="margin: 0;">参与人数</div>
@@ -102,7 +107,7 @@
               :remove="handleImgRemoveBg"
               @preview="handlePreview"
               @change="uploadBg"
-              :default-file-list="fileBgList"
+              :defaultFileList="fileBgList"
             >
               <template v-if="!activityBackgroundUrl && !fileBgList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -123,7 +128,7 @@
               :remove="handleImgRemoveMessage"
               @preview="handlePreview"
               @change="uploadMessage"
-              :default-file-list="fileMessageList"
+              :defaultFileList="fileMessageList"
             >
               <template v-if="!msgUrl && !fileMessageList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -144,7 +149,7 @@
               :remove="handleImgRemoveGame"
               @preview="handlePreview"
               @change="uploadGame"
-              :default-file-list="fileGameList"
+              :defaultFileList="fileGameList"
             >
               <template v-if="!gameUrl && !fileGameList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -165,7 +170,7 @@
               :remove="handleImgRemoveAlert"
               @preview="handlePreview"
               @change="uploadAlert"
-              :default-file-list="fileAlertList"
+              :defaultFileList="fileAlertList"
             >
               <template v-if="!popFrameUrl && !fileAlertList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -198,6 +203,8 @@ export default {
   },
   data() {
     return {
+      addForm: this.$form.createForm(this),
+
       fileBgList: [],
       fileAlertList: [],
       fileMessageList: [],
@@ -271,8 +278,8 @@ export default {
     if (this.activityType) {
       this.msgUrl = this.paramsPage.msgUrl;
       this.activityBackgroundUrl = this.paramsPage.activityBackgroundUrl;
-      this.gameUrl = this.paramsPage.gameUrl
-      this.popFrameUrl = this.paramsPage.popFrameUrl
+      this.gameUrl = this.paramsPage.gameUrl;
+      this.popFrameUrl = this.paramsPage.popFrameUrl;
 
       this.fileBgList = [
         {

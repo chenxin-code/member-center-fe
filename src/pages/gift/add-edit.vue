@@ -38,6 +38,10 @@
                 </a-form-item>
                 <a-form-item label="有效期">
                   <a-range-picker
+                    :default-value="[
+        moment(startTime,'YYYY-MM-DD HH:mm:ss'),
+        moment(endTime,'YYYY-MM-DD HH:mm:ss')
+      ]"
                     v-decorator="[
                         'rangePickerValue',
                         {
@@ -326,18 +330,7 @@ export default {
           this.endTime = this.isDateString(this.momentStrHms(resp.data.endTime))
             ? this.momentStrHms(resp.data.endTime)
             : ''; //有效期结束时间
-          if (
-            this.isDateString(this.startTime) &&
-            this.isDateString(this.endTime) &&
-            resp.data.startTime > Date.now() &&
-            resp.data.endTime > Date.now()
-          ) {
-            this.rangePickerValue = [moment(this.startTime), moment(this.endTime)];
-          } else {
-            this.rangePickerValue = [];
-            this.startTime = '';
-            this.endTime = '';
-          }
+          this.rangePickerValue = [moment(this.startTime), moment(this.endTime)];
         }
       });
     }

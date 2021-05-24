@@ -12,9 +12,19 @@
       :loading="tableLoading2"
       :rowKey="(r, i) => i"
       style="margin: 30px 35px;">
-      <template slot="faceAmountSlot" slot-scope="rowData">
+      <template slot="faceAmountSlot" slot-scope="scope">
         <div class="editable-row-operations">
-          <span v-html="faceAmountStr2(rowData)"></span>
+          <span v-html="faceAmountStr2(scope)"></span>
+        </div>
+      </template>
+      <template slot="activitySlot" slot-scope="scope">
+        <div class="editable-row-operations">
+          <span v-html="activityStr(scope.couponBusinessType)"></span>
+        </div>
+      </template>
+      <template slot="validitySlot" slot-scope="scope">
+        <div class="editable-row-operations">
+          <span v-html="parseValidity(scope)"></span>
         </div>
       </template>
       <template slot="detailsSlot" slot-scope="scope">
@@ -33,9 +43,9 @@
       :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
       @change="change2"
       @showSizeChange="showSizeChange2"
-      style="margin-top: 30px;width: 100%;text-align: right;"/>
+      style="margin-top: 30px;width: 100%;text-align: right;" />
     <a-modal title="卡券选择" :visible="visible" @ok="handleOk" @cancel="visible = false" width="1300px">
-      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch"/>
+      <FilterForm ref="form" rowCol="3" :formList="formList" :onSubmit="onSearch" />
       <a-table
         :style="{ marginTop: '20px' }"
         :columns="columns"
@@ -44,16 +54,17 @@
         :loading="tableLoading"
         :scroll="{ y: 300 }"
         :row-selection="rowSelection"
-        :rowKey="(r, i) => i"
-      >
-        <template slot="faceAmountSlot" slot-scope="rowData">
+        :rowKey="(r, i) => i">
+        <template slot="faceAmountSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="faceAmountStr(rowData)"></span>
+            <span v-html="faceAmountStr(scope)"></span>
           </div>
         </template>
-        <span slot="action" slot-scope="record">
-          <a @click="onCheck(record)">查看</a>
-        </span>
+        <template slot="activitySlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <span v-html="activityStr(scope.activity)"></span>
+          </div>
+        </template>
       </a-table>
       <a-pagination
         :total="total"
@@ -66,8 +77,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top: 30px;width: 100%;text-align: right;"
-      />
+        style="margin-top: 30px;width: 100%;text-align: right;" />
     </a-modal>
   </div>
 </template>
@@ -107,12 +117,11 @@ export default {
           dataIndex: 'couponType',
           customRender: text => typeList.filter(item => item.id == text)[0].name || ''
         },
-        // {
-        //   title: '卡券业务类型',
-        //   key: 'activity',
-        //   dataIndex: 'activity',
-        //   customRender: text => activityList.filter(item => item.id == text)[0].name || ''
-        // },
+        {
+          title: '卡券业务类型',
+          key: 'activitySlot',
+          scopedSlots: { customRender: 'activitySlot' }
+        },
         {
           title: '卡券面值金额',
           key: 'faceAmountSlot',
@@ -138,8 +147,8 @@ export default {
         },
         {
           title: '卡券标题',
-          key: 'couponName',
-          dataIndex: 'couponName'
+          key: 'couponTitle',
+          dataIndex: 'couponTitle'
         },
         {
           title: '卡券副标题',
@@ -152,16 +161,20 @@ export default {
           dataIndex: 'couponType',
           customRender: text => typeList.filter(item => item.id == text)[0].name || ''
         },
-        // {
-        //   title: '卡券业务类型',
-        //   key: 'activity',
-        //   dataIndex: 'activity',
-        //   customRender: text => activityList.filter(item => item.id == text)[0].name || ''
-        // },
+        {
+          title: '卡券业务类型',
+          key: 'activitySlot',
+          scopedSlots: { customRender: 'activitySlot' }
+        },
         {
           title: '卡券面值金额',
           key: 'faceAmountSlot',
           scopedSlots: {customRender: 'faceAmountSlot'}
+        },
+        {
+          title: '卡券有效期',
+          scopedSlots: { customRender: 'validitySlot' },
+          key: 'validitySlot'
         },
         {
           title: '操作',
@@ -219,6 +232,41 @@ export default {
     };
   },
   computed: {
+    momentStrHms() {
+      return param => {
+        if (!param) {
+          return '';
+        } else {
+          return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
+    parseValidity() {
+      return param => {
+        if (param.validityType === 1) {
+          //固定有效期
+          return this.momentStrHms(param.validityStartTime) + ' ~ ' + this.momentStrHms(param.validityEndTime);
+        } else if (param.validityType === 3) {
+          //相对有效期
+          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效';
+        } else {
+          return '';
+        }
+      };
+    },
+    activityStr() {
+      return param => {
+        if(param === '4014'){
+          return '物业费';
+        }else if(param === '4005'){
+          return '购物券';
+        }else if(param === '4015'){
+          return '实物券';
+        }else{
+          return '';
+        }
+      };
+    },
     faceAmountStr() {
       return param => {
         if (param.couponType === 10) {
@@ -235,11 +283,11 @@ export default {
     faceAmountStr2() {
       return param => {
         if (param.couponType === 10) {
-          return param.couponCost;
+          return param.voucherAmount;
         } else if (param.couponType === 20) {
-          return param.couponCost;
+          return param.fullReductionDiscountAmount;
         } else if (param.couponType === 40) {
-          return param.couponCost * 10 + '折';
+          return param.discountRatio * 10 + '折';
         } else {
           return '';
         }
