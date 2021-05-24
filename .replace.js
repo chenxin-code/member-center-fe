@@ -1,6 +1,7 @@
 const sh = require('./.sh');
 const shell = require("shelljs");
 
+// shell.cd('');//进入根目录
 shell.cd('dist');//进入`lib`目录
 shell.mkdir('memberGame');
 
