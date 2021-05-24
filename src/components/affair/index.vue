@@ -7,7 +7,7 @@
       :data-source="tableDataList" 
       :pagination="false" 
       :loading="tableLoading" 
-      :scroll="{ y: scrollY }" 
+      :scroll="{ y: scrollY,x: 'calc(700px + 50%)' }" 
       :rowKey="(r, i) => r.id"
       :row-selection="rowSelection"
     >
@@ -200,7 +200,8 @@ export default {
             ? moment(this.searchVal.jointime[1]).format('YYYY-MM-DD')
             : null,
         jointime: '',
-        status: 1
+        status: 1,
+        isBindBehavior: 1
       };
 
       getTaskList(para)
