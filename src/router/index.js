@@ -988,8 +988,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  // console.log('router beforeEach 全局守卫执行了: ', to.path);
-  // console.log('beforeEach to :>> ', to);
+  console.log('router beforeEach 全局守卫执行了: ', to.path);
+  console.log('beforeEach to :>> ', to);
   // store.commit('menu/changeMenuStatus', true); //禁止menu
   await api
     .getLoginUrl()
@@ -1000,11 +1000,11 @@ router.beforeEach(async (to, from, next) => {
       //   console.log('beforeEach setTimeout...');
       //   store.commit('menu/changeMenuStatus', false); //解禁menu
       // }, 3000);
-      //console.log('beforeEach setTimeout...');
+      console.log('beforeEach setTimeout...');
       // store.commit('menu/changeMenuStatus', false); //解禁menu
     })
     .then(res => {
-      //console.log('beforeEach getLoginUrl res :>> ', res);
+      console.log('beforeEach getLoginUrl res :>> ', res);
       if (res.code === 200) {
         window.localStorage.setItem('SD_LOGIN_URL', res.data);
       }
@@ -1040,7 +1040,7 @@ router.onError(error => {
     window.location.reload();
     // router.replace(router.history.pending.fullPath);
   } else {
-    //console.log(error);
+    console.log(error);
   }
 });
 
