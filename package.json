@@ -8,7 +8,7 @@
     "prod:game": "cd memberGame & vue-cli-service build",
     "prod": "npm run install:all && vue-cli-service build && npm run replace",
     "build": "npm run prod && npm run prod:game",
-    "replace": "node .project.js",
+    "replace": "node .replace.js",
     "lint": "vue-cli-service lint",
     "postinstall": "patch-package",
     "install:game": "cd memberGame && npm install",
