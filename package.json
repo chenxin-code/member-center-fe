@@ -4,9 +4,15 @@
   "private": true,
   "scripts": {
     "serve": "npm run postinstall && vue-cli-service serve",
-    "build": "npm run postinstall && vue-cli-service build",
+    "serve:game": "cd memberGame &  vue-cli-service serve",
+    "prod:game": "cd memberGame & vue-cli-service build",
+    "prod": "npm run install:all && vue-cli-service build && npm run replace",
+    "build": "npm run prod && npm run prod:game",
+    "replace": "node .replace.js",
     "lint": "vue-cli-service lint",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "install:game": "cd memberGame && npm install",
+    "install:all": "npm run postinstall && npm run install:game"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.7",
@@ -25,6 +31,7 @@
     "nprogress": "^0.2.0",
     "qrcodejs2": "0.0.2",
     "qs": "^6.9.4",
+    "shelljs": "^0.8.4",
     "store": "^2.0.12",
     "viser-vue": "^2.4.8",
     "vue": "^2.6.11",
