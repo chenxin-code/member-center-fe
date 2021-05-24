@@ -30,6 +30,7 @@
           <timesSelect
             :optionObj="PRIZE_TYPE_DICT"
             @select-option="seleceType"
+            :defaultValue="PRIZE_TYPE_DICT[defaultPrizeType()].name"
             placeholder="请选择奖品类型"
           ></timesSelect>
         </div>
@@ -214,6 +215,11 @@ export default {
     this.init();
   },
   methods: {
+    defaultPrizeType() {
+      return PRIZE_TYPE_DICT.findIndex(item => {
+        return this.prizeType = item.value;
+      })
+    },
     init() {
       GANE_PRIZE_MANAGE_LIST({
         gameId: this.paramsPage.id,

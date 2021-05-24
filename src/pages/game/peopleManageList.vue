@@ -62,7 +62,7 @@
     </div>
 
     <div class="game-prize-content">
-      <a-table :columns="columns" :data-source="contentData" @change="changePage" :pagination="pagination">
+      <a-table :columns="columns" :data-source="contentData" @change="changePage" :pagination="pagination" :rowKey="record => record.id">
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record, 'result')" class="operate">查看抽奖结果</span>
           <span @click="turnOn(record, 'times')" class="operate">管理抽奖次数</span>
@@ -71,7 +71,7 @@
     </div>
 
     <a-modal title="查看抽奖结果" :visible="resultVisible" @cancel="resultVisible = false">
-      <a-table :columns="rusultColumns" :data-source="activityLotteryVoList" bordered></a-table>
+      <a-table :columns="rusultColumns" :data-source="activityLotteryVoList" bordered :rowKey="record => record.id"></a-table>
       <div slot="footer" style="display: flex;justify-content: center;">
         <a-button type="primary" @click="resultVisible = false">关闭</a-button>
       </div>
@@ -139,7 +139,7 @@ const columns = [
     title: '已参与次数',
     dataIndex: 'alreadyPartakeNum',
     key: 'alreadyPartakeNum'
-  },
+  }
   // {
   //   key: 'operate',
   //   slots: { title: 'operate' },
@@ -204,7 +204,7 @@ export default {
   },
   created() {
     this.paramsPage = this.$route.query;
-    let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+    let { memberId, memberPhone, prizeFlag, prizeId, lotteryType } = this.paramsPage;
     if (!this.paramsPage.drawLotteryTime) {
       columns.push({
         key: 'operate',
@@ -235,7 +235,8 @@ export default {
       pageNum: 1,
       pageSize: 10,
       prizeFlag,
-      prizeId
+      prizeId,
+      lotteryType: this.paramsPage.lotteryType * 1
     });
   },
   activated() {},
@@ -263,7 +264,8 @@ export default {
         pageSize: 10,
         prizeFlag,
         prizeId,
-        prizeName: this.prizeName
+        prizeName: this.prizeName,
+        lotteryType: this.paramsPage.lotteryType
       });
     },
     turnOn(data, flag) {

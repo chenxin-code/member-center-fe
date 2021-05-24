@@ -102,7 +102,7 @@
               :remove="handleImgRemoveBg"
               @preview="handlePreview"
               @change="uploadBg"
-              :default-file-list="fileBgList"
+              :defaultFileList="fileBgList"
             >
               <template v-if="!activityBackgroundUrl && !fileBgList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -123,7 +123,7 @@
               :remove="handleImgRemoveMessage"
               @preview="handlePreview"
               @change="uploadMessage"
-              :default-file-list="fileMessageList"
+              :defaultFileList="fileMessageList"
             >
               <template v-if="!msgUrl && !fileMessageList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -144,7 +144,7 @@
               :remove="handleImgRemoveGame"
               @preview="handlePreview"
               @change="uploadGame"
-              :default-file-list="fileGameList"
+              :defaultFileList="fileGameList"
             >
               <template v-if="!gameUrl && !fileGameList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -165,7 +165,7 @@
               :remove="handleImgRemoveAlert"
               @preview="handlePreview"
               @change="uploadAlert"
-              :default-file-list="fileAlertList"
+              :defaultFileList="fileAlertList"
             >
               <template v-if="!popFrameUrl && !fileAlertList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
