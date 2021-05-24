@@ -8,7 +8,7 @@
     "prod:game": "cd memberGame & vue-cli-service build",
     "staging:game": "cd memberGame & vue-cli-service build --mode staging",
     "prod": "npm run install:all && vue-cli-service build && npm run replace",
-    "build": "npm run prod && npm run prod:game",
+    "build": "npm run postinstall && vue-cli-service build",
     "build:staging": "npm run prod && npm run staging:game",
     "replace": "node .replace.js",
     "lint": "vue-cli-service lint",
