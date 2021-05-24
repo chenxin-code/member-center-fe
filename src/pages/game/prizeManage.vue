@@ -37,7 +37,6 @@
           <div class="prizeManage-label-title" style="width: 120px">奖励数量</div>
           <timesInput v-model="rewardNum"></timesInput>
         </div>
-
         <div class="game-prizeManage-label" v-if="prizeType >= 4005">
           <div class="prizeManage-label-title" style="width: 120px">选择卡券</div>
           <timesSelect
@@ -168,7 +167,7 @@ const PRIZE_TYPE_DICT = [
   },
   {
     name: '谢谢惠顾',
-    value: 6
+    value: 7
   }
 ];
 import timesInput from './component/form-input';
@@ -214,6 +213,11 @@ export default {
     this.init();
   },
   methods: {
+    defaultPrizeType() {
+      return PRIZE_TYPE_DICT.findIndex(item => {
+        return (this.prizeType = item.value);
+      });
+    },
     init() {
       GANE_PRIZE_MANAGE_LIST({
         gameId: this.paramsPage.id,
@@ -265,6 +269,7 @@ export default {
     changePage() {},
     handleImgRemove() {
       this.prizeUrl = '';
+      this.fileList = [];
     },
     handlePreview() {},
     uploadPic({ fileList = [] } = {}) {
@@ -300,14 +305,15 @@ export default {
       this.prizeNum = val.prizeNum + '';
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
-      this.prizeUrl = '';
+      this.fileList = [];
       if (val.prizeUrl) {
+        this.prizeUrl = val.prizeUrl;
         this.fileList = [
           {
             uid: '-1',
             status: 'done',
-            url: val.gameUrl,
-            thumbUrl: val.gameUrl
+            url: val.prizeUrl,
+            thumbUrl: val.prizeUrl
           }
         ];
       }
@@ -323,6 +329,7 @@ export default {
       // 当奖品类型是券时，查询卡券列表反显让操作着选择
       // 当奖励类型是非券，显示奖品奖励数量（邦豆， 成长值）
       this.prizeType = val;
+      this.ticketCode = '';
       console.log('val', this.prizeType);
       if (val == 4015 || val == 4005 || val == 4014) {
         api

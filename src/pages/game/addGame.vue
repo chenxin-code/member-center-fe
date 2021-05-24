@@ -71,7 +71,12 @@
       <template v-if="lotteryType == 2">
         <div class="label-content">
           <div class="label-title">开奖时间</div>
-          <a-date-picker format="YYYY-MM-DD hh:mm:ss" valueFormat="YYYY-MM-DD hh:mm:ss" @change="openPrize" />
+          <a-date-picker
+            format="YYYY-MM-DD hh:mm:ss"
+            valueFormat="YYYY-MM-DD hh:mm:ss"
+            @change="openPrize"
+            v-model="drawLotteryTime"
+          />
         </div>
         <div class="label-content">
           <div class="label-title" style="margin: 0;">开奖人数</div>
@@ -79,7 +84,7 @@
         </div>
       </template>
 
-      <div class="label-content">
+      <div class="label-content" v-if="lotteryType == 1">
         <div class="label-title" style="margin: 0;">活动方式</div>
         <timesSelect
           :optionObj="activityOption"
@@ -89,7 +94,7 @@
         ></timesSelect>
       </div>
 
-      <div class="label-content">
+      <div class="label-content" v-if="lotteryType == 1">
         <div class="label-title" style="margin: 0;">上传抽奖素材</div>
         <div class="game-imgupload">
           <div class="stair">
@@ -102,7 +107,7 @@
               :remove="handleImgRemoveBg"
               @preview="handlePreview"
               @change="uploadBg"
-              :default-file-list="fileBgList"
+              :defaultFileList="fileBgList"
             >
               <template v-if="!activityBackgroundUrl && !fileBgList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -123,7 +128,7 @@
               :remove="handleImgRemoveMessage"
               @preview="handlePreview"
               @change="uploadMessage"
-              :default-file-list="fileMessageList"
+              :defaultFileList="fileMessageList"
             >
               <template v-if="!msgUrl && !fileMessageList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -144,7 +149,7 @@
               :remove="handleImgRemoveGame"
               @preview="handlePreview"
               @change="uploadGame"
-              :default-file-list="fileGameList"
+              :defaultFileList="fileGameList"
             >
               <template v-if="!gameUrl && !fileGameList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -165,7 +170,7 @@
               :remove="handleImgRemoveAlert"
               @preview="handlePreview"
               @change="uploadAlert"
-              :default-file-list="fileAlertList"
+              :defaultFileList="fileAlertList"
             >
               <template v-if="!popFrameUrl && !fileAlertList.length">
                 <a-icon :type="picUploading ? 'loading' : 'plus'" />
@@ -217,6 +222,7 @@ export default {
       noticeType: '', // 通知方式
       lotteryType: '', // 开奖方式
       activityType: '', // 活动方式
+      drawLotteryTime: '',
 
       msgUrl: '', //消息层底图
       activityBackgroundUrl: '', //上传抽奖活动背景
@@ -268,11 +274,13 @@ export default {
     this.noticeType = this.paramsPage.noticeType;
     this.lotteryType = this.paramsPage.lotteryType;
     this.activityType = this.paramsPage.activityType;
+    this.drawLotteryTime = this.paramsPage.drawLotteryTime;
+    this.drawLotteryNum = this.paramsPage.drawLotteryNum;
     if (this.activityType) {
       this.msgUrl = this.paramsPage.msgUrl;
       this.activityBackgroundUrl = this.paramsPage.activityBackgroundUrl;
-      this.gameUrl = this.paramsPage.gameUrl
-      this.popFrameUrl = this.paramsPage.popFrameUrl
+      this.gameUrl = this.paramsPage.gameUrl;
+      this.popFrameUrl = this.paramsPage.popFrameUrl;
 
       this.fileBgList = [
         {
@@ -433,15 +441,14 @@ export default {
       } else if (!activityDesc) {
         messageText = '请输入活动说明';
         flag = true;
-      } else if (!noticeType) {
-        messageText = '请选择通知方式';
-        flag = true;
       } else if (!lotteryType) {
         messageText = '请选择开奖方式';
         flag = true;
-      } else if (!activityType) {
-        flag = true;
-        messageText = '请选择活动方式';
+      } else if (this.lotteryType == 1) {
+        if (!activityType) {
+          flag = true;
+          messageText = '请选择活动方式';
+        }
       } else if (lotteryType == 2) {
         if (!drawLotteryTime) {
           flag = true;
@@ -450,19 +457,22 @@ export default {
           flag = true;
           messageText = '请选择开奖人数';
         }
-      } else if (!activityBackgroundUrl) {
-        messageText = '请上传背景图片';
-        flag = true;
-      } else if (this.activityType == 3 && !msgUrl) {
-        flag = true;
-        messageText = '请上传消息层背景';
-      } else if (this.activityType == 1 && !gameUrl) {
-        flag = true;
-        messageText = '请上传游戏层背景';
-      } else if (!popFrameUrl) {
-        flag = true;
-        messageText = '请上传弹框图片';
+      } else if (this.lotteryType == 1) {
+        if (!activityBackgroundUrl) {
+          messageText = '请上传背景图片';
+          flag = true;
+        } else if (this.activityType == 3 && !msgUrl) {
+          flag = true;
+          messageText = '请上传消息层背景';
+        } else if (this.activityType == 1 && !gameUrl) {
+          flag = true;
+          messageText = '请上传游戏层背景';
+        } else if (!popFrameUrl) {
+          flag = true;
+          messageText = '请上传弹框图片';
+        }
       }
+
       if (flag) {
         this.$message.error(messageText);
       } else {
@@ -470,6 +480,12 @@ export default {
       }
     },
     submit() {
+      // 提交
+      // 业务规则1，当游戏选择幸运转盘，显示4层背景上传
+      // 2，当游戏选择大转盘，隐藏游戏层背景
+      // 3，当游戏选择砸金蛋，隐藏消息层和游戏层背景上传。
+      // 4，当开奖方式为非实时开奖，则隐藏活动方式和活动素材区域，显示开奖时间和开奖人数
+      // 5，当开奖方式为实时开奖，则展示活动方式和活动素材区域，隐藏开奖时间和开奖人数
       let params = {
         gameTitle: this.gameTitle,
         availableFlage: this.availableFlage,
@@ -478,7 +494,7 @@ export default {
         partakeNum: this.partakeNum,
         luckyDrawLimits: this.luckyDrawLimits,
         activityDesc: this.activityDesc,
-        noticeType: this.noticeType,
+        noticeType: 1,
         lotteryType: this.lotteryType,
         activityType: this.activityType,
         activityBackgroundUrl: this.activityBackgroundUrl,
@@ -486,9 +502,17 @@ export default {
         gameUrl: this.gameUrl,
         msgUrl: this.msgUrl
       };
+      // 当开奖方式为非实时开奖，则隐藏活动方式和活动素材区域，显示开奖时间和开奖人数，并上送参数值
       if (this.lotteryType == 2) {
         params.drawLotteryNum = this.drawLotteryNum;
         params.drawLotteryTime = this.drawLotteryTime;
+      } else {
+        // 当开奖方式为实时开奖，则展示活动方式和活动素材区域，隐藏开奖时间和开奖人数
+        params.gameUrl = this.gameUrl;
+        params.msgUrl = this.msgUrl;
+        params.popFrameUrl = this.popFrameUrl;
+        params.activityBackgroundUrl = this.activityBackgroundUrl;
+        params.activityType = this.activityType;
       }
       if (this.paramsPage.update) {
         params.id = this.paramsPage.id;

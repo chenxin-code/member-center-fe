@@ -30,8 +30,8 @@
         <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
             <a style="padding-right: 10px;" @click="goGiftDetail(scope.id)">查看</a>
-            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 0)" v-if="scope.status === 1">禁用</a>
-            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 1)" v-else-if="scope.status === 0">启用</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 1)" v-if="scope.status === 1">禁用</a>
+            <a style="padding-right: 10px;" @click="changeGiftBag(scope.id, 0)" v-else-if="scope.status === 0">启用</a>
             <a style="padding-right: 10px;" @click="goGiftEdit(scope.id)">编辑</a>
             <a style="padding-right: 10px;" @click="$router.push({path: '/gift/content',query: {id: scope.id}})">礼包内容管理</a>
           </div>
@@ -212,11 +212,11 @@ export default {
         }
       });
     },
-    changeGiftBag(id, state) {
+    changeGiftBag(id, status) {
       let title;
-      if (state === 0) {
+      if (status === 0) {
         title = '确认启用当前礼包？';
-      } else if (state === 1) {
+      } else if (status === 1) {
         title = '确认禁用当前礼包？';
       } else {
         title = '';
@@ -230,7 +230,7 @@ export default {
           this.tableLoading = true;
           const formData = new FormData();
           formData.append('id', id);
-          formData.append('status', state);
+          formData.append('status', status);
           api.changeGiftBag(formData).then(resp => {
             if (resp.code === 200) {
               this.getList();
