@@ -215,22 +215,20 @@ export default {
         });
     },
     getTaskSource() {
-      let sourceList = [];
-      api
-        .getTaskSource()
-        .then(
-          res =>
-            (sourceList = res.data.map(item => {
-              return { id: item.appCode, name: item.appName };
-            }))
+      api.getTaskSource().then(res =>
+        this.$set(
+          this.formList,
+          2,
+          Object.assign(this.formList[2], {
+            selectOptions: [].concat(
+              { id: '', name: '全部' },
+              res.data.map(item => {
+                return { id: item.appCode, name: item.appName };
+              })
+            )
+          })
         )
-        .then(() => {
-          this.$set(
-            this.formList,
-            3,
-            Object.assign(this.formList[3], { selectOptions: [].concat({ id: '', name: '全部' }, sourceList) })
-          );
-        });
+      );
     }
   }
 };

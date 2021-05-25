@@ -32,7 +32,7 @@ Date.prototype.format = function() {
 // 获取某天到某天的所有日期
 export function getDateAll(begin, end) {
   // 开始日期和结束日期
-  console.log(begin, end);
+  // console.log(begin, end);
   var arr = [];
   var ab = begin.split('-');
   var ae = end.split('-');
@@ -102,7 +102,7 @@ export function dataURLtoFile(dataUrl, filename) {
  * @param callback
  */
 export function getBase64Img(imgUrl, callback) {
-  console.log(imgUrl);
+  // console.log(imgUrl);
   window.URL = window.URL || window.webkitURL;
   var xhr = new XMLHttpRequest();
   xhr.open('get', imgUrl, true);
