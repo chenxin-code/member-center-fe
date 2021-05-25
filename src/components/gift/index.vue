@@ -7,7 +7,7 @@
       :data-source="tableDataList" 
       :pagination="false" 
       :loading="tableLoading" 
-      :scroll="{ y: scrollY }" 
+      :scroll="{ y: scrollY,x: 'calc(700px + 50%)' }" 
       :rowKey="(r, i) => i"
       :row-selection="rowSelection"
     >
