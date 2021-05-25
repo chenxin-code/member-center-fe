@@ -44,6 +44,7 @@
         </a-form-item>
         <a-form-item label="参与人数">
           <a-input-number
+            style="width: 400px"
             :min="1"
             v-decorator="[
               'partakeNum',
@@ -57,6 +58,7 @@
         </a-form-item>
         <a-form-item label="每人可参与次数">
           <a-input-number
+            style="width: 400px"
             :min="1"
             v-decorator="[
               'luckyDrawLimits',
