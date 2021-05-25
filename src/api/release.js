@@ -1,7 +1,7 @@
 import { fetchApi, download } from '@/utils/ajax';
 import URL from './urlConfig';
 let tokenStr = 'Bearer ' + localStorage.getItem('SD_ACCESS_TOKEN');
-console.log('tokenStr 666:>> ', tokenStr);
+// console.log('tokenStr 666:>> ', tokenStr);
 
 export const getReleaseList = data => fetchApi(URL.GET_RELEASELIST, data, 'GET');
 export const downloadCamilo = data => fetchApi(URL.DOWNLOAD_CAMILO, data, 'GET');
