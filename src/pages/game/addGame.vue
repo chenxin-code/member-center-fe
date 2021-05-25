@@ -43,16 +43,21 @@
           />
         </a-form-item>
         <a-form-item label="参与人数">
-          <a-input
+          <a-input-number
+            :min="1"
             v-decorator="[
               'partakeNum',
-              { initialValue: partakeNum, rules: [{ required: true, message: '请输入参与人数' }] }
+              {
+                initialValue: partakeNum,
+                rules: [{ required: true, message: '请输入参与人数' }]
+              }
             ]"
             @change="takePartInput"
           />
         </a-form-item>
         <a-form-item label="每人可参与次数">
-          <a-input
+          <a-input-number
+            :min="1"
             v-decorator="[
               'luckyDrawLimits',
               { initialValue: luckyDrawLimits, rules: [{ required: true, message: '请输入每人可参与次数' }] }
@@ -115,7 +120,8 @@
             ]" -->
 
         <a-form-item label="开奖人数" v-if="lotteryType == 2">
-          <a-input
+          <a-input-number
+            :min="1"
             v-decorator="[
               'drawLotteryNum',
               { initialValue: drawLotteryNum, rules: [{ required: true, message: '请输入开奖人数' }] }
@@ -491,17 +497,17 @@ export default {
     disabledDate(currentParam) {
       return currentParam && currentParam < Date.now() - 86400000;
     },
-    gameNameInput(e) {
-      this.gameTitle = e.target.value;
+    gameNameInput(value) {
+      this.gameTitle = value;
     },
-    takePartInput(e) {
-      this.partakeNum = e.target.value;
+    takePartInput(value) {
+      this.partakeNum = value;
     },
-    drawLotteryNumInput(e) {
-      this.drawLotteryNum = e.target.value;
+    drawLotteryNumInput(value) {
+      this.drawLotteryNum = value;
     },
-    luckyDrawLimitsInput(e) {
-      this.luckyDrawLimits = e.target.value;
+    luckyDrawLimitsInput(value) {
+      this.luckyDrawLimits = value;
     },
     handlePrizeType(val) {},
 
