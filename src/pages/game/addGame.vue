@@ -525,6 +525,7 @@ export default {
     changeDate(val) {
       this.validityStartTime = val[0];
       this.validityEndTime = val[1];
+      console.log('this.validityEndTime', this.validityEndTime);
       // this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
       // this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
     },
@@ -683,7 +684,7 @@ export default {
         gameTitle: this.gameTitle,
         availableFlage: this.availableFlage,
         validityStartTime: this.validityStartTime,
-        validityEndTime: this.validityEndTime,
+        validityEndTime: this.validityEndTime + ' 23:59:59',
         partakeNum: this.partakeNum,
         luckyDrawLimits: this.luckyDrawLimits,
         activityDesc: this.activityDesc,
