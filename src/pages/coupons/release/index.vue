@@ -15,9 +15,9 @@
           />-->
           <FormList routePath="/couponsRelease/create" ref="form" :rowCol="4" :formList="formList" :onSubmit="onSearch" />
           <a-table :style="{ marginTop: '20px' }" :columns="columns" :data-source="dataList" :pagination="false" :loading="tableLoading" :scroll="{ y: scrollY }">
-            <template slot="faceAmountSlot" slot-scope="rowData">
+            <template slot="faceAmountSlot" slot-scope="scope">
               <div class="editable-row-operations">
-                <span v-html="faceAmountStr(rowData)"></span>
+                <span v-html="faceAmountStr(scope)"></span>
               </div>
             </template>
             <span slot="action" slot-scope="record">

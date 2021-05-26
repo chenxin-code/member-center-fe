@@ -5,56 +5,56 @@
       <FormList routePath="/couponsManage/new" ref="memberForm" :rowCol="4" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table :columns="tableColumns" :data-source="tableData" :pagination="false" :scroll="{ x: 988, y: scrollY }" :rowKey="(r, i) => i" style="width:100%;margin-top:8px;" :selectable="false" :loading="tableLoading">
-        <template slot="couponTypeSlot" slot-scope="rowData">
+        <template slot="couponTypeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="couponTypeStr(rowData.couponType)"></span>
+            <span v-html="couponTypeStr(scope.couponType)"></span>
           </div>
         </template>
-        <template slot="activitySlot" slot-scope="rowData">
+        <template slot="activitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="activityStr(rowData.activity)"></span>
+            <span v-html="activityStr(scope.activity)"></span>
           </div>
         </template>
-        <template slot="faceAmountSlot" slot-scope="rowData">
+        <template slot="faceAmountSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="faceAmountStr(rowData)"></span>
+            <span v-html="faceAmountStr(scope)"></span>
           </div>
         </template>
-        <template slot="sourceSlot" slot-scope="rowData">
+        <template slot="sourceSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="sourceStr(rowData.source)"></span>
+            <span v-html="sourceStr(scope.source)"></span>
           </div>
         </template>
-        <template slot="validitySlot" slot-scope="rowData">
+        <template slot="validitySlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="parseValidity(rowData)"></span>
+            <span v-html="parseValidity(scope)"></span>
           </div>
         </template>
-        <template slot="couponStatusSlot" slot-scope="rowData">
+        <template slot="couponStatusSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="couponStatusStr(rowData.couponStatus)"></span>
+            <span v-html="couponStatusStr(scope.couponStatus)"></span>
           </div>
         </template>
-        <template slot="jointimeSlot" slot-scope="rowData">
+        <template slot="jointimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStrHms(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a style="padding-right: 10px;" @click="goDetail(rowData.id)">查看</a>
-            <a style="padding-right: 10px;" @click="goCopy(rowData.id)">复制</a>
-            <a style="padding-right: 10px;" @click="goEdit(rowData.id)" v-if="rowData.couponStatus === 3">编辑</a>
-            <!-- <a style="padding-right: 10px;" @click="couponOnOrOff(rowData, 1)" v-else-if="rowData.couponStatus === 0">
+            <a style="padding-right: 10px;" @click="goDetail(scope.id)">查看</a>
+            <a style="padding-right: 10px;" @click="goCopy(scope.id)">复制</a>
+            <a style="padding-right: 10px;" @click="goEdit(scope.id)" v-if="scope.couponStatus === 3">编辑</a>
+            <!-- <a style="padding-right: 10px;" @click="couponOnOrOff(scope, 1)" v-else-if="scope.couponStatus === 0">
               启用
             </a> -->
-            <a style="padding-right: 10px;" @click="couponOnOrOff(rowData.id, 0)" v-else-if="rowData.couponStatus === 1">
+            <a style="padding-right: 10px;" @click="couponOnOrOff(scope.id, 0)" v-else-if="scope.couponStatus === 1">
               禁用
             </a>
-            <!-- <a @click="zhiding(rowData.id, 1)" v-if="rowData.referrer === false">
+            <!-- <a @click="zhiding(scope.id, 1)" v-if="scope.referrer === false">
               置顶
             </a>
-            <a @click="zhiding(rowData.id, 0)" v-else-if="rowData.referrer === true">
+            <a @click="zhiding(scope.id, 0)" v-else-if="scope.referrer === true">
               取消置顶
             </a> -->
           </div>

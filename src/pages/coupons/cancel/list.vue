@@ -14,14 +14,14 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="jointimeSlot" slot-scope="rowData">
+        <template slot="jointimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.offTime)"></span>
+            <span v-html="momentStrHms(scope.offTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData.couponCode)">查看卡券</a>
+            <a @click="goDetail(scope.couponCode)">查看卡券</a>
           </div>
         </template>
       </a-table>
