@@ -1,5 +1,7 @@
 <template>
   <div class="game-index">
+    <div ref="tradeNo" class="copy">copyTarget</div>
+
     <div class="game-header">
       <timesInput title="游戏名称" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
       <timesSelect
@@ -27,11 +29,12 @@
           <span @click="turnOn(record, 1)" class="operate" v-if="record.availableFlage == 0">启用</span>
           <span @click="turnOn(record, 2)" class="operate" v-if="record.availableFlage == 1">禁用</span>
           <span @click="turnOn(record, 3)" class="operate" v-if="record.availableFlage == 0">删除</span>
-          <span @click="turnOn(record, 'editor')" class="operate"  v-if="record.availableFlage == 0">编辑</span>
+          <span @click="turnOn(record, 'editor')" class="operate" v-if="record.availableFlage == 0">编辑</span>
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
-          <span class="operate" data-clipboard-action="copy">复制</span>
+          <span class="operate" data-clipboard-action="copy">复制链接</span>
+          <div ref="tradeNo" class="copy">{{record.gameLink}}</div>
         </span>
       </a-table>
     </div>
@@ -116,14 +119,13 @@ export default {
   },
   mounted() {
     const that = this;
-    const btnCopy = new Clipboard('.copy', {
+    const btnCopy = new Clipboard('.operate', {
       target: function() {
         return that.$refs.tradeNo;
       }
     });
     btnCopy.on('success', target => {
       that.copyText = target.text;
-      that.$toast('复制成功');
     });
   },
   activated() {
@@ -238,6 +240,10 @@ export default {
       margin-left: 10px;
       cursor: pointer;
     }
+  }
+  .copy {
+    position: absolute;
+    top: -300px;
   }
 }
 </style>
