@@ -153,10 +153,12 @@ export default {
   computed: {
     parseStatus() {
       return param => {
-        if (param === 1) {
-          return '领取';
+        if (param === 0) {
+          return '派发中';
+        } else if (param === 1) {
+          return '派发成功';
         } else if (param === 2) {
-          return '核销';
+          return '派发失败';
         } else {
           return '';
         }
