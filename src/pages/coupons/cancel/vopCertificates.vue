@@ -5,14 +5,14 @@
       <FormList ref="memberForm" rowCol="3" :formList="formList" :onSubmit="onQuery" />
       <!-- 表格 -->
       <a-table :columns="tableColumns" :data-source="tableData" :pagination="false" :scroll="{ x: 1038, y: scrollY }" :rowKey="(r, i) => i" style="width:100%;margin-top:8px;" :selectable="false" :loading="tableLoading">
-        <template slot="jointimeSlot" slot-scope="rowData">
+        <template slot="jointimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.offTime)"></span>
+            <span v-html="momentStrHms(scope.offTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="detailsSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData.couponCode)">查看卡券</a>
+            <a @click="goDetail(scope.couponCode)">查看卡券</a>
           </div>
         </template>
       </a-table>

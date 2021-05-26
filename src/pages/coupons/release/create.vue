@@ -183,9 +183,9 @@
         :scroll="{ y: scrollY }"
         :row-selection="rowSelection"
       >
-        <template slot="faceAmountSlot" slot-scope="rowData">
+        <template slot="faceAmountSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="faceAmountStr(rowData)"></span>
+            <span v-html="faceAmountStr(scope)"></span>
           </div>
         </template>
         <span slot="action" slot-scope="record">
