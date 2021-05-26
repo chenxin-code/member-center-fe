@@ -56,7 +56,7 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1" label="邦豆成长值奖励计算方式" prop="awardType">
-            <a-radio-group v-model="form.awardType">
+            <a-radio-group v-model="form.awardType" @change="onAwardType">
               <a-radio value="1">
                 固定值
               </a-radio>
@@ -65,20 +65,14 @@
               </a-radio>
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardIntegral" label="邦豆奖励数量" prop="awardIntegral">
-            <a-input-number v-model="form.awardIntegral" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==1" ref="awardGrow" label="成长值奖励数量" prop="awardGrow">
-            <a-input-number v-model="form.awardGrow" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
-          </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegral" label="邦豆奖励比例" prop="awardIntegral">
-            <a-input-number v-model="form.awardIntegral" :min="0" :max="1" class="number-input" />
+          <a-form-model-item v-if="form.isSystemAward==1" ref="awardIntegral" :label="['邦豆奖励数量','邦豆奖励比例'][form.awardType - 1]" prop="awardIntegral">
+            <a-input-number v-model="form.awardIntegral" :min="0" :max="[9999999999999999,1][form.awardType - 1]" :precision="[0,null][form.awardType - 1]" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardIntegralMax" label="邦豆奖励最大值" prop="awardIntegralMax">
             <a-input-number v-model="form.awardIntegralMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrow" label="成长值奖励比例" prop="awardGrow">
-            <a-input-number v-model="form.awardGrow" :min="0" :max="1" class="number-input" />
+          <a-form-model-item v-if="form.isSystemAward==1" ref="awardGrow" :label="['成长值奖励数量','成长值奖励比例'][form.awardType - 1]" prop="awardGrow">
+            <a-input-number v-model="form.awardGrow" :min="0" :max="[9999999999999999,1][form.awardType - 1]" :precision="[0,null][form.awardType - 1]" class="number-input" />
           </a-form-model-item>
           <a-form-model-item v-if="form.isSystemAward==1&&form.awardType==2" ref="awardGrowMax" label="成长值奖励最大值" prop="awardGrowMax">
             <a-input-number v-model="form.awardGrowMax" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
@@ -314,6 +308,7 @@ export default {
       this.form.source = value;
     },
     btnCreateTask(e) {
+      console.log(this.form);
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           const _http = this.type === 'add' ? postAdd : postUpdate;
@@ -378,6 +373,9 @@ export default {
     changeOtherAwardType(e) {
       this.form.otherAwardId = '';
       this.form.otherAwardName = '';
+    },
+    onAwardType(event) {
+      this.$refs.ruleForm.clearValidate(['awardIntegral', 'awardGrow', 'awardIntegralMax', 'awardGrowMax']);
     }
   }
 };
