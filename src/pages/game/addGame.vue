@@ -36,8 +36,8 @@
                 rules: [{ type: 'array', required: true, message: '活动有效期不能为空, 请选择日期!' }]
               }
             ]"
-            format="YYYY-MM-DD hh:mm:ss"
-            valueFormat="YYYY-MM-DD hh:mm:ss"
+            format="YYYY-MM-DD"
+            valueFormat="YYYY-MM-DD"
             @change="changeDate"
             :disabled-date="disabledDate"
           />
@@ -101,8 +101,8 @@
         </a-form-item>
         <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
-            format="YYYY-MM-DD hh:mm:ss"
-            valueFormat="YYYY-MM-DD hh:mm:ss"
+            format="YYYY-MM-DD"
+            valueFormat="YYYY-MM-DD"
             @change="openPrize"
             :disabled-date="disabledDate"
             v-decorator="[
@@ -165,8 +165,8 @@
         </div>
         <a-range-picker
           v-model="rangeDate"
-          format="YYYY-MM-DD hh:mm:ss"
-          valueFormat="YYYY-MM-DD hh:mm:ss"
+          format="YYYY-MM-DD"
+          valueFormat="YYYY-MM-DD"
           @change="changeDate"
         />
       </div> -->
@@ -230,8 +230,8 @@
             开奖时间
           </div>
           <a-date-picker
-            format="YYYY-MM-DD hh:mm:ss"
-            valueFormat="YYYY-MM-DD hh:mm:ss"
+            format="YYYY-MM-DD"
+            valueFormat="YYYY-MM-DD"
             @change="openPrize"
             v-model="drawLotteryTime"
           />
@@ -386,7 +386,7 @@ export default {
       rangeDate: '',
 
       gameTitle: '',
-      availableFlage: 1,
+      availableFlage: 0,
       validityStartTime: '', // 活动结束时间
       validityEndTime: '', //活动开始时间
       partakeNum: '', // 参与人数
@@ -499,8 +499,8 @@ export default {
     disabledDate(currentParam) {
       return currentParam && currentParam < Date.now() - 86400000;
     },
-    gameNameInput(value) {
-      this.gameTitle = value;
+    gameNameInput(e) {
+      this.gameTitle = e.target.value;
     },
     takePartInput(value) {
       this.partakeNum = value;
