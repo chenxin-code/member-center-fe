@@ -1,7 +1,5 @@
 <template>
   <div class="game-index">
-    <div ref="tradeNo" class="copy">copyTarget</div>
-
     <div class="game-header">
       <timesInput title="游戏名称" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
       <timesSelect
@@ -33,8 +31,8 @@
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
-          <span class="operate" data-clipboard-action="copy">复制链接</span>
-          <div ref="tradeNo" class="copy">{{record.gameLink}}</div>
+          <span class="operate" data-clipboard-action="copy" @click="targetItem(record.gameLink)">复制链接</span>
+          <div ref="tradeNo" class="copy">{{ copyTarget }}</div>
         </span>
       </a-table>
     </div>
@@ -42,7 +40,6 @@
 </template>
 
 <script>
-// TODO 复制功能未完成
 import Clipboard from 'clipboard';
 import { GAME_LIST, GANE_MANAGE_GAME } from '@/api/game.js';
 import timesInput from './component/form-input';
@@ -99,6 +96,7 @@ export default {
   },
   data() {
     return {
+      copyTarget: '',
       gameOption: [
         { name: '全部', value: '' },
         { name: '九宫格', value: '3' },
@@ -126,6 +124,7 @@ export default {
     });
     btnCopy.on('success', target => {
       that.copyText = target.text;
+      this.$message.info('复制成功');
     });
   },
   activated() {
@@ -137,6 +136,10 @@ export default {
     });
   },
   methods: {
+    targetItem(val) {
+      console.log('??????????', val);
+      this.copyTarget = val;
+    },
     // 获取游戏列表
     getGameList(params) {
       GAME_LIST(params).then(({ code, data }) => {

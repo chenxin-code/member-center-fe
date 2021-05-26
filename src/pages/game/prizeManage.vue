@@ -31,11 +31,23 @@
             :optionObj="PRIZE_TYPE_DICT"
             @select-option="seleceType"
             placeholder="请选择奖品类型"
+            :default-value="PRIZE_TYPE_DICT2[prizeTarget.prizeType]"
           ></timesSelect>
         </div>
         <div class="game-prizeManage-label" v-if="prizeType == 1 || prizeType == 2">
           <div class="prizeManage-label-title" style="width: 120px">奖励数量</div>
-          <timesInput v-model="rewardNum"></timesInput>
+          <!-- <timesInput v-model="rewardNum"></timesInput> -->
+          <a-input-number
+            :min="1"
+            v-decorator="[
+              'rewardNum',
+              {
+                initialValue: rewardNum,
+                rules: [{ required: true, message: '请输入奖励数量' }]
+              }
+            ]"
+            @change="value => rewardNum = value"
+          />
         </div>
         <div class="game-prizeManage-label" v-if="prizeType >= 4005">
           <div class="prizeManage-label-title" style="width: 120px">选择卡券</div>
@@ -43,6 +55,7 @@
             :optionObj="couponOpton"
             @select-option="selectCoupon"
             placeholder="请选择奖品类型"
+            :default-value="couponOpton2[ticketCode]"
           ></timesSelect>
         </div>
 
@@ -170,6 +183,7 @@ const PRIZE_TYPE_DICT = [
     value: 7
   }
 ];
+1;
 import timesInput from './component/form-input';
 import timesSelect from './component/form-select';
 
@@ -187,7 +201,16 @@ export default {
 
       columns,
       PRIZE_TYPE_DICT, // 奖品类型
+      PRIZE_TYPE_DICT2: {
+        1: '成长值',
+        2: '邦豆',
+        7: '谢谢惠顾',
+        4014: '物业券',
+        4015: '实物券',
+        4005: '购物券'
+      },
       couponOpton: [], // 卡券类型
+      couponOpton2: {},
       pagination: {
         total: 23
       },
@@ -301,6 +324,7 @@ export default {
       this.ticketVisible = true;
       this.prizeTarget = val;
       this.prizeName = val.prizeName;
+      this.prizeType = val.prizeType;
       this.rewardNum = val.rewardNum + '';
       this.prizeNum = val.prizeNum + '';
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
@@ -342,11 +366,14 @@ export default {
           .then(({ code, data }) => {
             if (code == 200) {
               this.couponOpton = [];
+              this.couponOpton2 = {};
+              //一个用来做选择列表数据，一个用于反向填充时候数据展示
               data.records.forEach(item => {
                 this.couponOpton.push({
                   value: item.couTypeCode,
                   name: item.couponTitle
                 });
+                this.couponOpton2[item.couTypeCode] = item.couponTitle;
               });
               console.log('couponOpton', this.couponOpton);
             }
