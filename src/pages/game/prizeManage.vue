@@ -35,7 +35,7 @@
           ></timesSelect>
         </div>
         <div class="game-prizeManage-label" v-if="prizeType == 1 || prizeType == 2">
-          <div class="prizeManage-label-title" style="width: 120px">奖励数量</div>
+          <div class="prizeManage-label-title" style="width: 120px;margin-right: 15px;">奖励数量</div>
           <!-- <timesInput v-model="rewardNum"></timesInput> -->
           <a-input-number
             :min="1"
@@ -46,7 +46,7 @@
                 rules: [{ required: true, message: '请输入奖励数量' }]
               }
             ]"
-            @change="value => rewardNum = value"
+            @change="value => (rewardNum = value)"
           />
         </div>
         <div class="game-prizeManage-label" v-if="prizeType >= 4005">
@@ -75,6 +75,8 @@
             :before-upload="() => false"
             @change="handleExcel"
             :remove="handRemoveExcel"
+            :disabled="hasExcel"
+            :default-file-list="excelFileList"
           >
             <a-button>
               <a-icon type="upload" />
@@ -195,10 +197,12 @@ export default {
   components: { timesInput, timesSelect },
   data() {
     return {
+      hasExcel: false, // 由于组件没有限制上传数量功能，用来做标示
+      ticketCode: '',
       paramsPage: {}, //页面传递参数
 
       fileList: [], // 奖品缩略图
-
+      excelFileList: [],
       columns,
       PRIZE_TYPE_DICT, // 奖品类型
       PRIZE_TYPE_DICT2: {
@@ -387,6 +391,7 @@ export default {
         prizeId: this.prizeTarget.id
       }).then(res => {
         if (res.code == 200) {
+          this.hasExcel = false;
           this.$message.info('删除成功');
         }
       });
@@ -403,6 +408,7 @@ export default {
         GANE_UPLOAD_PEOPLE(formData).then(res => {
           if (res.code === 200) {
             this.appointPersonUrl = res.data;
+            this.hasExcel = true;
           }
         });
       }
