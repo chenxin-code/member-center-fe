@@ -14,14 +14,19 @@
         :selectable="false"
         :loading="tableLoading"
       >
-        <template slot="jointimeSlot" slot-scope="rowData">
+        <template slot="jointimeSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <span v-html="momentStrHms(rowData.createTime)"></span>
+            <span v-html="momentStrHms(scope.createTime)"></span>
           </div>
         </template>
-        <template slot="detailsSlot" slot-scope="rowData">
+        <template slot="statusSlot" slot-scope="scope">
           <div class="editable-row-operations">
-            <a @click="goDetail(rowData.couponCode)">查看卡券</a>
+            <span v-html="parseStatus(scope.status)"></span>
+          </div>
+        </template>
+        <template slot="detailsSlot" slot-scope="scope">
+          <div class="editable-row-operations">
+            <a @click="goDetail(scope.couponCode)">查看卡券</a>
           </div>
         </template>
       </a-table>
@@ -124,6 +129,11 @@ export default {
           key: 'memberPhone'
         },
         {
+          title: '状态',
+          key: 'statusSlot',
+          scopedSlots: { customRender: 'statusSlot' }
+        },
+        {
           title: '操作',
           key: 'detailsSlot',
           scopedSlots: { customRender: 'detailsSlot' }
@@ -141,6 +151,17 @@ export default {
     FormList
   },
   computed: {
+    parseStatus() {
+      return param => {
+        if (param === 1) {
+          return '领取';
+        } else if (param === 2) {
+          return '核销';
+        } else {
+          return '';
+        }
+      };
+    },
     momentStr() {
       return param => {
         if (!param) {
