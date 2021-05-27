@@ -684,7 +684,7 @@ export default {
         gameTitle: this.gameTitle,
         availableFlage: this.availableFlage,
         validityStartTime: this.validityStartTime,
-        validityEndTime: this.validityEndTime + ' 23:59:59',
+        validityEndTime: this.validityEndTime.substr(0, 10) + ' 23:59:59',
         partakeNum: this.partakeNum,
         luckyDrawLimits: this.luckyDrawLimits,
         activityDesc: this.activityDesc,
