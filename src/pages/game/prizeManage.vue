@@ -95,7 +95,6 @@
           <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
           <timesInput v-model="lotteryWeight" type="number"></timesInput>
         </div>
-
         <div class="game-prizeManage-label" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">奖品缩略图</div>
           <div class="stair">
@@ -342,6 +341,7 @@ export default {
       this.prizeNum = val.prizeNum + '';
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
+      this.prizeUrl = val.prizeUrl;
       this.fileList = [];
       this.excelFileList = [];
 
@@ -372,7 +372,6 @@ export default {
       }
 
       if (val.prizeUrl) {
-        this.prizeUrl = val.prizeUrl;
         this.fileList = [
           {
             uid: '-1',
