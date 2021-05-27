@@ -1,6 +1,12 @@
 <template>
   <div class="game-prizeManage">
-    <div class="game-prizeManage-title">活动奖品管理</div>
+    <!-- <div class="game-prizeManage-title">活动奖品管理</div> -->
+
+    <div class="game-prizeManage-title">
+      <div style="margin-left: 30px">活动奖品管理</div>
+      <div class="page-back" @click="pageBack">返回</div>
+    </div>
+
     <div style="margin: 30px">
       <a-table
         :columns="columns"
@@ -240,6 +246,9 @@ export default {
     this.init();
   },
   methods: {
+    pageBack() {
+      this.$router.go(-1);
+    },
     defaultPrizeType() {
       return PRIZE_TYPE_DICT.findIndex(item => {
         return (this.prizeType = item.value);
@@ -334,14 +343,54 @@ export default {
       this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
       this.lotteryWeight = val.lotteryWeight + '';
       this.fileList = [];
+      this.excelFileList = [];
+
+      // 反向填充时候，如果奖品类型是券，请求接口匹配对应的奖品
+      if (this.prizeType == 4015 || this.prizeType == 4005 || this.prizeType == 4014) {
+        api
+          .getCouponList({
+            pageIndex: 1,
+            pageSize: 30,
+            activity: this.prizeType,
+            status: 1 // 启用
+          })
+          .then(({ code, data }) => {
+            if (code == 200) {
+              this.couponOpton = [];
+              this.couponOpton2 = {};
+              //一个用来做选择列表数据，一个用于反向填充时候数据展示
+              data.records.forEach(item => {
+                this.couponOpton.push({
+                  value: item.couTypeCode,
+                  name: item.couponTitle
+                });
+                this.couponOpton2[item.couTypeCode] = item.couponTitle;
+              });
+              console.log('couponOpton', this.couponOpton);
+            }
+          });
+      }
+
       if (val.prizeUrl) {
         this.prizeUrl = val.prizeUrl;
         this.fileList = [
           {
             uid: '-1',
             status: 'done',
+            name: '',
             url: val.prizeUrl,
             thumbUrl: val.prizeUrl
+          }
+        ];
+      }
+      if (val.personFileName) {
+        this.excelFileList = [
+          {
+            uid: '-1',
+            status: 'done',
+            name: val.personFileName,
+            url: '',
+            thumbUrl: ''
           }
         ];
       }
@@ -432,11 +481,23 @@ export default {
     margin-left: 15px;
   }
 }
+// .game-prizeManage-title {
+//   width: 200px;
+//   height: 80px;
+//   text-align: center;
+//   line-height: 80px;
+// }
 .game-prizeManage-title {
-  width: 200px;
   height: 80px;
   text-align: center;
   line-height: 80px;
+  display: flex;
+  justify-content: space-between;
+  .page-back {
+    margin-right: 30px;
+    color: #4b7afb;
+    cursor: pointer;
+  }
 }
 .operate {
   color: #169bd5;

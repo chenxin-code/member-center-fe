@@ -1,6 +1,10 @@
 <template>
   <div class="game-prizeManage">
-    <div class="game-prize-title">游戏人员管理</div>
+    <!-- <div class="game-prize-title">游戏人员管理</div> -->
+    <div class="game-prize-title">
+      <div style="margin-left: 30px">游戏人员管理</div>
+      <div class="page-back" @click="pageBack">返回</div>
+    </div>
 
     <div class="game-prize-header">
       <div class="game-message-explain">
@@ -62,7 +66,13 @@
     </div>
 
     <div class="game-prize-content">
-      <a-table :columns="columns" :data-source="contentData" @change="changePage" :pagination="pagination" :rowKey="record => record.id">
+      <a-table
+        :columns="columns"
+        :data-source="contentData"
+        @change="changePage"
+        :pagination="pagination"
+        :rowKey="record => record.id"
+      >
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record, 'result')" class="operate">查看抽奖结果</span>
           <span @click="turnOn(record, 'times')" class="operate">管理抽奖次数</span>
@@ -71,7 +81,12 @@
     </div>
 
     <a-modal title="查看抽奖结果" :visible="resultVisible" @cancel="resultVisible = false">
-      <a-table :columns="rusultColumns" :data-source="activityLotteryVoList" bordered :rowKey="record => record.id"></a-table>
+      <a-table
+        :columns="rusultColumns"
+        :data-source="activityLotteryVoList"
+        bordered
+        :rowKey="record => record.id"
+      ></a-table>
       <div slot="footer" style="display: flex;justify-content: center;">
         <a-button type="primary" @click="resultVisible = false">关闭</a-button>
       </div>
@@ -241,6 +256,9 @@ export default {
   },
   activated() {},
   methods: {
+    pageBack() {
+      this.$router.go(-1);
+    },
     getList(params) {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
         if (code == 200) {
@@ -317,11 +335,23 @@ export default {
   }
 }
 .game-prizeManage {
+  // .game-prize-title {
+  //   width: 200px;
+  //   height: 80px;
+  //   text-align: center;
+  //   line-height: 80px;
+  // }
   .game-prize-title {
-    width: 200px;
     height: 80px;
     text-align: center;
     line-height: 80px;
+    display: flex;
+    justify-content: space-between;
+    .page-back {
+      margin-right: 30px;
+      color: #4b7afb;
+      cursor: pointer;
+    }
   }
   .game-prize-header {
     // display: flex;
