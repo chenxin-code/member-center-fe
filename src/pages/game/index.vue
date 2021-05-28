@@ -1,9 +1,7 @@
 <template>
   <div class="game-index">
-    <div ref="tradeNo" class="copy">copyTarget</div>
-
     <div class="game-header">
-      <timesInput title="游戏名称" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
+      <timesInput title="游戏主题" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
       <timesSelect
         title="游戏方式"
         :optionObj="gameOption"
@@ -16,7 +14,7 @@
         <a-button @click="addGame" style="width: 150px;margin-left: 10px" type="primary">新建游戏</a-button>
       </div>
     </div>
-    <div class="game-content">
+    <div class="game-content" v-if="isUpdate">
       <a-table
         :columns="columns"
         :data-source="records"
@@ -33,8 +31,8 @@
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
-          <span class="operate" data-clipboard-action="copy">复制链接</span>
-          <div ref="tradeNo" class="copy">{{record.gameLink}}</div>
+          <span class="operateCopy" data-clipboard-action="copy" @click="turnOn(record, 'copy')">复制链接</span>
+          <div ref="tradeNo" class="copy">{{ copyTarget }}</div>
         </span>
       </a-table>
     </div>
@@ -42,7 +40,6 @@
 </template>
 
 <script>
-// TODO 复制功能未完成
 import Clipboard from 'clipboard';
 import { GAME_LIST, GANE_MANAGE_GAME } from '@/api/game.js';
 import timesInput from './component/form-input';
@@ -99,6 +96,8 @@ export default {
   },
   data() {
     return {
+      isUpdate: true,
+      copyTarget: '',
       gameOption: [
         { name: '全部', value: '' },
         { name: '九宫格', value: '3' },
@@ -119,16 +118,18 @@ export default {
   },
   mounted() {
     const that = this;
-    const btnCopy = new Clipboard('.operate', {
+    const btnCopy = new Clipboard('.operateCopy', {
       target: function() {
         return that.$refs.tradeNo;
       }
     });
     btnCopy.on('success', target => {
       that.copyText = target.text;
+      this.$message.info('复制成功');
     });
   },
   activated() {
+    this.isUpdate = false;
     this.getGameList({
       pageNum: 1,
       pageSize: 10,
@@ -137,11 +138,16 @@ export default {
     });
   },
   methods: {
+    targetItem(val) {
+      console.log('??????????', val);
+      this.copyTarget = val;
+    },
     // 获取游戏列表
     getGameList(params) {
       GAME_LIST(params).then(({ code, data }) => {
         console.log('code', code);
         if (code == 200) {
+          this.isUpdate = true;
           this.pagination.total = Number(data.total);
           this.pageNum++;
           this.records = data.records;
@@ -212,6 +218,8 @@ export default {
           path: '/gameManage/addGame',
           query: target
         });
+      } else if (type == 'copy') {
+        this.copyTarget = target.gameLink;
       }
     },
     //  分页
@@ -236,6 +244,11 @@ export default {
   }
   .game-content {
     .operate {
+      color: #169bd5;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .operateCopy {
       color: #169bd5;
       margin-left: 10px;
       cursor: pointer;

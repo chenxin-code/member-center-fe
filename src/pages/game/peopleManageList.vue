@@ -1,6 +1,10 @@
 <template>
   <div class="game-prizeManage">
-    <div class="game-prize-title">游戏人员管理</div>
+    <!-- <div class="game-prize-title">游戏人员管理</div> -->
+    <div class="game-prize-title">
+      <div style="margin-left: 30px">游戏人员管理</div>
+      <div class="page-back" @click="pageBack">返回</div>
+    </div>
 
     <div class="game-prize-header">
       <div class="game-message-explain">
@@ -62,7 +66,13 @@
     </div>
 
     <div class="game-prize-content">
-      <a-table :columns="columns" :data-source="contentData" @change="changePage" :pagination="pagination" :rowKey="record => record.id">
+      <a-table
+        :columns="columns"
+        :data-source="contentData"
+        @change="changePage"
+        :pagination="pagination"
+        :rowKey="record => record.id"
+      >
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record, 'result')" class="operate">查看抽奖结果</span>
           <span @click="turnOn(record, 'times')" class="operate">管理抽奖次数</span>
@@ -71,7 +81,12 @@
     </div>
 
     <a-modal title="查看抽奖结果" :visible="resultVisible" @cancel="resultVisible = false">
-      <a-table :columns="rusultColumns" :data-source="activityLotteryVoList" bordered :rowKey="record => record.id"></a-table>
+      <a-table
+        :columns="rusultColumns"
+        :data-source="activityLotteryVoList"
+        bordered
+        :rowKey="record => record.id"
+      ></a-table>
       <div slot="footer" style="display: flex;justify-content: center;">
         <a-button type="primary" @click="resultVisible = false">关闭</a-button>
       </div>
@@ -183,7 +198,33 @@ export default {
       prizeLevelOption: [],
       prizeLevel: '',
       vipId: '',
-      columns,
+      columns: [
+        {
+          title: '会员手机号',
+          dataIndex: 'memberPhone',
+          key: 'memberPhone'
+        },
+        {
+          title: '会员ID',
+          dataIndex: 'memberId',
+          key: 'memberId'
+        },
+        {
+          title: '最高参与次数',
+          dataIndex: 'maxPartakeNum',
+          key: 'maxPartakeNum'
+        },
+        {
+          title: '已参与次数',
+          dataIndex: 'alreadyPartakeNum',
+          key: 'alreadyPartakeNum'
+        }
+        // {
+        //   key: 'operate',
+        //   slots: { title: 'operate' },
+        //   scopedSlots: { customRender: 'operate' }
+        // }
+      ],
       contentData: [],
       pagination: {
         total: 10
@@ -206,12 +247,13 @@ export default {
     this.paramsPage = this.$route.query;
     let { memberId, memberPhone, prizeFlag, prizeId, lotteryType } = this.paramsPage;
     if (!this.paramsPage.drawLotteryTime) {
-      columns.push({
+      this.columns.push({
         key: 'operate',
         slots: { title: 'operate' },
         scopedSlots: { customRender: 'operate' }
       });
     }
+    console.log('columns', this.columns);
     // 获取活动奖品名称列表
     PRIZE_NAME_LIST({
       gameId: this.paramsPage.id,
@@ -241,6 +283,9 @@ export default {
   },
   activated() {},
   methods: {
+    pageBack() {
+      this.$router.go(-1);
+    },
     getList(params) {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
         if (code == 200) {
@@ -255,14 +300,14 @@ export default {
     },
     changePage() {},
     search() {
-      let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+      let { memberId, prizeId } = this.paramsPage;
       this.getList({
         gameId: this.paramsPage.id,
         memberId,
-        memberPhone,
+        memberPhone: this.memberPhone,
         pageNum: 1,
         pageSize: 10,
-        prizeFlag,
+        prizeFlag: this.prizeFlag,
         prizeId,
         prizeName: this.prizeName,
         lotteryType: this.paramsPage.lotteryType
@@ -286,7 +331,7 @@ export default {
         });
       }
     },
-    /* 
+    /*
       管理游戏抽奖次数
     */
     save() {
@@ -298,6 +343,18 @@ export default {
         if (code == 200) {
           this.$message.info('游戏次数重置成功');
           this.changeVisible = false;
+          let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+          // 游戏人员列表
+          this.getList({
+            gameId: this.paramsPage.id,
+            memberId,
+            memberPhone,
+            pageNum: 1,
+            pageSize: 10,
+            prizeFlag,
+            prizeId,
+            lotteryType: this.paramsPage.lotteryType * 1
+          });
         }
       });
     }
@@ -317,11 +374,23 @@ export default {
   }
 }
 .game-prizeManage {
+  // .game-prize-title {
+  //   width: 200px;
+  //   height: 80px;
+  //   text-align: center;
+  //   line-height: 80px;
+  // }
   .game-prize-title {
-    width: 200px;
     height: 80px;
     text-align: center;
     line-height: 80px;
+    display: flex;
+    justify-content: space-between;
+    .page-back {
+      margin-right: 30px;
+      color: #4b7afb;
+      cursor: pointer;
+    }
   }
   .game-prize-header {
     // display: flex;

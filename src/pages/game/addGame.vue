@@ -125,13 +125,6 @@
             ]"
           />
         </a-form-item>
-        <!-- v-decorator="[
-              'drawLotteryTime',
-              {
-                initialValue: drawLotteryTime,
-                rules: [{ type: 'array', required: true, message: '活动有效期不能为空, 请选择日期!' }]
-              }
-            ]" -->
 
         <a-form-item label="开奖人数" v-if="lotteryType == 2">
           <a-input-number
@@ -144,131 +137,6 @@
           />
         </a-form-item>
       </a-form>
-
-      <!-- <div class="label-content">
-        <div class="label-title" style="margin: 0">
-          <span style="color: red">*</span>
-          游戏主题
-        </div>
-        <timesInput
-          v-model="gameTitle"
-          v-decorator="['note', { rules: [{ required: true, message: 'Please input your note!' }] }]"
-        ></timesInput>
-      </div> -->
-
-      <!-- <div class="choose-isActive">
-        <div class="label-title">
-          <span style="color: red">*</span>
-          是否可用
-        </div>
-        <a-radio-group v-model="availableFlage" @change="radioChange">
-          <a-radio value="1">
-            启用
-          </a-radio>
-          <a-radio value="0">
-            禁用
-          </a-radio>
-        </a-radio-group>
-      </div> -->
-      <!-- <div class="label-content">
-        <div class="label-title">
-          <span style="color: red">*</span>
-          有效期
-        </div>
-        <a-range-picker
-          v-model="rangeDate"
-          format="YYYY-MM-DD"
-          valueFormat="YYYY-MM-DD"
-          @change="changeDate"
-        />
-      </div> -->
-
-      <!-- <div class="label-content">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          参与人数
-        </div>
-        <timesInput v-model="partakeNum" type="number"></timesInput>
-      </div> -->
-
-      <!-- <div class="label-content">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          每人可参与次数
-        </div>
-        <timesInput v-model="luckyDrawLimits" type="number"></timesInput>
-      </div> -->
-
-      <!-- <div class="label-content">
-        <div class="label-title">活动说明</div>
-        <a-textarea
-          v-model="activityDesc"
-          placeholder="请输入内容"
-          :auto-size="{ minRows: 3, maxRows: 5 }"
-          style="width: 400px;"
-        />
-      </div> -->
-
-      <!-- <div class="label-content">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          通知方式
-        </div>
-        <timesSelect
-          :optionObj="informOption"
-          @select-option="selectInform"
-          defaultValue="消息通知"
-          placeholder="请选择通知方式"
-        ></timesSelect>
-      </div> -->
-
-      <!-- <div class="label-content">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          开奖方式
-        </div>
-        <timesSelect
-          :optionObj="prizeOption"
-          @select-option="selectPrize"
-          :defaultValue="prizeDict[lotteryType]"
-          placeholder="请选择开奖方式"
-        ></timesSelect>
-      </div> -->
-
-      <!-- <template v-if="lotteryType == 2">
-        <div class="label-content">
-          <div class="label-title">
-            <span style="color: red">*</span>
-            开奖时间
-          </div>
-          <a-date-picker
-            format="YYYY-MM-DD"
-            valueFormat="YYYY-MM-DD"
-            @change="openPrize"
-            v-model="drawLotteryTime"
-          />
-        </div>
-        <div class="label-content">
-          <div class="label-title" style="margin: 0;">
-            <span style="color: red">*</span>
-            开奖人数
-          </div>
-          <timesInput v-model="drawLotteryNum" type="number"></timesInput>
-        </div>
-      </template> -->
-
-      <!-- <div class="label-content" v-if="lotteryType == 1">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          活动方式
-        </div>
-        <timesSelect
-          :optionObj="activityOption"
-          @select-option="selectActivity"
-          placeholder="请选择活动方式"
-          :defaultValue="activityDict[activityType]"
-        ></timesSelect>
-      </div> -->
 
       <div class="label-content" v-if="lotteryType == 1">
         <div class="label-title" style="margin: 0;">
@@ -289,7 +157,7 @@
               :defaultFileList="fileBgList"
             >
               <template v-if="!activityBackgroundUrl && !fileBgList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="bgLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -310,7 +178,7 @@
               :defaultFileList="fileMessageList"
             >
               <template v-if="!msgUrl && !fileMessageList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="msgLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -331,7 +199,7 @@
               :defaultFileList="fileGameList"
             >
               <template v-if="!gameUrl && !fileGameList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="gameLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -352,7 +220,7 @@
               :defaultFileList="fileAlertList"
             >
               <template v-if="!popFrameUrl && !fileAlertList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="popLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -398,6 +266,11 @@ export default {
       picUploading: false,
       activityCover: '',
       rangeDate: '',
+
+      bgLoading: false,
+      msgLoading: false,
+      gameLoading: false,
+      popLoading: false,
 
       gameTitle: '',
       availableFlage: 0,
@@ -546,6 +419,7 @@ export default {
     changeDate(val) {
       this.validityStartTime = val[0];
       this.validityEndTime = val[1];
+      console.log('this.validityEndTime', this.validityEndTime);
       // this.validityStartTime = getFormatDate(val[0]._d, 'yyyy-mm-dd MM:mm:ss');
       // this.validityEndTime = getFormatDate(val[1]._d, 'yyyy-mm-dd MM:mm:ss');
     },
@@ -576,27 +450,27 @@ export default {
     },
     // 上传背景图片
     uploadBg({ fileList = [] } = {}) {
-      this.addPic(fileList, 'activityBackgroundUrl');
+      this.addPic(fileList, 'activityBackgroundUrl', 'bgLoading');
     },
     // 上传消息背景图片
     uploadMessage({ fileList = [] } = {}) {
-      this.addPic(fileList, 'msgUrl');
+      this.addPic(fileList, 'msgUrl', 'msgLoading');
     },
     // 上传游戏层背景图片
     uploadGame({ fileList = [] } = {}) {
-      this.addPic(fileList, 'gameUrl');
+      this.addPic(fileList, 'gameUrl', 'gameLoading');
     },
     // 上传弹框背景图片
     uploadAlert({ fileList = [] } = {}) {
-      this.addPic(fileList, 'popFrameUrl');
+      this.addPic(fileList, 'popFrameUrl', 'popLoading');
     },
-    addPic(fileList, flag) {
+    addPic(fileList, flag, target) {
       if (fileList.length > 0) {
         const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
         if (!isJpgOrPng) {
           this.$message.error('图片格式错误，请重新上传');
         } else {
-          this.picUploading = true;
+          this[target] = true;
           const formData = new FormData();
           fileList.forEach(file => {
             formData.append('file', file.originFileObj);
@@ -604,7 +478,7 @@ export default {
           formData.append('programCode', 'sys-member-center');
           updateImage(formData)
             .finally(() => {
-              this.picUploading = false;
+              this[target] = false;
             })
             .then(res => {
               if (res.code === 200) {
@@ -704,7 +578,7 @@ export default {
         gameTitle: this.gameTitle,
         availableFlage: this.availableFlage,
         validityStartTime: this.validityStartTime,
-        validityEndTime: this.validityEndTime,
+        validityEndTime: this.validityEndTime.substr(0, 10) + ' 23:59:59',
         partakeNum: this.partakeNum,
         luckyDrawLimits: this.luckyDrawLimits,
         activityDesc: this.activityDesc,
@@ -763,6 +637,7 @@ export default {
     .label-content {
       display: flex;
       margin-top: 20px;
+      margin-left: 300px;
       align-items: center;
     }
     .label-title {
