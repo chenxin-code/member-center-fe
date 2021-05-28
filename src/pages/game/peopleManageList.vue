@@ -227,6 +227,7 @@ export default {
         scopedSlots: { customRender: 'operate' }
       });
     }
+    console.log('columns', columns);
     // 获取活动奖品名称列表
     PRIZE_NAME_LIST({
       gameId: this.paramsPage.id,
@@ -316,6 +317,18 @@ export default {
         if (code == 200) {
           this.$message.info('游戏次数重置成功');
           this.changeVisible = false;
+          let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+          // 游戏人员列表
+          this.getList({
+            gameId: this.paramsPage.id,
+            memberId,
+            memberPhone,
+            pageNum: 1,
+            pageSize: 10,
+            prizeFlag,
+            prizeId,
+            lotteryType: this.paramsPage.lotteryType * 1
+          });
         }
       });
     }
