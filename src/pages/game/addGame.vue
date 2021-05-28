@@ -277,7 +277,7 @@
               :defaultFileList="fileBgList"
             >
               <template v-if="!activityBackgroundUrl && !fileBgList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="bgLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -298,7 +298,7 @@
               :defaultFileList="fileMessageList"
             >
               <template v-if="!msgUrl && !fileMessageList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="msgLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -319,7 +319,7 @@
               :defaultFileList="fileGameList"
             >
               <template v-if="!gameUrl && !fileGameList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="gameLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -340,7 +340,7 @@
               :defaultFileList="fileAlertList"
             >
               <template v-if="!popFrameUrl && !fileAlertList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                <a-icon :type="popLoading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">
                   上传
                 </div>
@@ -384,6 +384,11 @@ export default {
       picUploading: false,
       activityCover: '',
       rangeDate: '',
+
+      bgLoading: false,
+      msgLoading: false,
+      gameLoading: false,
+      popLoading: false,
 
       gameTitle: '',
       availableFlage: 0,
@@ -556,27 +561,27 @@ export default {
     },
     // 上传背景图片
     uploadBg({ fileList = [] } = {}) {
-      this.addPic(fileList, 'activityBackgroundUrl');
+      this.addPic(fileList, 'activityBackgroundUrl', 'bgLoading');
     },
     // 上传消息背景图片
     uploadMessage({ fileList = [] } = {}) {
-      this.addPic(fileList, 'msgUrl');
+      this.addPic(fileList, 'msgUrl', 'msgLoading');
     },
     // 上传游戏层背景图片
     uploadGame({ fileList = [] } = {}) {
-      this.addPic(fileList, 'gameUrl');
+      this.addPic(fileList, 'gameUrl', 'gameLoading');
     },
     // 上传弹框背景图片
     uploadAlert({ fileList = [] } = {}) {
-      this.addPic(fileList, 'popFrameUrl');
+      this.addPic(fileList, 'popFrameUrl', 'popLoading');
     },
-    addPic(fileList, flag) {
+    addPic(fileList, flag, target) {
       if (fileList.length > 0) {
         const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
         if (!isJpgOrPng) {
           this.$message.error('图片格式错误，请重新上传');
         } else {
-          this.picUploading = true;
+          this[target] = true;
           const formData = new FormData();
           fileList.forEach(file => {
             formData.append('file', file.originFileObj);
@@ -584,7 +589,7 @@ export default {
           formData.append('programCode', 'sys-member-center');
           updateImage(formData)
             .finally(() => {
-              this.picUploading = false;
+              this[target] = false;
             })
             .then(res => {
               if (res.code === 200) {

@@ -45,6 +45,7 @@
           <!-- <timesInput v-model="rewardNum"></timesInput> -->
           <a-input-number
             :min="1"
+            style="width: 200px"
             v-decorator="[
               'rewardNum',
               {
@@ -67,11 +68,35 @@
 
         <div class="game-prizeManage-label">
           <div class="prizeManage-label-title" style="width: 120px">奖品数量</div>
-          <timesInput v-model="prizeNum"></timesInput>
+          <!-- <timesInput v-model="prizeNum"></timesInput> -->
+          <a-input-number
+            :min="1"
+            style="width: 200px;margin-left: 15px;"
+            v-decorator="[
+              'prizeNum',
+              {
+                initialValue: prizeNum,
+                rules: [{ required: true, message: '请输入奖品数量' }]
+              }
+            ]"
+            @change="value => (prizeNum = value)"
+          />
         </div>
         <div class="game-prizeManage-label">
           <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
-          <timesInput v-model="dayMaxLotteryNum"></timesInput>
+          <!-- <timesInput v-model="dayMaxLotteryNum"></timesInput> -->
+          <a-input-number
+            :min="1"
+            style="width: 200px;margin-left: 15px;"
+            v-decorator="[
+              'dayMaxLotteryNum',
+              {
+                initialValue: dayMaxLotteryNum,
+                rules: [{ required: true, message: '请输入最高中奖数量' }]
+              }
+            ]"
+            @change="value => (dayMaxLotteryNum = value)"
+          />
         </div>
         <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
@@ -93,7 +118,20 @@
 
         <div class="game-prizeManage-label">
           <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
-          <timesInput v-model="lotteryWeight" type="number"></timesInput>
+          <!-- <timesInput v-model="lotteryWeight" type="number"></timesInput> -->
+          <a-input-number
+            :min="0"
+            :max="100"
+            style="width: 200px;margin-left: 15px;"
+            v-decorator="[
+              'lotteryWeight',
+              {
+                initialValue: lotteryWeight,
+                rules: [{ required: true, message: '请输入中奖权重' }]
+              }
+            ]"
+            @change="value => (lotteryWeight = value)"
+          />
         </div>
         <div class="game-prizeManage-label" v-if="ticketVisible">
           <div class="prizeManage-label-title" style="width: 120px">奖品缩略图</div>
@@ -284,7 +322,7 @@ export default {
         params.rewardNum = this.rewardNum;
       } else {
         params.ticketCode = this.ticketCode;
-        params.ticketName = this.prizeTarget.ticketName;
+        params.ticketName = this.couponOpton2[this.ticketCode];
       }
       GANE_UPDATE_PRIZE(params).then(res => {
         if (res.code == 200) {
@@ -337,10 +375,10 @@ export default {
       this.prizeTarget = val;
       this.prizeName = val.prizeName;
       this.prizeType = val.prizeType;
-      this.rewardNum = val.rewardNum + '';
-      this.prizeNum = val.prizeNum + '';
-      this.dayMaxLotteryNum = val.dayMaxLotteryNum + '';
-      this.lotteryWeight = val.lotteryWeight + '';
+      this.rewardNum = val.rewardNum;
+      this.prizeNum = val.prizeNum;
+      this.dayMaxLotteryNum = val.dayMaxLotteryNum;
+      this.lotteryWeight = val.lotteryWeight;
       this.prizeUrl = val.prizeUrl;
       this.fileList = [];
       this.excelFileList = [];
@@ -367,6 +405,7 @@ export default {
                 this.couponOpton2[item.couTypeCode] = item.couponTitle;
               });
               console.log('couponOpton', this.couponOpton);
+              console.log('------------', this.couponOpton2);
             }
           });
       }
