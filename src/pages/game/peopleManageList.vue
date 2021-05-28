@@ -198,7 +198,33 @@ export default {
       prizeLevelOption: [],
       prizeLevel: '',
       vipId: '',
-      columns,
+      columns: [
+        {
+          title: '会员手机号',
+          dataIndex: 'memberPhone',
+          key: 'memberPhone'
+        },
+        {
+          title: '会员ID',
+          dataIndex: 'memberId',
+          key: 'memberId'
+        },
+        {
+          title: '最高参与次数',
+          dataIndex: 'maxPartakeNum',
+          key: 'maxPartakeNum'
+        },
+        {
+          title: '已参与次数',
+          dataIndex: 'alreadyPartakeNum',
+          key: 'alreadyPartakeNum'
+        }
+        // {
+        //   key: 'operate',
+        //   slots: { title: 'operate' },
+        //   scopedSlots: { customRender: 'operate' }
+        // }
+      ],
       contentData: [],
       pagination: {
         total: 10
@@ -305,7 +331,7 @@ export default {
         });
       }
     },
-    /* 
+    /*
       管理游戏抽奖次数
     */
     save() {
