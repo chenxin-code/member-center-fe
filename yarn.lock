@@ -9366,7 +9366,7 @@ vuex@^3.5.1:
   resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.6.2.tgz#236bc086a870c3ae79946f107f16de59d5895e71"
   integrity sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==
 
-wangeditor@^4.0.6:
+wangeditor@^4.7.1:
   version "4.7.1"
   resolved "https://registry.yarnpkg.com/wangeditor/-/wangeditor-4.7.1.tgz#82c66bece0b7a587afaef02124d1d249cda51721"
   integrity sha512-Q10pJ21Fa3v51D7icMM3t9jIZw34+TVVhM/VmbYd6NAy9Zt8uW3f6OxlEFXtrVXhYi/9d8p5YBczFdQw6W7T+w==
