@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "npm run postinstall && vue-cli-service serve",
+    "serve": "vue-cli-service serve",
     "serve:game": "cd memberGame && vue-cli-service serve",
     "build:game": "cd memberGame && vue-cli-service build",
     "build": "npm run postinstall && vue-cli-service build",
@@ -38,7 +38,8 @@
     "vue": "^2.6.11",
     "vue-cropper": "^0.5.5",
     "vue-router": "^3.0.1",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "wangeditor": "^4.0.6"
   },
   "devDependencies": {
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
