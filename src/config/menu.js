@@ -36,7 +36,7 @@ export default [
   //   path: '/task-manager'
   // },
   {
-    title: '任务管理-1.5',
+    title: '任务管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/task_show.png'),
     iconHide: require('@/assets/img/menu/task_hide.png'),
@@ -45,7 +45,7 @@ export default [
     path: '/taskCenter-task'
   },
   {
-    title: '任务派发-1.5',
+    title: '任务派发',
     authKeys: [''],
     icon: require('@/assets/img/menu/task_show.png'),
     iconHide: require('@/assets/img/menu/task_hide.png'),
@@ -54,7 +54,7 @@ export default [
     path: '/taskCenter-distribute'
   },
   {
-    title: '行为管理-1.5',
+    title: '行为管理',
     authKeys: [''],
     icon: require('@/assets/img/menu/task_show.png'),
     iconHide: require('@/assets/img/menu/task_hide.png'),
