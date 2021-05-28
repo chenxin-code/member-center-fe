@@ -129,7 +129,7 @@ export default {
       var temp = value.replace(/<\/?.+?>/g, '');
       var result = temp.replace(/ /g, ''); //result为获取冲文字得到后的内容
       result = result.replace(/(\r|\n|\\s|&nbsp;)/g, ''); //result为获取冲文字得到后的内容
-      //         获取img标签
+      //获取img标签
       var re = /<img[^>]+>/g;
       var ImgA = value.match(re);
       let imgLen;
