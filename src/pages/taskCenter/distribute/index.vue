@@ -27,7 +27,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
-              <a-button type="primary" @click="onSearch">查询</a-button>
+              <a-button type="primary" @click="onSearch" :disabled="tableLoading">查询</a-button>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
