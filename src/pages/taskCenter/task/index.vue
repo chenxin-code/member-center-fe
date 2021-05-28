@@ -1,22 +1,22 @@
 <template>
   <div class="taskManager">
     <div class="taskManager-header">任务管理</div>
-    <div class="taskManager-main" ref="contentMain">
-      <a-form-model :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <div class="taskManager-main" ref="contentMain" >
+      <a-form-model ref="ruleForm" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
             <a-form-model-item label="任务名称">
-              <a-input v-model="formList.taskName" />
+              <a-input v-model.trim="formList.taskName" whitespace />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="任务key">
-              <a-input v-model="formList.taskKey" />
+              <a-input v-model.trim="formList.taskKey" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="任务状态">
-              <a-select v-model="formList.status" placeholder="请选择">
+              <a-select v-model.trim="formList.status" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.statusOption"
                   :key="sindex"
@@ -26,8 +26,13 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
-            <a-form-model-item label="任务来源" style="width:300px">
-              <a-select v-model="formList.taskSource" placeholder="请选择">
+            <a-form-model-item label :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
+              <a-button type="primary" @click="onSearch" :disabled="tableLoading">查询</a-button>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-model-item label="任务来源">
+              <a-select v-model.trim="formList.taskSource" placeholder="请选择">
                 <a-select-option
                   v-for="(item,sindex) in formList.taskSourceOption"
                   :key="sindex"
@@ -41,29 +46,27 @@
               <a-range-picker @change="onChange" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="6">
-            <a-form-model-item label :wrapper-col="{ span: 24, offset: 4 }">
-              <a-button type="primary" @click="onSearch">查询</a-button>
+          <a-col :span="12">
+            <a-form-model-item label :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
               <a-button type="primary" @click="onCreateTask" style="margin-left: 10px;">新建任务</a-button>
             </a-form-model-item>
           </a-col>
+         
         </a-row>
       </a-form-model>
       <a-row type="flex" style="height:100%;flex-flow: row;">
-        <a-col flex="auto" style="padding:20px 10px;height:100%;">
+        <a-col flex="auto" style="padding:10px 10px;height:100%;">
           <a-table
-            :style="{ marginTop: '20px' }"
             :columns="columns"
             :data-source="dataList"
             :pagination="false"
             :loading="tableLoading"
             :scroll="{ y: scrollY }"
           >
-            <span slot="action" slot-scope="record" class="record">
-              <a @click="onCheck(record)">查看</a>
-              <a @click="onCheck(record)">启用</a>
-              <a @click="onCheck(record)">禁用</a>
-              <a @click="onEditTask(record)">编辑</a>
+            <span slot="action" slot-scope="record">
+              <a-button type="link" class="record" @click="onCheck(record)">查看</a-button>
+              <a-button type="link" class="record" @click="onStatus(record)">{{record.status === 1 ? '禁用' : '启用'}}</a-button>
+              <a-button type="link" class="record" @click="onEditTask(record)" :disabled="record.status === 1">编辑</a-button>
             </span>
           </a-table>
           <a-pagination
@@ -90,6 +93,7 @@
 import FormList from '@/components/FormList/index.jsx';
 import moment from 'moment';
 import api from '@/api';
+import { getTaskList, postUpdateStatus } from '@/api/task';
 export default {
   name: 'task-manager',
   data() {
@@ -102,18 +106,14 @@ export default {
       total: null,
       tableLoading: false,
       formList: {
-        taskName: "",
-        taskKey: "",
-        status: "",
-        taskDate: "",
-        taskSource: "",
-        createTimeStart: "",
-        createTimeEnd: "",
-        statusOption: [
-          { id: '', name: '全部' },
-          { id: '0', name: '禁用' },
-          { id: '1', name: '启用' }
-        ],
+        taskName: '',
+        taskKey: '',
+        status: '',
+        taskDate: '',
+        taskSource: '',
+        createTimeStart: '',
+        createTimeEnd: '',
+        statusOption: [{ id: '', name: '全部' }, { id: '0', name: '禁用' }, { id: '1', name: '启用' }],
         taskSourceOption: []
       },
       columns: [
@@ -145,11 +145,6 @@ export default {
           customRender: text => (text === 0 ? '禁用' : '启用')
         },
         {
-          title: '对应行为',
-          key: 'behaviourName',
-          dataIndex: 'behaviourName'
-        },
-        {
           title: '任务来源',
           key: 'sourceName',
           dataIndex: 'sourceName'
@@ -163,6 +158,7 @@ export default {
         {
           title: '操作',
           key: 'action',
+          width: 200,
           scopedSlots: { customRender: 'action' }
         }
       ],
@@ -202,10 +198,10 @@ export default {
       this.$router.push({ name: 'taskCenter-task-detial', query: { id: record.id } });
     },
     onEditTask(record) {
-      this.$router.push({ name: 'taskCenter-task-edit',query: { id: record.id }  });
+      this.$router.push({ name: 'taskCenter-task-create', query: { id: record.id, type: 'edit' } });
     },
     onCreateTask() {
-      this.$router.push({ name: 'taskCenter-task-create' });
+      this.$router.push({ name: 'taskCenter-task-create', query: { type: 'add' } });
     },
     // onShowSizeChange(current, pageSize) {
     //   this.current = current;
@@ -234,8 +230,7 @@ export default {
         taskName: this.taskName,
         taskSource: this.taskSource
       };
-      api
-        .getTaskList(args)
+      getTaskList(args)
         .then(res => {
           this.dataList = res.data.records.map((item, index) => {
             return {
@@ -256,15 +251,32 @@ export default {
         .getTaskSource()
         .then(
           res =>
-          (sourceList = res.data.map(item => {
-            return { id: item.appCode, name: item.appName };
-          }))
+            (sourceList = res.data.map(item => {
+              return { id: item.appCode, name: item.appName };
+            }))
         )
         .then(() => {
-          this.formList.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList)
+          this.formList.taskSourceOption = [].concat({ id: '', name: '全部' }, sourceList);
+        });
+    },
+
+    // 是否启用
+    onStatus(row) {
+      this.tableLoading = true;
+      postUpdateStatus({
+        id: row.id,
+        status: row.status === 1 ? 0 : 1
+      })
+        .then(res => {
+          this.getTaskList();
+          this.$message.success('状态已更改');
+        })
+        .finally(() => {
+          this.tableLoading = false;
         });
     }
   },
+
   activated() {
     // isUseCache为false时才重新刷新获取数据
     // 通过这个控制刷新
@@ -279,7 +291,7 @@ export default {
       this.taskSource = '';
       this.status = null;
       //初始化加载数据
-      this.$refs.form.form.resetFields();
+      this.$refs.ruleForm.resetFields();
       this.getTaskList();
     }
 
@@ -311,10 +323,12 @@ export default {
 <style lang="less" scoped>
 .searchContent {
   margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .taskManager {
   height: 100%;
-  overflow: hide;
+  overflow: hidden;
   &-header {
     border-bottom: 1px solid #e8e8e8;
     line-height: 60px;
@@ -323,8 +337,18 @@ export default {
   &-main {
     height: 100%;
   }
-  .record a {
-    margin-right: 5px;
+  .record {
+    padding: 0 5px;
   }
+}
+.table-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.search-btn ::v-deep .ant-form-item-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>

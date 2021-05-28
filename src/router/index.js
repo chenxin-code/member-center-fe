@@ -43,6 +43,12 @@ const CouponsReleaseDetail = () => import('@/pages/coupons/release/detail');
 const CouponsReleaseCreate = () => import('@/pages/coupons/release/create');
 const CouponsReleaseStatus = () => import('@/pages/coupons/release/status');
 
+// 游戏
+const gameManage = () => import('@/pages/game/index');
+const addGame = () => import('@/pages/game/addGame');
+const prizeManage = () => import('@/pages/game/prizeManage'); //奖品管理
+const peopleManage = () => import('@/pages/game/peopleManageList'); //奖品管理
+
 const routes = [
   //首页:home
   {
@@ -172,6 +178,58 @@ const routes = [
         },
         component: CouponsManageDetail
       },
+
+      // 游戏管理
+      {
+        path: '/gameManage',
+        name: 'gameManage',
+        menuKey: 'gameManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: gameManage
+      },
+      {
+        path: '/gameManage/addGame',
+        name: 'addGame',
+        menuKey: 'addGame',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+        },
+        component: addGame
+      },
+      {
+        path: '/gameManage/prizeManage',
+        name: 'prizeManage',
+        menuKey: 'prizeManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+        },
+        component: prizeManage
+      },
+      {
+        path: '/gameManage/peopleManage',
+        name: 'peopleManage',
+        menuKey: 'peopleManage',
+        meta: {
+          menu: '/gameManage',
+          authKeys: [''],
+          bread: [{ path: '/gameManage', name: '游戏管理' }],
+          isUseCache: false,
+        },
+        component: peopleManage
+      },
+
       //// 活动管理 start
       {
         path: '/actManage',
@@ -312,9 +370,45 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/index.vue')
+      },
+      {
+        path: '/taskCenter-distribute',
+        name: 'taskCenter-distribute',
+        menuKey: 'taskCenter-distribute',
+        meta: {
+          menu: '/taskCenter-distribute',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribute',
+              name: '任务派发'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: false
+        },
+        component: () => import('@/pages/taskCenter/distribute/index.vue')
+      },
+      {
+        path: '/taskCenter-distribute/create',
+        name: 'taskCenter-distribute-create',
+        menuKey: 'taskCenter-distribute-create',
+        meta: {
+          menu: '/taskCenter-distribute',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-distribute',
+              name: '任务派发'
+            }
+          ],
+          isUseCache: false,
+          keepAlive: false
+        },
+        component: () => import('@/pages/taskCenter/distribute/create.vue')
       },
       {
         path: '/task-manager',
@@ -348,7 +442,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/index.vue')
       },
@@ -370,7 +464,7 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/detial.vue')
       },
@@ -392,31 +486,9 @@ const routes = [
             }
           ],
           isUseCache: false,
-          keepAlive: true
+          keepAlive: false
         },
         component: () => import('@/pages/taskCenter/task/create.vue')
-      },
-      {
-        path: '/taskCenter-task/edit',
-        name: 'taskCenter-task-edit',
-        menuKey: 'taskCenter-task-edit',
-        meta: {
-          menu: '/taskCenter-task-edit',
-          authKeys: [''],
-          bread: [
-            {
-              path: '/task-manager',
-              name: '任务管理'
-            },
-            {
-              path: '/taskCenter-task-edit',
-              name: '编辑任务'
-            }
-          ],
-          isUseCache: false,
-          keepAlive: true
-        },
-        component: () => import('@/pages/taskCenter/task/Edit.vue')
       },
       {
         path: '/taskCenter-behavior',
@@ -434,14 +506,14 @@ const routes = [
           isUseCache: false,
           keepAlive: true
         },
-        component: () => import('@/pages/taskCenter/behavior/index.vue')
+        component: () => import('@/pages/taskCenter/behavior/list.vue')
       },
       {
-        path: '/taskCenter-behavior/create',
-        name: 'taskCenter-behavior-create',
-        menuKey: 'taskCenter-behavior-create',
+        path: '/taskCenter-behavior/add',
+        name: 'taskCenter-behavior-add-edit',
+        menuKey: 'taskCenter-behavior-add-edit',
         meta: {
-          menu: '/taskCenter-behavior-create',
+          menu: '/taskCenter-behavior-add-edit',
           authKeys: [''],
           bread: [
             {
@@ -449,21 +521,19 @@ const routes = [
               name: '行为管理'
             },
             {
-              path: '/taskCenter-behavior/create',
-              name: '行为创建'
+              path: '/taskCenter-behavior/add',
+              name: '创建行为'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
-        component: () => import('@/pages/taskCenter/behavior/create.vue')
+        component: () => import('@/pages/taskCenter/behavior/add-edit.vue')
       },
       {
         path: '/taskCenter-behavior/edit',
-        name: 'taskCenter-behavior-edit',
-        menuKey: 'taskCenter-behavior-edit',
+        name: 'taskCenter-behavior-add-edit',
+        menuKey: 'taskCenter-behavior-add-edit',
         meta: {
-          menu: '/taskCenter-behavior-edit',
+          menu: '/taskCenter-behavior-add-edit',
           authKeys: [''],
           bread: [
             {
@@ -474,11 +544,9 @@ const routes = [
               path: '/taskCenter-behavior/edit',
               name: '编辑行为'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
-        component: () => import('@/pages/taskCenter/behavior/Edit.vue')
+        component: () => import('@/pages/taskCenter/behavior/add-edit.vue')
       },
       {
         path: '/taskCenter-behavior/detial',
@@ -494,13 +562,31 @@ const routes = [
             },
             {
               path: '/taskCenter-behavior/detial',
-              name: '行为创建'
+              name: '行为详情'
             }
-          ],
-          isUseCache: false,
-          keepAlive: true
+          ]
         },
         component: () => import('@/pages/taskCenter/behavior/detial.vue')
+      },
+      {
+        path: '/taskCenter-behavior/journal',
+        name: 'taskCenter-behavior-journal',
+        menuKey: 'taskCenter-behavior-journal',
+        meta: {
+          menu: '/taskCenter-behavior-journal',
+          authKeys: [''],
+          bread: [
+            {
+              path: '/taskCenter-behavior',
+              name: '行为管理'
+            },
+            {
+              path: '/taskCenter-behavior/journal',
+              name: '行为日志'
+            }
+          ]
+        },
+        component: () => import('@/pages/taskCenter/behavior/journal.vue')
       },
       {
         path: '/task-manager/detail',
@@ -708,6 +794,171 @@ const routes = [
           ]
         },
         component: () => import('@/pages/systemRecord/detail')
+      },
+      {
+        path: '/gift',
+        name: 'gift',
+        menuKey: 'gift',
+        meta: {
+          menu: '/gift',
+          authKeys: [''],
+          bread: [{ path: '/gift', name: '礼包管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/gift/list')
+      },
+      {
+        path: '/gift/add',
+        name: 'giftAddEdit',
+        menuKey: 'gift',
+        meta: {
+          menu: '/gift',
+          authKeys: [''],
+          bread: [
+            { path: '/gift', name: '礼包管理' },
+            { path: '/gift/add', name: '新建礼包' }
+          ]
+        },
+        component: () => import('@/pages/gift/add-edit')
+      },
+      {
+        path: '/gift/edit',
+        name: 'giftAddEdit',
+        menuKey: 'gift',
+        meta: {
+          menu: '/gift',
+          authKeys: [''],
+          bread: [
+            { path: '/gift', name: '礼包管理' },
+            { path: '/gift/edit', name: '编辑礼包' }
+          ]
+        },
+        component: () => import('@/pages/gift/add-edit')
+      },
+      {
+        path: '/gift/detail',
+        name: 'giftDetail',
+        menuKey: 'gift',
+        meta: {
+          menu: '/gift',
+          authKeys: [''],
+          bread: [
+            { path: '/gift', name: '礼包管理' },
+            { path: '/gift/detail', name: '礼包详情' }
+          ]
+        },
+        component: () => import('@/pages/gift/detail')
+      },
+      {
+        path: '/gift/content',
+        name: 'giftContent',
+        menuKey: 'gift',
+        meta: {
+          menu: '/gift',
+          authKeys: [''],
+          bread: [
+            { path: '/gift', name: '礼包管理' },
+            { path: '/gift/content', name: '礼包内容管理' }
+          ]
+        },
+        component: () => import('@/pages/gift/content')
+      },
+      {
+        path: '/giftH',
+        name: 'giftH',
+        menuKey: 'giftH',
+        meta: {
+          menu: '/giftH',
+          authKeys: [''],
+          bread: [{ path: '/giftH', name: '节日礼包管理' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/giftH/list')
+      },
+      {
+        path: '/giftH/add',
+        name: 'giftHAddEdit',
+        menuKey: 'giftH',
+        meta: {
+          menu: '/giftH',
+          authKeys: [''],
+          bread: [
+            { path: '/giftH', name: '节日礼包管理' },
+            { path: '/giftH/add', name: '新建节日礼包' }
+          ]
+        },
+        component: () => import('@/pages/giftH/add-edit')
+      },
+      {
+        path: '/giftH/edit',
+        name: 'giftHAddEdit',
+        menuKey: 'giftH',
+        meta: {
+          menu: '/giftH',
+          authKeys: [''],
+          bread: [
+            { path: '/giftH', name: '节日礼包管理' },
+            { path: '/giftH/edit', name: '编辑节日礼包' }
+          ]
+        },
+        component: () => import('@/pages/giftH/add-edit')
+      },
+      {
+        path: '/giftH/detail',
+        name: 'giftHDetail',
+        menuKey: 'giftH',
+        meta: {
+          menu: '/giftH',
+          authKeys: [''],
+          bread: [
+            { path: '/giftH', name: '节日礼包管理' },
+            { path: '/giftH/detail', name: '节日礼包详情' }
+          ]
+        },
+        component: () => import('@/pages/giftH/detail')
+      },
+      {
+        path: '/giftDist',
+        name: 'giftDist',
+        menuKey: 'giftDist',
+        meta: {
+          menu: '/giftDist',
+          authKeys: [''],
+          bread: [{ path: '/giftDist', name: '礼包派发' }],
+          isUseCache: false,
+          keepAlive: true
+        },
+        component: () => import('@/pages/giftDist/list')
+      },
+      {
+        path: '/giftDist/add',
+        name: 'giftDistAdd',
+        menuKey: 'giftDist',
+        meta: {
+          menu: '/giftDist',
+          authKeys: [''],
+          bread: [
+            { path: '/giftDist', name: '礼包派发' },
+            { path: '/giftDist/add', name: '新建派发' }
+          ]
+        },
+        component: () => import('@/pages/giftDist/add')
+      },
+      {
+        path: '/giftDist/detail',
+        name: 'giftDistDetail',
+        menuKey: 'giftDist',
+        meta: {
+          menu: '/giftDist',
+          authKeys: [''],
+          bread: [
+            { path: '/giftDist', name: '礼包派发' },
+            { path: '/giftDist/detail', name: '派发详情' }
+          ]
+        },
+        component: () => import('@/pages/giftDist/detail')
       }
     ]
   },
@@ -737,23 +988,23 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log('router beforeEach 全局守卫执行了: ', to.path);
-  console.log('beforeEach to :>> ', to);
+  // console.log('router beforeEach 全局守卫执行了: ', to.path);
+  // console.log('beforeEach to :>> ', to);
   // store.commit('menu/changeMenuStatus', true); //禁止menu
   await api
     .getLoginUrl()
     .finally(() => {
       //测试异步用
       // setTimeout(() => {
-      //   console.log('beforeEach store :>> ', store);
-      //   console.log('beforeEach setTimeout...');
+      //   // console.log('beforeEach store :>> ', store);
+      //   // console.log('beforeEach setTimeout...');
       //   store.commit('menu/changeMenuStatus', false); //解禁menu
       // }, 3000);
-      console.log('beforeEach setTimeout...');
+      // console.log('beforeEach setTimeout...');
       // store.commit('menu/changeMenuStatus', false); //解禁menu
     })
     .then(res => {
-      console.log('beforeEach getLoginUrl res :>> ', res);
+      // console.log('beforeEach getLoginUrl res :>> ', res);
       if (res.code === 200) {
         window.localStorage.setItem('SD_LOGIN_URL', res.data);
       }
@@ -789,7 +1040,7 @@ router.onError(error => {
     window.location.reload();
     // router.replace(router.history.pending.fullPath);
   } else {
-    console.log(error);
+    // console.log(error);
   }
 });
 

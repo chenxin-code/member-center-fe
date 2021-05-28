@@ -61,3 +61,35 @@ export const updateGrowth = data => fetchApi(URL.UPDATE_GROWTH, data, 'POST');
 export const reissueCoupon = data => fetchApi(URL.REISSUE_COUPON, data, 'POST');
 //系统异常处理接口修改异常是否处理
 export const editRecord = data => fetchApi(URL.EDIT_RECORD, data, 'POST');
+//创建行为
+export const createBehaviour = data => fetchApi(URL.createBehaviour, data, 'POST');
+//编辑行为
+export const editBehaviour = data => fetchApi(URL.editBehaviour, data, 'POST');
+//查看行为详情
+export const selectBehaviour = data => fetchApi(URL.selectBehaviour, data, 'GET');
+//礼包列表
+export const selectGiftBagList = data => fetchApi(URL.selectGiftBagList, data, 'GET');
+//启用禁用礼包
+export const changeGiftBag = data => fetchApi(URL.changeGiftBag, data, 'POST');
+//创建礼包
+export const createGiftBag = data => fetchApi(URL.createGiftBag, data, 'POST');
+//删除卡卷
+export const delCoupon = data => fetchApi(URL.delCoupon, data, 'POST');
+//编辑礼包
+export const editGiftBag = data => fetchApi(URL.editGiftBag, data, 'POST');
+//添加卡券
+export const giftBagManagement = data => fetchApi(URL.giftBagManagement, data, 'POST');
+//礼包卡卷列表
+export const selectCoupon = data => fetchApi(URL.selectCoupon, data, 'GET');
+//礼包详情
+export const selectGiftBag = data => fetchApi(URL.selectGiftBag, data, 'GET');
+//节日礼包列表
+export const selectGiftBagHoliday = data => fetchApi(URL.selectGiftBagHoliday, data, 'GET');
+//创建节日礼包
+export const createGiftBagHoliday = data => fetchApi(URL.createGiftBagHoliday, data, 'POST');
+//编辑节日礼包
+export const updateGiftBagHoliday = data => fetchApi(URL.updateGiftBagHoliday, data, 'POST');
+//直接派发节日礼包
+export const directGiftBagHoliday = data => fetchApi(URL.directGiftBagHoliday, data, 'POST');
+//节日礼包详情
+export const selectGiftBagHolidayId = data => fetchApi(URL.selectGiftBagHolidayId, data, 'GET');

@@ -140,6 +140,13 @@ const vueConfig = {
     port: 8080,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
+      '/times/member-game-center/': {
+        target:'https://member-uat-members-linli.timesgroup.cn:8080',
+        // target: 'http://47.112.249.207:12345',
+        // target: 'http://10.71.12.238:7000',
+        changeOrigin: true //是否开启跨域
+      },
+      // target: 'http://47.112.249.207:12345',
       '/times/': {
         target: 'http://47.112.249.207:20000', //开发:dev
         // target: 'http://member-uat-members-linli.timesgroup.cn:50001', //测试:uat+sit
@@ -168,7 +175,7 @@ const vueConfig = {
 
 // preview.pro.loacg.com only do not use in your production;
 if (process.env.VUE_APP_PREVIEW === 'true') {
-  console.log('VUE_APP_PREVIEW', true);
+  // console.log('VUE_APP_PREVIEW', true);
   // add `ThemeColorReplacer` plugin to webpack plugins
   vueConfig.configureWebpack.plugins.push(createThemeColorReplacerPlugin());
 }

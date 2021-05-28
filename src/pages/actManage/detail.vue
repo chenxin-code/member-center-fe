@@ -141,6 +141,59 @@
           </a-row>
         </div>
 
+        <!-- 会员日邦豆奖励规则 -->
+        <div class="act-common act-config" v-if="actDetails.typeId === 3">
+          <div class="common-title">
+            <div class="common-title-content">会员日邦豆奖励规则</div>
+          </div>
+          <a-row class="common-row">
+            <a-col :span="24">
+              <!-- 每月活动日包含 -->
+              <div class="common-column-wrapp" v-show="actDetails.systemAwardFlag">
+                <div class="common-column">
+                  <div class="column-item">
+                    <div class="column-right">进行邦豆/成长值奖励:</div>
+                    <div class="column-left">{{ actDetails.systemAwardFlag === 1 ? '是' : '否' }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 每周活动日包含 -->
+              <template v-if="actDetails.systemAwardFlag === 1">
+                <div class="common-column-wrapp" v-show="actDetails.isFixed">
+                  <div class="common-column">
+                    <div class="column-item">
+                      <div class="column-right">奖励规则:</div>
+                      <div class="column-left">{{ actDetails.isFixed === 1 ? '固定值':'倍率' }}</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 会员权益类型 -->
+                <div class="common-column-wrapp">
+                  <div class="common-column">
+                    <div class="column-item">
+                      <div class="column-right">奖励成长值数/倍率:</div>
+
+                      <div class="column-left">{{ actDetails.awardGrow }}</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- scopeType 是否指定 0 不指定 1 指定 -->
+                <!-- 会员卡及等级包含 -->
+                <div class="common-column-wrapp">
+                  <div class="common-column">
+                    <div class="column-item">
+                      <div class="column-right">奖励邦豆数/倍率:</div>
+                      <div class="column-left">
+                        {{ actDetails.awardIntegral }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </a-col>
+          </a-row>
+        </div>
+
         <!-- 活动奖品信息 -->
         <div class="act-common act-award">
           <div class="common-title">
@@ -413,7 +466,7 @@ export default {
 
     weeklyDayStr() {
       return param => {
-        console.log('param :>> ', param);
+        // console.log('param :>> ', param);
         if (!param) {
           return '';
         }
@@ -449,7 +502,7 @@ export default {
         },
         responseType: 'blob'
       }).then(res => {
-        console.log('getDownloadInfo res.data :>> ', res.data);
+        // console.log('getDownloadInfo res.data :>> ', res.data);
         // return;
         this.handleDownload(res.data);
       });
@@ -462,7 +515,7 @@ export default {
       eleLink.style.display = 'none';
       // 字符内容转变成blob地址
       var blob = new Blob([content], { type: 'application/vnd.ms-excel;charset=utf-8' });
-      console.log('blob :>> ', blob);
+      // console.log('blob :>> ', blob);
       eleLink.href = URL.createObjectURL(blob);
       // 触发点击
       document.body.appendChild(eleLink);
@@ -476,10 +529,10 @@ export default {
         activityId: this.$route.query.id
       };
 
-      console.log('getActDetail param :>> ', param);
+      // console.log('getActDetail param :>> ', param);
 
       api.getActDetail(param).then(res => {
-        console.log('getActDetail res :>> ', res);
+        // console.log('getActDetail res :>> ', res);
         if (res.code === 200) {
           for (const key in res.data) {
             if (Object.hasOwnProperty.call(res.data, key)) {
@@ -490,13 +543,13 @@ export default {
           // this.actDetails.activityAwards = this.actDetails.activityAwards.concat(
           //   this.actDetails.activityAwards
           // );
-          console.log('this.actDetails :>> ', this.actDetails);
+          // console.log('this.actDetails :>> ', this.actDetails);
         }
       });
     }
   },
   created() {
-    console.log('this.$route :>> ', this.$route);
+    // console.log('this.$route :>> ', this.$route);
     // this.getActDownload();
     this.getActDetail();
   },

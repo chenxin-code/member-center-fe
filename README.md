@@ -113,3 +113,9 @@ handleBlur: function handleBlur(e) {
   //FIXME: blur bug
 }
 ```
+
+### 本地部署通过地址传递token并存储到localstorage
+
+http://localhost:8080?token=
+
+代码实现原理: src/pages/member/dashboard/index.vue

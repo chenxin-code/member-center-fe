@@ -106,5 +106,52 @@ export default {
   //异常卡卷补发
   REISSUE_COUPON: '/times/member-center/coupon/api/v1/coupon/reissueCoupon',
   //系统异常处理接口修改异常是否处理
-  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord'
+  EDIT_RECORD: '/times/member-center/record/api/v1/editRecord',
+  //创建行为
+  createBehaviour: '/times/member-center/behaviour/api/v1/createBehaviour',
+  //编辑行为
+  editBehaviour: '/times/member-center/behaviour/api/v1/editBehaviour',
+  //查看行为详情
+  selectBehaviour: '/times/member-center/behaviour/api/v1/selectBehaviour',
+  //礼包列表
+  selectGiftBagList: '/times/member-center/giftBag/api/v1/selectGiftBagList',
+  //启用禁用礼包
+  changeGiftBag: '/times/member-center/giftBag/api/v1/changeGiftBag',
+  //创建礼包
+  createGiftBag: '/times/member-center/giftBag/api/v1/createGiftBag',
+  //删除卡卷
+  delCoupon: '/times/member-center/giftBag/api/v1/delCoupon',
+  //编辑礼包
+  editGiftBag: '/times/member-center/giftBag/api/v1/editGiftBag',
+  //添加卡券
+  giftBagManagement: '/times/member-center/giftBag/api/v1/giftBagManagement',
+  //礼包卡卷列表
+  selectCoupon: '/times/member-center/giftBag/api/v1/selectCoupon',
+  //礼包详情
+  selectGiftBag: '/times/member-center/giftBag/api/v1/selectGiftBag',
+  //节日礼包列表
+  selectGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHoliday',
+  //创建节日礼包
+  createGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/createGiftBagHoliday',
+  //编辑节日礼包
+  updateGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/updateGiftBagHoliday',
+  //直接派发节日礼包
+  directGiftBagHoliday: '/times/member-center/giftBagHoliday/api/v1/directGiftBagHoliday',
+  //节日礼包详情
+  selectGiftBagHolidayId: '/times/member-center/giftBagHoliday/api/v1/selectGiftBagHolidayId',
+
+  GAME_LIST: '/times/member-game-center/admin/api/v1/game/activitygameList', // 获取活动游戏列表
+  GANE_TAKEPARTINLIST: '/times/member-game-center/admin/api/v1/game/activitygameMemberList', // 获取游戏人员管理列表
+  GANE_PRIZE_MANAGE_LIST: '/times/member-game-center/admin/api/v1/game/activitygamePrizeList', // 获取活动奖品管理列表
+  GANE_DEL_PRIZE_PEOPLE: '/times/member-game-center/admin/api/v1/game/delActivityPerson', // 删除指定中奖人
+  GANE_DETAIL: '/times/member-game-center/admin/api/v1/game/getActivityGameInfo', // 获取活动游戏详情
+  GANE_CHECK_RESULT: '/times/member-game-center/admin/api/v1/game/getMemberLotteryResult', // 查看中奖结果
+  GANE_MANAGE_GAME:  '/times/member-game-center/admin/api/v1/game/manageActivityGame', // 管理活动游戏(启用、禁用、删除)
+  GANE_SAVE_GAME: '/times/member-game-center/admin/api/v1/game/saveOrUpdate', // 保存活动游戏
+  GANE_UPDATE_PRIZE: '/times/member-game-center/admin/api/v1/game/updateActivityPrize', // 更新活动游戏奖品
+  GANE_MANAGE_TIMES: '/times/member-game-center/admin/api/v1/game/updateDrawLotteryNum', // 管理抽奖次数
+  GANE_UPLOAD_PEOPLE: '/times/member-game-center/admin/api/v1/game/uploadActivityPerson', // 上传指定中奖人
+  PRIZE_NAME_LIST: '/times/member-game-center/admin/api/v1/game/queryPrizeNameList', // 活动奖品名称列表
+
+  GAME_UPLOAD_IMG: '/times/member-game-center/oss/file/upload'
 };
