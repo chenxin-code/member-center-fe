@@ -748,6 +748,7 @@ export default {
     .label-content {
       display: flex;
       margin-top: 20px;
+      margin-left: 300px;
       align-items: center;
     }
     .label-title {
