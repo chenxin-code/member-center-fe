@@ -1,7 +1,7 @@
 <template>
   <div class="taskManager">
     <div class="taskManager-header">任务管理</div>
-    <div class="taskManager-main" ref="contentMain">
+    <div class="taskManager-main" ref="contentMain" >
       <a-form-model ref="ruleForm" :model="formList" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-row class="searchContent">
           <a-col :span="6">
@@ -27,7 +27,7 @@
           </a-col>
           <a-col :span="6">
             <a-form-model-item label :wrapper-col="{ span: 20, offset: 4 }" class="search-btn">
-              <a-button type="primary" @click="onSearch">查询</a-button>
+              <a-button type="primary" @click="onSearch" :disabled="tableLoading">查询</a-button>
             </a-form-model-item>
           </a-col>
           <a-col :span="6">

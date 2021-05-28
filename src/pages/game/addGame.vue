@@ -68,12 +68,24 @@
           />
         </a-form-item>
         <a-form-item label="活动说明">
-          <a-textarea
+          <!-- <a-textarea
             v-model="activityDesc"
             placeholder="请输入内容"
             :auto-size="{ minRows: 3, maxRows: 5 }"
             style="width: 400px;"
-          />
+          /> -->
+          <editorComponent
+            :contenteditable="true"
+            :value="activityDesc"
+            :index="0"
+            :is-show-num="true"
+            content-height="200px"
+            editor-width="100%"
+            :max-num="2000"
+            :filter-text="true"
+            @changeValue="changeValue"
+            @isBeyond="isBeyond"
+          ></editorComponent>
         </a-form-item>
 
         <a-form-item label="通知方式">
@@ -361,10 +373,12 @@
 <script>
 import { GANE_SAVE_GAME } from '@/api/game';
 import { updateImage } from '@/api/member';
+import editorComponent from '@/components/editor';
 // import timesInput from './component/form-input';
 // import timesSelect from './component/form-select';
 export default {
   components: {
+    editorComponent
     // timesInput
     // timesSelect
   },
@@ -437,7 +451,8 @@ export default {
       },
       loading: false,
       imageUrl: '',
-      paramsPage: {}
+      paramsPage: {},
+      isBeyondStatus: ''
     };
   },
   created() {
@@ -497,6 +512,12 @@ export default {
     this.changeDate(this.rangeDate);
   },
   methods: {
+    isBeyond(v) {
+      this.isBeyondStatus = v;
+    },
+    changeValue(value) {
+      this.activityDesc = value.content;
+    },
     pageBack() {
       this.$router.go(-1);
     },
