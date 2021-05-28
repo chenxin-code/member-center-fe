@@ -21,118 +21,120 @@
       </a-table>
     </div>
 
-    <a-modal title="奖品管理" :visible="ticketVisible" @ok="submit" @cancel="ticketVisible = false">
-      <div style="height: 400px;overflow-y: scroll;">
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">位置：</div>
-          <div class="prizeManage-label-text">{{ prizeTarget.positionIndex }}</div>
-        </div>
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">奖品名称</div>
-          <timesInput v-model="prizeName"></timesInput>
-        </div>
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">奖品类型</div>
-          <timesSelect
-            :optionObj="PRIZE_TYPE_DICT"
-            @select-option="seleceType"
-            placeholder="请选择奖品类型"
-            :default-value="PRIZE_TYPE_DICT2[prizeTarget.prizeType]"
-          ></timesSelect>
-        </div>
-        <div class="game-prizeManage-label" v-if="prizeType == 1 || prizeType == 2">
-          <div class="prizeManage-label-title" style="width: 120px;margin-right: 15px;">奖励数量</div>
-          <!-- <timesInput v-model="rewardNum"></timesInput> -->
-          <a-input-number
-            :min="0"
-            style="width: 200px"
-            :defaultValue="rewardNum"
-            @change="value => (rewardNum = value)"
-          />
-        </div>
-        <div class="game-prizeManage-label" v-if="prizeType >= 4005">
-          <div class="prizeManage-label-title" style="width: 120px">选择卡券</div>
-          <timesSelect
-            :optionObj="couponOpton"
-            @select-option="selectCoupon"
-            placeholder="请选择奖品类型"
-            :default-value="couponOpton2[ticketCode]"
-          ></timesSelect>
-        </div>
+    <div v-if="ticketVisible">
+      <a-modal title="奖品管理" :visible="ticketVisible" @ok="submit" @cancel="ticketVisible = false">
+        <div style="height: 400px;overflow-y: scroll;">
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">位置：</div>
+            <div class="prizeManage-label-text">{{ prizeTarget.positionIndex }}</div>
+          </div>
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">奖品名称</div>
+            <timesInput v-model="prizeName"></timesInput>
+          </div>
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">奖品类型</div>
+            <timesSelect
+              :optionObj="PRIZE_TYPE_DICT"
+              @select-option="seleceType"
+              placeholder="请选择奖品类型"
+              :default-value="PRIZE_TYPE_DICT2[prizeTarget.prizeType]"
+            ></timesSelect>
+          </div>
+          <div class="game-prizeManage-label" v-if="prizeType == 1 || prizeType == 2">
+            <div class="prizeManage-label-title" style="width: 120px;margin-right: 15px;">奖励数量</div>
+            <!-- <timesInput v-model="rewardNum"></timesInput> -->
+            <a-input-number
+              :min="0"
+              style="width: 200px"
+              :defaultValue="rewardNum"
+              @change="value => (rewardNum = value)"
+            />
+          </div>
+          <div class="game-prizeManage-label" v-if="prizeType >= 4005">
+            <div class="prizeManage-label-title" style="width: 120px">选择卡券</div>
+            <timesSelect
+              :optionObj="couponOpton"
+              @select-option="selectCoupon"
+              placeholder="请选择奖品类型"
+              :default-value="couponOpton2[ticketCode]"
+            ></timesSelect>
+          </div>
 
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">奖品数量</div>
-          <!-- <timesInput v-model="prizeNum"></timesInput> -->
-          <a-input-number
-            :min="0"
-            style="width: 200px;margin-left: 15px;"
-            :defaultValue="prizeNum"
-            @change="value => (prizeNum = value)"
-          />
-        </div>
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
-          <!-- <timesInput v-model="dayMaxLotteryNum"></timesInput> -->
-          <a-input-number
-            :min="0"
-            :defaultValue="dayMaxLotteryNum"
-            style="width: 200px;margin-left: 15px;"
-            @change="value => (dayMaxLotteryNum = value)"
-          />
-        </div>
-        <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
-          <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
-          <a-upload
-            style="margin-left: 15px"
-            name="file"
-            :before-upload="() => false"
-            @change="handleExcel"
-            :remove="handRemoveExcel"
-            :disabled="hasExcel"
-            :default-file-list="excelFileList"
-          >
-            <a-button>
-              <a-icon type="upload" />
-              上传
-            </a-button>
-          </a-upload>
-        </div>
-
-        <div class="game-prizeManage-label">
-          <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
-          <!-- <timesInput v-model="lotteryWeight" type="number"></timesInput> -->
-          <a-input-number
-            style="width: 200px;margin-left: 15px;"
-            :defaultValue="lotteryWeight"
-            @change="value => (lotteryWeight = value)"
-            :min="0"
-            :max="100"
-          />
-        </div>
-        <div class="game-prizeManage-label" v-if="ticketVisible">
-          <div class="prizeManage-label-title" style="width: 120px">奖品缩略图</div>
-          <div class="stair">
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">奖品数量</div>
+            <!-- <timesInput v-model="prizeNum"></timesInput> -->
+            <a-input-number
+              :min="0"
+              style="width: 200px;margin-left: 15px;"
+              :defaultValue="prizeNum"
+              @change="value => (prizeNum = value)"
+            />
+          </div>
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">单日最高中奖数量</div>
+            <!-- <timesInput v-model="dayMaxLotteryNum"></timesInput> -->
+            <a-input-number
+              :min="0"
+              :defaultValue="dayMaxLotteryNum"
+              style="width: 200px;margin-left: 15px;"
+              @change="value => (dayMaxLotteryNum = value)"
+            />
+          </div>
+          <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
+            <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
             <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
+              style="margin-left: 15px"
+              name="file"
               :before-upload="() => false"
-              :remove="handleImgRemove"
-              @preview="handlePreview"
-              @change="uploadPic"
-              :default-file-list="fileList"
+              @change="handleExcel"
+              :remove="handRemoveExcel"
+              :disabled="hasExcel"
+              :default-file-list="excelFileList"
             >
-              <template v-if="!prizeUrl && !fileList.length">
-                <a-icon :type="picUploading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
+              <a-button>
+                <a-icon type="upload" />
+                上传
+              </a-button>
             </a-upload>
           </div>
+
+          <div class="game-prizeManage-label">
+            <div class="prizeManage-label-title" style="width: 120px">中奖权重(%)</div>
+            <!-- <timesInput v-model="lotteryWeight" type="number"></timesInput> -->
+            <a-input-number
+              style="width: 200px;margin-left: 15px;"
+              :defaultValue="lotteryWeight"
+              @change="value => (lotteryWeight = value)"
+              :min="0"
+              :max="100"
+            />
+          </div>
+          <div class="game-prizeManage-label" v-if="ticketVisible">
+            <div class="prizeManage-label-title" style="width: 120px">奖品缩略图</div>
+            <div class="stair">
+              <a-upload
+                name="avatar"
+                accept="image/jpeg,image/jpg,image/png"
+                list-type="picture-card"
+                :before-upload="() => false"
+                :remove="handleImgRemove"
+                @preview="handlePreview"
+                @change="uploadPic"
+                :default-file-list="fileList"
+              >
+                <template v-if="!prizeUrl && !fileList.length">
+                  <a-icon :type="picUploading ? 'loading' : 'plus'" />
+                  <div class="ant-upload-text">
+                    上传
+                  </div>
+                </template>
+              </a-upload>
+            </div>
+          </div>
         </div>
-      </div>
-    </a-modal>
+      </a-modal>
+    </div>
     <a-modal title="奖品管理" :visible="beanVisible" @cancel="beanVisible = false"></a-modal>
   </div>
 </template>
@@ -348,6 +350,8 @@ export default {
     // 点击编辑
     turnOn(val) {
       this.ticketVisible = true;
+      console.log('------------turnOn-----------');
+      console.log('val', val);
       this.prizeTarget = val;
       this.prizeName = val.prizeName;
       this.prizeType = val.prizeType;
@@ -355,6 +359,7 @@ export default {
       this.prizeNum = val.prizeNum * 1;
       this.dayMaxLotteryNum = val.dayMaxLotteryNum * 1;
       this.lotteryWeight = val.lotteryWeight * 1;
+
       this.prizeUrl = val.prizeUrl;
       this.fileList = [];
       this.excelFileList = [];
