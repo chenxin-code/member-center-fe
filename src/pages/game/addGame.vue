@@ -67,6 +67,7 @@
             @change="luckyDrawLimitsInput"
           />
         </a-form-item>
+
         <a-form-item label="活动说明">
           <!-- <a-textarea
             v-model="activityDesc"
@@ -111,6 +112,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
+
         <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
             format="YYYY-MM-DD"
