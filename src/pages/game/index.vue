@@ -14,7 +14,7 @@
         <a-button @click="addGame" style="width: 150px;margin-left: 10px" type="primary">新建游戏</a-button>
       </div>
     </div>
-    <div class="game-content">
+    <div class="game-content" v-if="isUpdate">
       <a-table
         :columns="columns"
         :data-source="records"
@@ -96,6 +96,7 @@ export default {
   },
   data() {
     return {
+      isUpdate: true,
       copyTarget: '',
       gameOption: [
         { name: '全部', value: '' },
@@ -128,6 +129,7 @@ export default {
     });
   },
   activated() {
+    this.isUpdate = false;
     this.getGameList({
       pageNum: 1,
       pageSize: 10,
@@ -145,6 +147,7 @@ export default {
       GAME_LIST(params).then(({ code, data }) => {
         console.log('code', code);
         if (code == 200) {
+          this.isUpdate = true;
           this.pagination.total = Number(data.total);
           this.pageNum++;
           this.records = data.records;

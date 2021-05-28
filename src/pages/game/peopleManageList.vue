@@ -221,13 +221,13 @@ export default {
     this.paramsPage = this.$route.query;
     let { memberId, memberPhone, prizeFlag, prizeId, lotteryType } = this.paramsPage;
     if (!this.paramsPage.drawLotteryTime) {
-      columns.push({
+      this.columns.push({
         key: 'operate',
         slots: { title: 'operate' },
         scopedSlots: { customRender: 'operate' }
       });
     }
-    console.log('columns', columns);
+    console.log('columns', this.columns);
     // 获取活动奖品名称列表
     PRIZE_NAME_LIST({
       gameId: this.paramsPage.id,
