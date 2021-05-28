@@ -300,14 +300,14 @@ export default {
     },
     changePage() {},
     search() {
-      let { memberId, prizeFlag, prizeId } = this.paramsPage;
+      let { memberId, prizeId } = this.paramsPage;
       this.getList({
         gameId: this.paramsPage.id,
         memberId,
         memberPhone: this.memberPhone,
         pageNum: 1,
         pageSize: 10,
-        prizeFlag,
+        prizeFlag: this.prizeFlag,
         prizeId,
         prizeName: this.prizeName,
         lotteryType: this.paramsPage.lotteryType

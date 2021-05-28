@@ -1,7 +1,7 @@
 <template>
   <div class="game-index">
     <div class="game-header">
-      <timesInput title="游戏名称" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
+      <timesInput title="游戏主题" v-model="gameName" placeholder="请输入游戏名称"></timesInput>
       <timesSelect
         title="游戏方式"
         :optionObj="gameOption"
