@@ -11,7 +11,7 @@
             <a-input v-model="form.taskName" />
           </a-form-model-item>
           <a-form-model-item label="有效期" prop="taskDate">
-            <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD" style="width: 100%" @change="onChange" :disabled-date="disabledDate" />
+            <a-range-picker v-model="form.taskDate" format="YYYY-MM-DD HH:mm:ss" style="width: 100%" @change="onChange" :disabled-date="disabledDate" :showTime="dateShowTime" />
           </a-form-model-item>
           <a-form-model-item label="任务周期性" prop="isPeriodic">
             <a-select v-model="form.isPeriodic" placeholder="请选择">
@@ -258,6 +258,11 @@ export default {
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'register' });
   },
+  computed: {
+    dateShowTime() {
+      return { defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')] };
+    }
+  },
   created() {
     this.getTaskSource();
     this.type = this.$route.query.type;
@@ -308,7 +313,6 @@ export default {
       this.form.source = value;
     },
     btnCreateTask(e) {
-      console.log(this.form);
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           const _http = this.type === 'add' ? postAdd : postUpdate;
