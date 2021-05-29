@@ -261,6 +261,10 @@ export default {
       pageSize: 10
     }).then(({ code, data }) => {
       if (code == 200) {
+        this.activityLotteryVoListLevel.push({
+          name: '全部',
+          value: ''
+        });
         data.forEach(item => {
           this.activityLotteryVoListLevel.push({
             name: item,
@@ -300,16 +304,16 @@ export default {
     },
     changePage() {},
     search() {
-      let { memberId, prizeId } = this.paramsPage;
+      let { prizeId } = this.paramsPage;
       this.getList({
         gameId: this.paramsPage.id,
-        memberId,
+        memberId: this.memberId,
         memberPhone: this.memberPhone,
         pageNum: 1,
         pageSize: 10,
-        prizeFlag: this.prizeFlag,
+        // prizeFlag: this.prizeFlag,
         prizeId,
-        prizeName: this.prizeName,
+        prizeName: this.prizeFlag,
         lotteryType: this.paramsPage.lotteryType
       });
     },
@@ -343,15 +347,16 @@ export default {
         if (code == 200) {
           this.$message.info('游戏次数重置成功');
           this.changeVisible = false;
-          let { memberId, memberPhone, prizeFlag, prizeId } = this.paramsPage;
+          let { prizeFlag, prizeId } = this.paramsPage;
           // 游戏人员列表
           this.getList({
             gameId: this.paramsPage.id,
-            memberId,
-            memberPhone,
+            memberId: this.memberId,
+            memberPhone: this.memberPhone,
             pageNum: 1,
             pageSize: 10,
             prizeFlag,
+            prizeName: this.prizeName,
             prizeId,
             lotteryType: this.paramsPage.lotteryType * 1
           });

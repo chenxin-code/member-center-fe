@@ -138,99 +138,109 @@
             @change="drawLotteryNumInput"
           />
         </a-form-item>
+
+        <a-form-item label="上传抽奖素材">
+          <a-input
+            v-decorator="[
+              'vaildUploadImg',
+              { initialValue: vaildUploadImg, rules: [{ required: true, message: '请上传抽奖素材' }] }
+            ]"
+            type="hidden"
+            placeholder="Please input your name"
+          />
+          <div class="label-content" v-if="lotteryType == 1">
+            <!-- <div class="label-title" style="margin: 0;">
+              <span style="color: red">*</span>
+              上传抽奖素材
+            </div> -->
+            <div class="game-imgupload">
+              <div class="stair">
+                <div style="margin-bottom: 15px;">背景图片</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveBg"
+                  @preview="handlePreview"
+                  @change="uploadBg"
+                  :defaultFileList="fileBgList"
+                >
+                  <template v-if="!activityBackgroundUrl && !fileBgList.length">
+                    <a-icon :type="bgLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair" v-if="activityType != 2">
+                <div style="margin-bottom: 15px;">消息层背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveMessage"
+                  @preview="handlePreview"
+                  @change="uploadMessage"
+                  :defaultFileList="fileMessageList"
+                >
+                  <template v-if="!msgUrl && !fileMessageList.length">
+                    <a-icon :type="msgLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair" v-if="activityType != 2">
+                <div style="margin-bottom: 15px;">游戏层背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveGame"
+                  @preview="handlePreview"
+                  @change="uploadGame"
+                  :defaultFileList="fileGameList"
+                >
+                  <template v-if="!gameUrl && !fileGameList.length">
+                    <a-icon :type="gameLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair">
+                <div style="margin-bottom: 15px;">弹框背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveAlert"
+                  @preview="handlePreview"
+                  @change="uploadAlert"
+                  :defaultFileList="fileAlertList"
+                >
+                  <template v-if="!popFrameUrl && !fileAlertList.length">
+                    <a-icon :type="popLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+            </div>
+          </div>
+        </a-form-item>
       </a-form>
-
-      <div class="label-content" v-if="lotteryType == 1">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          上传抽奖素材
-        </div>
-        <div class="game-imgupload">
-          <div class="stair">
-            <div style="margin-bottom: 15px;">背景图片</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveBg"
-              @preview="handlePreview"
-              @change="uploadBg"
-              :defaultFileList="fileBgList"
-            >
-              <template v-if="!activityBackgroundUrl && !fileBgList.length">
-                <a-icon :type="bgLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair" v-if="activityType != 2">
-            <div style="margin-bottom: 15px;">消息层背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveMessage"
-              @preview="handlePreview"
-              @change="uploadMessage"
-              :defaultFileList="fileMessageList"
-            >
-              <template v-if="!msgUrl && !fileMessageList.length">
-                <a-icon :type="msgLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair" v-if="activityType != 2">
-            <div style="margin-bottom: 15px;">游戏层背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveGame"
-              @preview="handlePreview"
-              @change="uploadGame"
-              :defaultFileList="fileGameList"
-            >
-              <template v-if="!gameUrl && !fileGameList.length">
-                <a-icon :type="gameLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair">
-            <div style="margin-bottom: 15px;">弹框背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveAlert"
-              @preview="handlePreview"
-              @change="uploadAlert"
-              :defaultFileList="fileAlertList"
-            >
-              <template v-if="!popFrameUrl && !fileAlertList.length">
-                <a-icon :type="popLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-        </div>
-      </div>
 
       <div class="game-button">
         <a-button @click="cancel" style="width: 150px;margin-left: 20px;">取消</a-button>
@@ -251,11 +261,6 @@ export default {
     editorComponent
     // timesInput
     // timesSelect
-  },
-  watch: {
-    gameTitle(val) {
-      console.log('-------', val);
-    }
   },
   data() {
     return {
@@ -322,7 +327,8 @@ export default {
       loading: false,
       imageUrl: '',
       paramsPage: {},
-      isBeyondStatus: ''
+      isBeyondStatus: '',
+      vaildUploadImg: false
     };
   },
   created() {
@@ -496,8 +502,12 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
+    // 校验图片是否有上传
+    verifyPic() {},
+    // 校验表单数据
     verify() {
       this.addForm.validateFields((err, values) => {
+        console.log('------lotteryType--------', this.lotteryType);
         if (!err) {
           let {
             gameTitle,
@@ -533,12 +543,14 @@ export default {
           } else if (!lotteryType) {
             messageText = '请选择开奖方式';
             flag = true;
-          } else if (this.lotteryType == 1) {
-            if (!activityType) {
-              flag = true;
-              messageText = '请选择活动方式';
-            }
-          } else if (lotteryType == 2) {
+          }
+          //  else if (this.lotteryType == 1) {
+          //   if (!activityType) {
+          //     flag = true;
+          //     messageText = '请选择活动方式';
+          //   }
+          // }
+          else if (lotteryType == 2) {
             if (!drawLotteryTime) {
               flag = true;
               messageText = '非立即开奖请选择开奖时间';
@@ -563,8 +575,12 @@ export default {
           }
           if (flag) {
             this.$message.error(messageText);
+            if (this.lotteryType == 1) {
+              this.vaildUploadImg = false;
+            }
           } else {
-            this.submit();
+            this.vaildUploadImg = 1;
+            // this.submit();
           }
         }
       });
@@ -638,8 +654,8 @@ export default {
   .game-add-content {
     .label-content {
       display: flex;
-      margin-top: 20px;
-      margin-left: 300px;
+      // margin-top: 20px;
+      // margin-left: 300px;
       align-items: center;
     }
     .label-title {
