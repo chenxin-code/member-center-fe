@@ -139,13 +139,15 @@
           />
         </a-form-item>
 
-        <a-form-item
-          label="上传抽奖素材"
-          v-decorator="[
-            'vaildUploadImg',
-            { initialValue: vaildUploadImg, rules: [{ required: true, message: '请上传抽奖素材' }] }
-          ]"
-        >
+        <a-form-item label="上传抽奖素材">
+          <a-input
+            v-decorator="[
+              'vaildUploadImg',
+              { initialValue: vaildUploadImg, rules: [{ required: true, message: '请上传抽奖素材' }] }
+            ]"
+            type="hidden"
+            placeholder="Please input your name"
+          />
           <div class="label-content" v-if="lotteryType == 1">
             <!-- <div class="label-title" style="margin: 0;">
               <span style="color: red">*</span>
@@ -331,7 +333,7 @@ export default {
       imageUrl: '',
       paramsPage: {},
       isBeyondStatus: '',
-      vaildUploadImg: ''
+      vaildUploadImg: false
     };
   },
   created() {
@@ -572,11 +574,11 @@ export default {
           }
           if (flag) {
             this.$message.error(messageText);
-            if (this.activityType == 1) {
-              this.vaildUploadImg = '';
+            if (this.lotteryType == 1) {
+              this.vaildUploadImg = false;
             }
           } else {
-            this.vaildUploadImg = 1;
+            this.vaildUploadImg = true;
             this.submit();
           }
         }
