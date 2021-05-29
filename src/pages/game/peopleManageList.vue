@@ -208,17 +208,17 @@ export default {
           title: '会员ID',
           dataIndex: 'memberId',
           key: 'memberId'
-        },
-        {
-          title: '最高参与次数',
-          dataIndex: 'maxPartakeNum',
-          key: 'maxPartakeNum'
-        },
-        {
-          title: '已参与次数',
-          dataIndex: 'alreadyPartakeNum',
-          key: 'alreadyPartakeNum'
         }
+        // {
+        //   title: '最高参与次数',
+        //   dataIndex: 'maxPartakeNum',
+        //   key: 'maxPartakeNum'
+        // },
+        // {
+        //   title: '已参与次数',
+        //   dataIndex: 'alreadyPartakeNum',
+        //   key: 'alreadyPartakeNum'
+        // }
         // {
         //   key: 'operate',
         //   slots: { title: 'operate' },
@@ -247,10 +247,28 @@ export default {
     this.paramsPage = this.$route.query;
     let { memberId, memberPhone, prizeFlag, prizeId, lotteryType } = this.paramsPage;
     if (!this.paramsPage.drawLotteryTime) {
+      this.columns.push(
+        {
+          title: '最高参与次数',
+          dataIndex: 'maxPartakeNum',
+          key: 'maxPartakeNum'
+        },
+        {
+          title: '已参与次数',
+          dataIndex: 'alreadyPartakeNum',
+          key: 'alreadyPartakeNum'
+        },
+        {
+          key: 'operate',
+          slots: { title: 'operate' },
+          scopedSlots: { customRender: 'operate' }
+        }
+      );
+    } else {
       this.columns.push({
-        key: 'operate',
-        slots: { title: 'operate' },
-        scopedSlots: { customRender: 'operate' }
+        title: '奖品名称',
+        dataIndex: 'prizeName',
+        key: 'prizeName'
       });
     }
     console.log('columns', this.columns);
