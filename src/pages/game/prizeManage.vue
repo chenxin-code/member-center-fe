@@ -371,7 +371,7 @@ export default {
             pageIndex: 1,
             pageSize: 30,
             activity: this.prizeType,
-            status: 1 // 启用
+            status: 99 // 启用
           })
           .then(({ code, data }) => {
             if (code == 200) {
@@ -433,7 +433,7 @@ export default {
             pageIndex: 1,
             pageSize: 30,
             activity: val,
-            status: 1 // 启用
+            status: 99 // 启用
           })
           .then(({ code, data }) => {
             if (code == 200) {

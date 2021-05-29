@@ -503,9 +503,7 @@ export default {
       this.$router.go(-1);
     },
     // 校验图片是否有上传
-    verifyPic() {
-
-    },
+    verifyPic() {},
     // 校验表单数据
     verify() {
       this.addForm.validateFields((err, values) => {
@@ -545,12 +543,14 @@ export default {
           } else if (!lotteryType) {
             messageText = '请选择开奖方式';
             flag = true;
-          } else if (this.lotteryType == 1) {
-            if (!activityType) {
-              flag = true;
-              messageText = '请选择活动方式';
-            }
-          } else if (lotteryType == 2) {
+          }
+          //  else if (this.lotteryType == 1) {
+          //   if (!activityType) {
+          //     flag = true;
+          //     messageText = '请选择活动方式';
+          //   }
+          // }
+          else if (lotteryType == 2) {
             if (!drawLotteryTime) {
               flag = true;
               messageText = '非立即开奖请选择开奖时间';
