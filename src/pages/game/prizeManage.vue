@@ -85,6 +85,7 @@
             <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
             <div v-if="!hasExcel">
               <a-upload
+                v-if="updateHandleExcel"
                 style="margin-left: 15px"
                 name="file"
                 :before-upload="() => false"
@@ -226,6 +227,7 @@ export default {
   data() {
     return {
       hasExcel: false, // 由于组件没有限制上传数量功能，用来做标示
+      updateHandleExcel: true,
       ticketCode: '',
       paramsPage: {}, //页面传递参数
 
@@ -473,12 +475,23 @@ export default {
         formData.append('gameId', this.prizeTarget.gameId);
         formData.append('positionIndex', this.prizeTarget.positionIndex);
         formData.append('prizeId', this.prizeTarget.id);
-        GANE_UPLOAD_PEOPLE(formData).then(res => {
-          if (res.code === 200) {
-            this.appointPersonUrl = res.data;
-            this.hasExcel = true;
-          }
-        });
+        try {
+          GANE_UPLOAD_PEOPLE(formData).then(res => {
+            if (res.code === 200) {
+              this.appointPersonUrl = res.data;
+              this.prizeTarget.personFileName = res.data;
+              this.hasExcel = true;
+            } else {
+              // upload组件上传失败后强行刷新
+              this.updateHandleExcel = false;
+              setTimeout(() => {
+                this.updateHandleExcel = true;
+              }, 500);
+            }
+          });
+        } catch (err) {
+          console.log('err');
+        }
       }
     }
   }

@@ -42,31 +42,33 @@
             :disabled-date="disabledDate"
           />
         </a-form-item>
-        <a-form-item label="参与人数">
-          <a-input-number
-            style="width: 400px"
-            :min="1"
-            v-decorator="[
-              'partakeNum',
-              {
-                initialValue: partakeNum,
-                rules: [{ required: true, message: '请输入参与人数' }]
-              }
-            ]"
-            @change="takePartInput"
-          />
-        </a-form-item>
-        <a-form-item label="每人可参与次数">
-          <a-input-number
-            style="width: 400px"
-            :min="1"
-            v-decorator="[
-              'luckyDrawLimits',
-              { initialValue: luckyDrawLimits, rules: [{ required: true, message: '请输入每人可参与次数' }] }
-            ]"
-            @change="luckyDrawLimitsInput"
-          />
-        </a-form-item>
+        <div v-if="lotteryType == 1">
+          <a-form-item label="参与人数">
+            <a-input-number
+              style="width: 400px"
+              :min="1"
+              v-decorator="[
+                'partakeNum',
+                {
+                  initialValue: partakeNum,
+                  rules: [{ required: true, message: '请输入参与人数' }]
+                }
+              ]"
+              @change="takePartInput"
+            />
+          </a-form-item>
+          <a-form-item label="每人可参与次数">
+            <a-input-number
+              style="width: 400px"
+              :min="1"
+              v-decorator="[
+                'luckyDrawLimits',
+                { initialValue: luckyDrawLimits, rules: [{ required: true, message: '请输入每人可参与次数' }] }
+              ]"
+              @change="luckyDrawLimitsInput"
+            />
+          </a-form-item>
+        </div>
 
         <a-form-item label="活动说明">
           <!-- <a-textarea
@@ -550,12 +552,6 @@ export default {
           } else if (!validityStartTime || !validityEndTime) {
             messageText = '请选择活动时间';
             flag = true;
-          } else if (!partakeNum) {
-            messageText = '请输入参与人数';
-            flag = true;
-          } else if (!luckyDrawLimits) {
-            messageText = '请输入每人可参与次数';
-            flag = true;
           } else if (!lotteryType) {
             messageText = '请选择开奖方式';
             flag = true;
@@ -575,7 +571,13 @@ export default {
               messageText = '请选择开奖人数';
             }
           } else if (this.lotteryType == 1) {
-            if (!activityBackgroundUrl) {
+            if (!partakeNum) {
+              messageText = '请输入参与人数';
+              flag = true;
+            } else if (!luckyDrawLimits) {
+              messageText = '请输入每人可参与次数';
+              flag = true;
+            } else if (!activityBackgroundUrl) {
               messageText = '请上传背景图片';
               flag = true;
             } else if (this.activityType == 3 && !msgUrl) {
