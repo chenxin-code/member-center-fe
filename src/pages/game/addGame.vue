@@ -113,12 +113,27 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+        <!-- <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
             format="YYYY-MM-DD"
             valueFormat="YYYY-MM-DD"
             @change="openPrize"
             :disabled-date="disabledDate"
+            v-decorator="[
+              'drawLotteryTime',
+              {
+                initialValue: drawLotteryTime
+              }
+            ]"
+          />
+        </a-form-item> -->
+        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+          <a-date-picker
+            show-time
+            placeholder="请选择开奖时间"
+            @change="openPrize"
+            format="YYYY-MM-DD HH:mm:ss"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
             v-decorator="[
               'drawLotteryTime',
               {
@@ -139,7 +154,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="上传抽奖素材">
+        <a-form-item label="上传抽奖素材" v-if="lotteryType == 1">
           <a-input
             v-decorator="[
               'vaildUploadImg',
@@ -148,7 +163,7 @@
             type="hidden"
             placeholder="Please input your name"
           />
-          <div class="label-content" v-if="lotteryType == 1">
+          <div class="label-content">
             <!-- <div class="label-title" style="margin: 0;">
               <span style="color: red">*</span>
               上传抽奖素材
@@ -420,6 +435,7 @@ export default {
     },
     // 开奖时间
     openPrize(val) {
+      console.log('val--------------------', val);
       this.drawLotteryTime = val;
       //this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
