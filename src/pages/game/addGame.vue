@@ -113,12 +113,27 @@
           </a-select>
         </a-form-item>
 
-        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+        <!-- <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
             format="YYYY-MM-DD"
             valueFormat="YYYY-MM-DD"
             @change="openPrize"
             :disabled-date="disabledDate"
+            v-decorator="[
+              'drawLotteryTime',
+              {
+                initialValue: drawLotteryTime
+              }
+            ]"
+          />
+        </a-form-item> -->
+        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+          <a-date-picker
+            show-time
+            placeholder="请选择开奖时间"
+            @change="openPrize"
+            format="YYYY-MM-DD HH:mm:ss"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
             v-decorator="[
               'drawLotteryTime',
               {
@@ -420,6 +435,7 @@ export default {
     },
     // 开奖时间
     openPrize(val) {
+      console.log('val--------------------', val);
       this.drawLotteryTime = val;
       //this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
