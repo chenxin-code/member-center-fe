@@ -83,20 +83,27 @@
           </div>
           <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
             <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
-            <a-upload
-              style="margin-left: 15px"
-              name="file"
-              :before-upload="() => false"
-              @change="handleExcel"
-              :remove="handRemoveExcel"
-              :disabled="hasExcel"
-              :default-file-list="excelFileList"
-            >
-              <a-button>
-                <a-icon type="upload" />
-                上传
-              </a-button>
-            </a-upload>
+            <div v-if="!hasExcel">
+              <a-upload
+                style="margin-left: 15px"
+                name="file"
+                :before-upload="() => false"
+                @change="handleExcel"
+                :remove="handRemoveExcel"
+                :default-file-list="excelFileList"
+              >
+                <a-button>
+                  <a-icon type="upload" />
+                  上传
+                </a-button>
+              </a-upload>
+            </div>
+            <div v-else>
+              <div style="margin-left: 15px;">
+                {{ prizeTarget.personFileName }}
+                <a-icon type="delete" style="margin-left: 15px;cursor: pointer;" @click="handRemoveExcel" />
+              </div>
+            </div>
           </div>
 
           <div class="game-prizeManage-label">
@@ -350,6 +357,7 @@ export default {
     // 点击编辑
     turnOn(val) {
       this.ticketVisible = true;
+      // this.hasExcel = false;
       console.log('------------turnOn-----------');
       console.log('val', val);
       this.prizeTarget = val;
@@ -403,15 +411,7 @@ export default {
         ];
       }
       if (val.personFileName) {
-        this.excelFileList = [
-          {
-            uid: '-1',
-            status: 'done',
-            name: val.personFileName,
-            url: '',
-            thumbUrl: ''
-          }
-        ];
+        this.hasExcel = true;
       }
       console.log('remove', this.prizeTarget);
     },
