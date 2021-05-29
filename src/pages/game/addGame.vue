@@ -260,11 +260,6 @@ export default {
     // timesInput
     // timesSelect
   },
-  watch: {
-    gameTitle(val) {
-      console.log('-------', val);
-    }
-  },
   data() {
     return {
       addForm: this.$form.createForm(this),
@@ -505,8 +500,14 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
+    // 校验图片是否有上传
+    verifyPic() {
+
+    },
+    // 校验表单数据
     verify() {
       this.addForm.validateFields((err, values) => {
+        console.log('------lotteryType--------', this.lotteryType);
         if (!err) {
           let {
             gameTitle,
@@ -577,7 +578,7 @@ export default {
             }
           } else {
             this.vaildUploadImg = 1;
-            this.submit();
+            // this.submit();
           }
         }
       });
