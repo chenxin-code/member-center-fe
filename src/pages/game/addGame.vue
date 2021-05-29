@@ -139,7 +139,7 @@
           />
         </a-form-item>
 
-        <a-form-item label="上传抽奖素材">
+        <a-form-item label="上传抽奖素材" v-if="lotteryType == 1">
           <a-input
             v-decorator="[
               'vaildUploadImg',
@@ -148,7 +148,7 @@
             type="hidden"
             placeholder="Please input your name"
           />
-          <div class="label-content" v-if="lotteryType == 1">
+          <div class="label-content">
             <!-- <div class="label-title" style="margin: 0;">
               <span style="color: red">*</span>
               上传抽奖素材
