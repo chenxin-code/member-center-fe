@@ -136,6 +136,7 @@
             @change="openPrize"
             format="YYYY-MM-DD HH:mm:ss"
             valueFormat="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="disabledDate"
             v-decorator="[
               'drawLotteryTime',
               {
