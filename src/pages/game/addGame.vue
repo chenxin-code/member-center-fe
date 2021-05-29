@@ -579,8 +579,8 @@ export default {
               this.vaildUploadImg = false;
             }
           } else {
-            this.vaildUploadImg = 1;
-            // this.submit();
+            this.vaildUploadImg = true;
+            this.submit();
           }
         }
       });
