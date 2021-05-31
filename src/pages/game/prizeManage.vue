@@ -57,7 +57,7 @@
               :optionObj="couponOpton"
               @select-option="selectCoupon"
               placeholder="请选择奖品类型"
-              :default-value="couponOpton2[ticketCode]"
+              :default-value="ticketName"
             ></timesSelect>
           </div>
 
@@ -369,6 +369,8 @@ export default {
       this.prizeNum = val.prizeNum * 1;
       this.dayMaxLotteryNum = val.dayMaxLotteryNum * 1;
       this.lotteryWeight = val.lotteryWeight * 1;
+      this.ticketCode = val.ticketCode;
+      this.ticketName = val.ticketName;
 
       this.prizeUrl = val.prizeUrl;
       this.fileList = [];
