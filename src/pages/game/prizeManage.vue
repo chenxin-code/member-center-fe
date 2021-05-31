@@ -57,7 +57,7 @@
               :optionObj="couponOpton"
               @select-option="selectCoupon"
               placeholder="请选择奖品类型"
-              :default-value="couponOpton2[ticketCode]"
+              :default-value="ticketName"
             ></timesSelect>
           </div>
 
@@ -83,20 +83,28 @@
           </div>
           <div class="game-prizeManage-label" style="align-items:flex-start" v-if="ticketVisible">
             <div class="prizeManage-label-title" style="width: 120px">指定中奖人</div>
-            <a-upload
-              style="margin-left: 15px"
-              name="file"
-              :before-upload="() => false"
-              @change="handleExcel"
-              :remove="handRemoveExcel"
-              :disabled="hasExcel"
-              :default-file-list="excelFileList"
-            >
-              <a-button>
-                <a-icon type="upload" />
-                上传
-              </a-button>
-            </a-upload>
+            <div v-if="!hasExcel">
+              <a-upload
+                v-if="updateHandleExcel"
+                style="margin-left: 15px"
+                name="file"
+                :before-upload="() => false"
+                @change="handleExcel"
+                :remove="handRemoveExcel"
+                :default-file-list="excelFileList"
+              >
+                <a-button>
+                  <a-icon type="upload" />
+                  上传
+                </a-button>
+              </a-upload>
+            </div>
+            <div v-else>
+              <div style="margin-left: 15px;">
+                {{ prizeTarget.personFileName }}
+                <a-icon type="delete" style="margin-left: 15px;cursor: pointer;" @click="handRemoveExcel" />
+              </div>
+            </div>
           </div>
 
           <div class="game-prizeManage-label">
@@ -219,6 +227,7 @@ export default {
   data() {
     return {
       hasExcel: false, // 由于组件没有限制上传数量功能，用来做标示
+      updateHandleExcel: true,
       ticketCode: '',
       paramsPage: {}, //页面传递参数
 
@@ -350,6 +359,7 @@ export default {
     // 点击编辑
     turnOn(val) {
       this.ticketVisible = true;
+      this.hasExcel = false;
       console.log('------------turnOn-----------');
       console.log('val', val);
       this.prizeTarget = val;
@@ -359,6 +369,8 @@ export default {
       this.prizeNum = val.prizeNum * 1;
       this.dayMaxLotteryNum = val.dayMaxLotteryNum * 1;
       this.lotteryWeight = val.lotteryWeight * 1;
+      this.ticketCode = val.ticketCode;
+      this.ticketName = val.ticketName;
 
       this.prizeUrl = val.prizeUrl;
       this.fileList = [];
@@ -371,7 +383,7 @@ export default {
             pageIndex: 1,
             pageSize: 30,
             activity: this.prizeType,
-            status: 1 // 启用
+            status: 99 // 启用
           })
           .then(({ code, data }) => {
             if (code == 200) {
@@ -403,15 +415,7 @@ export default {
         ];
       }
       if (val.personFileName) {
-        this.excelFileList = [
-          {
-            uid: '-1',
-            status: 'done',
-            name: val.personFileName,
-            url: '',
-            thumbUrl: ''
-          }
-        ];
+        this.hasExcel = true;
       }
       console.log('remove', this.prizeTarget);
     },
@@ -433,7 +437,7 @@ export default {
             pageIndex: 1,
             pageSize: 30,
             activity: val,
-            status: 1 // 启用
+            status: 99 // 启用
           })
           .then(({ code, data }) => {
             if (code == 200) {
@@ -473,12 +477,23 @@ export default {
         formData.append('gameId', this.prizeTarget.gameId);
         formData.append('positionIndex', this.prizeTarget.positionIndex);
         formData.append('prizeId', this.prizeTarget.id);
-        GANE_UPLOAD_PEOPLE(formData).then(res => {
-          if (res.code === 200) {
-            this.appointPersonUrl = res.data;
-            this.hasExcel = true;
-          }
-        });
+        try {
+          GANE_UPLOAD_PEOPLE(formData).then(res => {
+            if (res.code === 200) {
+              this.appointPersonUrl = res.data;
+              this.prizeTarget.personFileName = res.data;
+              this.hasExcel = true;
+            } else {
+              // upload组件上传失败后强行刷新
+              this.updateHandleExcel = false;
+              setTimeout(() => {
+                this.updateHandleExcel = true;
+              }, 500);
+            }
+          });
+        } catch (err) {
+          console.log('err');
+        }
       }
     }
   }

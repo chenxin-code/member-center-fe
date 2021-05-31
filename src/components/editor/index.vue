@@ -274,6 +274,8 @@ export default {
   border: 1px solid #ccc;
   line-height: 25px;
   padding-bottom: 22px;
+  overflow: hidden;
+  z-index: 0;
   .limitNum {
     position: absolute;
     bottom: 0;

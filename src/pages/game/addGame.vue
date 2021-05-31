@@ -42,31 +42,34 @@
             :disabled-date="disabledDate"
           />
         </a-form-item>
-        <a-form-item label="参与人数">
-          <a-input-number
-            style="width: 400px"
-            :min="1"
-            v-decorator="[
-              'partakeNum',
-              {
-                initialValue: partakeNum,
-                rules: [{ required: true, message: '请输入参与人数' }]
-              }
-            ]"
-            @change="takePartInput"
-          />
-        </a-form-item>
-        <a-form-item label="每人可参与次数">
-          <a-input-number
-            style="width: 400px"
-            :min="1"
-            v-decorator="[
-              'luckyDrawLimits',
-              { initialValue: luckyDrawLimits, rules: [{ required: true, message: '请输入每人可参与次数' }] }
-            ]"
-            @change="luckyDrawLimitsInput"
-          />
-        </a-form-item>
+        <div v-if="lotteryType == 1">
+          <a-form-item label="参与人数">
+            <a-input-number
+              style="width: 400px"
+              :min="1"
+              v-decorator="[
+                'partakeNum',
+                {
+                  initialValue: partakeNum,
+                  rules: [{ required: true, message: '请输入参与人数' }]
+                }
+              ]"
+              @change="takePartInput"
+            />
+          </a-form-item>
+          <a-form-item label="每人可参与次数">
+            <a-input-number
+              style="width: 400px"
+              :min="1"
+              v-decorator="[
+                'luckyDrawLimits',
+                { initialValue: luckyDrawLimits, rules: [{ required: true, message: '请输入每人可参与次数' }] }
+              ]"
+              @change="luckyDrawLimitsInput"
+            />
+          </a-form-item>
+        </div>
+
         <a-form-item label="活动说明">
           <!-- <a-textarea
             v-model="activityDesc"
@@ -91,13 +94,13 @@
         <a-form-item label="通知方式">
           <a-select default-value="1">
             <a-select-option value="1">
-              短信推送
+              消息提醒
             </a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item label="开奖方式">
-          <a-select :default-value="prizeDict[lotteryType]" @change="selectPrize">
+          <a-select :default-value="prizeDict[lotteryType]" @change="selectPrize" :disabled="paramsPage.activityType">
             <a-select-option :value="item.value" v-for="(item, index) in prizeOption" :key="index">
               {{ item.name }}
             </a-select-option>
@@ -111,11 +114,28 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+
+        <!-- <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
             format="YYYY-MM-DD"
             valueFormat="YYYY-MM-DD"
             @change="openPrize"
+            :disabled-date="disabledDate"
+            v-decorator="[
+              'drawLotteryTime',
+              {
+                initialValue: drawLotteryTime
+              }
+            ]"
+          />
+        </a-form-item> -->
+        <a-form-item label="开奖时间" v-if="lotteryType == 2">
+          <a-date-picker
+            show-time
+            placeholder="请选择开奖时间"
+            @change="openPrize"
+            format="YYYY-MM-DD HH:mm:ss"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledDate"
             v-decorator="[
               'drawLotteryTime',
@@ -136,99 +156,109 @@
             @change="drawLotteryNumInput"
           />
         </a-form-item>
+
+        <a-form-item label="上传抽奖素材" v-if="lotteryType == 1">
+          <a-input
+            v-decorator="[
+              'vaildUploadImg',
+              { initialValue: vaildUploadImg, rules: [{ required: true, message: '请上传抽奖素材' }] }
+            ]"
+            type="hidden"
+            placeholder="Please input your name"
+          />
+          <div class="label-content">
+            <!-- <div class="label-title" style="margin: 0;">
+              <span style="color: red">*</span>
+              上传抽奖素材
+            </div> -->
+            <div class="game-imgupload">
+              <div class="stair">
+                <div style="margin-bottom: 15px;">背景图片</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveBg"
+                  @preview="handlePreview"
+                  @change="uploadBg"
+                  :defaultFileList="fileBgList"
+                >
+                  <template v-if="!activityBackgroundUrl && !fileBgList.length">
+                    <a-icon :type="bgLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair" v-if="activityType != 2">
+                <div style="margin-bottom: 15px;">消息层背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveMessage"
+                  @preview="handlePreview"
+                  @change="uploadMessage"
+                  :defaultFileList="fileMessageList"
+                >
+                  <template v-if="!msgUrl && !fileMessageList.length">
+                    <a-icon :type="msgLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair" v-if="activityType != 2">
+                <div style="margin-bottom: 15px;">游戏层背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveGame"
+                  @preview="handlePreview"
+                  @change="uploadGame"
+                  :defaultFileList="fileGameList"
+                >
+                  <template v-if="!gameUrl && !fileGameList.length">
+                    <a-icon :type="gameLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+
+              <div class="stair">
+                <div style="margin-bottom: 15px;">弹框背景</div>
+                <a-upload
+                  name="avatar"
+                  accept="image/jpeg,image/jpg,image/png"
+                  list-type="picture-card"
+                  :before-upload="() => false"
+                  :remove="handleImgRemoveAlert"
+                  @preview="handlePreview"
+                  @change="uploadAlert"
+                  :defaultFileList="fileAlertList"
+                >
+                  <template v-if="!popFrameUrl && !fileAlertList.length">
+                    <a-icon :type="popLoading ? 'loading' : 'plus'" />
+                    <div class="ant-upload-text">
+                      上传
+                    </div>
+                  </template>
+                </a-upload>
+              </div>
+            </div>
+          </div>
+        </a-form-item>
       </a-form>
-
-      <div class="label-content" v-if="lotteryType == 1">
-        <div class="label-title" style="margin: 0;">
-          <span style="color: red">*</span>
-          上传抽奖素材
-        </div>
-        <div class="game-imgupload">
-          <div class="stair">
-            <div style="margin-bottom: 15px;">背景图片</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveBg"
-              @preview="handlePreview"
-              @change="uploadBg"
-              :defaultFileList="fileBgList"
-            >
-              <template v-if="!activityBackgroundUrl && !fileBgList.length">
-                <a-icon :type="bgLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair" v-if="activityType != 2">
-            <div style="margin-bottom: 15px;">消息层背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveMessage"
-              @preview="handlePreview"
-              @change="uploadMessage"
-              :defaultFileList="fileMessageList"
-            >
-              <template v-if="!msgUrl && !fileMessageList.length">
-                <a-icon :type="msgLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair" v-if="activityType != 2">
-            <div style="margin-bottom: 15px;">游戏层背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveGame"
-              @preview="handlePreview"
-              @change="uploadGame"
-              :defaultFileList="fileGameList"
-            >
-              <template v-if="!gameUrl && !fileGameList.length">
-                <a-icon :type="gameLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-
-          <div class="stair">
-            <div style="margin-bottom: 15px;">弹框背景</div>
-            <a-upload
-              name="avatar"
-              accept="image/jpeg,image/jpg,image/png"
-              list-type="picture-card"
-              :before-upload="() => false"
-              :remove="handleImgRemoveAlert"
-              @preview="handlePreview"
-              @change="uploadAlert"
-              :defaultFileList="fileAlertList"
-            >
-              <template v-if="!popFrameUrl && !fileAlertList.length">
-                <a-icon :type="popLoading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">
-                  上传
-                </div>
-              </template>
-            </a-upload>
-          </div>
-        </div>
-      </div>
 
       <div class="game-button">
         <a-button @click="cancel" style="width: 150px;margin-left: 20px;">取消</a-button>
@@ -249,11 +279,6 @@ export default {
     editorComponent
     // timesInput
     // timesSelect
-  },
-  watch: {
-    gameTitle(val) {
-      console.log('-------', val);
-    }
   },
   data() {
     return {
@@ -294,7 +319,7 @@ export default {
       gamePeopleNum: '',
       gamePeopleTimes: '',
       gameExplain: '',
-      informOption: [{ name: '消息推送', value: 1 }],
+      informOption: [{ name: '消息提醒', value: 1 }],
       informType: '', //通知方式
       // activityOption
       // prizeOption
@@ -320,7 +345,8 @@ export default {
       loading: false,
       imageUrl: '',
       paramsPage: {},
-      isBeyondStatus: ''
+      isBeyondStatus: '',
+      vaildUploadImg: false
     };
   },
   created() {
@@ -412,6 +438,7 @@ export default {
     },
     // 开奖时间
     openPrize(val) {
+      console.log('val--------------------', val);
       this.drawLotteryTime = val;
       //this.drawLotteryTime = getFormatDate(val._d, 'yyyy-mm-dd MM:mm:ss');
     },
@@ -494,8 +521,12 @@ export default {
     cancel() {
       this.$router.go(-1);
     },
+    // 校验图片是否有上传
+    verifyPic() {},
+    // 校验表单数据
     verify() {
       this.addForm.validateFields((err, values) => {
+        console.log('------lotteryType--------', this.lotteryType);
         if (!err) {
           let {
             gameTitle,
@@ -522,21 +553,17 @@ export default {
           } else if (!validityStartTime || !validityEndTime) {
             messageText = '请选择活动时间';
             flag = true;
-          } else if (!partakeNum) {
-            messageText = '请输入参与人数';
-            flag = true;
-          } else if (!luckyDrawLimits) {
-            messageText = '请输入每人可参与次数';
-            flag = true;
           } else if (!lotteryType) {
             messageText = '请选择开奖方式';
             flag = true;
-          } else if (this.lotteryType == 1) {
-            if (!activityType) {
-              flag = true;
-              messageText = '请选择活动方式';
-            }
-          } else if (lotteryType == 2) {
+          }
+          //  else if (this.lotteryType == 1) {
+          //   if (!activityType) {
+          //     flag = true;
+          //     messageText = '请选择活动方式';
+          //   }
+          // }
+          else if (lotteryType == 2) {
             if (!drawLotteryTime) {
               flag = true;
               messageText = '非立即开奖请选择开奖时间';
@@ -545,7 +572,13 @@ export default {
               messageText = '请选择开奖人数';
             }
           } else if (this.lotteryType == 1) {
-            if (!activityBackgroundUrl) {
+            if (!partakeNum) {
+              messageText = '请输入参与人数';
+              flag = true;
+            } else if (!luckyDrawLimits) {
+              messageText = '请输入每人可参与次数';
+              flag = true;
+            } else if (!activityBackgroundUrl) {
               messageText = '请上传背景图片';
               flag = true;
             } else if (this.activityType == 3 && !msgUrl) {
@@ -559,9 +592,25 @@ export default {
               messageText = '请上传弹框图片';
             }
           }
+
+          // 非立即开奖，开奖时间不能大于有效时间
+          if (lotteryType == 2) {
+            if (
+              this.validityEndTime.substr(0, 10).replace(/-/g, '') <=
+              this.drawLotteryTime.substr(0, 10).replace(/-/g, '')
+            ) {
+              flag = true;
+              messageText = '开奖时间不能大于游戏有效期';
+            }
+          }
+
           if (flag) {
             this.$message.error(messageText);
+            if (this.lotteryType == 1) {
+              this.vaildUploadImg = false;
+            }
           } else {
+            this.vaildUploadImg = true;
             this.submit();
           }
         }
@@ -636,8 +685,8 @@ export default {
   .game-add-content {
     .label-content {
       display: flex;
-      margin-top: 20px;
-      margin-left: 300px;
+      // margin-top: 20px;
+      // margin-left: 300px;
       align-items: center;
     }
     .label-title {
