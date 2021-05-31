@@ -94,7 +94,7 @@
         <a-form-item label="通知方式">
           <a-select default-value="1">
             <a-select-option value="1">
-              短信推送
+              消息提醒
             </a-select-option>
           </a-select>
         </a-form-item>
