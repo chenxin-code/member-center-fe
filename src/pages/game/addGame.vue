@@ -100,7 +100,7 @@
         </a-form-item>
 
         <a-form-item label="开奖方式">
-          <a-select :default-value="prizeDict[lotteryType]" @change="selectPrize">
+          <a-select :default-value="prizeDict[lotteryType]" @change="selectPrize" :disabled="paramsPage.activityType">
             <a-select-option :value="item.value" v-for="(item, index) in prizeOption" :key="index">
               {{ item.name }}
             </a-select-option>
