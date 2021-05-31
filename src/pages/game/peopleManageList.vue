@@ -259,6 +259,7 @@ export default {
           key: 'alreadyPartakeNum'
         },
         {
+          title: '操作',
           key: 'operate',
           slots: { title: 'operate' },
           scopedSlots: { customRender: 'operate' }
