@@ -359,7 +359,7 @@ export default {
     // 点击编辑
     turnOn(val) {
       this.ticketVisible = true;
-      // this.hasExcel = false;
+      this.hasExcel = false;
       console.log('------------turnOn-----------');
       console.log('val', val);
       this.prizeTarget = val;
