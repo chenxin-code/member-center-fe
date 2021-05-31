@@ -319,7 +319,7 @@ export default {
       gamePeopleNum: '',
       gamePeopleTimes: '',
       gameExplain: '',
-      informOption: [{ name: '消息推送', value: 1 }],
+      informOption: [{ name: '消息提醒', value: 1 }],
       informType: '', //通知方式
       // activityOption
       // prizeOption
