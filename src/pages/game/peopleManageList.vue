@@ -26,7 +26,7 @@
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">活动最高参与人数</div>
-          <div class="prize-label-text">{{ paramsPage.partakeNum }}</div>
+          <div class="prize-label-text">{{ paramsPage.shouldPartakeNum }}</div>
         </div>
         <div class="game-prize-label">
           <div class="prize-label-title">开奖方式</div>
@@ -147,8 +147,8 @@ const columns = [
   },
   {
     title: '最高参与次数',
-    dataIndex: 'maxPartakeNum',
-    key: 'maxPartakeNum'
+    dataIndex: 'shouldPartakeNum',
+    key: 'shouldPartakeNum'
   },
   {
     title: '已参与次数',
@@ -250,8 +250,8 @@ export default {
       this.columns.push(
         {
           title: '最高参与次数',
-          dataIndex: 'maxPartakeNum',
-          key: 'maxPartakeNum'
+          dataIndex: 'shouldPartakeNum',
+          key: 'shouldPartakeNum'
         },
         {
           title: '已参与次数',
