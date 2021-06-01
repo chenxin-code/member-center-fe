@@ -596,7 +596,7 @@ export default {
           // 非立即开奖，开奖时间不能大于有效时间
           if (lotteryType == 2) {
             if (
-              this.validityEndTime.substr(0, 10).replace(/-/g, '') <=
+              this.validityEndTime.substr(0, 10).replace(/-/g, '') <
               this.drawLotteryTime.substr(0, 10).replace(/-/g, '')
             ) {
               flag = true;
