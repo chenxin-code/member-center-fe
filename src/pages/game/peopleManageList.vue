@@ -54,6 +54,7 @@
             style="margin-left: 20px;"
           ></timesInput>
           <timesSelect
+            v-if="paramsPage.drawLotteryTime"
             title="已抽取奖品"
             :optionObj="activityLotteryVoListLevel"
             @select-option="seleceLevel"
