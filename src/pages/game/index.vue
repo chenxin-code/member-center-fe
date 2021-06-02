@@ -101,7 +101,7 @@ export default {
       gameOption: [
         { name: '全部', value: '' },
         { name: '九宫格', value: '3' },
-        { name: '大转盘', value: '1' },
+        { name: '幸运转盘', value: '1' },
         { name: '砸金蛋', value: '2' }
       ],
       chooseGame: '', // 选择游戏
