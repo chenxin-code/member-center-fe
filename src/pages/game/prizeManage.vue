@@ -181,6 +181,7 @@ const columns = [
     dataIndex: 'lotteryWeight'
   },
   {
+    title: '操作',
     dataIndex: 'operate',
     key: 'operate',
     slots: { title: 'operate' },

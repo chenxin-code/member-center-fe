@@ -108,7 +108,11 @@
         </a-form-item>
 
         <a-form-item label="活动方式" v-if="lotteryType == 1">
-          <a-select :default-value="activityDict[activityType]" @change="selectActivity">
+          <a-select
+            :default-value="activityDict[activityType]"
+            @change="selectActivity"
+            :disabled="paramsPage.activityType"
+          >
             <a-select-option :value="item.value" v-for="(item, index) in activityOption" :key="index">
               {{ item.name }}
             </a-select-option>
@@ -596,7 +600,7 @@ export default {
           // 非立即开奖，开奖时间不能大于有效时间
           if (lotteryType == 2) {
             if (
-              this.validityEndTime.substr(0, 10).replace(/-/g, '') <=
+              this.validityEndTime.substr(0, 10).replace(/-/g, '') <
               this.drawLotteryTime.substr(0, 10).replace(/-/g, '')
             ) {
               flag = true;
