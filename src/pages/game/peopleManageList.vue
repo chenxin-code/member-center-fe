@@ -192,6 +192,7 @@ export default {
   },
   data() {
     return {
+      isUpdate: true,
       data: [],
       resultVisible: false,
       changeVisible: false,
@@ -314,6 +315,7 @@ export default {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
         if (code == 200) {
           console.log('data');
+          this.isUpdate = true;
           this.contentData = data.activityMemberRespVoIPage.records;
           this.pagination.total = data.activityMemberRespVoIPage.total * 1;
         }
@@ -322,9 +324,20 @@ export default {
     seleceLevel(val) {
       this.prizeFlag = val;
     },
-    changePage() {},
+    changePage(val) {
+      this.getList({
+        gameId: this.paramsPage.id,
+        memberId: this.memberId,
+        memberPhone: this.memberPhone,
+        pageNum: val.current,
+        pageSize: 10,
+        // prizeFlag: this.prizeFlag,
+        prizeId: this.paramsPage.prizeName,
+        prizeName: this.prizeFlag,
+        lotteryType: this.paramsPage.lotteryType
+      });
+    },
     search() {
-      let { prizeId } = this.paramsPage;
       this.getList({
         gameId: this.paramsPage.id,
         memberId: this.memberId,
@@ -332,7 +345,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         // prizeFlag: this.prizeFlag,
-        prizeId,
+        prizeId: this.paramsPage.prizeName,
         prizeName: this.prizeFlag,
         lotteryType: this.paramsPage.lotteryType
       });
