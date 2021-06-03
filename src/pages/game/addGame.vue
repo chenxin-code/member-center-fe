@@ -637,7 +637,6 @@ export default {
         activityDesc: this.activityDesc,
         noticeType: 1,
         lotteryType: this.lotteryType,
-        activityType: this.activityType,
         activityBackgroundUrl: this.activityBackgroundUrl,
         popFrameUrl: this.popFrameUrl,
         gameUrl: this.gameUrl,
