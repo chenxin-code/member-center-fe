@@ -67,18 +67,24 @@
     </div>
 
     <div class="game-prize-content">
-      <a-table
-        :columns="columns"
-        :data-source="contentData"
-        @change="changePage"
-        :pagination="pagination"
-        :rowKey="record => record.id"
-      >
+      <a-table :columns="columns" :data-source="contentData" :pagination="false" :rowKey="record => record.id">
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record, 'result')" class="operate">查看抽奖结果</span>
           <span @click="turnOn(record, 'times')" class="operate">管理抽奖次数</span>
         </span>
       </a-table>
+      <a-pagination
+        :total="total"
+        :show-total="total => `共 ${total} 条`"
+        show-quick-jumper
+        show-size-changer
+        :current="pageNum"
+        :pageSize="pageSize"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="changePage"
+        @showSizeChange="showSizeChange"
+        style="margin-top:30px;width:100%;text-align: right;"
+      />
     </div>
 
     <a-modal title="查看抽奖结果" :visible="resultVisible" @cancel="resultVisible = false">
@@ -192,6 +198,7 @@ export default {
   },
   data() {
     return {
+      isUpdate: true,
       data: [],
       resultVisible: false,
       changeVisible: false,
@@ -230,6 +237,9 @@ export default {
       pagination: {
         total: 10
       },
+      total: 0,
+      pageNum: 1,
+      pageSize: 10,
       rusultColumns,
       operateTarget: {}, //每次命中的对象
       activityLotteryVoList: [], // 抽奖结果列表
@@ -314,17 +324,45 @@ export default {
       GANE_TAKEPARTINLIST(params).then(({ code, data }) => {
         if (code == 200) {
           console.log('data');
+          this.isUpdate = true;
           this.contentData = data.activityMemberRespVoIPage.records;
           this.pagination.total = data.activityMemberRespVoIPage.total * 1;
+          this.total = data.activityMemberRespVoIPage.total * 1;
         }
       });
     },
     seleceLevel(val) {
       this.prizeFlag = val;
     },
-    changePage() {},
+    showSizeChange(current, size) {
+      this.pageNum = 1;
+      this.pageSize = size;
+      this.getList({
+        gameId: this.paramsPage.id,
+        memberId: this.memberId,
+        memberPhone: this.memberPhone,
+        pageNum: current,
+        pageSize: this.pageSize,
+        // prizeFlag: this.prizeFlag,
+        prizeId: this.paramsPage.prizeName,
+        prizeName: this.prizeFlag,
+        lotteryType: this.paramsPage.lotteryType
+      });
+    },
+    changePage(val) {
+      this.getList({
+        gameId: this.paramsPage.id,
+        memberId: this.memberId,
+        memberPhone: this.memberPhone,
+        pageNum: val,
+        pageSize: this.pageSize,
+        // prizeFlag: this.prizeFlag,
+        prizeId: this.paramsPage.prizeName,
+        prizeName: this.prizeFlag,
+        lotteryType: this.paramsPage.lotteryType
+      });
+    },
     search() {
-      let { prizeId } = this.paramsPage;
       this.getList({
         gameId: this.paramsPage.id,
         memberId: this.memberId,
@@ -332,7 +370,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         // prizeFlag: this.prizeFlag,
-        prizeId,
+        prizeId: this.paramsPage.prizeName,
         prizeName: this.prizeFlag,
         lotteryType: this.paramsPage.lotteryType
       });

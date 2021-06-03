@@ -15,13 +15,7 @@
       </div>
     </div>
     <div class="game-content" v-if="isUpdate">
-      <a-table
-        :columns="columns"
-        :data-source="records"
-        :rowKey="record => record.id"
-        @change="changePage"
-        :pagination="pagination"
-      >
+      <a-table :columns="columns" :data-source="records" :rowKey="record => record.id" :pagination="false">
         <span slot="operate" slot-scope="text, record">
           <!-- 0禁用、1启用 -->
           <span @click="turnOn(record, 1)" class="operate" v-if="record.availableFlage == 0">启用</span>
@@ -35,6 +29,18 @@
           <div ref="tradeNo" class="copy">{{ copyTarget }}</div>
         </span>
       </a-table>
+      <a-pagination
+        :total="total"
+        :show-total="total => `共 ${total} 条`"
+        show-quick-jumper
+        show-size-changer
+        :current="pageNum"
+        :pageSize="pageSize"
+        :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
+        @change="changePage"
+        @showSizeChange="showSizeChange"
+        style="margin-top:30px;width:100%;text-align: right;"
+      />
     </div>
   </div>
 </template>
@@ -112,6 +118,7 @@ export default {
       pagination: {
         total: 0
       },
+      total: 0,
       pageNum: 1,
       pageSize: 10
     };
@@ -132,7 +139,7 @@ export default {
     this.isUpdate = false;
     this.getGameList({
       pageNum: 1,
-      pageSize: 10,
+      pageSize: this.pageSize,
       chooseGame: '',
       gameName: ''
     });
@@ -149,7 +156,7 @@ export default {
         if (code == 200) {
           this.isUpdate = true;
           this.pagination.total = Number(data.total);
-          this.pageNum++;
+          this.total = Number(data.total);
           this.records = data.records;
           this.records.forEach(item => {
             item.lotteryTypeText = prizeDict[item.lotteryType];
@@ -173,7 +180,7 @@ export default {
             gameTitle: this.gameName,
             activityType: this.chooseGame,
             pageNum: 1,
-            pageSize: 10
+            pageSize: this.pageSize
           });
         }
       });
@@ -186,7 +193,7 @@ export default {
         gameTitle: this.gameName,
         activityType: this.chooseGame,
         pageNum: 1,
-        pageSize: 10
+        pageSize: this.pageSize
       };
       this.getGameList(params);
     },
@@ -225,11 +232,23 @@ export default {
     //  分页
     changePage(val) {
       console.log('------------', val);
+      this.pageNum = val;
       this.getGameList({
         gameTitle: this.gameName,
         activityType: this.chooseGame,
-        pageNum: val.current,
-        pageSize: 10
+        pageNum: val,
+        pageSize: this.pageSize
+      });
+    },
+    showSizeChange(current, size) {
+      console.log('----showSizeChange-----', current);
+      this.pageNum = 1;
+      this.pageSize = size;
+      this.getGameList({
+        gameTitle: this.gameName,
+        activityType: this.chooseGame,
+        pageNum: 1,
+        pageSize: size
       });
     }
   }
