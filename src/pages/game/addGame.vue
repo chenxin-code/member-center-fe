@@ -269,6 +269,7 @@
         <a-button @click="verify" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
       </div>
     </div>
+    <timesLoading v-show="isShowLoading"></timesLoading>
   </div>
 </template>
 
@@ -276,16 +277,20 @@
 import { GANE_SAVE_GAME } from '@/api/game';
 import { updateImage } from '@/api/member';
 import editorComponent from '@/components/editor';
+import timesLoading from '@/components/times-loading';
 // import timesInput from './component/form-input';
 // import timesSelect from './component/form-select';
 export default {
   components: {
-    editorComponent
+    editorComponent,
+    timesLoading
     // timesInput
     // timesSelect
   },
   data() {
     return {
+      isShowLoading: false,
+
       addForm: this.$form.createForm(this),
       fileBgList: [],
       fileAlertList: [],
@@ -620,7 +625,7 @@ export default {
         }
       });
     },
-    submit() {
+    async submit() {
       // 提交
       // 业务规则1，当游戏选择幸运转盘，显示4层背景上传
       // 2，当游戏选择大转盘，隐藏游戏层背景
@@ -658,14 +663,30 @@ export default {
         params.id = this.paramsPage.id;
       }
       console.log('>>>>>>>>>', params);
-      GANE_SAVE_GAME(params).then(res => {
-        if (res.code == 200) {
-          console.log('res', res);
+      this.isShowLoading = true;
+      let saveGame = {};
+      try {
+        // GANE_SAVE_GAME(params).then(res => {
+        //   this.isShowLoading = false;
+        //   if (res.code == 200) {
+        //     console.log('res', res);
+        //     this.$router.push({
+        //       path: '/gameManage'
+        //     });
+        //   }
+        // });
+        const saveGameRes = await GANE_SAVE_GAME(params);
+        this.isShowLoading = false;
+        if (saveGameRes.code == 200) {
+          console.log('res', saveGameRes);
           this.$router.push({
             path: '/gameManage'
           });
         }
-      });
+      } catch (err) {
+        console.log('err---->>', err);
+        this.isShowLoading = false;
+      }
     }
   }
 };
