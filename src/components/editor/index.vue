@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" :style="`width:${editorWidth};${contenteditable ? '' : 'background:#f5f7fa;'}`">
+  <div class="editor" :style="`width:${editorWidth};${contenteditable ? '' : 'background:#f5f7fa;'};z-index:0;`">
     <div ref="toolbar" class="toolbar"></div>
     <div ref="editor" class="text" :style="`height: ${contentHeight};`"></div>
     <!-- <p v-if="isShowNum" class="limitNum align-right font12 cor-6">
@@ -269,13 +269,13 @@ export default {
 }
 .editor {
   position: relative;
+  z-index: 0;
   margin: 0 auto;
   position: relative;
   border: 1px solid #ccc;
   line-height: 25px;
   padding-bottom: 22px;
-  overflow: hidden;
-  z-index: 0;
+  overflow: hidden;  
   .limitNum {
     position: absolute;
     bottom: 0;
