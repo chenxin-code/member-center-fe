@@ -360,7 +360,8 @@ export default {
   },
   created() {
     this.paramsPage = this.$route.query;
-    if (this.paramsPage.activityType) {
+    console.log('this.paramsPage', this.paramsPage);
+    if (this.paramsPage.update) {
       console.log('--------', this.paramsPage);
       this.gameTitle = this.paramsPage.gameTitle;
       this.availableFlage = this.paramsPage.availableFlage * 1;
