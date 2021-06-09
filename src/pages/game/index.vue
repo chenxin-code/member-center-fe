@@ -25,7 +25,7 @@
           <span @click="turnOn(record, 'check')" class="operate">查看活动人员</span>
           <span @click="turnOn(record, 'manage')" class="operate">奖品管理</span>
           <!-- <span @click="turnOn(record, 'copy')" class="operate">复制链接</span> -->
-          <span class="operateCopy" data-clipboard-action="copy" @click="turnOn(record, 'copy')">复制链接</span>
+          <span class="operateCopy" data-clipboard-action="copy" @click="turnOn(record, 'copy')" v-if="!record.drawLotteryTime">复制链接</span>
           <div ref="tradeNo" class="copy">{{ copyTarget }}</div>
         </span>
       </a-table>
