@@ -58,7 +58,8 @@ const conditionList = [
   { id: 1, name: '领券中心' },
   { id: 2, name: '直接发放' },
   { id: 3, name: '邦豆兑换' },
-  { id: 4, name: '卡密兑换' }
+  { id: 4, name: '卡密兑换' },
+  { id: 5, name: '分销领券' },
 ];
 export default {
   name: 'release',
