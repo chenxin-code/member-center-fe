@@ -43,7 +43,7 @@
         <span class="detail-main-items-value">{{ filterValue(receiveType, dataObj.condition) }}</span>
       </div>
       <!-- 领取类型：领券中心 -->
-      <div v-show="dataObj.condition == 1">
+      <div v-show="dataObj.condition == 1 || dataObj.condition == 5">
         <div class="detail-main-items" v-for="item in receiveCenter" :key="item.label">
           <span class="detail-main-items-label">{{ item.label }}</span>
           <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
@@ -138,7 +138,8 @@ export default {
         { label: '领券中心', value: 1 },
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
-        { label: '卡密兑换', value: 4 }
+        { label: '卡密兑换', value: 4 },
+        { label: '分销领券', value: 5 }
       ],
       issueRangeList: [
         { label: '全部会员', value: 1 },
