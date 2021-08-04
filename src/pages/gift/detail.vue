@@ -63,7 +63,23 @@
                         :loading="tableLoading"
                         :rowKey="(r, i) => i"
                         :scroll="{ x: 1000, y: 400 }"
-                      ></a-table>
+                      >
+                        <template slot="activitySlot" slot-scope="scope">
+                          <div class="editable-row-operations">
+                            <span v-html="activityStr(scope.couponBusinessType)"></span>
+                          </div>
+                        </template>
+                        <template slot="faceAmountSlot" slot-scope="scope">
+                          <div class="editable-row-operations">
+                            <span v-html="faceAmountStr2(scope)"></span>
+                          </div>
+                        </template>
+                        <template slot="validitySlot" slot-scope="scope">
+                          <div class="editable-row-operations">
+                            <span v-html="parseValidity(scope)"></span>
+                          </div>
+                        </template>
+                      </a-table>
                       <a-pagination
                         :total="total"
                         :show-total="total => `共 ${total} 条`"
@@ -124,12 +140,11 @@ export default {
           dataIndex: 'couponType',
           customRender: text => typeList.filter(item => item.id == text)[0].name || ''
         },
-        // {
-        //   title: '卡券业务类型',
-        //   key: 'activity',
-        //   dataIndex: 'activity',
-        //   customRender: text => activityList.filter(item => item.id == text)[0].name || ''
-        // },
+        {
+          title: '卡券业务类型',
+          key: 'activitySlot',
+          scopedSlots: { customRender: 'activitySlot' }
+        },
         {
           title: '卡券面值金额',
           key: 'faceAmountSlot',
@@ -137,8 +152,8 @@ export default {
         },
         {
           title: '卡券有效期',
-          key: 'operator',
-          dataIndex: 'operator'
+          scopedSlots: { customRender: 'validitySlot' },
+          key: 'validitySlot'
         }
       ],
       tableData: [],
@@ -150,12 +165,51 @@ export default {
     };
   },
   computed: {
+    parseValidity() {
+      return param => {
+        if (param.validityType === 1) {
+          //固定有效期
+          return this.momentStrHms(param.validityStartTime) + ' ~ ' + this.momentStrHms(param.validityEndTime);
+        } else if (param.validityType === 3) {
+          //相对有效期
+          return '相对有效期: ' + param.validityDayNums + '天，领取后' + param.takeEffectDayNums + '天生效';
+        } else {
+          return '';
+        }
+      };
+    },
     momentStrHms() {
       return param => {
         if (!param) {
           return '';
         } else {
           return moment(param).format('YYYY-MM-DD HH:mm:ss');
+        }
+      };
+    },
+    activityStr() {
+      return param => {
+        if(param === '4014'){
+          return '物业费';
+        }else if(param === '4005'){
+          return '购物券';
+        }else if(param === '4015'){
+          return '实物券';
+        }else{
+          return '';
+        }
+      };
+    },
+    faceAmountStr2() {
+      return param => {
+        if (param.couponType === 10) {
+          return param.voucherAmount;
+        } else if (param.couponType === 20) {
+          return param.fullReductionDiscountAmount;
+        } else if (param.couponType === 40) {
+          return param.discountRatio * 10 + '折';
+        } else {
+          return '';
         }
       };
     },

@@ -350,6 +350,8 @@ export default {
       });
     },
     changePage(val) {
+      this.pageNum = val;
+      this.isUpdate = false;
       this.getList({
         gameId: this.paramsPage.id,
         memberId: this.memberId,

@@ -140,7 +140,7 @@
             </a-form-item>
           </a-form-item>
         </div>
-        <a-form-item label="领取有效期" v-if="condition === 1 || condition === 3">
+        <a-form-item label="领取有效期" v-if="condition === 1 || condition === 3 || condition === 5">
           <a-range-picker
             v-decorator="[
               'rangePickerValue',
@@ -256,7 +256,8 @@ export default {
         { label: '领券中心', value: 1 },
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
-        { label: '卡密兑换', value: 4 }
+        { label: '卡密兑换', value: 4 },
+        { label: '分销推广', value: 5 },
       ],
       systemList: [],
       issueRange: [
@@ -575,6 +576,9 @@ export default {
       console.log('condition newVal :>> ', newVal);
       switch (newVal) {
         case 1:
+          this.issueForm = couponsCenterList;
+          break;
+        case 5:
           this.issueForm = couponsCenterList;
           break;
         case 4:

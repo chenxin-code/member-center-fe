@@ -18,7 +18,7 @@ spec:
         run: nginx
     spec:
       containers:
-      - image: times-registry-vpc.cn-shenzhen.cr.aliyuncs.com:443/m-center-uat/member-center-fe:GIT_BRANCH_AS_TAG_TIMESTAMP
+      - image: 10.1.245.66:31104/times-linli-member/member-center-fe:GIT_BRANCH_AS_TAG_TIMESTAMP
         name: member-center-fe
         resources: {}
         volumeMounts:
