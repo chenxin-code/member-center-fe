@@ -139,7 +139,7 @@ export default {
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
         { label: '卡密兑换', value: 4 },
-        { label: '分销领券', value: 5 }
+        { label: '分销推广', value: 5 }
       ],
       issueRangeList: [
         { label: '全部会员', value: 1 },
