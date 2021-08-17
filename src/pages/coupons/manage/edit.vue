@@ -864,7 +864,8 @@ export default {
         validityEndTime: this.validityEndTime,
         validityStartTime: this.validityStartTime,
         validityType: this.validityType,
-        voucherAmount: this.voucherAmount
+        voucherAmount: this.voucherAmount,
+        referrer: 0
       };
 
       console.log('getCouponUpdate param :>> ', param);
