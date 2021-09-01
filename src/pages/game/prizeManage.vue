@@ -15,6 +15,9 @@
         :pagination="pagination"
         :rowKey="record => record.positionIndex"
       >
+        <template slot="lotteryWeight" slot-scope="scope">
+          <span v-html="lotteryWeightParse(scope.lotteryWeight)"></span>
+        </template>
         <span slot="operate" slot-scope="text, record">
           <span @click="turnOn(record)" class="operate">编辑</span>
         </span>
@@ -178,7 +181,7 @@ const columns = [
   {
     title: '中奖权重（%）',
     key: 'lotteryWeight',
-    dataIndex: 'lotteryWeight'
+    scopedSlots: { customRender: 'lotteryWeight' }
   },
   {
     title: '操作',
@@ -264,6 +267,13 @@ export default {
       dayMaxLotteryNum: '', //单日最高中奖数量
       lotteryWeight: '' //中奖权重
     };
+  },
+  computed: {
+    lotteryWeightParse() {
+      return param => {
+        return param.toFixed(2);
+      }
+    },
   },
   created() {
     this.paramsPage = this.$route.query;
