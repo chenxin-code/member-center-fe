@@ -270,6 +270,9 @@
       </div>
     </div>
     <timesLoading v-show="isShowLoading"></timesLoading>
+    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+      <img alt="example" style="width: 100%" :src="previewImage" />
+    </a-modal>
   </div>
 </template>
 
@@ -321,9 +324,10 @@ export default {
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
       popFrameUrl: '', // 弹窗背景Url
-
+      previewImage: '', // 图片预览url
       drawLotteryTime: '', // 开奖时间
       drawLotteryNum: '', // 开奖人数
+      previewVisible: false, // 图片预览弹窗显示隐藏
 
       gamePeopleNum: '',
       gamePeopleTimes: '',
@@ -352,7 +356,6 @@ export default {
         2: '非立即开奖'
       },
       loading: false,
-      imageUrl: '',
       paramsPage: {},
       isBeyondStatus: '',
       vaildUploadImg: false
@@ -525,8 +528,24 @@ export default {
         }
       }
     },
-    handlePreview(file) {
-      console.log('>>stairPreview>>>', file);
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
+    // 图片预览
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await this.getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    handleCancel() {
+      this.previewVisible = false
     },
     cancel() {
       this.$router.go(-1);
