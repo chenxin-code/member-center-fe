@@ -40,31 +40,31 @@
       </p>
       <div class="detail-main-items">
         <span class="detail-main-items-label">领取条件设置：</span>
-        <span class="detail-main-items-value">{{ filterValue(receiveType, dataObj.condition) }}</span>
+        <span class="detail-main-items-value">{{ filterValue(receiveType, dataObj.conditions) }}</span>
       </div>
       <!-- 领取类型：领券中心 -->
-      <div v-show="dataObj.condition == 1 || dataObj.condition == 5">
+      <div v-show="dataObj.conditions == 1 || dataObj.conditions == 5">
         <div class="detail-main-items" v-for="item in receiveCenter" :key="item.label">
           <span class="detail-main-items-label">{{ item.label }}</span>
           <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         </div>
       </div>
       <!-- 领取类型：邦豆兑换 -->
-      <div v-show="dataObj.condition == 3">
+      <div v-show="dataObj.conditions == 3">
         <div class="detail-main-items" v-for="item in bangdouList" :key="item.label">
           <span class="detail-main-items-label">{{ item.label }}</span>
           <span class="detail-main-items-value">{{ dataObj[item.name] }}</span>
         </div>
       </div>
       <!-- 领取类型：卡密兑换 -->
-      <div v-show="dataObj.condition == 4">
+      <div v-show="dataObj.conditions == 4">
         <div class="detail-main-items">
           <span class="detail-main-items-label">派发数量：</span>
           <span class="detail-main-items-value">{{ dataObj.issuedCount }}</span>
         </div>
       </div>
       <!-- 领取类型：直接发放 -->
-      <div v-show="dataObj.condition == 2">
+      <div v-show="dataObj.conditions == 2">
         <div class="detail-main-items">
           <span class="detail-main-items-label">发放范围：</span>
           <span class="detail-main-items-value">{{ filterValue(issueRangeList, dataObj.issuedRang) }}</span>
@@ -107,7 +107,7 @@
         <a-divider type="vertical" style="width: 3px; background-color: #4c7afb" />
         卡券数据
       </p>
-      <div class="detail-main-items" v-if="dataObj.condition === 4">
+      <div class="detail-main-items" v-if="dataObj.conditions === 4">
         <span class="detail-main-items-label">线下卡密下载：</span>
         <a-button @click="downloadCamilo(dataObj)">
           <a-icon type="download" />
@@ -196,7 +196,7 @@ export default {
       if (url === 'couponsCancel') {
         this.$router.push({ name: url, query: { code: this.dataObj.couTypeCode } });
       }
-      return;
+
     },
     downloadInfo() {
       const args = {

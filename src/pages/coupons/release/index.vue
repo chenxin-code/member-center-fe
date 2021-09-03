@@ -53,7 +53,7 @@ const activityList = [
   { id: 4005, name: '购物券' },
   { id: 4015, name: '实物券' }
 ];
-const conditionList = [
+const conditionsList = [
   { id: '', name: '全部' },
   { id: 1, name: '领券中心' },
   { id: 2, name: '直接发放' },
@@ -111,7 +111,7 @@ export default {
           type: 'select',
           name: 'conditions',
           placeholder: '全部',
-          selectOptions: conditionList,
+          selectOptions: conditionsList,
           initialValue: '全部',
           labelCol: { span: 6 },
           wrapperCol: { span: 18 }
@@ -196,8 +196,8 @@ export default {
           key: 'conditions',
           dataIndex: 'conditions',
           customRender: text =>
-            conditionList.filter(item => item.id == text)[0].name
-              ? conditionList.filter(item => item.id == text)[0].name
+            conditionsList.filter(item => item.id == text)[0].name
+              ? conditionsList.filter(item => item.id == text)[0].name
               : ''
         },
         {
