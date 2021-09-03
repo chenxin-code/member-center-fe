@@ -18,12 +18,8 @@
 
         <a-form-item label="是否启用">
           <a-radio-group v-model="availableFlage" @change="radioChange" default-value="1">
-            <a-radio :value="1">
-              启用
-            </a-radio>
-            <a-radio :value="0">
-              禁用
-            </a-radio>
+            <a-radio :value="1">启用</a-radio>
+            <a-radio :value="0">禁用</a-radio>
           </a-radio-group>
         </a-form-item>
 
@@ -93,9 +89,7 @@
 
         <a-form-item label="通知方式">
           <a-select default-value="1">
-            <a-select-option value="1">
-              消息提醒
-            </a-select-option>
+            <a-select-option value="1">消息提醒</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -118,7 +112,26 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-
+        <a-form-item label="是否消耗邦豆">
+          <a-radio-group v-model="bandDouFlag" @change="radioChangeOne" default-value="1">
+            <a-radio :value="1">是</a-radio>
+            <a-radio :value="0">否</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="消耗邦豆数量">
+          <a-input-number
+            style="width: 100px"
+            :min="1"
+            v-decorator="[
+              'consumeNum',
+              {
+                initialValue: consumeNum,
+                rules: [{ required: true, message: '请输入消耗邦豆数量' }]
+              }
+            ]"
+            @change="takePartInputOne"
+          />
+        </a-form-item>
         <!-- <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
             format="YYYY-MM-DD"
@@ -177,7 +190,7 @@
             </div> -->
             <div class="game-imgupload">
               <div class="stair">
-                <div style="margin-bottom: 15px;">背景图片</div>
+                <div style="margin-bottom: 15px">背景图片</div>
                 <a-upload
                   name="avatar"
                   accept="image/jpeg,image/jpg,image/png"
@@ -190,15 +203,13 @@
                 >
                   <template v-if="!activityBackgroundUrl && !fileBgList.length">
                     <a-icon :type="bgLoading ? 'loading' : 'plus'" />
-                    <div class="ant-upload-text">
-                      上传
-                    </div>
+                    <div class="ant-upload-text">上传</div>
                   </template>
                 </a-upload>
               </div>
 
               <div class="stair" v-if="activityType != 2">
-                <div style="margin-bottom: 15px;">消息层背景</div>
+                <div style="margin-bottom: 15px">消息层背景</div>
                 <a-upload
                   name="avatar"
                   accept="image/jpeg,image/jpg,image/png"
@@ -211,15 +222,13 @@
                 >
                   <template v-if="!msgUrl && !fileMessageList.length">
                     <a-icon :type="msgLoading ? 'loading' : 'plus'" />
-                    <div class="ant-upload-text">
-                      上传
-                    </div>
+                    <div class="ant-upload-text">上传</div>
                   </template>
                 </a-upload>
               </div>
 
               <div class="stair" v-if="activityType != 2">
-                <div style="margin-bottom: 15px;">游戏层背景</div>
+                <div style="margin-bottom: 15px">游戏层背景</div>
                 <a-upload
                   name="avatar"
                   accept="image/jpeg,image/jpg,image/png"
@@ -232,15 +241,13 @@
                 >
                   <template v-if="!gameUrl && !fileGameList.length">
                     <a-icon :type="gameLoading ? 'loading' : 'plus'" />
-                    <div class="ant-upload-text">
-                      上传
-                    </div>
+                    <div class="ant-upload-text">上传</div>
                   </template>
                 </a-upload>
               </div>
 
               <div class="stair">
-                <div style="margin-bottom: 15px;">弹框背景</div>
+                <div style="margin-bottom: 15px">弹框背景</div>
                 <a-upload
                   name="avatar"
                   accept="image/jpeg,image/jpg,image/png"
@@ -253,9 +260,7 @@
                 >
                   <template v-if="!popFrameUrl && !fileAlertList.length">
                     <a-icon :type="popLoading ? 'loading' : 'plus'" />
-                    <div class="ant-upload-text">
-                      上传
-                    </div>
+                    <div class="ant-upload-text">上传</div>
                   </template>
                 </a-upload>
               </div>
@@ -265,8 +270,8 @@
       </a-form>
 
       <div class="game-button">
-        <a-button @click="cancel" style="width: 150px;margin-left: 20px;">取消</a-button>
-        <a-button @click="verify" style="width: 150px;margin-left: 10px" type="primary">确定</a-button>
+        <a-button @click="cancel" style="width: 150px; margin-left: 20px">取消</a-button>
+        <a-button @click="verify" style="width: 150px; margin-left: 10px" type="primary">确定</a-button>
       </div>
     </div>
     <timesLoading v-show="isShowLoading"></timesLoading>
@@ -319,7 +324,8 @@ export default {
       noticeType: '', // 通知方式
       lotteryType: 1, // 开奖方式
       activityType: 1, // 活动方式
-
+      bandDouFlag: 1, //是否消耗邦豆
+      consumeNum: '0', //消耗邦豆数量
       msgUrl: '', //消息层底图
       activityBackgroundUrl: '', //上传抽奖活动背景
       gameUrl: '', // 游戏层底图
@@ -380,7 +386,12 @@ export default {
       this.activityBackgroundUrl = this.paramsPage.activityBackgroundUrl;
       this.gameUrl = this.paramsPage.gameUrl;
       this.popFrameUrl = this.paramsPage.popFrameUrl;
-
+      if (this.paramsPage.bandDouFlag != null) {
+        this.bandDouFlag = Number(this.paramsPage.bandDouFlag);
+      }
+      if (this.paramsPage.consumeNum != null) {
+        this.consumeNum = this.paramsPage.consumeNum;
+      }
       this.fileBgList = [
         {
           uid: '-1',
@@ -438,6 +449,9 @@ export default {
     takePartInput(value) {
       this.partakeNum = value;
     },
+    takePartInputOne(value) {
+      this.consumeNum = value;
+    },
     drawLotteryNumInput(value) {
       this.drawLotteryNum = value;
     },
@@ -448,6 +462,9 @@ export default {
 
     radioChange(e) {
       this.availableFlage = e.target.value;
+    },
+    radioChangeOne(e) {
+      this.bandDouFlag = e.target.value;
     },
     // 开奖时间
     openPrize(val) {
@@ -572,7 +589,9 @@ export default {
             gameUrl, //游戏层背景
             popFrameUrl, //弹框图片url
             drawLotteryTime, //开奖时间
-            drawLotteryNum //开奖人数
+            drawLotteryNum, //开奖人数
+            bandDouFlag, //是否消耗邦豆
+            consumeNum //消耗邦豆数量
           } = this;
           let messageText = '';
           let flag = false;
@@ -632,7 +651,10 @@ export default {
           //     messageText = '开奖时间不能大于游戏有效期';
           //   }
           // }
-
+          if (bandDouFlag == 1 && !consumeNum) {
+            flag = true;
+            messageText = '请填写消耗邦豆数量';
+          }
           if (flag) {
             this.$message.error(messageText);
             if (this.lotteryType == 1) {
@@ -665,7 +687,9 @@ export default {
         activityBackgroundUrl: this.activityBackgroundUrl,
         popFrameUrl: this.popFrameUrl,
         gameUrl: this.gameUrl,
-        msgUrl: this.msgUrl
+        msgUrl: this.msgUrl,
+        bandDouFlag: this.bandDouFlag,
+        consumeNum: this.consumeNum
       };
       // 当开奖方式为非实时开奖，则隐藏活动方式和活动素材区域，显示开奖时间和开奖人数，并上送参数值
       if (this.lotteryType == 2) {
