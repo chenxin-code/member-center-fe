@@ -140,15 +140,15 @@ const vueConfig = {
     port: 8080,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     proxy: {
-      '/times/member-game-center/': {
-        target:'https://member-uat-members-linli.timesgroup.cn:8080',
+      //'/times/member-game-center/': {
+        //target:'https://member-uat-members-linli.timesgroup.cn:8080',
         // target: 'http://47.112.249.207:12345',
         // target: 'http://10.71.12.238:7000',
-        changeOrigin: true //是否开启跨域
-      },
+        //changeOrigin: true //是否开启跨域
+      //},
       // target: 'http://47.112.249.207:12345',
       '/times/': {
-        target: 'http://47.112.249.207:20000', //开发:dev
+        target: 'https://member-uat-members-linli.timesgroup.cn:8080', //开发:dev
         // target: 'http://member-uat-members-linli.timesgroup.cn:50001', //测试:uat+sit
         // target: 'http://member-prod-members-linli.timesgroup.cn:50000/', //生产:master
         ws: true, //是否支持WebSocket

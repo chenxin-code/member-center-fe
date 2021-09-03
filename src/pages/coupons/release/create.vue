@@ -258,6 +258,7 @@ export default {
         { label: '邦豆兑换', value: 3 },
         { label: '卡密兑换', value: 4 },
         { label: '分销推广', value: 5 },
+        { label: '商品详情', value: 6 },
       ],
       systemList: [],
       issueRange: [
@@ -547,7 +548,7 @@ export default {
           } else if (values.clientId) {
             Object.assign(args, values, { clientId: values.clientId.join(',') });
           } else if (values.condition === 2) {
-            Object.assign(args, values, { memberCardName: this.dataSourse.memberCardName });
+            Object.assign(args, values, { memberCardName: this.dataSourse.memberCardName ,conditions: values.condition});
           } else {
             Object.assign(args, values);
           }
