@@ -22,7 +22,7 @@
             </template>
             <span slot="action" slot-scope="record">
               <a @click="onCheck(record)">查看</a>
-              <a style="padding-left:10px;" v-if="record.condition == 4" @click="getCardCode(record)">下载卡密</a>
+              <a style="padding-left:10px;" v-if="record.conditions == 4" @click="getCardCode(record)">下载卡密</a>
               <a style="padding-left:10px;" v-if="record.referrer == 0" @click="cardTop(record)">置顶</a>
               <a style="padding-left:10px;" v-if="record.referrer == 1" @click="cardNotTop(record)">取消置顶</a>
             </span>
@@ -60,6 +60,7 @@ const conditionList = [
   { id: 3, name: '邦豆兑换' },
   { id: 4, name: '卡密兑换' },
   { id: 5, name: '分销推广' },
+  { id: 6, name: '商品详情' },
 ];
 export default {
   name: 'release',
@@ -108,7 +109,7 @@ export default {
         {
           label: '派发类型',
           type: 'select',
-          name: 'condition',
+          name: 'conditions',
           placeholder: '全部',
           selectOptions: conditionList,
           initialValue: '全部',
@@ -192,8 +193,8 @@ export default {
         },
         {
           title: '派发类型',
-          key: 'condition',
-          dataIndex: 'condition',
+          key: 'conditions',
+          dataIndex: 'conditions',
           customRender: text =>
             conditionList.filter(item => item.id == text)[0].name
               ? conditionList.filter(item => item.id == text)[0].name
@@ -225,7 +226,7 @@ export default {
       ],
       dataList: [],
       activity: '',
-      condition: '',
+      conditions: '',
       title: '',
       type: '',
       rangeDate: [],
@@ -261,9 +262,9 @@ export default {
   methods: {
     onSearch(args) {
       console.log(args);
-      const { activity, condition, title, type, rangeDate, themeName, activityName } = args;
+      const { activity, conditions, title, type, rangeDate, themeName, activityName } = args;
       this.activity = activity || null;
-      this.condition = condition || null;
+      this.conditions = conditions || null;
       this.title = title || null;
       this.type = type || null;
       this.rangeDate = rangeDate || [];
@@ -403,7 +404,7 @@ export default {
         themeName: this.themeName,
         activityName: this.activityName,
         activity: this.activity,
-        condition: this.condition
+        conditions: this.conditions
       };
       api
         .getReleaseList(args)
@@ -431,7 +432,7 @@ export default {
       this.total = 0;
       this.current = 1;
       this.pageSize = 10;
-      this.condition = '';
+      this.conditions = '';
       this.type = '';
       this.title = '';
       this.activity = '';
