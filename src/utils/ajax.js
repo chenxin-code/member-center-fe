@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   BASEURL = location.origin;
 }
-
+const { NODE_ENV } = process.env;
 const JSONBigString = JSONbig({ storeAsString: true });
 export const HTTP = axios.create({
   baseURL: BASEURL,
@@ -136,7 +136,9 @@ async function refreshToken() {
     okText: '确认',
     onOk() {
       // console.log('Modal warning OK');
-      window.location.href = localStorage.getItem('SD_LOGIN_URL');
+      if (NODE_ENV !== 'development') {
+        window.location.href = localStorage.getItem('SD_LOGIN_URL');
+      }
     }
   });
 
