@@ -122,6 +122,7 @@
           <a-input-number
             style="width: 100px"
             :min="1"
+            v-if="bandDouFlag == 1"
             v-decorator="[
               'consumeNum',
               {
@@ -131,6 +132,7 @@
             ]"
             @change="takePartInputOne"
           />
+          <a-input v-else style="width: 100px" v-model="consumeNum" disabled />
         </a-form-item>
         <!-- <a-form-item label="开奖时间" v-if="lotteryType == 2">
           <a-date-picker
@@ -465,6 +467,9 @@ export default {
     },
     radioChangeOne(e) {
       this.bandDouFlag = e.target.value;
+      if (e.target.value == 0) {
+        this.consumeNum = 0;
+      }
     },
     // 开奖时间
     openPrize(val) {
@@ -562,7 +567,7 @@ export default {
       this.previewVisible = true;
     },
     handleCancel() {
-      this.previewVisible = false
+      this.previewVisible = false;
     },
     cancel() {
       this.$router.go(-1);
