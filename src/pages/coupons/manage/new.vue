@@ -370,7 +370,33 @@
                     </a-radio-group>
                     <!-- <div>classification:{{ classification }}</div> -->
                   </a-form-item>
-                  <a-form-item label="商户id">
+                  <a-form-item label="是否与商品券叠加" v-if="classification === 1">
+                    <a-radio-group
+                      @change="overlyingChange"
+                      v-decorator="[
+                        'overlying',
+                        {
+                          initialValue: overlying,
+                          rules: [{ required: true }]
+                        }
+                      ]"
+                    >
+                      <a-radio :value="1">
+                        是
+                      </a-radio>
+                      <a-radio :value="0">
+                        否
+                      </a-radio>
+                    </a-radio-group>
+                    <!-- <div>classification:{{ classification }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="购物券类型" v-if="classification === 2">
+                    <a-radio-group>
+                      <a-radio>商品券</a-radio>
+                    </a-radio-group>
+                    <!-- <div>classification:{{ classification }}</div> -->
+                  </a-form-item>
+                  <a-form-item label="商户id" v-if="classification === 2">
                     <a-input
                       @change="commercialTenantsChange"
                       v-decorator="[
@@ -388,7 +414,7 @@
                     />
                     <!-- <div>commercialTenants:{{ commercialTenants }}</div> -->
                   </a-form-item>
-                  <a-form-item label="商品id">
+                  <a-form-item label="商品id" v-if="classification === 2">
                     <a-input
                       @change="merchandisesChange"
                       v-decorator="[
@@ -563,6 +589,7 @@ export default {
       commercialTenants: '', //购物券-商户id
       merchandises: '', //购物券——商品id
       classification: 1, //	商城订单类型: 1全部/2零售
+      overlying: 1,
       cost: '', //成本价
       memo: '' //使用说明
     };
@@ -851,6 +878,9 @@ export default {
     classificationChange(e) {
       this.classification = e.target.value;
     },
+    overlyingChange(e){
+      this.overlying = e.target.value;
+    },
 
     //下拉
     couponTypeSelect(value) {
@@ -996,7 +1026,8 @@ export default {
         validityStartTime: this.validityStartTime,
         validityType: this.validityType,
         voucherAmount: this.voucherAmount,
-        referrer: 0
+        referrer: 0,
+        overlying: this.classification === 1 ? this.overlying : 0
       };
 
       console.log('getCouponCreate param :>> ', param);
