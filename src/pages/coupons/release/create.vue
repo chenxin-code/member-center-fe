@@ -359,6 +359,8 @@ export default {
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: null, //领取有效期-开始时间
       validityExpirationTime: null, //	领取有效期-结束时间
+      classification: null,
+      overlying: null,
     };
   },
   created() {
@@ -441,6 +443,8 @@ export default {
         } else {
           this.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${this.selectedRows[0].takeEffectDayNums}天后生效`;
         }
+        this.classification = this.selectedRows[0].classification;
+        this.overlying = this.selectedRows[0].overlying;
       } else {
         this.$message.error('必须选择一个卡券!');
       }
@@ -541,6 +545,7 @@ export default {
         if(this.validityStartTime && this.validityExpirationTime){
           Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
         }
+        Object.assign(args, {classification: this.classification || 1, overlying: this.overlying || 0});
         console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
