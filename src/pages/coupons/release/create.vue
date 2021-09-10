@@ -140,7 +140,7 @@
             </a-form-item>
           </a-form-item>
         </div>
-        <a-form-item label="领取有效期" v-if="conditions === 1 || conditions === 3 || conditions === 5 || conditions === 6">
+        <a-form-item label="领取有效期" v-if="conditions === 1 || conditions === 3 || conditions === 5 || conditions === 6 || conditions === 7">
           <a-range-picker
             v-decorator="[
               'rangePickerValue',
@@ -259,6 +259,7 @@ export default {
         { label: '卡密兑换', value: 4 },
         { label: '分销推广', value: 5 },
         { label: '商品详情', value: 6 },
+        { label: '活动领券', value: 7 },
       ],
       systemList: [],
       issueRange: [
@@ -590,6 +591,9 @@ export default {
           this.issueForm = couponsCenterList;
           break;
         case 6:
+          this.issueForm = couponsCenterList;
+          break;
+        case 7:
           this.issueForm = couponsCenterList;
           break;
         case 4:

@@ -61,6 +61,7 @@ const conditionsList = [
   { id: 4, name: '卡密兑换' },
   { id: 5, name: '分销推广' },
   { id: 6, name: '商品详情' },
+  { id: 7, name: '活动领券' },
 ];
 export default {
   name: 'release',

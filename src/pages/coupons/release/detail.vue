@@ -141,6 +141,7 @@ export default {
         { label: '卡密兑换', value: 4 },
         { label: '分销推广', value: 5 },
         { label: '商品详情', value: 6 },
+        { label: '活动领券', value: 7 },
       ],
       issueRangeList: [
         { label: '全部会员', value: 1 },
