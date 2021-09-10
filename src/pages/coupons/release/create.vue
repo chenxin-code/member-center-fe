@@ -361,6 +361,7 @@ export default {
       validityExpirationTime: null, //	领取有效期-结束时间
       classification: null,
       overlying: null,
+      merchanDises: null,
     };
   },
   created() {
@@ -445,6 +446,7 @@ export default {
         }
         this.classification = this.selectedRows[0].classification;
         this.overlying = this.selectedRows[0].overlying;
+        this.merchanDises = this.selectedRows[0].merchanDises;
       } else {
         this.$message.error('必须选择一个卡券!');
       }
@@ -545,7 +547,7 @@ export default {
         if(this.validityStartTime && this.validityExpirationTime){
           Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
         }
-        Object.assign(args, {classification: this.classification || 1, overlying: this.overlying || 0});
+        Object.assign(args, {classification: this.classification, overlying: this.overlying, merchanDises: this.merchanDises});
         console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
