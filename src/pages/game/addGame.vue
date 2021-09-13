@@ -728,9 +728,10 @@ export default {
         this.isShowLoading = false;
         if (saveGameRes.code == 200) {
           console.log('res', saveGameRes);
-          this.$router.push({
-            path: '/gameManage'
-          });
+          // this.$router.push({
+          //   path: '/gameManage'
+          // });
+          this.$router.go(-1);
         }
       } catch (err) {
         console.log('err---->>', err);
