@@ -140,23 +140,25 @@
             </a-form-item>
           </a-form-item>
         </div>
-        <a-form-item label="领取有效期" v-if="conditions === 1 || conditions === 3 || conditions === 5 || conditions === 6 || conditions === 7">
+        <a-form-item
+          label="领取有效期"
+          v-if="conditions === 1 || conditions === 3 || conditions === 5 || conditions === 6 || conditions === 7"
+        >
           <a-range-picker
             v-decorator="[
               'rangePickerValue',
               {
                 initialValue: rangePickerValue,
-                rules: [
-                  { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
-                ]
+                rules: [{ validator: (rule, value, callback) => validatorDate(rule, value, callback) }]
               }
             ]"
             :placeholder="['开始时间', '结束时间']"
             format="YYYY-MM-DD HH:mm:ss"
             @change="handleRangePicker"
-            :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
+            :show-time="{ defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')] }"
             :disabled-date="disabledDate"
-            style="width: 100%"/>
+            style="width: 100%"
+          />
         </a-form-item>
         <a-form-item class="create-main-button">
           <a-button
@@ -259,7 +261,7 @@ export default {
         { label: '卡密兑换', value: 4 },
         { label: '分销推广', value: 5 },
         { label: '商品详情', value: 6 },
-        { label: '活动领券', value: 7 },
+        { label: '活动领券', value: 7 }
       ],
       systemList: [],
       issueRange: [
@@ -362,7 +364,7 @@ export default {
       validityExpirationTime: null, //	领取有效期-结束时间
       classification: null,
       overlying: null,
-      merchanDises: null,
+      merchanDises: null
     };
   },
   created() {
@@ -372,11 +374,11 @@ export default {
   },
   methods: {
     validatorFn1,
-    validatorDate(rule, value, callback){
-      let time1 = new Date(value[1]).getTime(),//领取有效期结束时间
-        time2 = new Date(this.selectedRows[0].validityEndTime).getTime();//卡券有效期结束时间
-      console.log('领取有效期结束时间',time1);
-      console.log('卡券有效期结束时间',time2);
+    validatorDate(rule, value, callback) {
+      let time1 = new Date(value[1]).getTime(), //领取有效期结束时间
+        time2 = new Date(this.selectedRows[0].validityEndTime).getTime(); //卡券有效期结束时间
+      console.log('领取有效期结束时间', time1);
+      console.log('卡券有效期结束时间', time2);
       if (this.selectedRows[0].validityType == 1 && time1 < time2) {
         callback('领取有效期结束时间不能小于卡券有效期结束时间');
       } else {
@@ -545,10 +547,17 @@ export default {
       this.formBasic.validateFields((err, values) => {
         console.log('couponDistribute err :>> ', err);
         console.log('couponDistribute values :>> ', values);
-        if(this.validityStartTime && this.validityExpirationTime){
-          Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
+        if (this.validityStartTime && this.validityExpirationTime) {
+          Object.assign(args, {
+            validityStartTime: this.validityStartTime,
+            validityExpirationTime: this.validityExpirationTime
+          });
         }
-        Object.assign(args, {classification: this.classification, overlying: this.overlying, merchanDises: this.merchanDises});
+        Object.assign(args, {
+          classification: this.classification,
+          overlying: this.overlying,
+          merchanDises: this.merchanDises
+        });
         console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
@@ -561,14 +570,13 @@ export default {
             Object.assign(args, values);
           }
 
-          console.log('couponDistribute args :>> ', args);
-          // return;
-
           this.submitLoading = true;
           api
             .couponDistribute(
               Object.keys(args).reduce((pre, key) => {
-                pre.append([key], args[key]);
+                if (args[key]) {
+                  pre.append([key], args[key]);
+                }
                 return pre;
               }, new FormData())
             )
