@@ -1018,7 +1018,7 @@ export default {
         fullReductionDiscountAmount: this.fullReductionDiscountAmount,
         memo: this.memo,
         merchandises: this.merchandises,
-        satisfyAmount: this.satisfyAmount,
+        satisfyAmount: this.couponType === 10 ? null : this.satisfyAmount,
         source: this.source,
         takeEffectDayNums: this.takeEffectDayNums,
         validityDayNums: this.validityDayNums,
