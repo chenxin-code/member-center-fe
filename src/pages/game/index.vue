@@ -136,13 +136,32 @@ export default {
     });
   },
   activated() {
-    this.isUpdate = false;
-    this.getGameList({
-      pageNum: 1,
-      pageSize: this.pageSize,
-      chooseGame: '',
-      gameName: ''
-    });
+    if (!this.$route.meta.isUseCache) {
+      this.isUpdate = false;
+      this.getGameList({
+        pageNum: 1,
+        pageSize: this.pageSize,
+        chooseGame: '',
+        gameName: ''
+      });
+    }
+    this.$route.meta.isUseCache = false;
+  },
+  beforeRouteEnter(to, from, next) {
+    if (['addGame','peopleManage','prizeManage'].includes(from.name)) {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    if (['addGame','peopleManage','prizeManage'].includes(to.name)) {
+      to.meta.isUseCache = true;
+    } else {
+      to.meta.isUseCache = false;
+    }
+    next();
   },
   methods: {
     targetItem(val) {

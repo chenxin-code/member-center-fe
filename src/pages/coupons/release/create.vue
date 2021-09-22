@@ -25,10 +25,10 @@
         </p>
         <a-form-item label="领取条件设置：">
           <a-select
-            @change="conditionChange"
+            @change="conditionsChange"
             placeholder="请选择"
             v-decorator="[
-              'condition',
+              'conditions',
               {
                 initialValue: 1,
                 rules: [{ required: true, message: '请设置领取条件!' }]
@@ -40,7 +40,7 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-        <div v-if="condition !== 2">
+        <div v-if="conditions !== 2">
           <a-form-item v-for="item in issueForm" :key="item.label" :label="item.label">
             <a-input-number
               style="width: 100%"
@@ -49,7 +49,7 @@
             />
           </a-form-item>
         </div>
-        <div v-if="condition == 2">
+        <div v-if="conditions == 2">
           <a-form-item label="发放范围">
             <a-select
               v-decorator="[
@@ -136,7 +136,10 @@
             </a-form-item>
           </a-form-item>
         </div>
-        <a-form-item label="领取有效期" v-if="condition === 1 || condition === 3 || condition === 5">
+        <a-form-item
+          label="领取有效期"
+          v-if="conditions === 1 || conditions === 3 || conditions === 5 || conditions === 6 || conditions === 7"
+        >
           <a-range-picker
             v-decorator="[
               'rangePickerValue',
@@ -253,7 +256,9 @@ export default {
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
         { label: '卡密兑换', value: 4 },
-        { label: '分销推广', value: 5 }
+        { label: '分销推广', value: 5 },
+        { label: '商品详情', value: 6 },
+        { label: '活动领券', value: 7 }
       ],
       systemList: [],
       issueRange: [
@@ -342,7 +347,7 @@ export default {
       activity: null,
       title: '',
       type: null,
-      condition: 1, // 领取类型
+      conditions: 1, // 领取类型
       issuedRang: 2, // 发放范围
       couTypeCode: '', // 卡券类型编号
       dataSourse: {
@@ -353,7 +358,10 @@ export default {
       id: null,
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: null, //领取有效期-开始时间
-      validityExpirationTime: null //	领取有效期-结束时间
+      validityExpirationTime: null, //	领取有效期-结束时间
+      classification: null,
+      overlying: null,
+      merchanDises: null
     };
   },
   created() {
@@ -391,10 +399,10 @@ export default {
         content: '暂无模板文件, 您可以尝试刷新页面重新加载～'
       });
     },
-    conditionChange(val) {
-      console.log('conditionChange val :>> ', val);
-      this.condition = val;
-      if (this.condition === 2) {
+    conditionsChange(val) {
+      console.log('conditionsChange val :>> ', val);
+      this.conditions = val;
+      if (this.conditions === 2) {
         this.getTplDownload();
       }
     },
@@ -437,6 +445,9 @@ export default {
         } else {
           this.couponValid = `有效天数: ${this.selectedRows[0].validityDayNums}天，${this.selectedRows[0].takeEffectDayNums}天后生效`;
         }
+        this.classification = this.selectedRows[0].classification;
+        this.overlying = this.selectedRows[0].overlying;
+        this.merchanDises = this.selectedRows[0].merchanDises;
       } else {
         this.$message.error('必须选择一个卡券!');
       }
@@ -540,20 +551,22 @@ export default {
             validityExpirationTime: this.validityExpirationTime
           });
         }
+        Object.assign(args, {
+          classification: this.classification,
+          overlying: this.overlying,
+          merchanDises: this.merchanDises
+        });
         console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
           if (values.file) {
             Object.assign(args, values, { file: this.dataSourse.file });
           } else if (values.clientId) {
             Object.assign(args, values, { clientId: values.clientId.join(',') });
-          } else if (values.condition === 2) {
+          } else if (values.conditions === 2) {
             Object.assign(args, values, { memberCardName: this.dataSourse.memberCardName });
           } else {
             Object.assign(args, values);
           }
-
-          console.log('couponDistribute args :>> ', args);
-          // return;
 
           this.submitLoading = true;
           if (this.overlying != 999) {
@@ -562,7 +575,9 @@ export default {
           api
             .couponDistribute(
               Object.keys(args).reduce((pre, key) => {
-                pre.append([key], args[key]);
+                if (args[key]) {
+                  pre.append([key], args[key]);
+                }
                 return pre;
               }, new FormData())
             )
@@ -575,13 +590,19 @@ export default {
     }
   },
   watch: {
-    condition: function (newVal, oldVal) {
-      console.log('condition newVal :>> ', newVal);
+    conditions: function (newVal, oldVal) {
+      console.log('conditions newVal :>> ', newVal);
       switch (newVal) {
         case 1:
           this.issueForm = couponsCenterList;
           break;
         case 5:
+          this.issueForm = couponsCenterList;
+          break;
+        case 6:
+          this.issueForm = couponsCenterList;
+          break;
+        case 7:
           this.issueForm = couponsCenterList;
           break;
         case 4:
