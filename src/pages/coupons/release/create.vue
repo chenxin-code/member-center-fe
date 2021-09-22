@@ -2,9 +2,7 @@
   <div class="create">
     <div class="create-header">
       <div class="create-header-title">卡券派发</div>
-      <span class="create-header-fallback" @click="$store.dispatch('FALLBACK')">
-        返回
-      </span>
+      <span class="create-header-fallback" @click="$store.dispatch('FALLBACK')">返回</span>
     </div>
     <div class="create-main">
       <a-form :form="formBasic" :label-col="{ span: 4 }" :wrapper-col="{ span: 9 }">
@@ -125,9 +123,7 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-            <span :style="{ display: 'inline-block', width: '24px', textAlign: 'center' }">
-              -
-            </span>
+            <span :style="{ display: 'inline-block', width: '24px', textAlign: 'center' }">-</span>
             <a-form-item :style="{ display: 'inline-block', width: 'calc(50% - 12px)' }">
               <a-select
                 style="width: 100%"
@@ -146,17 +142,16 @@
               'rangePickerValue',
               {
                 initialValue: rangePickerValue,
-                rules: [
-                  { validator: (rule, value, callback) => validatorDate(rule, value, callback) }
-                ]
+                rules: [{ validator: (rule, value, callback) => validatorDate(rule, value, callback) }]
               }
             ]"
             :placeholder="['开始时间', '结束时间']"
             format="YYYY-MM-DD HH:mm:ss"
             @change="handleRangePicker"
-            :show-time="{defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')]}"
+            :show-time="{ defaultValue: [moment(moment().format('HH:mm:ss')), moment('23:59:59', 'HH:mm:ss')] }"
             :disabled-date="disabledDate"
-            style="width: 100%"/>
+            style="width: 100%"
+          />
         </a-form-item>
         <a-form-item class="create-main-button">
           <a-button
@@ -203,7 +198,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
+        style="margin-top: 30px; width: 100%; text-align: right"
       />
     </a-modal>
   </div>
@@ -235,6 +230,7 @@ export default {
   },
   data() {
     return {
+      overlying: 999,
       downLoadTplExist: false,
       downLoadTplUrl: '',
       submitLoading: false,
@@ -257,7 +253,7 @@ export default {
         { label: '直接发放', value: 2 },
         { label: '邦豆兑换', value: 3 },
         { label: '卡密兑换', value: 4 },
-        { label: '分销推广', value: 5 },
+        { label: '分销推广', value: 5 }
       ],
       systemList: [],
       issueRange: [
@@ -357,7 +353,7 @@ export default {
       id: null,
       rangePickerValue: [], //日期对象清空日期用
       validityStartTime: null, //领取有效期-开始时间
-      validityExpirationTime: null, //	领取有效期-结束时间
+      validityExpirationTime: null //	领取有效期-结束时间
     };
   },
   created() {
@@ -367,11 +363,11 @@ export default {
   },
   methods: {
     validatorFn1,
-    validatorDate(rule, value, callback){
-      let time1 = new Date(value[1]).getTime(),//领取有效期结束时间
-        time2 = new Date(this.selectedRows[0].validityEndTime).getTime();//卡券有效期结束时间
-      console.log('领取有效期结束时间',time1);
-      console.log('卡券有效期结束时间',time2);
+    validatorDate(rule, value, callback) {
+      let time1 = new Date(value[1]).getTime(), //领取有效期结束时间
+        time2 = new Date(this.selectedRows[0].validityEndTime).getTime(); //卡券有效期结束时间
+      console.log('领取有效期结束时间', time1);
+      console.log('卡券有效期结束时间', time2);
       if (this.selectedRows[0].validityType == 1 && time1 < time2) {
         callback('领取有效期结束时间不能小于卡券有效期结束时间');
       } else {
@@ -432,6 +428,7 @@ export default {
         this.visible = false;
         this.couponName = this.selectedRows[0].couponTitle;
         this.couTypeCode = this.selectedRows[0].couTypeCode;
+        this.overlying = this.selectedRows[0].overlying;
         this.showRedBorder = false;
         this.id = this.selectedRows[0].id;
         console.log('=======', this.selectedRows);
@@ -537,8 +534,11 @@ export default {
       this.formBasic.validateFields((err, values) => {
         console.log('couponDistribute err :>> ', err);
         console.log('couponDistribute values :>> ', values);
-        if(this.validityStartTime && this.validityExpirationTime){
-          Object.assign(args, {validityStartTime: this.validityStartTime, validityExpirationTime: this.validityExpirationTime});
+        if (this.validityStartTime && this.validityExpirationTime) {
+          Object.assign(args, {
+            validityStartTime: this.validityStartTime,
+            validityExpirationTime: this.validityExpirationTime
+          });
         }
         console.log('couponDistribute args :>> ', args);
         if (!err && !this.showRedBorder) {
@@ -556,6 +556,9 @@ export default {
           // return;
 
           this.submitLoading = true;
+          if (this.overlying != 999) {
+            args.overlying = this.overlying;
+          }
           api
             .couponDistribute(
               Object.keys(args).reduce((pre, key) => {
@@ -572,7 +575,7 @@ export default {
     }
   },
   watch: {
-    condition: function(newVal, oldVal) {
+    condition: function (newVal, oldVal) {
       console.log('condition newVal :>> ', newVal);
       switch (newVal) {
         case 1:
@@ -592,7 +595,7 @@ export default {
           break;
       }
     },
-    visible: function(newVal, oldVal) {
+    visible: function (newVal, oldVal) {
       if (newVal) {
         this.getCouponList();
       }
