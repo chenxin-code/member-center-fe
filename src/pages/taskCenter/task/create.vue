@@ -32,7 +32,7 @@
           <a-form-model-item v-if="form.isPeriodic==2" ref="executeNum" label="最大执行次数" prop="executeNum">
             <a-input-number v-model="form.executeNum" :min="0" :max="9999999999999999" :precision="0" class="number-input" />
           </a-form-model-item>
-          <a-form-model-item v-if="form.isPeriodic==2" ref="perDayLimit" label="每日最大执行次数" prop="perDayLimit">
+          <a-form-model-item v-if="form.isPeriodic==2" ref="perDayLimit" label="每人每日最大执行次数" prop="perDayLimit">
             <a-input-number v-model="form.perDayLimit" :min="0" :max="999999" :precision="0" class="number-input" />
           </a-form-model-item>
           <a-form-model-item ref="source" label="任务来源" prop="source">
@@ -218,7 +218,7 @@ export default {
         isPeriodic: '0', // 任务周期性
         periodic: '', // 任务周期
         executeNum: '', //最大执行次数
-        perDayLimit: '', //每日最大执行次数
+        perDayLimit: '', //每人每日最大执行次数
         source: '', // 任务来源
         sourceName: '', // 任务来源名称
         memo: '', // 任务描述
@@ -243,7 +243,7 @@ export default {
         taskName: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
         periodic: [{ required: true, message: '请输入周期范围', trigger: 'blur' }],
         executeNum: [{ required: true, message: '请输入最大执行次数', trigger: 'blur' }],
-        perDayLimit: [{ required: true, message: '请输入每日最大执行次数', trigger: 'blur' }, { validator: this.checkExecuteNumDay, trigger: 'blur' }],
+        perDayLimit: [{ required: true, message: '请输入每人每日最大执行次数', trigger: 'blur' }, { validator: this.checkExecuteNumDay, trigger: 'blur' }],
         taskDate: [{ required: true, message: '请输入选择有效期', trigger: 'blur' }],
         awardIntegral: [{ required: true, message: '请输入邦豆奖励', trigger: 'blur' }],
         awardGrow: [{ required: true, message: '请输入成长值奖励', trigger: 'blur' }],
@@ -279,7 +279,7 @@ export default {
   methods: {
     checkExecuteNumDay(rule, value, callback) {
       if (this.form.executeNum && this.form.perDayLimit && Number(this.form.executeNum) < Number(this.form.perDayLimit)) {
-        callback(new Error('每日最大执行次数不能大于最大执行次数'));
+        callback(new Error('每人每日最大执行次数不能大于最大执行次数'));
       }
       callback();
     },
