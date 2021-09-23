@@ -2,9 +2,7 @@
   <div class="create">
     <div class="create-header">
       <div class="create-header-title">卡券派发</div>
-      <span class="create-header-fallback" @click="$store.dispatch('FALLBACK')">
-        返回
-      </span>
+      <span class="create-header-fallback" @click="$store.dispatch('FALLBACK')">返回</span>
     </div>
     <div class="create-main">
       <a-form :form="formBasic" :label-col="{ span: 4 }" :wrapper-col="{ span: 9 }">
@@ -125,9 +123,7 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-            <span :style="{ display: 'inline-block', width: '24px', textAlign: 'center' }">
-              -
-            </span>
+            <span :style="{ display: 'inline-block', width: '24px', textAlign: 'center' }">-</span>
             <a-form-item :style="{ display: 'inline-block', width: 'calc(50% - 12px)' }">
               <a-select
                 style="width: 100%"
@@ -205,7 +201,7 @@
         :pageSizeOptions="['10', '20', '30', '40', '50', '100']"
         @change="change"
         @showSizeChange="showSizeChange"
-        style="margin-top:30px;width:100%;text-align: right;"
+        style="margin-top: 30px; width: 100%; text-align: right"
       />
     </a-modal>
   </div>
@@ -237,6 +233,7 @@ export default {
   },
   data() {
     return {
+      overlying: 999,
       downLoadTplExist: false,
       downLoadTplUrl: '',
       submitLoading: false,
@@ -439,6 +436,7 @@ export default {
         this.visible = false;
         this.couponName = this.selectedRows[0].couponTitle;
         this.couTypeCode = this.selectedRows[0].couTypeCode;
+        this.overlying = this.selectedRows[0].overlying;
         this.showRedBorder = false;
         this.id = this.selectedRows[0].id;
         console.log('=======', this.selectedRows);
@@ -571,6 +569,9 @@ export default {
           }
 
           this.submitLoading = true;
+          if (this.overlying != 999) {
+            args.overlying = this.overlying;
+          }
           api
             .couponDistribute(
               Object.keys(args).reduce((pre, key) => {
@@ -589,7 +590,7 @@ export default {
     }
   },
   watch: {
-    conditions: function(newVal, oldVal) {
+    conditions: function (newVal, oldVal) {
       console.log('conditions newVal :>> ', newVal);
       switch (newVal) {
         case 1:
@@ -615,7 +616,7 @@ export default {
           break;
       }
     },
-    visible: function(newVal, oldVal) {
+    visible: function (newVal, oldVal) {
       if (newVal) {
         this.getCouponList();
       }
