@@ -574,7 +574,7 @@ export default {
           api
             .couponDistribute(
               Object.keys(args).reduce((pre, key) => {
-                if (args[key]) {
+                if (args[key] !== null) {
                   pre.append([key], args[key]);
                 }
                 return pre;
